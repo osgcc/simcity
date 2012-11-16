@@ -1,0 +1,14 @@
+#------------------------------------------------------------------------------
+# A/UX 2.0.1 - System V.2 derivative with BSD extensions
+#------------------------------------------------------------------------------
+# $Id: aux,v 2.2 1992/11/08 17:23:40 markd Exp $
+#------------------------------------------------------------------------------
+#
+SYS_DEP_FLAGS= -DTCL_USE_BZERO_MACRO -DTCL_SIG_PROC_INT
+LIBS=-lc_s -lm
+RANLIB_CMD=true
+MCS_CMD=true
+TCL_TK_LIBS= -lX11 -lm
+
+TCL_MAN_SEPARATOR=.
+TCL_MAN_STYLE=LONG
