@@ -1,130 +1,107 @@
-# Makefile for Micropolis
-# 
-# Micropolis, Unix Version.  This game was released for the Unix platform
-# in or about 1990 and has been modified for inclusion in the One Laptop
-# Per Child program.  Copyright (C) 1989 - 2007 Electronic Arts Inc.  If
-# you need assistance with this program, you may contact:
-#   http://wiki.laptop.org/go/Micropolis  or email  micropolis@laptop.org.
-# 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or (at
-# your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.  You should have received a
-# copy of the GNU General Public License along with this program.  If
-# not, see <http://www.gnu.org/licenses/>.
-# 
-#             ADDITIONAL TERMS per GNU GPL Section 7
-# 
-# No trademark or publicity rights are granted.  This license does NOT
-# give you any right, title or interest in the trademark SimCity or any
-# other Electronic Arts trademark.  You may not distribute any
-# modification of this program using the trademark SimCity or claim any
-# affliation or association with Electronic Arts Inc. or its employees.
-# 
-# Any propagation or conveyance of this program must include this
-# copyright notice and these terms.
-# 
-# If you convey this program (or any modifications of it) and assume
-# contractual liability for the program to recipients of it, you agree
-# to indemnify Electronic Arts for any liability that those contractual
-# assumptions impose on Electronic Arts.
-# 
-# You may not misrepresent the origins of this program; modified
-# versions of the program must be marked as such and not identified as
-# the original program.
-# 
-# This disclaimer supplements the one included in the General Public
-# License.  TO THE FULLEST EXTENT PERMISSIBLE UNDER APPLICABLE LAW, THIS
-# PROGRAM IS PROVIDED TO YOU "AS IS," WITH ALL FAULTS, WITHOUT WARRANTY
-# OF ANY KIND, AND YOUR USE IS AT YOUR SOLE RISK.  THE ENTIRE RISK OF
-# SATISFACTORY QUALITY AND PERFORMANCE RESIDES WITH YOU.  ELECTRONIC ARTS
-# DISCLAIMS ANY AND ALL EXPRESS, IMPLIED OR STATUTORY WARRANTIES,
-# INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY, SATISFACTORY QUALITY,
-# FITNESS FOR A PARTICULAR PURPOSE, NONINFRINGEMENT OF THIRD PARTY
-# RIGHTS, AND WARRANTIES (IF ANY) ARISING FROM A COURSE OF DEALING,
-# USAGE, OR TRADE PRACTICE.  ELECTRONIC ARTS DOES NOT WARRANT AGAINST
-# INTERFERENCE WITH YOUR ENJOYMENT OF THE PROGRAM; THAT THE PROGRAM WILL
-# MEET YOUR REQUIREMENTS; THAT OPERATION OF THE PROGRAM WILL BE
-# UNINTERRUPTED OR ERROR-FREE, OR THAT THE PROGRAM WILL BE COMPATIBLE
-# WITH THIRD PARTY SOFTWARE OR THAT ANY ERRORS IN THE PROGRAM WILL BE
-# CORRECTED.  NO ORAL OR WRITTEN ADVICE PROVIDED BY ELECTRONIC ARTS OR
-# ANY AUTHORIZED REPRESENTATIVE SHALL CREATE A WARRANTY.  SOME
-# JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF OR LIMITATIONS ON IMPLIED
-# WARRANTIES OR THE LIMITATIONS ON THE APPLICABLE STATUTORY RIGHTS OF A
-# CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
-# NOT APPLY TO YOU.
+XINCLUDE = /usr/include/X11
+TCLHOME = ../tcl
+TKHOME = ../tk
+TCLXHOME = ../tclx
+TCLLIBRARY = /usr/local/lib/tcl
+TKLIBRARY = /usr/local/lib/tk
 
-RES = ../res
+CC = gcc
 
-TARFILES = \
-	micropolis-activity/Micropolis \
-	micropolis-activity/README \
-	micropolis-activity/COPYING \
-	micropolis-activity/cities \
-	micropolis-activity/images \
-	micropolis-activity/res \
-	micropolis-activity/manual \
-	micropolis-activity/activity \
-	micropolis-activity/__init__.py \
-	micropolis-activity/micropolisactivity.py \
-	micropolis-activity/Micropolis.png
+OPTFLAGS = -O3
+#OPTFLAGS = -g
 
-all:
-	cd tcl ; make all
-	cd tk ; make all
-	cd tclx ; make all
-	cd sim ; make all
+#DEFINES = -DIS_LINUX -DIS_INTEL -DCAM -DNET
+DEFINES = -DIS_LINUX -DIS_INTEL
+
+CFLAGS = $(OPTFLAGS) $(DEFINES)
+
+#LDFLAGS = -Bstatic
+
+INSTALL = install -s
+
+INCLUDES = \
+	-Iheaders \
+	-I$(XPMHOME) \
+	-I$(XINCLUDE) \
+	-I$(TCLHOME) \
+	-I$(TCLXHOME)/src \
+	-I$(TKHOME)
+
+CPPFLAGS = $(INCLUDES)
+
+LIBS =	$(TCLXHOME)/libtk.a \
+	$(TCLXHOME)/libtcl.a \
+	-lm \
+        -lX11 \
+        -lXext \
+	-lXpm
+
+SRCS = \
+	sim.c \
+	s_alloc.c \
+	s_disast.c \
+	s_eval.c \
+	s_gen.c \
+	s_init.c \
+	s_msg.c \
+	s_power.c \
+	s_scan.c \
+	s_sim.c \
+	s_traf.c \
+	s_zone.c \
+	s_fileio.c \
+	g_setup.c \
+	g_ani.c \
+	g_bigmap.c \
+	g_map.c \
+	g_smmaps.c \
+	w_stubs.c \
+	w_sound.c \
+	w_resrc.c \
+	w_keys.c \
+	w_util.c \
+	w_con.c \
+	w_eval.c \
+	w_budget.c \
+	w_graph.c \
+	w_date.c \
+	w_update.c \
+	w_tool.c \
+	w_x.c \
+	w_tk.c \
+	w_sim.c \
+	w_editor.c \
+	w_map.c \
+	w_sprite.c \
+	w_piem.c \
+	w_inter.c \
+	w_cam.c \
+	g_cam.c \
+	w_net.c \
+	rand.c \
+	random.c
+
+HEADERS = \
+	headers/mac.h \
+	headers/macros.h \
+	headers/sim.h \
+	headers/view.h \
+	headers/animtab.h
+
+OBJS = $(SRCS:.c=.o)
+ALLOBJS = $(OBJS)
+
+all: sim
+
+lint:
+	alint $(INCLUDES) $(SRCS) > LINT
+
+sim: $(ALLOBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDES) $(ALLOBJS) $(LIBS) -o sim
 
 clean:
-	rm -f Micropolis.tgz
-	(cd $(RES) ; touch junk~ ; rm -f sim *~)
-	(cd .. ; touch junk~ ; rm -f *~)
-	touch junk~ ; rm -f *~
-	rm -rf BUILDIT
-	cd tcl ; make clean
-	cd tk ; make clean
-	cd tclx ; make clean
-	cd sim ; make clean
+	rm -f $(OBJS) \
+		sim a.out core gmon.out *~ *.BAK Headers/*~
 
-install: all
-	(cd $(RES) ; rm -f sim)
-	cp sim/sim $(RES)/sim ; strip $(RES)/sim
-
-tar:
-	touch $(RES)/junk~ ../images/junk~
-	rm -f ../../micropolis-activity.tgz $(RES)/*~ ../images/*~
-	(cd ../.. ; tar cfvz micropolis-activity.tgz $(TARFILES)) 
-
-xo:  install
-	touch $(RES)/junk~ ../images/junk~
-	rm -f ../../micropolis.xo $(RES)/*~ ../images/*~
-	rm -rf BUILDIT
-	mkdir BUILDIT
-	tar cf - -C ../.. $(TARFILES) | (cd BUILDIT; tar xf -)
-	# The DejaVu fonts are not needed on the XO, only other platforms.
-	rm -rf BUILDIT/micropolis-activity/res/dejavu-lgc
-	mv BUILDIT/micropolis-activity BUILDIT/micropolis.activity
-	(cd BUILDIT; zip -r ../../../micropolis.xo micropolis.activity)
-	rm -rf BUILDIT
-
-#
-# To cut a release:
-# Edit activity/activity.info and increment the version number.
-# In what follows, replace "3" with the latest version number
-#   vi activity/activity.info
-#   git commit activity/activity.info
-# Now make the source tar file:
-#   git-archive --format=tar --prefix=micropolis-activity-3/ HEAD >../micropolis-activity-3-src.tar
-#   gzip -9 ../micropolis-activity-3-src.tar
-#   chmod a-w ../micropolis-activity-3-src.tar.gz
-# Now make the binary:
-#   (cd src; make xo)
-#   mv ../micropolis.xo ../micropolis-3.xo
-#   chmod a-w ../micropolis-3.xo 
-# You're done.  Publish them.
-#
+etags:
+	etags $(SRCS) $(HEADERS)
