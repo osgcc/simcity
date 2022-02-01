@@ -64,11 +64,11 @@
 
 short MustUpdateFunds;
 short MustUpdateOptions;
-QUAD LastCityTime;
-QUAD LastCityYear;
-QUAD LastCityMonth;
-QUAD LastFunds;
-QUAD LastR, LastC, LastI;
+long LastCityTime;
+long LastCityYear;
+long LastCityMonth;
+long LastFunds;
+long LastR, LastC, LastI;
 
 char *dateStr[12] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun", 

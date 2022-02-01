@@ -71,8 +71,8 @@ int DynamicData[32];
   short *mp; \
   unsigned char *imageBase; \
   unsigned char *image; \
-  unsigned QUAD *mem; \
-  unsigned QUAD l; \
+  unsigned long *mem; \
+  unsigned long l; \
   int lineBytes = view->line_bytes8; \
   int pixelBytes = view->pixel_bytes; \
   mp = &Map[0][0]; \
@@ -164,7 +164,7 @@ int DynamicData[32];
 	  }
 
 #define DRAW_END \
-      mem = (unsigned QUAD *)&view->smalltiles[tile * 4 * 4 * pixelBytes]; \
+      mem = (unsigned long *)&view->smalltiles[tile * 4 * 4 * pixelBytes]; \
       ROW3 \
     } \
   }
@@ -231,8 +231,8 @@ void drawPower(SimView *view)
   unsigned short tile;
   short *mp;
   unsigned char *image, *imageBase;
-  unsigned QUAD *mem;
-  unsigned QUAD l;
+  unsigned long *mem;
+  unsigned long l;
   int lineBytes = view->line_bytes8;
   int pixelBytes = view->pixel_bytes;
 
@@ -274,7 +274,7 @@ void drawPower(SimView *view)
       }
 
       if (pix < 0) {
-		mem = (unsigned QUAD *)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+		mem = (unsigned long *)&view->smalltiles[tile * 4 * 4 * pixelBytes];
 		ROW3
       } else {
 		switch (view->x->depth) {

@@ -641,28 +641,29 @@ InitNewGraph(SimGraph *graph)
 }
 
 
-DestroyGraph(SimGraph *graph)
+DestroyGraph(SimGraph* graph)
 {
-  SimGraph **gp;
+    SimGraph** gp;
 
-  for (gp = &sim->graph;
-       (*gp) != NULL;
-       gp = &((*gp)->next)) {
-    if ((*gp) == graph) {
-      (*gp) = graph->next;
-      sim->graphs--;
-      break;
+    for (gp = &sim->graph; (*gp) != NULL; gp = &((*gp)->next))
+    {
+        if ((*gp) == graph)
+        {
+            (*gp) = graph->next;
+            sim->graphs--;
+            break;
+        }
     }
-  }
 
-  if (graph->pixmap != None) {
-    XFreePixmap(graph->x->dpy, graph->pixmap);
-    graph->pixmap = None;
-  }
+    if (graph->pixmap != None)
+    {
+        XFreePixmap(graph->x->dpy, graph->pixmap);
+        graph->pixmap = None;
+    }
 
-  DecRefDisplay(graph->x);
+    DecRefDisplay(graph->x);
 
-  ckfree((char *) graph);
+    ckfree((char*)graph);
 }
 
 

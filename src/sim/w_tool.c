@@ -72,7 +72,7 @@ int PendingX;
 int PendingY;
 
 
-QUAD CostOf[] = {
+long CostOf[] = {
     100,    100,    100,    500,
       0,    500,      5,      1,
      20,     10,      0,      0,
@@ -99,7 +99,7 @@ short toolOffset[] = {
 };
 
 
-QUAD toolColors[] = {
+long toolColors[] = {
  COLOR_LIGHTGREEN | (COLOR_LIGHTGREEN << 8),	/* residentialState */
  COLOR_LIGHTBLUE | (COLOR_LIGHTBLUE << 8),	/* commercialState */
  COLOR_YELLOW | (COLOR_YELLOW << 8),		/* industrialState */

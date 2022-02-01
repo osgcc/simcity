@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
 
 Tcl_HashTable SimCmds;
@@ -1496,26 +1496,9 @@ int SimCmdMultiPlayerMode(ARGS)
   return (TCL_OK);
 }
 
-
-int SimCmdSugarMode(ARGS)
-{
-  /* This is read-only because it's specified on
-     the command line and effects how the user 
-     interface is initialized. */
-
-  if (argc != 2) {
-    return (TCL_ERROR);
-  }
-
-  sprintf(interp->result, "%d", SugarMode);
-  return (TCL_OK);
-}
-
-
 /************************************************************************/
 
-int
-SimCmd(CLIENT_ARGS)
+int SimCmd(CLIENT_ARGS)
 {
   Tcl_HashEntry *ent;
   int result = TCL_OK;

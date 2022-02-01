@@ -106,7 +106,7 @@ typedef struct PieMenuEntry {
     float angle;		/* Angle through center of slice */
     float dx, dy;		/* Cosine and sine of angle */
     float subtend;		/* Angle subtended by slice */
-    int quadrant;		/* Quadrant of leading edge */
+    int longrant;		/* longrant of leading edge */
     float slope;		/* Slope of leading edge */
 
     /*
@@ -639,7 +639,7 @@ PieMenuWidgetCmd(clientData, interp, argc, argv)
 	mePtr->dx = 0.0;
 	mePtr->dy = 0.0;
 	mePtr->subtend = 0.0;
-	mePtr->quadrant = 0;
+	mePtr->longrant = 0;
 	mePtr->slope = 0.0;
 	mePtr->command = NULL;
 	mePtr->preview = NULL;
@@ -1863,29 +1863,29 @@ ActivatePieMenuEntry(menuPtr, index, preview)
 
 /*
  * This pie menu tracking code determines the slice the cursor 
- * is in by representing slice edge angles as (quadrant, slope) 
+ * is in by representing slice edge angles as (longrant, slope) 
  * pairs that can be quickly computed and compared. 
  *
  * The slope is defined such that it is greater than or equal to zero,
  * less than infinity, and increasing counter-clockwise around the menu. 
- * Each of the four quadrants encompasses one range of slope.
+ * Each of the four longrants encompasses one range of slope.
  *
  *                 Y
  *               ^
  *               |     x>0, y>=0
  *  x<=0, y>0 <--+       y/x
  *    -x/y       |        ^
- *        quad 1 | quad 0 |     X
+ *        long 1 | long 0 |     X
  * -----+--------+--------+----> 
- *      | quad 2 | quad 3
+ *      | long 2 | long 3
  *      V        |      -x/y
  *   x<0, y<=0   +--> x>=0, y<0
  *     y/x       |
  *               |
  * 
- * The quadrants and slopes of the item edges are all precalculated,
+ * The longrants and slopes of the item edges are all precalculated,
  * during menu layout.
- * The quadrant and slope of the cursor must be calculated frequently
+ * The longrant and slope of the cursor must be calculated frequently
  * during menu tracking, so we just calculate the numerator and
  * denominator of the slope, and avoid an unnecessary division.
  * Instead of calculating "slope = numerator / denominator" then
@@ -1898,11 +1898,11 @@ ActivatePieMenuEntry(menuPtr, index, preview)
  */
 
 
-#define CALC_QUADRANT_SLOPE(x, y, quadrant, numerator, denominator) \
-    if ((y) > 0) (quadrant) = ((x) > 0 ? 0 : 1); \
-    else if ((y) < 0) (quadrant) = ((x) < 0 ? 2 : 3); \
-    else (quadrant) = ((x) > 0 ? 0 : 2); \
-    if ((quadrant) & 1) { \
+#define CALC_longRANT_SLOPE(x, y, longrant, numerator, denominator) \
+    if ((y) > 0) (longrant) = ((x) > 0 ? 0 : 1); \
+    else if ((y) < 0) (longrant) = ((x) < 0 ? 2 : 3); \
+    else (longrant) = ((x) > 0 ? 0 : 2); \
+    if ((longrant) & 1) { \
 	(numerator) = ABS((x)); (denominator) = ABS((y)); \
     } else { \
 	(numerator) = ABS((y)); (denominator) = ABS((x)); \
@@ -1915,7 +1915,7 @@ CalcPieMenuItem(menu, x, y)
   int x, y;
 {
   register PieMenuEntry *it, *last_it;
-  int i, j, order, quadrant;
+  int i, j, order, longrant;
   int numerator, denominator;
   int first, last_i, last_order;
   
@@ -1946,10 +1946,10 @@ CalcPieMenuItem(menu, x, y)
   }
   
   /*
-   * Calculate the quadrant, slope numerator, and slope denominator of
+   * Calculate the longrant, slope numerator, and slope denominator of
    * the cursor slope, to be used for comparisons.
    */
-  CALC_QUADRANT_SLOPE(x, y, quadrant, numerator, denominator);
+  CALC_longRANT_SLOPE(x, y, longrant, numerator, denominator);
   
   /*
    * In most cases, during cursor tracking, the menu item that the
@@ -1989,14 +1989,14 @@ CalcPieMenuItem(menu, x, y)
   while (1) {
 
 /* Legend: c = cursor, e = edge
-   <cursor quad>,<edge quad>
-         quad 1 | quad 0
+   <cursor long>,<edge long>
+         long 1 | long 0
          -------+-------
-         quad 2 | quad 3
+         long 2 | long 3
 */
 
     /* Set order = 1, if shortest direction from edge to cursor is ccw */
-    switch ((quadrant - it->quadrant) & 3) {
+    switch ((longrant - it->longrant) & 3) {
 
 case 0: /*
 		 0,0	 1,1	 2,2	 3,3
@@ -2095,13 +2095,13 @@ LayoutPieMenu(menu)
     titlefont = menu->fontPtr;
 
   /*
-   * Calculate the subtend, angle, cosine, sine, quadrant, slope,
+   * Calculate the subtend, angle, cosine, sine, longrant, slope,
    * and size of each menu item.
    */
   angle = DEG_TO_RAD(menu->initial_angle);
   for (i = 0; i < menu->numEntries; i++) {
     register float edge_dx, edge_dy, numerator, denominator, twist;
-    register int quadrant;
+    register int longrant;
 
     it = menu->entries[i];
     if ((font = it->fontPtr) == NULL)
@@ -2134,8 +2134,8 @@ LayoutPieMenu(menu)
     it->dy = sin(angle);
     edge_dx = cos(angle - twist);
     edge_dy = sin(angle - twist);
-    CALC_QUADRANT_SLOPE(edge_dx, edge_dy, quadrant, numerator, denominator);
-    it->quadrant = quadrant;
+    CALC_longRANT_SLOPE(edge_dx, edge_dy, longrant, numerator, denominator);
+    it->longrant = longrant;
     it->slope = (float)numerator / (float)denominator;
     angle += twist;
   }

@@ -76,14 +76,14 @@ char *HomeDir, *ResourceDir, *KeyDir, *HostName;
 struct Resource *Resources = NULL;
 
 struct StringTable {
-  QUAD id;
+  long id;
   int lines;
   char **strings;
   struct StringTable *next;
 } *StringTables;
 
 
-Handle GetResource(char *name, QUAD id)
+Handle GetResource(char *name, long id)
 {
   struct Resource *r = Resources;
   char fname[256];
@@ -135,7 +135,7 @@ ReleaseResource(Handle r)
 }
 
 
-QUAD
+long
 ResourceSize(Handle h)
 {
   struct Resource *r = (struct Resource *)h;
@@ -153,7 +153,7 @@ ResourceName(Handle h)
 }
 
 
-QUAD
+long
 ResourceID(Handle h)
 {
   struct Resource *r = (struct Resource *)h;
@@ -177,7 +177,7 @@ GetIndString(char *str, int id, short num)
     tp = &((*tp)->next);
   }
   if (!st) {
-    QUAD i, lines, size;
+    long i, lines, size;
     char *buf;
 
     st = (struct StringTable *)ckalloc(sizeof (struct StringTable));

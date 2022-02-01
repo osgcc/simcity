@@ -702,131 +702,112 @@ DoEarthQuake(void)
 }
 
 
-StopToolkit()
+int Eval(char* buf)
 {
-  if (tk_mainInterp != NULL) {
-    Eval("catch {DoStopMicropolis}");
-  }
-}
-
-
-Eval(char *buf)
-{
-  int result = Tcl_Eval(tk_mainInterp, buf, 0, (char **) NULL);
-  if (result != TCL_OK) {
-    char *errorinfo = Tcl_GetVar(tk_mainInterp, "errorInfo",
-				 TCL_GLOBAL_ONLY);
-    if (errorinfo == NULL) errorinfo = "<no backtrace>";
-    fprintf(stderr, "Micropolis: error in TCL code: %s\n%s\n",
-	    tk_mainInterp->result, errorinfo);
-  }
-  return (result);
-}
-
-
-tk_main()
-{
-  char *p, *msg;
-  char buf[20];
-  char initCmd[256];
-  Tk_3DBorder border;
-
-  tk_mainInterp = Tcl_CreateExtendedInterp();
-
-#if 0
-  /* XXX: Figure out Extended TCL */
-  tclAppName     = "Wish";
-  tclAppLongname = "Wish - Tk Shell";
-  tclAppVersion  = TK_VERSION;
-  Tcl_ShellEnvInit (interp, TCLSH_ABORT_STARTUP_ERR,
-                    name,
-                    0, NULL,           /* argv var already set  */
-                    fileName == NULL,  /* interactive?          */
-                    NULL);             /* Standard default file */
-#endif
-
-  MainWindow = Tk_CreateMainWindow(tk_mainInterp, FirstDisplay, "Micropolis");
-  if (MainWindow == NULL) {
-    fprintf(stderr, "%s\n", tk_mainInterp->result);
-    sim_really_exit(1); // Just sets tkMustExit and ExitReturn
-  }
-  Tk_SetClass(MainWindow, "Tk");
-  Tk_CreateEventHandler(MainWindow, StructureNotifyMask,
-			StructureProc, (ClientData) NULL);
-/*  Tk_DoWhenIdle(DelayedMap, (ClientData) NULL); */
-
-  Tk_GeometryRequest(MainWindow, 256, 256);
-  border = Tk_Get3DBorder(tk_mainInterp, MainWindow, None, "gray75");
-  if (border == NULL) {
-    Tcl_SetResult(tk_mainInterp, (char *) NULL, TCL_STATIC);
-    Tk_SetWindowBackground(MainWindow,
-			   WhitePixelOfScreen(Tk_Screen(MainWindow)));
-  } else {
-    Tk_SetBackgroundFromBorder(MainWindow, border);
-  }
-  XSetForeground(Tk_Display(MainWindow),
-		 DefaultGCOfScreen(Tk_Screen(MainWindow)),
-		 BlackPixelOfScreen(Tk_Screen(MainWindow)));
-
-  sim_command_init();
-  map_command_init();
-  editor_command_init();
-  graph_command_init();
-  date_command_init();
-  sprite_command_init();
-
-#ifdef CAM
-  cam_command_init();
-#endif
-
-  Tcl_CreateCommand(tk_mainInterp, "piemenu", Tk_PieMenuCmd,
-		    (ClientData)MainWindow, (void (*)()) NULL);
-  Tcl_CreateCommand(tk_mainInterp, "interval", Tk_IntervalCmd,
-		    (ClientData)MainWindow, (void (*)()) NULL);
-
-  sim = MakeNewSim();
-
-  sprintf(initCmd, "source %s/micropolis.tcl", ResourceDir);
-  filename2UNIX(initCmd);
-  if (Eval(initCmd)) {
-    sim_exit(1); // Just sets tkMustExit and ExitReturn
-    goto bail;
-  }
-
-  sim_init();
-
-  buffer = Tcl_CreateCmdBuf();
-
-  if (sim_tty) {
-    Tk_CreateFileHandler(0, TK_READABLE, StdinProc, (ClientData) 0);
-  }
-
-  { char buf[1024];
-
-    sprintf(buf, "UIStartMicropolis {%s} {%s} {%s}",
-	    HomeDir, ResourceDir, HostName);
-    filename2UNIX(buf);
-    if (Eval(buf) != TCL_OK) {
-      sim_exit(1); // Just sets tkMustExit and ExitReturn
-      goto bail;
+    /*
+    int result = Tcl_Eval(tk_mainInterp, buf, 0, (char**)NULL);
+    if (result != TCL_OK)
+    {
+        char* errorinfo = Tcl_GetVar(tk_mainInterp, "errorInfo", TCL_GLOBAL_ONLY);
+        if (errorinfo == NULL) errorinfo = "<no backtrace>";
+        fprintf(stderr, "Micropolis: error in TCL code: %s\n%s\n", tk_mainInterp->result, errorinfo);
     }
-  }
+    */
 
-  if (sim_tty) {
-    printf("sim:\n");
-  }
-  fflush(stdout);
+    return 0;
+}
 
-  Tk_MainLoop();
 
-  sim_exit(0); // Just sets tkMustExit and ExitReturn
+void tk_main()
+{
+    char* p, * msg;
+    char buf[20];
+    char initCmd[256];
+    //Tk_3DBorder border;
 
- bail:
+    tk_mainInterp = Tcl_CreateExtendedInterp();
 
-  if (buffer != NULL) {
-    Tcl_DeleteCmdBuf(buffer);
-  }
+    MainWindow = Tk_CreateMainWindow(tk_mainInterp, FirstDisplay, "Micropolis");
+    if (MainWindow == NULL)
+    {
+        fprintf(stderr, "%s\n", tk_mainInterp->result);
+        sim_really_exit(1); // Just sets tkMustExit and ExitReturn
+    }
 
-  Tcl_DeleteInterp(tk_mainInterp);
+    Tk_SetClass(MainWindow, "Tk");
+    Tk_CreateEventHandler(MainWindow, StructureNotifyMask, StructureProc, (ClientData)NULL);
+
+    Tk_GeometryRequest(MainWindow, 256, 256);
+    border = Tk_Get3DBorder(tk_mainInterp, MainWindow, None, "gray75");
+    if (border == NULL)
+    {
+        Tcl_SetResult(tk_mainInterp, (char*)NULL, TCL_STATIC);
+        Tk_SetWindowBackground(MainWindow, WhitePixelOfScreen(Tk_Screen(MainWindow)));
+    }
+    else
+    {
+        Tk_SetBackgroundFromBorder(MainWindow, border);
+    }
+    XSetForeground(Tk_Display(MainWindow), DefaultGCOfScreen(Tk_Screen(MainWindow)), BlackPixelOfScreen(Tk_Screen(MainWindow)));
+
+    sim_command_init();
+    map_command_init();
+    editor_command_init();
+    graph_command_init();
+    date_command_init();
+    sprite_command_init();
+
+    Tcl_CreateCommand(tk_mainInterp, "piemenu", Tk_PieMenuCmd, (ClientData)MainWindow, (void (*)()) NULL);
+    Tcl_CreateCommand(tk_mainInterp, "interval", Tk_IntervalCmd, (ClientData)MainWindow, (void (*)()) NULL);
+
+    sim = MakeNewSim();
+
+    sprintf(initCmd, "source %s/micropolis.tcl", ResourceDir);
+    filename2UNIX(initCmd);
+    if (Eval(initCmd))
+    {
+        sim_exit(1); // Just sets tkMustExit and ExitReturn
+        goto bail;
+    }
+
+    sim_init();
+
+    buffer = Tcl_CreateCmdBuf();
+
+    if (sim_tty)
+    {
+        Tk_CreateFileHandler(0, TK_READABLE, StdinProc, (ClientData)0);
+    }
+
+    {
+        char buf[1024];
+
+        sprintf(buf, "UIStartMicropolis {%s} {%s} {%s}", HomeDir, ResourceDir, HostName);
+        filename2UNIX(buf);
+        if (Eval(buf) != TCL_OK)
+        {
+            sim_exit(1); // Just sets tkMustExit and ExitReturn
+            goto bail;
+        }
+    }
+
+    if (sim_tty)
+    {
+        printf("sim:\n");
+    }
+    fflush(stdout);
+
+    Tk_MainLoop();
+
+    sim_exit(0); // Just sets tkMustExit and ExitReturn
+
+bail:
+
+    if (buffer != NULL)
+    {
+        Tcl_DeleteCmdBuf(buffer);
+    }
+
+    Tcl_DeleteInterp(tk_mainInterp);
 }
 

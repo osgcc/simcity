@@ -624,7 +624,7 @@ DoFreePop (void)
 SetZPower(void)		/* set bit in MapWord depending on powermap  */
 {
   short z;
-  QUAD PowerWrd;
+  long PowerWrd;
 
 /* TestPowerBit was taking alot of time so I inlined it. -Don */
 

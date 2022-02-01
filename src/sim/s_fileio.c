@@ -181,7 +181,7 @@ _load_file(char *filename, char *dir)
 {
   FILE *f;
   char path[512];
-  QUAD size;
+  long size;
 
 #ifdef MSDOS
   if (dir != NULL) {
@@ -249,11 +249,11 @@ int loadFile(char *filename)
   /* total funds is being put in the 50th & 51th word of MiscHis */
   /* find the address, cast the ptr to a lontPtr, take contents */
 
-  l = *(QUAD *)(MiscHis + 50);
+  l = *(long *)(MiscHis + 50);
   HALF_SWAP_LONGS(&l, 1);
   SetFunds(l);
 
-  l = *(QUAD *)(MiscHis + 8);
+  l = *(long *)(MiscHis + 8);
   HALF_SWAP_LONGS(&l, 1);
   CityTime = l;
 
@@ -269,21 +269,21 @@ int loadFile(char *filename)
 
   /* yayaya */
 
-  l = *(QUAD *)(MiscHis + 58);
+  l = *(long *)(MiscHis + 58);
   HALF_SWAP_LONGS(&l, 1);
   policePercent = l / 65536.0;
 
-  l = *(QUAD *)(MiscHis + 60);
+  l = *(long *)(MiscHis + 60);
   HALF_SWAP_LONGS(&l, 1);
   firePercent = l / 65536.0;
 
-  l = *(QUAD *)(MiscHis + 62);
+  l = *(long *)(MiscHis + 62);
   HALF_SWAP_LONGS(&l, 1);
   roadPercent = l / 65536.0;
 
-  policePercent = (*(QUAD*)(MiscHis + 58)) / 65536.0;	/* and 59 */
-  firePercent = (*(QUAD*)(MiscHis + 60)) / 65536.0;	/* and 61 */
-  roadPercent =(*(QUAD*)(MiscHis + 62)) / 65536.0;	/* and 63 */
+  policePercent = (*(long*)(MiscHis + 58)) / 65536.0;	/* and 59 */
+  firePercent = (*(long*)(MiscHis + 60)) / 65536.0;	/* and 61 */
+  roadPercent =(*(long*)(MiscHis + 62)) / 65536.0;	/* and 63 */
 
   if (CityTime < 0)
     CityTime = 0;
@@ -330,11 +330,11 @@ int saveFile(char *filename)
 
   l = TotalFunds;
   HALF_SWAP_LONGS(&l, 1);
-  (*(QUAD *)(MiscHis + 50)) = l;
+  (*(long *)(MiscHis + 50)) = l;
 
   l = CityTime;
   HALF_SWAP_LONGS(&l, 1);
-  (*(QUAD *)(MiscHis + 8)) = l;
+  (*(long *)(MiscHis + 8)) = l;
 
   MiscHis[52] = autoBulldoze;	/* flag for autoBulldoze */
   MiscHis[53] = autoBudget;	/* flag for autoBudget */
@@ -347,15 +347,15 @@ int saveFile(char *filename)
 
   l = (int)(policePercent * 65536);
   HALF_SWAP_LONGS(&l, 1);
-  (*(QUAD *)(MiscHis + 58)) = l;
+  (*(long *)(MiscHis + 58)) = l;
 
   l = (int)(firePercent * 65536);
   HALF_SWAP_LONGS(&l, 1);
-  (*(QUAD *)(MiscHis + 60)) = l;
+  (*(long *)(MiscHis + 60)) = l;
 
   l = (int)(roadPercent * 65536);
   HALF_SWAP_LONGS(&l, 1);
-  (*(QUAD *)(MiscHis + 62)) = l;
+  (*(long *)(MiscHis + 62)) = l;
 
   if ((_save_short(ResHis, HISTLEN / 2, f) == 0) ||
       (_save_short(ComHis, HISTLEN / 2, f) == 0) ||

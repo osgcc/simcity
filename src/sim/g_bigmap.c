@@ -75,7 +75,7 @@ MemDrawBeegMapRect(SimView *view, int x, int y, int w, int h)
 {
   int lineBytes = view->line_bytes;
   int pixelBytes = view->pixel_bytes;
-  QUAD ii, mm;
+  long ii, mm;
   unsigned short *map;
   unsigned short tile;
   unsigned char blink = (flagBlink <= 0), *bt = view->bigtiles;
@@ -102,10 +102,10 @@ MemDrawBeegMapRect(SimView *view, int x, int y, int w, int h)
   }
 
   if (view->x->color) {
-    register unsigned QUAD *image, *mem;
+    register unsigned long *image, *mem;
 
-    image = (unsigned QUAD *)view->data;
-    ii = ((lineBytes * h * 16) - 16) / sizeof(unsigned QUAD);
+    image = (unsigned long *)view->data;
+    ii = ((lineBytes * h * 16) - 16) / sizeof(unsigned long);
     map = (unsigned short *)&Map[x][y];
     mm = WORLD_Y - h;
     have = view->tiles;
@@ -116,7 +116,7 @@ MemDrawBeegMapRect(SimView *view, int x, int y, int w, int h)
 
     for (col = 0; col < w; col++) {
       ha = &have[col][0];
-      image = (unsigned QUAD *)(view->data + (col * 16 * pixelBytes));
+      image = (unsigned long *)(view->data + (col * 16 * pixelBytes));
       for (row = 0; row < h; row++, ha++) {
 	tile = *(map++);
 	if ((tile & LOMASK) >= TILE_COUNT) tile -= TILE_COUNT;
@@ -138,11 +138,11 @@ MemDrawBeegMapRect(SimView *view, int x, int y, int w, int h)
 
 	/* XXX */
 	if (tile == *ha) {
-	  image = (unsigned QUAD *)(((unsigned char *)image) +
+	  image = (unsigned long *)(((unsigned char *)image) +
 				    (lineBytes * 16));
 	} else {
 	  *ha = tile;
-	  mem = (unsigned QUAD *)&(bt[tile * 256 * pixelBytes]);
+	  mem = (unsigned long *)&(bt[tile * 256 * pixelBytes]);
 
 	  /* XXX: handle depth for big tiles */
 #if 1
@@ -153,7 +153,7 @@ MemDrawBeegMapRect(SimView *view, int x, int y, int w, int h)
 	  image[1] = mem[1+n]; \
 	  image[2] = mem[2+n]; \
 	  image[3] = mem[3+n]; \
-	  image = (unsigned QUAD *)(((unsigned char *)image) + lineBytes);
+	  image = (unsigned long *)(((unsigned char *)image) + lineBytes);
 
 #define ROW2_8(n) ROW1_8(n) ROW1_8(n+4)
 #define ROW4_8(n) ROW2_8(n) ROW2_8(n+8)
@@ -162,7 +162,7 @@ MemDrawBeegMapRect(SimView *view, int x, int y, int w, int h)
 
 #define ROW1_16(n) \
       memcpy((char *)image, (char *)mem + (2 * 16 * (n)), 2 * 16); \
-      image = (unsigned QUAD *)(((unsigned char *)image) + lineBytes);
+      image = (unsigned long *)(((unsigned char *)image) + lineBytes);
 
 #define ROW2_16(n) ROW1_16(n) ROW1_16(n+1)
 #define ROW4_16(n) ROW2_16(n) ROW2_16(n+2)
@@ -195,7 +195,7 @@ MemDrawBeegMapRect(SimView *view, int x, int y, int w, int h)
 	    for (i = 16; i > 0; i--) {
 	      image[0] = mem[0]; image[1] = mem[1];
 	      image[2] = mem[2]; image[3] = mem[3];
-	      image = (unsigned QUAD *)(((unsigned char *)image) + lineBytes);
+	      image = (unsigned long *)(((unsigned char *)image) + lineBytes);
 	      mem += 4;
 	    }
 	  } // scope
@@ -258,7 +258,7 @@ WireDrawBeegMapRect(SimView *view, short x, short y, short w, short h)
   unsigned short tile;
   unsigned char blink = (flagBlink <= 0);
   short col, row;
-  QUAD mm;
+  long mm;
   short **have, *ha;
 
   if (x < view->tile_x) {

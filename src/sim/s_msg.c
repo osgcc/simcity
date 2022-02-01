@@ -62,7 +62,7 @@
 #include "sim.h"
 
 
-QUAD LastCityPop;
+long LastCityPop;
 short LastCategory;
 short LastPicNum;
 short autoGo;
@@ -188,7 +188,7 @@ SendMessages(void)
 /* comefrom: SendMessages */
 CheckGrowth(void)
 {
-  QUAD ThisCityPop;
+  long ThisCityPop;
   short z;
 
   if (!(CityTime & 3)) {

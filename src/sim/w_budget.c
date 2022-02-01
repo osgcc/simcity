@@ -65,12 +65,12 @@
 float roadPercent = 0.0;
 float policePercent = 0.0;
 float firePercent = 0.0;
-QUAD roadValue;
-QUAD policeValue;
-QUAD fireValue;
-QUAD roadMaxValue;
-QUAD policeMaxValue;
-QUAD fireMaxValue;
+long roadValue;
+long policeValue;
+long fireValue;
+long roadMaxValue;
+long policeMaxValue;
+long fireMaxValue;
 int MustDrawCurrPercents = 0;
 int MustDrawBudgetWindow = 0;
 int SetBudget(char *flowStr, char *previousStr,
@@ -104,10 +104,10 @@ DoBudgetFromMenu()
 
 DoBudgetNow(int fromMenu)
 {
-  QUAD yumDuckets;
-  QUAD total;
-  QUAD moreDough;
-  QUAD fireInt, policeInt, roadInt;
+  long yumDuckets;
+  long total;
+  long moreDough;
+  long fireInt, policeInt, roadInt;
 
   fireInt = (int)(((float)FireFund) * firePercent);
   policeInt = (int)(((float)PoliceFund) * policePercent);
@@ -190,7 +190,7 @@ DoBudgetNow(int fromMenu)
       RoadSpend = roadValue;
 
       total = FireSpend + PoliceSpend + RoadSpend;
-      moreDough = (QUAD)(TaxFund - total);
+      moreDough = (long)(TaxFund - total);
       Spend(-moreDough);
     }
     drawBudgetWindow();
@@ -199,7 +199,7 @@ DoBudgetNow(int fromMenu)
 
   } else { /* autoBudget & !fromMenu */
     if ((yumDuckets) > total) {
-      moreDough = (QUAD)(TaxFund - total);
+      moreDough = (long)(TaxFund - total);
       Spend(-moreDough);
       FireSpend = FireFund;
       PoliceSpend = PoliceFund;

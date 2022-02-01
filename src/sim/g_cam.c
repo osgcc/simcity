@@ -625,7 +625,7 @@ n_heat(Cam *cam)
   int frob = cam->frob;
 
 #define HEAT (								\
-	((QUAD)(NORTHWEST + NORTH + NORTHEAST +				\
+	((long)(NORTHWEST + NORTH + NORTHEAST +				\
 		WEST + EAST +						\
 		SOUTHWEST + SOUTH + SOUTHEAST + frob)) >> 3	\
     )
@@ -657,7 +657,7 @@ n_lheat(Cam *cam)
   int frob = cam->frob;
 
 #define LHEAT (								\
-	((QUAD)(NORTH + WEST + EAST + SOUTH + frob)) >> 2		\
+	((long)(NORTH + WEST + EAST + SOUTH + frob)) >> 2		\
     )
 
     CAM_LOOP(LHEAT)
@@ -671,7 +671,7 @@ n_ldheat(Cam *cam)
   int last; /* I meant to do that! */
 
 #define LDHEAT (							\
-	((last = (QUAD)(NORTH + WEST + EAST + SOUTH + frob		\
+	((last = (long)(NORTH + WEST + EAST + SOUTH + frob		\
 			+ (last&0x03))), last >> 2)			\
   )
 
@@ -685,15 +685,15 @@ n_abdheat(Cam *cam)
   int frob = cam->frob;
   int lasta = 0, lastb = 0; /* I meant to do that! */
 
-#define YUM(x) (((QUAD)(x))&0x0f)
-#define YUK(x) (((QUAD)(x))&0xf0)
+#define YUM(x) (((long)(x))&0x0f)
+#define YUK(x) (((long)(x))&0xf0)
 
 #define ABDHEAT (							\
-	(lasta = (QUAD)(YUM(NORTHWEST) + YUM(NORTH) + YUM(NORTHEAST) +	\
+	(lasta = (long)(YUM(NORTHWEST) + YUM(NORTH) + YUM(NORTHEAST) +	\
 			YUM(WEST) + YUM(EAST) +				\
 			YUM(SOUTHWEST) + YUM(SOUTH) + YUM(SOUTHEAST) +	\
 			frob + (lasta&0x07))),			\
-	(lastb = (QUAD)(YUK(NORTHWEST) + YUK(NORTH) + YUK(NORTHEAST) +	\
+	(lastb = (long)(YUK(NORTHWEST) + YUK(NORTH) + YUK(NORTHEAST) +	\
 			YUK(WEST) + YUK(EAST) +				\
 			YUK(SOUTHWEST) + YUK(SOUTH) + YUK(SOUTHEAST) +	\
 			(frob<<4) + (lastb&0x70))),		\
@@ -721,7 +721,7 @@ n_edheat(Cam *cam)
   int last = 0;
 
 #define EDHEAT (							\
-	(last = (QUAD)(YUM(NORTHWEST) + YUM(NORTH) + YUM(NORTHEAST) +	\
+	(last = (long)(YUM(NORTHWEST) + YUM(NORTH) + YUM(NORTHEAST) +	\
 		       YUM(WEST) + YUM(EAST) +				\
 		       YUM(SOUTHWEST) + YUM(SOUTH) + YUM(SOUTHEAST) +	\
 		       frob + (last&0x07))),			\
@@ -732,7 +732,7 @@ n_edheat(Cam *cam)
 }
 
 
-int ranch(QUAD l0, QUAD l1, QUAD l2)
+int ranch(long l0, long l1, long l2)
 {
   int s = SUM8;
   int v = SUM9p(1);
@@ -1081,7 +1081,7 @@ cam_set_neighborhood(Cam *cam, int code)
 cam_load_rule(Cam *cam, char *filename)
 {
   FILE *fp;
-  QUAD magic, neighborhood, rule_size;
+  long magic, neighborhood, rule_size;
   Byte *rule;
 
   if ((fp = fopen(filename, "r")) == NULL) {
@@ -1093,24 +1093,24 @@ cam_load_rule(Cam *cam, char *filename)
 
 #if defined(MSDOS) || defined(OSF1) || defined(IS_INTEL)
 
-#define SWAPQUAD(x) ((x = ((x <<24) & 0xff000000) | \
+#define SWAPlong(x) ((x = ((x <<24) & 0xff000000) | \
 			  ((x <<8)  & 0x00ff0000) | \
 			  ((x >>8)  & 0x0000ff00) | \
 			  ((x >>24) & 0x000000ff)), 0)
 
 #else
 
-#define SWAPQUAD(x) 0
+#define SWAPlong(x) 0
 
 #endif
 
-  if ((fread(&magic, 1, sizeof(QUAD), fp) != sizeof(QUAD)) ||
-      SWAPQUAD(magic) ||
+  if ((fread(&magic, 1, sizeof(long), fp) != sizeof(long)) ||
+      SWAPlong(magic) ||
       (magic != 0xcac0cac0) ||
-      (fread(&neighborhood, 1, sizeof(QUAD), fp) != sizeof(QUAD)) ||
-      SWAPQUAD(neighborhood) ||
-      (fread(&rule_size, 1, sizeof(QUAD), fp) != sizeof(QUAD)) ||
-      SWAPQUAD(rule_size) ||
+      (fread(&neighborhood, 1, sizeof(long), fp) != sizeof(long)) ||
+      SWAPlong(neighborhood) ||
+      (fread(&rule_size, 1, sizeof(long), fp) != sizeof(long)) ||
+      SWAPlong(rule_size) ||
       ((rule = (Byte *)malloc(rule_size)) == NULL) ||
       (fread(rule, 1, rule_size, fp) != rule_size)) {
     fprintf(stderr, "cam: Bad rule file \"%s\"\n", filename);

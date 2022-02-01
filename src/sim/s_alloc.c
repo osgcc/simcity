@@ -79,7 +79,7 @@ short CoalPop, NuclearPop, PortPop, APortPop;
 short NeedHosp, NeedChurch;
 short CrimeAverage, PolluteAverage, LVAverage;
 
-QUAD CityTime;
+long CityTime;
 short StartingYear;
 
 short *Map[WORLD_X];
@@ -92,10 +92,10 @@ short CensusChanged;
 short MessagePort;
 short MesX, MesY;
 
-QUAD RoadSpend, PoliceSpend, FireSpend;
-QUAD RoadFund, PoliceFund, FireFund;
+long RoadSpend, PoliceSpend, FireSpend;
+long RoadFund, PoliceFund, FireFund;
 short RoadEffect, PoliceEffect, FireEffect;
-QUAD TaxFund; 
+long TaxFund; 
 short CityTax, TaxFlag;
 unsigned char tileSynch = 0x01;
 

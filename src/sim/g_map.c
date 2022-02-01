@@ -391,7 +391,7 @@ drawRect(SimView *view, int pixel, int solid,
     /* In the case of black and white, we use an 8 bit buffer and dither it. */
     int pixelBytes = 
       view->x->color ? view->pixel_bytes : 1;
-    QUAD line = 
+    long line = 
       view->x->color ? view->line_bytes : view->line_bytes8;
 
     unsigned char *image =

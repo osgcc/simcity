@@ -67,7 +67,7 @@
 
 int PowerStackNum;
 char PowerStackX[PWRSTKSIZE], PowerStackY[PWRSTKSIZE];
-QUAD MaxPower, NumPower;
+long MaxPower, NumPower;
 
 
 /* comefrom: TestForCond DoPowerScan TryGo */
