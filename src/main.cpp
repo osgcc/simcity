@@ -66,6 +66,7 @@
 #include "s_alloc.h"
 #include "s_gen.h"
 #include "s_init.h"
+#include "s_sim.h"
 
 #include "w_budget.h"
 #include "w_editor.h"
@@ -73,11 +74,13 @@
 #include "w_graph.h"
 #include "w_map.h"
 #include "w_sound.h"
+#include "w_sprite.h"
 #include "w_stubs.h"
 #include "w_tk.h"
 #include "w_update.h"
 #include "w_x.h"
 
+#include <iostream>
 #include <string>
 
 
@@ -305,27 +308,6 @@ void sim_update_evaluations()
 }
 
 
-#ifdef CAM
-
-sim_update_cams(void)
-{
-  SimCam *scam;
-
-  if ((sim_skips != 0) &&
-      (sim_skip != 0)) {
-    return;
-  }
-
-  for (scam = sim->scam; scam != nullptr; scam = scam->next) {
-    CancelRedrawView(scam);
-    scam->invalid = 1;
-    handle_scam(scam);
-  }
-}
-
-#endif /* CAM */
-
-
 short *CellSrc = nullptr;
 short *CellDst = nullptr;
 
@@ -547,30 +529,17 @@ void sim_loop(int doSim)
 }
 
 
-int
-MatchArg(char *arg, char *pat)
-{
-  while (*pat && *arg) {
-    if (tolower(*arg) != tolower(*pat)) {
-      if (*pat == '_') {
-	pat++;
-	continue;
-      }
-      return (0);
-    }
-    arg++; pat++;
-  }
-  return (*arg == '\0');
-}
-
-
 int main(int argc, char* argv[])
 {
-    int c, errflg = 0;
-    extern int isatty();
-
     printf("Welcome to X11 Multi Player Micropolis version %s by Will Wright, Don Hopkins.\n", MicropolisVersion);
     printf("Copyright (C) 2002 by Electronic Arts, Maxis. All rights reserved.\n");
+
+
+    std::cout << "Starting Micropolis-SDL2 version " << MicropolisVersion << " originally by Will Wright and Don Hopkins." << std::endl;
+    std::cout << "Original code Copyright © 2002 by Electronic Arts, Maxis. Released under the GPL v3" << std::endl;
+    std::cout << "Modifications Copyright © 2022 by Leeor Dicker. Available under the terms of the GPL v3" << std::endl << std::endl;
+    std::cout << "Micropolis-SDL2 is not afiliated with Electronic Arts." << std::endl;
+
 
     /*
     while (!errflg && !tkMustExit && (c = getopt(argc, argv, "tcwmSR:gs:l:")) != -1)

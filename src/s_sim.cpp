@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
 
 /* Simulation */
@@ -86,151 +86,153 @@ short DoInitialEval = 0;
 short MeltX, MeltY;
 
 
-/* comefrom: doEditWindow scoreDoer doMapInFront graphDoer doNilEvent */
-SimFrame(void)
+void SimFrame()
 {
-  short i;
+    short i;
 
-  if (SimSpeed == 0)
-    return;
+    if (SimSpeed == 0)
+        return;
 
-  if (++Spdcycle > 1023)
-    Spdcycle = 0;
+    if (++Spdcycle > 1023)
+        Spdcycle = 0;
 
-  if (SimSpeed == 1 && Spdcycle % 5)
-    return;
+    if (SimSpeed == 1 && Spdcycle % 5)
+        return;
 
-  if (SimSpeed == 2 && Spdcycle % 3)
-    return;
+    if (SimSpeed == 2 && Spdcycle % 3)
+        return;
 
-  if (++Fcycle > 1023) Fcycle = 0;
-/*  if (InitSimLoad) Fcycle = 0; */
-  Simulate(Fcycle & 15);
+    if (++Fcycle > 1023) Fcycle = 0;
+    Simulate(Fcycle & 15);
 }
 
 
-/* comefrom: SimFrame */
-Simulate(int mod16)
+void Simulate(int mod16)
 {
-  static short SpdPwr[4] = { 1,  2,  4,  5 };
-  static short SpdPtl[4] = { 1,  2,  7, 17 };
-  static short SpdCri[4] = { 1,  1,  8, 18 };
-  static short SpdPop[4] = { 1,  1,  9, 19 };
-  static short SpdFir[4] = { 1,  1, 10, 20 };
-  short x;
+    static short SpdPwr[4] = { 1,  2,  4,  5 };
+    static short SpdPtl[4] = { 1,  2,  7, 17 };
+    static short SpdCri[4] = { 1,  1,  8, 18 };
+    static short SpdPop[4] = { 1,  1,  9, 19 };
+    static short SpdFir[4] = { 1,  1, 10, 20 };
+    short x;
 
-  x = SimSpeed;
-  if (x > 3) x = 3;
+    x = SimSpeed;
+    if (x > 3) x = 3;
 
-  switch (mod16)  {
+    switch (mod16)
+    {
     case 0:
-      if (++Scycle > 1023) Scycle = 0;	/* this is cosmic */
-      if (DoInitialEval) {
-	DoInitialEval = 0;
-	CityEvaluation();
-      }
-      CityTime++;
-      AvCityTax += CityTax;		/* post */
-      if (!(Scycle & 1)) SetValves();
-      ClearCensus();
-      break;
+        if (++Scycle > 1023) Scycle = 0;	/* this is cosmic */
+        if (DoInitialEval)
+        {
+            DoInitialEval = 0;
+            CityEvaluation();
+        }
+        CityTime++;
+        AvCityTax += CityTax;		/* post */
+        if (!(Scycle & 1)) SetValves();
+        ClearCensus();
+        break;
     case 1:
-      MapScan(0, 1 * WORLD_X / 8);
-      break;
+        MapScan(0, 1 * WORLD_X / 8);
+        break;
     case 2:
-      MapScan(1 * WORLD_X / 8, 2 * WORLD_X / 8);
-      break;
+        MapScan(1 * WORLD_X / 8, 2 * WORLD_X / 8);
+        break;
     case 3:
-      MapScan(2 * WORLD_X / 8, 3 * WORLD_X / 8);
-      break;
+        MapScan(2 * WORLD_X / 8, 3 * WORLD_X / 8);
+        break;
     case 4:
-      MapScan(3 * WORLD_X / 8, 4 * WORLD_X / 8);
-      break;
+        MapScan(3 * WORLD_X / 8, 4 * WORLD_X / 8);
+        break;
     case 5:
-      MapScan(4 * WORLD_X / 8, 5 * WORLD_X / 8);
-      break;
+        MapScan(4 * WORLD_X / 8, 5 * WORLD_X / 8);
+        break;
     case 6:
-      MapScan(5 * WORLD_X / 8, 6 * WORLD_X / 8);
-      break;
+        MapScan(5 * WORLD_X / 8, 6 * WORLD_X / 8);
+        break;
     case 7:
-      MapScan(6 * WORLD_X / 8, 7 * WORLD_X / 8);
-      break;
+        MapScan(6 * WORLD_X / 8, 7 * WORLD_X / 8);
+        break;
     case 8:
-      MapScan(7 * WORLD_X / 8, WORLD_X);
-      break;
+        MapScan(7 * WORLD_X / 8, WORLD_X);
+        break;
     case 9:
-      if (!(CityTime % CENSUSRATE)) TakeCensus();
-      if (!(CityTime % (CENSUSRATE * 12))) Take2Census();
+        if (!(CityTime % CENSUSRATE)) TakeCensus();
+        if (!(CityTime % (CENSUSRATE * 12))) Take2Census();
 
-      if (!(CityTime % TAXFREQ))  {
-	CollectTax();
-	CityEvaluation();
-      }
-      break;
+        if (!(CityTime % TAXFREQ))
+        {
+            CollectTax();
+            CityEvaluation();
+        }
+        break;
     case 10:
-      if (!(Scycle % 5)) DecROGMem();
-      DecTrafficMem();
-      NewMapFlags[TDMAP] = 1;
-      NewMapFlags[RDMAP] = 1;
-      NewMapFlags[ALMAP] = 1;
-      NewMapFlags[REMAP] = 1;
-      NewMapFlags[COMAP] = 1;
-      NewMapFlags[INMAP] = 1;
-      NewMapFlags[DYMAP] = 1;
-      SendMessages();
-      break;
+        if (!(Scycle % 5)) DecROGMem();
+        DecTrafficMem();
+        NewMapFlags[TDMAP] = 1;
+        NewMapFlags[RDMAP] = 1;
+        NewMapFlags[ALMAP] = 1;
+        NewMapFlags[REMAP] = 1;
+        NewMapFlags[COMAP] = 1;
+        NewMapFlags[INMAP] = 1;
+        NewMapFlags[DYMAP] = 1;
+        SendMessages();
+        break;
     case 11:
-      if (!(Scycle % SpdPwr[x])) {
-	DoPowerScan();
-	NewMapFlags[PRMAP] = 1;
-	NewPower = 1; /* post-release change */
-      }
-      break;
+        if (!(Scycle % SpdPwr[x]))
+        {
+            DoPowerScan();
+            NewMapFlags[PRMAP] = 1;
+            NewPower = 1; /* post-release change */
+        }
+        break;
     case 12:
-      if (!(Scycle % SpdPtl[x])) PTLScan();
-      break;
+        if (!(Scycle % SpdPtl[x])) PTLScan();
+        break;
     case 13:
-      if (!(Scycle % SpdCri[x])) CrimeScan();
-      break;
+        if (!(Scycle % SpdCri[x])) CrimeScan();
+        break;
     case 14:
-      if (!(Scycle % SpdPop[x])) PopDenScan();
-      break;
+        if (!(Scycle % SpdPop[x])) PopDenScan();
+        break;
     case 15:
-      if (!(Scycle % SpdFir[x])) FireAnalysis();
-      DoDisasters();	
-      break;
-  }
+        if (!(Scycle % SpdFir[x])) FireAnalysis();
+        DoDisasters();
+        break;
+    }
 }
 
 
-/* comefrom: Simulate */
-DoSimInit(void)
+void DoSimInit()
 {
-  Fcycle = 0;
-  Scycle = 0;
+    Fcycle = 0;
+    Scycle = 0;
 
-  if (InitSimLoad == 2) 			/* if new city    */
-    InitSimMemory();
+    if (InitSimLoad == 2) 			/* if new city    */
+    {
+        InitSimMemory();
+    }
 
-  if (InitSimLoad == 1)  			/* if city just loaded  */
-    SimLoadInit();
+    if (InitSimLoad == 1)  			/* if city just loaded  */
+    {
+        SimLoadInit();
+    }
 
-  SetValves();
-  ClearCensus();
-#if 1
-  MapScan(0, WORLD_X); /* XXX are you sure ??? */
-#endif
-  DoPowerScan();
-  NewPower = 1;		/* post rel */
-  PTLScan();
-  CrimeScan();
-  PopDenScan();
-  FireAnalysis();
-  NewMap = 1;
-  doAllGraphs();
-  NewGraph = 1;
-  TotalPop = 1;
-  DoInitialEval = 1;
+    SetValves();
+    ClearCensus();
+    MapScan(0, WORLD_X); /* XXX are you sure ??? */
+    DoPowerScan();
+    NewPower = 1;		/* post rel */
+    PTLScan();
+    CrimeScan();
+    PopDenScan();
+    FireAnalysis();
+    NewMap = 1;
+    doAllGraphs();
+    NewGraph = 1;
+    TotalPop = 1;
+    DoInitialEval = 1;
 }
 
 
