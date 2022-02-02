@@ -18,6 +18,64 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\g_ani.c" />
+    <ClCompile Include="src\g_bigmap.c" />
+    <ClCompile Include="src\g_cam.c" />
+    <ClCompile Include="src\g_map.c" />
+    <ClCompile Include="src\g_setup.c" />
+    <ClCompile Include="src\g_smmaps.c" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\rand.c" />
+    <ClCompile Include="src\random.c" />
+    <ClCompile Include="src\s_alloc.c" />
+    <ClCompile Include="src\s_disast.c" />
+    <ClCompile Include="src\s_eval.c" />
+    <ClCompile Include="src\s_fileio.c" />
+    <ClCompile Include="src\s_gen.c" />
+    <ClCompile Include="src\s_init.c" />
+    <ClCompile Include="src\s_msg.c" />
+    <ClCompile Include="src\s_power.c" />
+    <ClCompile Include="src\s_scan.c" />
+    <ClCompile Include="src\s_sim.c" />
+    <ClCompile Include="src\s_traf.c" />
+    <ClCompile Include="src\s_zone.c" />
+    <ClCompile Include="src\terrain\mapgener.c" />
+    <ClCompile Include="src\terrain\terra.c" />
+    <ClCompile Include="src\terrain\terragen.c" />
+    <ClCompile Include="src\w_budget.c" />
+    <ClCompile Include="src\w_cam.c" />
+    <ClCompile Include="src\w_con.c" />
+    <ClCompile Include="src\w_date.c" />
+    <ClCompile Include="src\w_editor.c" />
+    <ClCompile Include="src\w_eval.c" />
+    <ClCompile Include="src\w_graph.c" />
+    <ClCompile Include="src\w_inter.c" />
+    <ClCompile Include="src\w_keys.c" />
+    <ClCompile Include="src\w_map.c" />
+    <ClCompile Include="src\w_net.c" />
+    <ClCompile Include="src\w_piem.c" />
+    <ClCompile Include="src\w_print.c" />
+    <ClCompile Include="src\w_resrc.c" />
+    <ClCompile Include="src\w_sim.c" />
+    <ClCompile Include="src\w_sound.c" />
+    <ClCompile Include="src\w_sprite.c" />
+    <ClCompile Include="src\w_stubs.c" />
+    <ClCompile Include="src\w_tk.c" />
+    <ClCompile Include="src\w_tool.c" />
+    <ClCompile Include="src\w_update.c" />
+    <ClCompile Include="src\w_util.c" />
+    <ClCompile Include="src\w_x.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\animtab.h" />
+    <ClInclude Include="src\cam.h" />
+    <ClInclude Include="src\mac.h" />
+    <ClInclude Include="src\macros.h" />
+    <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\view.h" />
+    <ClInclude Include="src\w_x.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -141,66 +199,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="src\sim\g_ani.c" />
-    <ClCompile Include="src\sim\g_bigmap.c" />
-    <ClCompile Include="src\sim\g_cam.c" />
-    <ClCompile Include="src\sim\g_map.c" />
-    <ClCompile Include="src\sim\g_setup.c" />
-    <ClCompile Include="src\sim\g_smmaps.c" />
-    <ClCompile Include="src\sim\main.cpp" />
-    <ClCompile Include="src\sim\rand.c" />
-    <ClCompile Include="src\sim\random.c" />
-    <ClCompile Include="src\sim\s_alloc.c" />
-    <ClCompile Include="src\sim\s_disast.c" />
-    <ClCompile Include="src\sim\s_eval.c" />
-    <ClCompile Include="src\sim\s_fileio.c" />
-    <ClCompile Include="src\sim\s_gen.c" />
-    <ClCompile Include="src\sim\s_init.c" />
-    <ClCompile Include="src\sim\s_msg.c" />
-    <ClCompile Include="src\sim\s_power.c" />
-    <ClCompile Include="src\sim\s_scan.c" />
-    <ClCompile Include="src\sim\s_sim.c" />
-    <ClCompile Include="src\sim\s_traf.c" />
-    <ClCompile Include="src\sim\s_zone.c" />
-    <ClCompile Include="src\sim\terrain\mapgener.c" />
-    <ClCompile Include="src\sim\terrain\terra.c" />
-    <ClCompile Include="src\sim\terrain\terragen.c" />
-    <ClCompile Include="src\sim\w_budget.c" />
-    <ClCompile Include="src\sim\w_cam.c" />
-    <ClCompile Include="src\sim\w_con.c" />
-    <ClCompile Include="src\sim\w_date.c" />
-    <ClCompile Include="src\sim\w_editor.c" />
-    <ClCompile Include="src\sim\w_eval.c" />
-    <ClCompile Include="src\sim\w_graph.c" />
-    <ClCompile Include="src\sim\w_inter.c" />
-    <ClCompile Include="src\sim\w_keys.c" />
-    <ClCompile Include="src\sim\w_map.c" />
-    <ClCompile Include="src\sim\w_net.c" />
-    <ClCompile Include="src\sim\w_piem.c" />
-    <ClCompile Include="src\sim\w_print.c" />
-    <ClCompile Include="src\sim\w_resrc.c" />
-    <ClCompile Include="src\sim\w_sim.c" />
-    <ClCompile Include="src\sim\w_sound.c" />
-    <ClCompile Include="src\sim\w_sprite.c" />
-    <ClCompile Include="src\sim\w_stubs.c" />
-    <ClCompile Include="src\sim\w_tk.c" />
-    <ClCompile Include="src\sim\w_tool.c" />
-    <ClCompile Include="src\sim\w_update.c" />
-    <ClCompile Include="src\sim\w_util.c" />
-    <ClCompile Include="src\sim\w_x.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\sim\makefile" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\sim\animtab.h" />
-    <ClInclude Include="src\sim\cam.h" />
-    <ClInclude Include="src\sim\mac.h" />
-    <ClInclude Include="src\sim\macros.h" />
-    <ClInclude Include="src\sim\main.h" />
-    <ClInclude Include="src\sim\view.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
