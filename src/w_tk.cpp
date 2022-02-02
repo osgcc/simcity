@@ -102,7 +102,7 @@ int ConfigureTileView(Tcl_Interp *interp, SimView *view,
 static void TileViewEventProc(ClientData clientData, XEvent *eventPtr);
 static void DestroyTileView(ClientData clientData);
 
-int ConfigureSimGraph(Tcl_Interp *interp, SimGraph *graph,
+int ConfigureSimGraph(Tcl_Interp *interp, Graph *graph,
 		      int argc, char **argv, int flags);
 
 static void MicropolisTimerProc(ClientData clientData);

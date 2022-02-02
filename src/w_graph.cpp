@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
 
 short NewGraph = 0;
@@ -80,17 +80,17 @@ int GraphUpdateTime = 100;
 
 Tk_ConfigSpec GraphConfigSpecs[] = {
     {TK_CONFIG_FONT, "-font", (char *) NULL, (char *) NULL,
-       DEF_GRAPH_FONT, Tk_Offset(SimGraph, fontPtr), 0},
+       DEF_GRAPH_FONT, Tk_Offset(Graph, fontPtr), 0},
     {TK_CONFIG_BORDER, "-background", "background", "Background",
-       DEF_GRAPH_BG_COLOR, Tk_Offset(SimGraph, border),
+       DEF_GRAPH_BG_COLOR, Tk_Offset(Graph, border),
        TK_CONFIG_COLOR_ONLY},
     {TK_CONFIG_BORDER, "-background", "background", "Background",
-       DEF_GRAPH_BG_MONO, Tk_Offset(SimGraph, border),
+       DEF_GRAPH_BG_MONO, Tk_Offset(Graph, border),
        TK_CONFIG_MONO_ONLY},
     {TK_CONFIG_PIXELS, "-borderwidth", "borderWidth", "BorderWidth",
-       DEF_GRAPH_BORDER_WIDTH, Tk_Offset(SimGraph, borderWidth), 0},
+       DEF_GRAPH_BORDER_WIDTH, Tk_Offset(Graph, borderWidth), 0},
     {TK_CONFIG_RELIEF, "-relief", "relief", "Relief",
-       DEF_GRAPH_RELIEF, Tk_Offset(SimGraph, relief), 0},
+       DEF_GRAPH_RELIEF, Tk_Offset(Graph, relief), 0},
     {TK_CONFIG_END, (char *) NULL, (char *) NULL, (char *) NULL,
        (char *) NULL, 0, 0}
   };
@@ -102,7 +102,7 @@ XDisplay *FindXDisplay();
 static void
 DisplaySimGraph(ClientData clientData)
 {
-  SimGraph *graph = (SimGraph *) clientData;
+  Graph *graph = (Graph *) clientData;
   Tk_Window tkwin = graph->tkwin;
   Pixmap pm = None;
   Drawable d;
@@ -127,13 +127,13 @@ DisplaySimGraph(ClientData clientData)
 void
 DestroySimGraph(ClientData clientData)
 {
-  SimGraph *graph = (SimGraph *) clientData;
+  Graph *graph = (Graph *) clientData;
 
   DestroyGraph(graph);
 }
 
 
-EventuallyRedrawGraph(SimGraph *graph)
+EventuallyRedrawGraph(Graph *graph)
 {
   if (!(graph->flags & VIEW_REDRAW_PENDING)) {
     assert(graph->draw_graph_token == 0);
@@ -153,7 +153,7 @@ EventuallyRedrawGraph(SimGraph *graph)
 void
 SimGraphEventProc(ClientData clientData, XEvent *eventPtr)
 {
-  SimGraph *graph = (SimGraph *) clientData;
+  Graph *graph = (Graph *) clientData;
 
   if ((eventPtr->type == Expose) && (eventPtr->xexpose.count == 0)) {
     graph->visible = 1;
@@ -327,7 +327,7 @@ int GraphCmdMask(GRAPH_ARGS)
 int
 DoGraphCmd(CLIENT_ARGS)
 {
-  SimGraph *graph = (SimGraph *) clientData;
+  Graph *graph = (Graph *) clientData;
   Tcl_HashEntry *ent;
   int result = TCL_OK;
   int (*cmd)();
@@ -353,7 +353,7 @@ DoGraphCmd(CLIENT_ARGS)
 int
 GraphViewCmd(CLIENT_ARGS)
 {
-  SimGraph *graph;
+  Graph *graph;
   Tk_Window tkwin = (Tk_Window) clientData;
 
   if (argc < 2) {
@@ -368,7 +368,7 @@ GraphViewCmd(CLIENT_ARGS)
     return TCL_ERROR;
   }
 
-  graph = (SimGraph *)malloc(sizeof (SimGraph));
+  graph = (Graph *)malloc(sizeof (Graph));
 
   graph->tkwin = tkwin;
   graph->interp = interp;
@@ -406,7 +406,7 @@ GraphViewCmd(CLIENT_ARGS)
 
 
 int
-ConfigureSimGraph(Tcl_Interp *interp, SimGraph *graph,
+ConfigureSimGraph(Tcl_Interp *interp, Graph *graph,
 		  int argc, char **argv, int flags)
 {
   if (Tk_ConfigureWidget(interp, graph->tkwin, GraphConfigSpecs,
@@ -538,7 +538,7 @@ void graphDoer()
 
     if (NewGraph)
     {
-        for (SimGraph* graph = sim->graph; graph != NULL; graph = graph->next)
+        for (Graph* graph = sim->graph; graph != NULL; graph = graph->next)
         {
             EventuallyRedrawGraph(graph);
         }
@@ -550,7 +550,7 @@ void graphDoer()
 void initGraphs()
 {
   int i;
-  SimGraph *graph;
+  Graph *graph;
 
   for (graph = sim->graph; graph != NULL; graph = graph->next) {
     graph->range = 10;
@@ -604,7 +604,7 @@ InitGraphMax(void)
 }
 
 
-InitNewGraph(SimGraph *graph)
+InitNewGraph(Graph *graph)
 {
   int d = 8;
   struct XDisplay *xd;
@@ -641,9 +641,9 @@ InitNewGraph(SimGraph *graph)
 }
 
 
-DestroyGraph(SimGraph* graph)
+DestroyGraph(Graph* graph)
 {
-    SimGraph** gp;
+    Graph** gp;
 
     for (gp = &sim->graph; (*gp) != NULL; gp = &((*gp)->next))
     {
@@ -667,7 +667,7 @@ DestroyGraph(SimGraph* graph)
 }
 
 
-DoResizeGraph(SimGraph *graph, int w, int h)
+DoResizeGraph(Graph *graph, int w, int h)
 {
   int resize = 0;
 
@@ -689,7 +689,7 @@ DoResizeGraph(SimGraph *graph, int w, int h)
 }
 
 
-DoNewGraph(SimGraph *graph)
+DoNewGraph(Graph *graph)
 {
   sim->graphs++; graph->next = sim->graph; sim->graph = graph;
 
@@ -699,7 +699,7 @@ DoNewGraph(SimGraph *graph)
 
 #define BORDER 5
 
-DoUpdateGraph(SimGraph *graph)
+DoUpdateGraph(Graph *graph)
 {
   Display *dpy;
   GC gc;

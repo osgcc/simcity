@@ -95,6 +95,7 @@ struct Ink
 };
 
 
+/*
 typedef struct XDisplay
 {
   struct XDisplay *next;
@@ -125,6 +126,7 @@ typedef struct XDisplay
   Pixmap horiz_stipple;
   Pixmap diag_stipple;
 } XDisplay;
+*/
 
 
 struct SimView
@@ -165,9 +167,12 @@ struct SimView
 	short super_user;
 	short show_me;
 	short dynamic_filter;
+
+	/*
 	Tk_TimerToken auto_scroll_token;
 	Time tool_event_time;
 	Time tool_last_event_time;
+	*/
 
 	/* scrolling */
 	int w_x, w_y;					/* view window position */
@@ -178,7 +183,7 @@ struct SimView
 	int tile_x, tile_y, tile_width, tile_height;	/* visible tiles */
 	int screen_x, screen_y, screen_width, screen_height; /* visible pixels */
 
-  /* tracking */
+	/* tracking */
 	int orig_pan_x, orig_pan_y;
 	int last_x, last_y;
 	int last_button;
@@ -188,21 +193,24 @@ struct SimView
 	/* window system */
 	//Tk_Window tkwin;
 	//Tcl_Interp* interp;
-	int tkwin;
-	void* interp;
 	int flags;
 
-	XDisplay* x;
-	XShmSegmentInfo* shminfo;
+	//XDisplay* x;
+	//XShmSegmentInfo* shminfo;
 	short** tiles;
 	short** other_tiles;
+
 	XImage* image;
 	XImage* other_image;
+
 	unsigned char* other_data;
+
 	Pixmap pixmap;
 	Pixmap pixmap2;
+
 	Pixmap overlay_pixmap;
 	Pixmap overlay_valid;
+
 	XFontStruct* fontPtr;
 
 	/* timing */
@@ -228,29 +236,11 @@ struct SimView
 	/* overlay */
 	int show_overlay;
 	int overlay_mode;
-	struct timeval overlay_time;
+	//struct timeval overlay_time;
 };
 
 
-typedef struct SimGraph {
-  struct SimGraph *next;
-  int range;
-  int mask;
-  Tk_Window tkwin;
-  Tcl_Interp *interp;
-  int flags;
-  XDisplay *x;
-  int visible;
-  int w_x, w_y;
-  int w_width, w_height;
-  Pixmap pixmap;
-  int *pixels;
-  XFontStruct *fontPtr;
-  Tk_3DBorder border;
-  int borderWidth;
-  int relief;
-  Tk_TimerToken draw_graph_token;
-} SimGraph;
+
 
 
 typedef struct SimDate {
@@ -297,7 +287,7 @@ struct Sim
 	int maps{ 0 };
 	SimView* map{ nullptr };
 	int graphs{ 0 };
-	SimGraph* graph{ nullptr };
+	Graph* graph{ nullptr };
 	int dates{ 0 };
 	SimDate* date{ nullptr };
 	int sprites{ 0 };

@@ -79,7 +79,7 @@
 	SimView *view, ARGS
 
 #define GRAPH_ARGS \
-	SimGraph *graph, ARGS
+	Graph *graph, ARGS
 
 #define DATE_ARGS \
 	SimDate *date, ARGS
