@@ -186,25 +186,6 @@ void sim_init()
 }
 
 
-void SignalExitHandler()
-{
-    static int triedToBailOnce = 0;
-
-    if (triedToBailOnce)
-    {
-        exit(-1);
-    }
-    else
-    {
-        triedToBailOnce = 1;
-        fprintf(stderr, "\nMicropolis has been terminated by a signal.\n");
-        fprintf(stderr, "Pick a window -- you're leaving!\n\n");
-        fflush(stderr);
-        sim_really_exit(-1);
-    }
-}
-
-
 void signal_init()
 {
 }
