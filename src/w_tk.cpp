@@ -59,20 +59,26 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
+
 #include "main.h"
 #include "view.h"
 
-Tcl_Interp *tk_mainInterp = NULL;
-Tcl_CmdBuf buffer = NULL;
-Tk_TimerToken sim_timer_token = 0;
+//Tcl_Interp *tk_mainInterp = NULL;
+//Tcl_CmdBuf buffer = NULL;
+//Tk_TimerToken sim_timer_token = 0;
+
 int sim_timer_idle = 0;
 int sim_timer_set = 0;
-Tk_Window MainWindow;
+
+//Tk_Window MainWindow;
+
 int UpdateDelayed = 0;
 int AutoScrollEdge = 16;
 int AutoScrollStep = 16;
 int AutoScrollDelay = 10;
-Tk_TimerToken earthquake_timer_token;
+
+//Tk_TimerToken earthquake_timer_token;
+
 int earthquake_timer_set = 0;
 int earthquake_delay = 3000;
 int PerformanceTiming;
@@ -80,9 +86,12 @@ double FlushTime;
 int NeedRest = 0;
 
 
+/*
 #define DEF_VIEW_FONT	"-Adobe-Helvetica-Bold-R-Normal-*-140-*"
 
-Tk_ConfigSpec TileViewConfigSpecs[] = {
+
+Tk_ConfigSpec TileViewConfigSpecs[] =
+{
     {TK_CONFIG_FONT, "-font", (char *) NULL, (char *) NULL,
 	DEF_VIEW_FONT, Tk_Offset(SimView, fontPtr), 0},
     {TK_CONFIG_STRING, "-messagevar", (char *) NULL, (char *) NULL,
@@ -94,16 +103,15 @@ Tk_ConfigSpec TileViewConfigSpecs[] = {
     {TK_CONFIG_END, (char *) NULL, (char *) NULL, (char *) NULL,
 	(char *) NULL, 0, 0}
 };
+*/
 
 
 int TileViewCmd(CLIENT_ARGS);
-int ConfigureTileView(Tcl_Interp *interp, SimView *view,
-		      int argc, char **argv, int flags);
-static void TileViewEventProc(ClientData clientData, XEvent *eventPtr);
+int ConfigureTileView(Tcl_Interp* interp, SimView* view, int argc, char** argv, int flags);
+static void TileViewEventProc(ClientData clientData, XEvent* eventPtr);
 static void DestroyTileView(ClientData clientData);
 
-int ConfigureSimGraph(Tcl_Interp *interp, Graph *graph,
-		      int argc, char **argv, int flags);
+int ConfigureSimGraph(Tcl_Interp* interp, Graph* graph, int argc, char** argv, int flags);
 
 static void MicropolisTimerProc(ClientData clientData);
 
@@ -117,40 +125,45 @@ extern int Tk_PieMenuCmd();
 extern int Tk_IntervalCmd();
 
 
-int
-TileViewCmd(CLIENT_ARGS)
+int TileViewCmd(CLIENT_ARGS)
 {
   Tk_Window tkwin = (Tk_Window) clientData;
   SimView *view;
   int viewclass;
 
-  if (argc < 2) {
-    Tcl_AppendResult(interp, "wrong # args:  should be \"",
-		     argv[0], " pathName ?options?\"", (char *) NULL);
-    return TCL_ERROR;
+  if (argc < 2)
+  {
+    Tcl_AppendResult(interp, "wrong # args:  should be \"",		     argv[0], " pathName ?options?\"", (char *) NULL);
+    return 1 /*TCL_ERROR*/;
   }
 
   if (strcmp(argv[0], "editorview") == 0)
-    viewclass = Editor_Class;
+  {
+      viewclass = Editor_Class;
+  }
   else if (strcmp(argv[0], "mapview") == 0)
-    viewclass = Map_Class;
-  else {
-    return TCL_ERROR;
+  {
+      viewclass = Map_Class;
+  }
+  else
+  {
+    return 1 /*TCL_ERROR*/;
   }
 
-  tkwin = Tk_CreateWindowFromPath(interp, tkwin,
-				  argv[1], (char *) NULL);
-  if (tkwin == NULL) {
-    return TCL_ERROR;
+  tkwin = Tk_CreateWindowFromPath(interp, tkwin,				  argv[1], (char *) NULL);
+  if (tkwin == NULL)
+  {
+      return 1 /*TCL_ERROR*/;
   }
 
   view = (SimView *)malloc(sizeof (SimView));
 
-  view->tkwin = tkwin;
-  view->interp = interp;
+  //view->tkwin = tkwin;
+  //view->interp = interp;
   view->flags = 0;
 
-  if (viewclass == Editor_Class) {
+  if (viewclass == Editor_Class)
+  {
     Tk_SetClass(view->tkwin, "EditorView");
 
     Tk_CreateEventHandler(view->tkwin,
@@ -161,9 +174,10 @@ TileViewCmd(CLIENT_ARGS)
 			  LeaveWindowMask |
 			  PointerMotionMask,
 			  TileViewEventProc, (ClientData) view);
-    Tcl_CreateCommand(interp, Tk_PathName(view->tkwin),
-		      DoEditorCmd, (ClientData) view, (void (*)()) NULL);
-  } else {
+    Tcl_CreateCommand(interp, Tk_PathName(view->tkwin),		      DoEditorCmd, (ClientData) view, (void (*)()) NULL);
+  }
+  else 
+  {
     Tk_SetClass(view->tkwin, "MapView");
 
     Tk_CreateEventHandler(view->tkwin,
@@ -174,28 +188,32 @@ TileViewCmd(CLIENT_ARGS)
 			  LeaveWindowMask |
 			  PointerMotionMask */ ,
 			  TileViewEventProc, (ClientData) view);
-    Tcl_CreateCommand(interp, Tk_PathName(view->tkwin),
-		      DoMapCmd, (ClientData) view, (void (*)()) NULL);
+    Tcl_CreateCommand(interp, Tk_PathName(view->tkwin),		      DoMapCmd, (ClientData) view, (void (*)()) NULL);
   }
 
   Tk_MakeWindowExist(view->tkwin);
 
-  if (getenv("XSYNCHRONIZE") != NULL) {
+  if (getenv("XSYNCHRONIZE") != NULL)
+  {
     XSynchronize(Tk_Display(tkwin), 1);
   }
 
-  if (viewclass == Editor_Class) {
+  if (viewclass == Editor_Class) 
+  {
     InitNewView(view, "MicropolisEditor", Editor_Class, EDITOR_W, EDITOR_H);
     DoNewEditor(view);
-  } else {
+  }
+  else
+  {
     InitNewView(view, "MicropolisMap", Map_Class, MAP_W, MAP_H);
     DoNewMap(view);
   }
 
-  if (ConfigureTileView(interp, view, argc-2, argv+2, 0) != TCL_OK) {
+  if (ConfigureTileView(interp, view, argc-2, argv+2, 0) != 0 /*TCL_OK*/)
+  {
     /* XXX: destroy view */
     Tk_DestroyWindow(view->tkwin);
-    return TCL_ERROR;
+    return 1 /*TCL_ERROR*/;
   }
 
   switch (view->viewClass) {
@@ -209,131 +227,119 @@ TileViewCmd(CLIENT_ARGS)
   }
 
   interp->result = Tk_PathName(view->tkwin);
-  return TCL_OK;
+  return 0 /*TCL_OK*/;
 }
 
 
-int
-ConfigureTileView(Tcl_Interp *interp, SimView *view,
-	     int argc, char **argv, int flags)
+int ConfigureTileView(Tcl_Interp* interp, SimView* view, int argc, char** argv, int flags)
 {
-  if (Tk_ConfigureWidget(interp, view->tkwin, TileViewConfigSpecs,
-			 argc, argv, (char *) view, flags) != TCL_OK) {
-    return TCL_ERROR;
-  }
-
-  if (view->viewClass == Map_Class) {
-    Tk_GeometryRequest(view->tkwin, MAP_W, MAP_H);
-  } else {
-    if (view->width || view->height) {
-      Tk_GeometryRequest(view->tkwin, view->width, view->height);
+    if (Tk_ConfigureWidget(interp, view->tkwin, TileViewConfigSpecs, argc, argv, (char*)view, flags) != 0 /*TCL_OK*/)
+    {
+        return 1 /*TCL_ERROR*/;
     }
-  }
-  EventuallyRedrawView(view);
-  return TCL_OK;
+
+    if (view->viewClass == Map_Class)
+    {
+        Tk_GeometryRequest(view->tkwin, MAP_W, MAP_H);
+    }
+    else
+    {
+        if (view->width || view->height)
+        {
+            Tk_GeometryRequest(view->tkwin, view->width, view->height);
+        }
+    }
+    EventuallyRedrawView(view);
+    return 0 /*TCL_OK*/;
 }
 
 
 InvalidateMaps()
 {
-  SimView *view;
-
-//fprintf(stderr, "InvalidateMaps\n");
-  for (view = sim->map; view != NULL; view = view->next) {
-    view->invalid = 1;
-    view->skip = 0;
-    EventuallyRedrawView(view);
-  }
-  sim_skip = 0;
+    //fprintf(stderr, "InvalidateMaps\n");
+    for (SimView* view = sim->map; view != NULL; view = view->next)
+    {
+        view->invalid = 1;
+        view->skip = 0;
+        EventuallyRedrawView(view);
+    }
+    sim_skip = 0;
 }
 
 
 InvalidateEditors()
 {
-  SimView *view;
-
-//fprintf(stderr, "InvalidateEditors\n");
-  for (view = sim->editor; view != NULL; view = view->next) {
-    view->invalid = 1;
-    view->skip = 0;
-    EventuallyRedrawView(view);
-  }
-  sim_skip = 0;
+    //fprintf(stderr, "InvalidateEditors\n");
+    for (SimView* view = sim->editor; view != NULL; view = view->next)
+    {
+        view->invalid = 1;
+        view->skip = 0;
+        EventuallyRedrawView(view);
+    }
+    sim_skip = 0;
 }
 
 
 RedrawMaps()
 {
-  SimView *view;
-
-//fprintf(stderr, "RedrawMaps\n");
-
-  for (view = sim->map; view != NULL; view = view->next) {
-    view->skip = 0;
-    EventuallyRedrawView(view);
-  }
-  sim_skip = 0;
+    //fprintf(stderr, "RedrawMaps\n");
+    for (SimView* view = sim->map; view != NULL; view = view->next)
+    {
+        view->skip = 0;
+        EventuallyRedrawView(view);
+    }
+    sim_skip = 0;
 }
 
 
 RedrawEditors()
 {
-  SimView *view;
+    //fprintf(stderr, "RedrawEditors\n");
 
-//fprintf(stderr, "RedrawEditors\n");
-
-  for (view = sim->editor; view != NULL; view = view->next) {
-    view->skip = 0;
-    EventuallyRedrawView(view);
-  }
-  sim_skip = 0;
-}
-
-
-static void
-DisplayTileView(ClientData clientData)
-{
-  SimView *view = (SimView *) clientData;
-  Tk_Window tkwin = view->tkwin;
-  Pixmap pm = None;
-  Drawable d;
-
-  view->flags &= ~VIEW_REDRAW_PENDING;
-  if (view->visible && (tkwin != NULL) && Tk_IsMapped(tkwin)) {
-    switch (view->viewClass) {
-    case Editor_Class:
-      view->skip = 0;
-      view->update = 1;
-      DoUpdateEditor(view);
-      break;
-    case Map_Class:
-//fprintf(stderr, "DisplayTileView\n");
-      view->skip = 0;
-      view->update = 1;
-      DoUpdateMap(view);
-      break;
+    for (SimView* view = sim->editor; view != NULL; view = view->next)
+    {
+        view->skip = 0;
+        EventuallyRedrawView(view);
     }
-  }
+    sim_skip = 0;
 }
 
 
-/* comefrom:
-    ConfigureTileView
-    TileViewEventProc expose configure motion
-    InvalidateMaps
-    EraserTo
-    DoSetMapState
-    AddInk
-    EraserTo
- */
-
-EventuallyRedrawView(SimView *view)
+static void DisplayTileView(ClientData clientData)
 {
-  if (!(view->flags & VIEW_REDRAW_PENDING)) {
-    Tk_DoWhenIdle(DisplayTileView, (ClientData) view);
-    view->flags |= VIEW_REDRAW_PENDING;
-  }
+    SimView* view = (SimView*)clientData;
+    Tk_Window tkwin = view->tkwin;
+    Pixmap pm = None;
+    Drawable d;
 
+    view->flags &= ~VIEW_REDRAW_PENDING;
+    if (view->visible && (tkwin != NULL) && Tk_IsMapped(tkwin))
+    {
+        switch (view->viewClass)
+        {
+        case Editor_Class:
+            view->skip = 0;
+            view->update = 1;
+            DoUpdateEditor(view);
+            break;
+        case Map_Class:
+            //fprintf(stderr, "DisplayTileView\n");
+            view->skip = 0;
+            view->update = 1;
+            DoUpdateMap(view);
+            break;
+        }
+    }
+}
+
+
+EventuallyRedrawView(SimView* view)
+{
+    if (!(view->flags & VIEW_REDRAW_PENDING))
+    {
+        Tk_DoWhenIdle(DisplayTileView, (ClientData)view);
+        view->flags |= VIEW_REDRAW_PENDING;
+    }
 }
 
 
@@ -346,351 +352,386 @@ void CancelRedrawView(SimView* view)
 }
 
 
-static void
-TileAutoScrollProc(ClientData clientData)
+static void TileAutoScrollProc(ClientData clientData)
 {
-  SimView *view = (SimView *)clientData;
-  char buf[256];
+    SimView* view = (SimView*)clientData;
+    char buf[256];
 
-  if (view->tool_mode != 0) {
-    int dx = 0, dy = 0;
-    int result, root_x, root_y, x, y;
-    unsigned int key_buttons;
-    Window root, child;
+    if (view->tool_mode != 0)
+    {
+        int dx = 0, dy = 0;
+        int result, root_x, root_y, x, y;
+        unsigned int key_buttons;
+        Window root, child;
 
-    XQueryPointer(Tk_Display(view->tkwin), Tk_WindowId(view->tkwin),
-		  &root, &child, &root_x, &root_y, &x, &y, &key_buttons);
+        XQueryPointer(Tk_Display(view->tkwin), Tk_WindowId(view->tkwin), &root, &child, &root_x, &root_y, &x, &y, &key_buttons);
 
-    if (x < AutoScrollEdge)
-      dx = -AutoScrollStep;
-    else if (x > (view->w_width - AutoScrollEdge))
-      dx = AutoScrollStep;
-    if (y < AutoScrollEdge)
-      dy = -AutoScrollStep;
-    else if (y > (view->w_height - AutoScrollEdge))
-      dy = AutoScrollStep;
+        if (x < AutoScrollEdge)
+            dx = -AutoScrollStep;
+        else if (x > (view->w_width - AutoScrollEdge))
+            dx = AutoScrollStep;
+        if (y < AutoScrollEdge)
+            dy = -AutoScrollStep;
+        else if (y > (view->w_height - AutoScrollEdge))
+            dy = AutoScrollStep;
 
-    if (dx || dy) {
-      int px = view->pan_x, py = view->pan_y;
+        if (dx || dy)
+        {
+            int px = view->pan_x, py = view->pan_y;
 
-      if (view->tool_mode == -1) {
-	dx = -dx; dy = -dy;
-      }
+            if (view->tool_mode == -1)
+            {
+                dx = -dx; dy = -dy;
+            }
 
-      DoPanBy(view, dx, dy);
-      view->tool_x += view->pan_x - px;
-      view->tool_y += view->pan_y - py;
-      view->auto_scroll_token =
-	Tk_CreateTimerHandler(AutoScrollDelay, TileAutoScrollProc,
-			      (ClientData) view);
+            DoPanBy(view, dx, dy);
+            view->tool_x += view->pan_x - px;
+            view->tool_y += view->pan_y - py;
+            view->auto_scroll_token = Tk_CreateTimerHandler(AutoScrollDelay, TileAutoScrollProc, (ClientData)view);
 
-      sprintf(buf, "UIDidPan %s %d %d", Tk_PathName(view->tkwin), x, y);
-      Eval(buf);
+            sprintf(buf, "UIDidPan %s %d %d", Tk_PathName(view->tkwin), x, y);
+            Eval(buf);
+        }
     }
-  }
 }
 
 
-static void
-TileViewEventProc(ClientData clientData, XEvent *eventPtr)
+static void TileViewEventProc(ClientData clientData, XEvent* eventPtr)
 {
-  SimView *view = (SimView *) clientData;
+    SimView* view = (SimView*)clientData;
 
-  if ((eventPtr->type == Expose) && (eventPtr->xexpose.count == 0)) {
-    view->visible = 1;
-    EventuallyRedrawView(view);
-  } else if (eventPtr->type == MapNotify) {
-    view->visible = 1;
-  } else if (eventPtr->type == UnmapNotify) {
-    view->visible = 0;
-  } else if (eventPtr->type == VisibilityNotify) {
-    if (eventPtr->xvisibility.state == VisibilityFullyObscured)
-      view->visible = 0;
-    else
-      view->visible = 1;
-  } else if (eventPtr->type == ConfigureNotify) {
-    if (view->viewClass == Editor_Class)
-      DoResizeView(view,
-		   eventPtr->xconfigure.width,
-		   eventPtr->xconfigure.height);
-    EventuallyRedrawView(view);
-  } else if (eventPtr->type == DestroyNotify) {
-    Tcl_DeleteCommand(view->interp, Tk_PathName(view->tkwin));
-    view->tkwin = NULL;
-    CancelRedrawView(view);
-    Tk_EventuallyFree((ClientData) view, DestroyTileView);
-  } else if ((view->viewClass == Editor_Class) &&
-	     (view->show_me != 0) &&
-	     ((eventPtr->type == EnterNotify) ||
-	      (eventPtr->type == LeaveNotify) ||
-	      (eventPtr->type == MotionNotify))) {
-    int last_x = view->tool_x, last_y = view->tool_y,
-        last_showing = view->tool_showing;
-    int x, y, showing, autoscroll;
-
-    if (eventPtr->type == EnterNotify) {
-      showing = 1;
-      x = eventPtr->xcrossing.x; y = eventPtr->xcrossing.y;
-    } else if (eventPtr->type == LeaveNotify) {
-      showing = 0;
-      x = eventPtr->xcrossing.x; y = eventPtr->xcrossing.y;
-    } else {
-      showing = 1;
-      x = eventPtr->xmotion.x; y = eventPtr->xmotion.y;
+    if ((eventPtr->type == Expose) && (eventPtr->xexpose.count == 0))
+    {
+        view->visible = 1;
+        EventuallyRedrawView(view);
     }
-
-    if (view->tool_mode != 0) {
-
-      if ((x < AutoScrollEdge) ||
-	  (x > (view->w_width - AutoScrollEdge)) ||
-	  (y < AutoScrollEdge) ||
-	  (y > (view->w_height - AutoScrollEdge))) {
-	if (!view->auto_scroll_token) {
-	  view->auto_scroll_token =
-	    Tk_CreateTimerHandler(AutoScrollDelay, TileAutoScrollProc,
-				  (ClientData) view);
-	}
-      } else {
-	if (view->auto_scroll_token) {
-	  Tk_DeleteTimerHandler(view->auto_scroll_token);
-	  view->auto_scroll_token = 0;
-	}
-      }
+    else if (eventPtr->type == MapNotify)
+    {
+        view->visible = 1;
     }
-
-    ViewToPixelCoords(view, x, y, &x, &y);
-    view->tool_showing = showing;
-
-    if (view->tool_mode != -1) {
-      view->tool_x = x; view->tool_y = y;
+    else if (eventPtr->type == UnmapNotify)
+    {
+        view->visible = 0;
     }
-
-/* XXX: redraw all views showing cursor */
-/* XXX: also, make sure switching tools works w/out moving */
-    if (((view->tool_showing != last_showing) ||
-	 (view->tool_x != last_x) ||
-	 (view->tool_y != last_y))) {
-#if 1
-      EventuallyRedrawView(view);
-#else
-      RedrawEditors();
-#endif
+    else if (eventPtr->type == VisibilityNotify)
+    {
+        if (eventPtr->xvisibility.state == VisibilityFullyObscured)
+            view->visible = 0;
+        else
+            view->visible = 1;
     }
-  }
+    else if (eventPtr->type == ConfigureNotify)
+    {
+        if (view->viewClass == Editor_Class)
+        {
+            DoResizeView(view, eventPtr->xconfigure.width, eventPtr->xconfigure.height);
+        }
+        EventuallyRedrawView(view);
+    }
+    else if (eventPtr->type == DestroyNotify)
+    {
+        Tcl_DeleteCommand(view->interp, Tk_PathName(view->tkwin));
+        view->tkwin = NULL;
+        CancelRedrawView(view);
+        Tk_EventuallyFree((ClientData)view, DestroyTileView);
+    }
+    else if ((view->viewClass == Editor_Class) &&
+        (view->show_me != 0) &&
+        ((eventPtr->type == EnterNotify) ||
+            (eventPtr->type == LeaveNotify) ||
+            (eventPtr->type == MotionNotify)))
+    {
+        int last_x = view->tool_x, last_y = view->tool_y,
+            last_showing = view->tool_showing;
+        int x, y, showing, autoscroll;
+
+        if (eventPtr->type == EnterNotify)
+        {
+            showing = 1;
+            x = eventPtr->xcrossing.x; y = eventPtr->xcrossing.y;
+        }
+        else if (eventPtr->type == LeaveNotify)
+        {
+            showing = 0;
+            x = eventPtr->xcrossing.x; y = eventPtr->xcrossing.y;
+        }
+        else
+        {
+            showing = 1;
+            x = eventPtr->xmotion.x; y = eventPtr->xmotion.y;
+        }
+
+        if (view->tool_mode != 0)
+        {
+
+            if ((x < AutoScrollEdge) ||
+                (x > (view->w_width - AutoScrollEdge)) ||
+                (y < AutoScrollEdge) ||
+                (y > (view->w_height - AutoScrollEdge)))
+            {
+                if (!view->auto_scroll_token)
+                {
+                    view->auto_scroll_token =
+                        Tk_CreateTimerHandler(AutoScrollDelay, TileAutoScrollProc,
+                            (ClientData)view);
+                }
+            }
+            else
+            {
+                if (view->auto_scroll_token)
+                {
+                    Tk_DeleteTimerHandler(view->auto_scroll_token);
+                    view->auto_scroll_token = 0;
+                }
+            }
+        }
+
+        ViewToPixelCoords(view, x, y, &x, &y);
+        view->tool_showing = showing;
+
+        if (view->tool_mode != -1)
+        {
+            view->tool_x = x; view->tool_y = y;
+        }
+
+        /* XXX: redraw all views showing cursor */
+        /* XXX: also, make sure switching tools works w/out moving */
+        if (((view->tool_showing != last_showing) ||
+            (view->tool_x != last_x) ||
+            (view->tool_y != last_y)))
+        {
+            EventuallyRedrawView(view);
+
+        }
+    }
 }
 
 
-static void
-DestroyTileView(ClientData clientData)
+static void DestroyTileView(ClientData clientData)
 {
-  SimView *view = (SimView *) clientData;
+    SimView* view = (SimView*)clientData;
 
-  DestroyView(view);
+    DestroyView(view);
 }
 
 
-void
-StdinProc(ClientData clientData, int mask)
+void StdinProc(ClientData clientData, int mask)
 {
-  char line[200];
-  static int gotPartial = 0;
-  char *cmd;
-  int result;
-  
-  if (mask & TK_READABLE) {
-    if (fgets(line, 200, stdin) == NULL) {
-      if (!gotPartial) {
-	if (sim_tty) {
-	  sim_exit(0); // Just sets tkMustExit and ExitReturn
-	  return;
-	} else {
-	  Tk_DeleteFileHandler(0);
-	}
-	return;
-      } else {
-	line[0] = 0;
-      }
+    char line[200];
+    static int gotPartial = 0;
+    char* cmd;
+    int result;
+
+    if (mask & TK_READABLE)
+    {
+        if (fgets(line, 200, stdin) == NULL)
+        {
+            if (!gotPartial)
+            {
+                if (sim_tty)
+                {
+                    sim_exit(0); // Just sets tkMustExit and ExitReturn
+                    return;
+                }
+                else
+                {
+                    Tk_DeleteFileHandler(0);
+                }
+                return;
+            }
+            else
+            {
+                line[0] = 0;
+            }
+        }
+        cmd = Tcl_AssembleCmd(buffer, line);
+        if (cmd == NULL)
+        {
+            gotPartial = 1;
+            return;
+        }
+        gotPartial = 0;
+        result = Tcl_RecordAndEval(tk_mainInterp, cmd, 0);
+        if (*tk_mainInterp->result != 0)
+        {
+            if ((result != TCL_OK) || sim_tty)
+            {
+                printf("%s\n", tk_mainInterp->result);
+            }
+        }
+        if (sim_tty) {
+            printf("sim:\n");
+            fflush(stdout);
+        }
     }
-    cmd = Tcl_AssembleCmd(buffer, line);
-    if (cmd == NULL) {
-      gotPartial = 1;
-      return;
+}
+
+
+static void StructureProc(ClientData clientData, XEvent* eventPtr)
+{
+    if (eventPtr->type == DestroyNotify)
+    {
+        MainWindow = NULL;
     }
-    gotPartial = 0;
-    result = Tcl_RecordAndEval(tk_mainInterp, cmd, 0);
-    if (*tk_mainInterp->result != 0) {
-      if ((result != TCL_OK) || sim_tty) {
-	printf("%s\n", tk_mainInterp->result);
-      }
+}
+
+
+static void DelayedMap(ClientData clientData)
+{
+    while (Tk_DoOneEvent(TK_IDLE_EVENTS) != 0)
+    {
+        /* Empty loop body. */
     }
-    if (sim_tty) {
-      printf("sim:\n");
-      fflush(stdout);
+    if (MainWindow == NULL)
+    {
+        return;
     }
-  }
+    Tk_MapWindow(MainWindow);
 }
 
 
-static void
-StructureProc(ClientData clientData, XEvent *eventPtr)
+void DidStopPan(SimView* view)
 {
-  if (eventPtr->type == DestroyNotify) {
-    MainWindow = NULL;
-  }
+    char buf[256];
+    sprintf(buf, "UIDidStopPan %s", Tk_PathName(view->tkwin));
+
+    Eval(buf);
 }
 
 
-static void
-DelayedMap(ClientData clientData)
+static void MicropolisTimerProc(ClientData clientData)
 {
-  while (Tk_DoOneEvent(TK_IDLE_EVENTS) != 0) {
-    /* Empty loop body. */
-  }
-  if (MainWindow == NULL) {
-    return;
-  }
-  Tk_MapWindow(MainWindow);
-}
-
-
-DidStopPan(SimView *view)
-{
-  char buf[256];
-  sprintf(buf, "UIDidStopPan %s", Tk_PathName(view->tkwin));
-	
-  Eval(buf);
-}
-
-
-static void
-MicropolisTimerProc(ClientData clientData)
-{
-  sim_timer_token = NULL;
-  sim_timer_set = 0;
-
-  if (NeedRest > 0) {
-    NeedRest--;
-  }
-
-  if (SimSpeed) {
-    sim_loop(1);
-    StartMicropolisTimer();
-  } else {
-    StopMicropolisTimer();
-  }
-}
-
-
-void
-ReallyStartMicropolisTimer(ClientData clientData)
-{
-  int delay = sim_delay;
-  XDisplay *xd = XDisplays;
-
-  StopMicropolisTimer();
-
-  while (xd != NULL) {
-    if ((NeedRest > 0) ||
-	ShakeNow ||
-	(xd->tkDisplay->buttonWinPtr != NULL) ||
-	(xd->tkDisplay->grabWinPtr != NULL)) {
-      if (ShakeNow || NeedRest) {
-	if (delay < 50000) delay = 50000;
-      } else {
-      }
-      break;
-    }
-    xd = xd->next;
-  }
-
-  sim_timer_token =
-    Tk_CreateMicroTimerHandler(
-      0,
-      delay,
-      MicropolisTimerProc,
-      (ClientData)0);
-
-  sim_timer_set = 1;
-}
-
-
-StartMicropolisTimer()
-{
-  if (sim_timer_idle == 0) {
-    sim_timer_idle = 1;
-    Tk_DoWhenIdle(
-      ReallyStartMicropolisTimer,
-      NULL);
-  }
-}
-
-
-StopMicropolisTimer()
-{
-  if (sim_timer_idle != 0) {
-    sim_timer_idle = 0;
-    Tk_CancelIdleCall(
-      ReallyStartMicropolisTimer,
-      NULL);
-  }
-
-  if (sim_timer_set) {
-    if (sim_timer_token != 0) {
-      Tk_DeleteTimerHandler(sim_timer_token);
-      sim_timer_token = 0;
-    }
+    sim_timer_token = NULL;
     sim_timer_set = 0;
-  }
+
+    if (NeedRest > 0)
+    {
+        NeedRest--;
+    }
+
+    if (SimSpeed)
+    {
+        sim_loop(1);
+        StartMicropolisTimer();
+    }
+    else
+    {
+        StopMicropolisTimer();
+    }
 }
 
 
-FixMicropolisTimer()
+void ReallyStartMicropolisTimer(ClientData clientData)
 {
-  if (sim_timer_set) {
-    StartMicropolisTimer(NULL);
-  }
+    int delay = sim_delay;
+    XDisplay* xd = XDisplays;
+
+    StopMicropolisTimer();
+
+    while (xd != NULL)
+    {
+        if ((NeedRest > 0) ||
+            ShakeNow ||
+            (xd->tkDisplay->buttonWinPtr != NULL) ||
+            (xd->tkDisplay->grabWinPtr != NULL))
+        {
+            if (ShakeNow || NeedRest)
+            {
+                if (delay < 50000) delay = 50000;
+            }
+            else
+            {
+            }
+            break;
+        }
+        xd = xd->next;
+    }
+
+    sim_timer_token = Tk_CreateMicroTimerHandler(0, delay, MicropolisTimerProc, (ClientData)0);
+
+    sim_timer_set = 1;
 }
 
 
-static void
-DelayedUpdate(ClientData clientData)
+void StartMicropolisTimer()
 {
-//fprintf(stderr, "DelayedUpdate\n");
-  UpdateDelayed = 0;
-  sim_skip = 0;
-  sim_update();
+    if (sim_timer_idle == 0) {
+        sim_timer_idle = 1;
+        Tk_DoWhenIdle(ReallyStartMicropolisTimer, NULL);
+    }
 }
 
 
-Kick()
+void StopMicropolisTimer()
 {
-  if (!UpdateDelayed) {
-    UpdateDelayed = 1;
-    Tk_DoWhenIdle(DelayedUpdate, (ClientData) NULL);
-  }
+    if (sim_timer_idle != 0)
+    {
+        sim_timer_idle = 0;
+        Tk_CancelIdleCall(ReallyStartMicropolisTimer, NULL);
+    }
+
+    if (sim_timer_set)
+    {
+        if (sim_timer_token != 0)
+        {
+            Tk_DeleteTimerHandler(sim_timer_token);
+            sim_timer_token = 0;
+        }
+        sim_timer_set = 0;
+    }
+}
+
+
+void FixMicropolisTimer()
+{
+    if (sim_timer_set)
+    {
+        StartMicropolisTimer(NULL);
+    }
+}
+
+
+static void DelayedUpdate(ClientData clientData)
+{
+    //fprintf(stderr, "DelayedUpdate\n");
+    UpdateDelayed = 0;
+    sim_skip = 0;
+    sim_update();
+}
+
+
+void Kick()
+{
+    if (!UpdateDelayed)
+    {
+        UpdateDelayed = 1;
+        Tk_DoWhenIdle(DelayedUpdate, (ClientData)NULL);
+    }
 }
 
 
 void StopEarthquake()
 {
-  ShakeNow = 0;
-  if (earthquake_timer_set) {
-    Tk_DeleteTimerHandler(earthquake_timer_token);
-  }
-  earthquake_timer_set = 0;
+    ShakeNow = 0;
+    if (earthquake_timer_set)
+    {
+        Tk_DeleteTimerHandler(earthquake_timer_token);
+    }
+    earthquake_timer_set = 0;
 }
 
 
 DoEarthQuake(void)
 {
-  MakeSound("city", "Explosion-Low");
-  Eval("UIEarthQuake");
-  ShakeNow++;
-  if (earthquake_timer_set) {
-    Tk_DeleteTimerHandler(earthquake_timer_token);
-  }
-  Tk_CreateTimerHandler(earthquake_delay, (void (*)())StopEarthquake, (ClientData) 0);
-  earthquake_timer_set = 1;
+    MakeSound("city", "Explosion-Low");
+    Eval("UIEarthQuake");
+    ShakeNow++;
+    if (earthquake_timer_set)
+    {
+        Tk_DeleteTimerHandler(earthquake_timer_token);
+    }
+    Tk_CreateTimerHandler(earthquake_delay, (void (*)())StopEarthquake, (ClientData)0);
+    earthquake_timer_set = 1;
 }
 
 
@@ -712,6 +753,7 @@ int Eval(const char* buf)
 
 void tk_main()
 {
+    /*
     char* p, * msg;
     char buf[20];
     char initCmd[256];
@@ -799,5 +841,5 @@ bail:
     }
 
     Tcl_DeleteInterp(tk_mainInterp);
+    */
 }
-
