@@ -69,9 +69,6 @@
   }
 
 
-#define DATE_ARGS \
-	SimDate *date, Tcl_Interp *interp, int argc, char **argv
-
 #define SPRITE_ARGS \
 	SimSprite *sprite, Tcl_Interp *interp, int argc, char **argv
 

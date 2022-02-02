@@ -235,7 +235,7 @@ ComputeDateGeometry(SimDate *date)
 }
 
 
-int DateCmdconfigure(DATE_ARGS)
+int DateCmdconfigure(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
 {
   int result = TCL_OK;
 
@@ -253,7 +253,7 @@ int DateCmdconfigure(DATE_ARGS)
 }
 
 
-int DateCmdposition(DATE_ARGS)
+int DateCmdposition(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
 {
   int result = TCL_OK;
 
@@ -271,7 +271,7 @@ int DateCmdposition(DATE_ARGS)
 }
 
 
-int DateCmdsize(DATE_ARGS)
+int DateCmdsize(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
 {
   if ((argc != 2) && (argc != 4)) {
     return TCL_ERROR;
@@ -293,7 +293,7 @@ int DateCmdsize(DATE_ARGS)
 }
 
 
-int DateCmdVisible(DATE_ARGS)
+int DateCmdVisible(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
 {
   int visible;
 
@@ -318,7 +318,7 @@ int DateCmdVisible(DATE_ARGS)
 }
 
 
-int DateCmdReset(DATE_ARGS)
+int DateCmdReset(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
 {
   int range;
 
@@ -337,7 +337,7 @@ int DateCmdReset(DATE_ARGS)
 }
 
 
-int DateCmdSet(DATE_ARGS)
+int DateCmdSet(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
 {
   int range;
 
