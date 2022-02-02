@@ -542,7 +542,7 @@ extern double FlushTime;
 
 extern char *optarg;
 extern int optind;
-extern struct timeval start_time, now_time, beat_time, last_now_time;
+extern struct timeval now_time, last_now_time;
 extern Sim *sim;
 extern int WireMode;
 extern int MultiPlayerMode;

@@ -59,8 +59,9 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
 
+#include "main.h"
+#include "view.h"
 
 #define VAL_NONE	0
 #define VAL_LOW		1
@@ -72,12 +73,14 @@
 #define VAL_MINUS	7
 #define VAL_VERYMINUS	8
 
-short valMap[] = { 
+short valMap[] =
+{
   -1, COLOR_LIGHTGRAY, COLOR_YELLOW, COLOR_ORANGE, COLOR_RED,
   COLOR_DARKGREEN, COLOR_LIGHTGREEN, COLOR_ORANGE, COLOR_YELLOW
 };
 
-short valGrayMap[] = { 
+short valGrayMap[] =
+{
   -1, 31, 127, 191, 255,
   223, 255, 31, 0
 };
@@ -262,16 +265,16 @@ setUpMapProcs(void)
 }
 
 
-MemDrawMap(SimView *view)
+void MemDrawMap(SimView* view)
 {
-  (*mapProcs[view->map_state])(view);
-  if (!view->x->color) {
-    ditherMap(view);
-    XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_BLACK]);
-    XSetBackground(view->x->dpy, view->x->gc, view->pixels[COLOR_WHITE]);
-    XPutImage(view->x->dpy, view->pixmap, view->x->gc, view->image, 
-	      0, 0, 0, 0, view->m_width, view->m_height);
-  }
+	(*mapProcs[view->map_state])(view);
+	if (!view->x->color)
+	{
+		ditherMap(view);
+		XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_BLACK]);
+		XSetBackground(view->x->dpy, view->x->gc, view->pixels[COLOR_WHITE]);
+		XPutImage(view->x->dpy, view->pixmap, view->x->gc, view->image, 0, 0, 0, 0, view->m_width, view->m_height);
+	}
 }
 
 

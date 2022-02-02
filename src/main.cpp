@@ -61,11 +61,14 @@
  */
 #include "main.h"
 
+#include "w_editor.h"
+#include "w_eval.h"
+#include "w_tk.h"
+#include "w_update.h"
 #include "w_x.h"
 
 #include <string>
 
-/* Sim City */
 
 const std::string MicropolisVersion = "4.0";
 
@@ -87,7 +90,7 @@ int heat_steps = 0;
 int heat_flow = -7;
 int heat_rule = 0;
 int heat_wrap = 3;
-struct timeval start_time, now_time, beat_time, last_now_time;
+struct timeval now_time, last_now_time;
 int Startup = 0;
 int StartupGameLevel = 0;
 int WireMode = 0;
@@ -113,63 +116,16 @@ void sim_really_exit(int val)
 }
 
 
-#define COPY(FROM, TO) \
-  TO = malloc(strlen(FROM) + 1); \
-  strcpy(TO, FROM);
-
-
-#define TESTDIR(DIR, NAME) \
-  if ((stat(DIR, &statbuf) == -1) || \
-      !(S_ISDIR(statbuf.st_mode))) { \
-    fprintf(stderr, \
-	    "Can't find the directory \"%s\"!\n", DIR); \
-    fprintf(stderr, \
-	    "The environment variable \"%s\" should name a directory.\n", \
-	    NAME); \
-    lost = 1; \
-  }
-
-
-void
-env_init(void)
+/**
+ * Init filesystem environment/path
+ */
+void env_init()
 {
-  char dir[256];
-  char *s;
-  struct stat statbuf;
-  int lost = 0;
-
-  if ((s = getenv("SIMHOME")) == nullptr) {
-    s = ".";
-  }
-  COPY(s, HomeDir);
-  TESTDIR(HomeDir, "$SIMHOME");
-
-  sprintf(dir, "%s/res/", HomeDir);
-  COPY(dir, ResourceDir);
-  TESTDIR(ResourceDir, "$SIMHOME/res");
-
-  { extern char *TCL_Library, *TK_Library;
-    TCL_Library = TK_Library = ResourceDir;
-  }
-
-  if (lost) {
-    fprintf(stderr,
-	    "Please check the environment or reinstall Micropolis and try again! Sorry!\n");
-    sim_exit(1); // Just sets tkMustExit and ExitReturn
-    return;
-  }
-
-  gettimeofday(&now_time, nullptr);
-  last_now_time = now_time;
 }
 
 
-void
-sim_init(void)
+void sim_init()
 {
-  gettimeofday(&start_time, nullptr);
-  gettimeofday(&beat_time, nullptr);
-
   signal_init();
 
   UserSoundOn = 1;
@@ -197,16 +153,12 @@ sim_init(void)
   sim_paused = 0;
   sim_loops = 0;
   InitSimLoad = 2;
-  tkMustExit = 0;
   ExitReturn = 0;
 
   InitializeSound();
   initMapArrays();
   initGraphs();
   InitFundingLevel();
-#if 0
-  loadObjectData();
-#endif
   setUpMapProcs();
   StopEarthquake();
   ResetMapState();
@@ -220,103 +172,97 @@ sim_init(void)
 }
 
 
-int triedToBailOnce = 0;
-
-void
-SignalExitHandler()
+void SignalExitHandler()
 {
-  if (triedToBailOnce) {
-    exit(-1);
-  } else {
-    triedToBailOnce = 1;
-    fprintf(stderr, "\nMicropolis has been terminated by a signal.\n");
-    fprintf(stderr, "Pick a window -- you're leaving!\n\n");
-    fflush(stderr);
-    sim_really_exit(-1);
-  }
-}
+    static int triedToBailOnce = 0;
 
-
-signal_init()
-{
-  signal(SIGHUP, (void (*)())SignalExitHandler);
-  signal(SIGINT, (void (*)())SignalExitHandler);
-  signal(SIGQUIT, (void (*)())SignalExitHandler);
-  signal(SIGTERM, (void (*)())SignalExitHandler);
-}
-
-
-void
-sim_update()
-{
-  gettimeofday(&now_time, nullptr);
-
-  flagBlink = (now_time.tv_usec < 500000) ? 1 : -1;
-
-  if (SimSpeed && !heat_steps) {
-    TilesAnimated = 0;
-  }
-
-  sim_update_editors();
-  
-  sim_update_maps();
-  sim_update_graphs();
-  sim_update_budgets();
-  sim_update_evaluations();
-
-  UpdateFlush();
-}
-
-
-sim_update_editors(void)
-{
-  SimView *view;
-
-  for (view = sim->editor; view != nullptr; view = view->next) {
-#if 1
-    CancelRedrawView(view);
-    view->invalid = 1;
-    DoUpdateEditor(view);
-#else
-    EventuallyRedrawView(view);
-#endif
-  }
-
-  DoUpdateHeads();
-}
-
-
-sim_update_maps(void)
-{
-  SimView *view;
-  int i;
-
-  for (view = sim->map; view != nullptr; view = view->next) {
-    int mustUpdateMap =
-      NewMapFlags[view->map_state] || NewMap || ShakeNow;
-    if (mustUpdateMap) {
-      view->invalid = 1;
+    if (triedToBailOnce)
+    {
+        exit(-1);
     }
-    if (view->invalid) {
-#if 1
-      if (mustUpdateMap) {
-//fprintf(stderr, "sim_update_maps mustUpdateMap\n");
-//	view->skip = 0;
-      }
-      if (DoUpdateMap(view)) {
-//          CancelRedrawView(view);
-//	  view->invalid = 1;
-      }
-#else
-      EventuallyRedrawView(view);
-#endif
+    else
+    {
+        triedToBailOnce = 1;
+        fprintf(stderr, "\nMicropolis has been terminated by a signal.\n");
+        fprintf(stderr, "Pick a window -- you're leaving!\n\n");
+        fflush(stderr);
+        sim_really_exit(-1);
     }
-  }
+}
 
-  NewMap = 0;
-  for (i = 0; i < NMAPS; i++) {
-    NewMapFlags[i] = 0;
-  }
+
+void signal_init()
+{
+}
+
+
+void sim_update()
+{
+    /* -- blink speed of 0.5 seconds
+    gettimeofday(&now_time, nullptr);
+    flagBlink = (now_time.tv_usec < 500000) ? 1 : -1;
+    */
+
+    if (SimSpeed && !heat_steps)
+    {
+        TilesAnimated = 0;
+    }
+
+    sim_update_editors();
+
+    sim_update_maps();
+    sim_update_graphs();
+    sim_update_budgets();
+    sim_update_evaluations();
+
+    UpdateFlush();
+}
+
+
+void sim_update_editors()
+{
+    for (SimView* view = sim->editor; view != nullptr; view = view->next)
+    {
+        CancelRedrawView(view);
+        view->invalid = 1;
+        DoUpdateEditor(view);
+    }
+
+    DoUpdateHeads();
+}
+
+
+void sim_update_maps()
+{
+    int i;
+
+    for (SimView* view = sim->map; view != nullptr; view = view->next)
+    {
+        int mustUpdateMap = NewMapFlags[view->map_state] || NewMap || ShakeNow;
+        if (mustUpdateMap)
+        {
+            view->invalid = 1;
+        }
+        if (view->invalid)
+        {
+            if (mustUpdateMap)
+            {
+                //fprintf(stderr, "sim_update_maps mustUpdateMap\n");
+                //view->skip = 0;
+            }
+            if (DoUpdateMap(view))
+            {
+                //CancelRedrawView(view);
+                //view->invalid = 1;
+            }
+        }
+    }
+
+    NewMap = 0;
+    for (i = 0; i < NMAPS; i++)
+    {
+        NewMapFlags[i] = 0;
+    }
 }
 
 
@@ -558,39 +504,35 @@ sim_timeout_loop(short doSim)
 }
 
 
-sim_loop(int doSim)
+void sim_loop(int doSim)
 {
-#ifdef CAM
-  if (!sim_just_cam) {
-#endif
-    if (heat_steps) {
-      int j;
 
-      for (j = 0; j < heat_steps; j++) {
-	sim_heat();
-      }
+    if (heat_steps)
+    {
+        int j;
 
-      MoveObjects();
-/*
-      InvalidateMaps();
-*/
-      NewMap = 1;
-    } else {
-      if (doSim) {
-	SimFrame();
-      }
-      MoveObjects();
+        for (j = 0; j < heat_steps; j++)
+        {
+            sim_heat();
+        }
+
+        MoveObjects();
+        /*
+              InvalidateMaps();
+        */
+        NewMap = 1;
+    }
+    else
+    {
+        if (doSim)
+        {
+            SimFrame();
+        }
+        MoveObjects();
     }
 
     sim_loops++;
     sim_update();
-#ifdef CAM
-  } else {
-    sim_update_cams();
-    UpdateFlush();
-    DoTimeoutListen();
-  }
-#endif
 }
 
 

@@ -2,3 +2,4 @@
 
 
 void DoStopMicropolis();
+void UpdateFlush();

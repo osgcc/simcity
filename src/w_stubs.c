@@ -121,7 +121,6 @@ GameStarted()
 {
   InvalidateMaps();
   InvalidateEditors();
-  gettimeofday(&start_time, NULL);
 
   switch (Startup) {
   case -2: /* Load a city */

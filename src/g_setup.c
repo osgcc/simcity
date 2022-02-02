@@ -296,7 +296,7 @@ GetViewTiles(SimView *view)
   attributes.depth = Tk_DefaultDepth(view->x->screen);
   attributes.valuemask = XpmVisual | XpmColormap | XpmDepth;
 
-  if (view->class == Editor_Class) {
+  if (view->viewClass == Editor_Class) {
 
     sprintf(name, "%s/images/%s", HomeDir,
 	    view->x->color ? "tiles.xpm" : "tilesbw.xpm");
@@ -336,7 +336,7 @@ GetViewTiles(SimView *view)
 
     }
 
-  } else if (view->class == Map_Class) {
+  } else if (view->viewClass == Map_Class) {
 
     if (view->x->small_tile_image == NULL) {
       if (view->x->color) {

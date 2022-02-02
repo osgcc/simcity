@@ -59,15 +59,8 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
-
-#ifdef MSDOS
-#define filename2UNIX(name)	\
-    {   char *p; for (p = name; *p; p++) if (*p == '\\') *p = '/'; }
-#else
-#define filename2UNIX(name)	/**/
-#endif
-
+#include "main.h"
+#include "view.h"
 
 Tcl_Interp *tk_mainInterp = NULL;
 Tcl_CmdBuf buffer = NULL;
@@ -205,7 +198,7 @@ TileViewCmd(CLIENT_ARGS)
     return TCL_ERROR;
   }
 
-  switch (view->class) {
+  switch (view->viewClass) {
   case Editor_Class:
     break;
   case Map_Class:
@@ -229,7 +222,7 @@ ConfigureTileView(Tcl_Interp *interp, SimView *view,
     return TCL_ERROR;
   }
 
-  if (view->class == Map_Class) {
+  if (view->viewClass == Map_Class) {
     Tk_GeometryRequest(view->tkwin, MAP_W, MAP_H);
   } else {
     if (view->width || view->height) {
@@ -307,7 +300,7 @@ DisplayTileView(ClientData clientData)
 
   view->flags &= ~VIEW_REDRAW_PENDING;
   if (view->visible && (tkwin != NULL) && Tk_IsMapped(tkwin)) {
-    switch (view->class) {
+    switch (view->viewClass) {
     case Editor_Class:
       view->skip = 0;
       view->update = 1;
@@ -344,7 +337,7 @@ EventuallyRedrawView(SimView *view)
 }
 
 
-CancelRedrawView(SimView *view)
+void CancelRedrawView(SimView* view)
 {
   if (view->flags & VIEW_REDRAW_PENDING) {
     Tk_CancelIdleCall(DisplayTileView, (ClientData) view);
@@ -416,7 +409,7 @@ TileViewEventProc(ClientData clientData, XEvent *eventPtr)
     else
       view->visible = 1;
   } else if (eventPtr->type == ConfigureNotify) {
-    if (view->class == Editor_Class)
+    if (view->viewClass == Editor_Class)
       DoResizeView(view,
 		   eventPtr->xconfigure.width,
 		   eventPtr->xconfigure.height);
@@ -426,7 +419,7 @@ TileViewEventProc(ClientData clientData, XEvent *eventPtr)
     view->tkwin = NULL;
     CancelRedrawView(view);
     Tk_EventuallyFree((ClientData) view, DestroyTileView);
-  } else if ((view->class == Editor_Class) &&
+  } else if ((view->viewClass == Editor_Class) &&
 	     (view->show_me != 0) &&
 	     ((eventPtr->type == EnterNotify) ||
 	      (eventPtr->type == LeaveNotify) ||
@@ -763,7 +756,6 @@ void tk_main()
     sim = MakeNewSim();
 
     sprintf(initCmd, "source %s/micropolis.tcl", ResourceDir);
-    filename2UNIX(initCmd);
     if (Eval(initCmd))
     {
         sim_exit(1); // Just sets tkMustExit and ExitReturn
@@ -783,7 +775,6 @@ void tk_main()
         char buf[1024];
 
         sprintf(buf, "UIStartMicropolis {%s} {%s} {%s}", HomeDir, ResourceDir, HostName);
-        filename2UNIX(buf);
         if (Eval(buf) != TCL_OK)
         {
             sim_exit(1); // Just sets tkMustExit and ExitReturn

@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
 
 char *cityClassStr[6] = {
@@ -126,7 +126,7 @@ doScoreCard(void)
 }
 
 
-ChangeEval()
+void ChangeEval()
 {
   EvalChanged = 1;
 }

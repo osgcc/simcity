@@ -60,32 +60,43 @@
  * NOT APPLY TO YOU.
  */
 
-#define X_Mem_View 1
-#define X_Wire_View 2
+#pragma once
 
-#define Editor_Class 0
-#define Map_Class 1
+constexpr auto X_Mem_View = 1;
+constexpr auto X_Wire_View = 2;
 
-#define Button_Press 0
-#define Button_Move 1
-#define Button_Release 2
+constexpr auto Editor_Class = 0;
+constexpr auto Map_Class = 1;
 
-#define VIEW_REDRAW_PENDING 1
+constexpr auto Button_Press = 0;
+constexpr auto Button_Move = 1;
+constexpr auto Button_Release = 2;
 
-
-typedef struct Ink {
-  struct Ink *next;
-  int x, y;
-  int color;
-  int length;
-  int maxlength;
-  XPoint *points;
-  int left, top, right, bottom;
-  int last_x, last_y;
-} Ink;
+constexpr auto VIEW_REDRAW_PENDING = 1;
 
 
-typedef struct XDisplay {
+struct XPoint
+{
+	short x{ 0 };
+	short y{ 0 };
+};
+
+
+struct Ink
+{
+	struct Ink* next{ nullptr };
+	int x{ 0 }, y{ 0 };
+	int color{ 0 };
+	int length{ 0 };
+	int maxlength{ 0 };
+	XPoint* points{ nullptr };
+	int left{ 0 }, top{ 0 }, right{ 0 }, bottom{ 0 };
+	int last_x{ 0 }, last_y{ 0 };
+};
+
+
+typedef struct XDisplay
+{
   struct XDisplay *next;
   int references;
   char *display;
@@ -116,106 +127,107 @@ typedef struct XDisplay {
 } XDisplay;
 
 
-typedef struct SimView {
-  struct SimView *next;
-  char *title;
-  int type;
-  int class;
+struct SimView
+{
+	struct SimView* next;
+	char* title;
+	int type;
+	int viewClass;
 
-/* graphics stuff */
-  int *pixels;
-  int line_bytes;
-  int pixel_bytes;
-  int depth;
-  unsigned char *data;
-  int line_bytes8;
-  unsigned char *data8;
-  int visible;
-  int invalid;
-  int skips;
-  int skip;
-  int update;
+	/* graphics stuff */
+	int* pixels;
+	int line_bytes;
+	int pixel_bytes;
+	int depth;
+	unsigned char* data;
+	int line_bytes8;
+	unsigned char* data8;
+	int visible;
+	int invalid;
+	int skips;
+	int skip;
+	int update;
 
-/* map stuff */
-  unsigned char *smalltiles;
-  short map_state;
-  int show_editors;
+	/* map stuff */
+	unsigned char* smalltiles;
+	short map_state;
+	int show_editors;
 
-/* editor stuff */
-  unsigned char *bigtiles;
-  short power_type;
-  short tool_showing;
-  short tool_mode;
-  short tool_x, tool_y;
-  short tool_x_const, tool_y_const;
-  short tool_state;
-  short tool_state_save;
-  short super_user;
-  short show_me;
-  short dynamic_filter;
-  Tk_TimerToken auto_scroll_token;
-  Time tool_event_time;
-  Time tool_last_event_time;
+	/* editor stuff */
+	unsigned char* bigtiles;
+	short power_type;
+	short tool_showing;
+	short tool_mode;
+	short tool_x, tool_y;
+	short tool_x_const, tool_y_const;
+	short tool_state;
+	short tool_state_save;
+	short super_user;
+	short show_me;
+	short dynamic_filter;
+	Tk_TimerToken auto_scroll_token;
+	Time tool_event_time;
+	Time tool_last_event_time;
 
-/* scrolling */
-  int w_x, w_y;					/* view window position */
-  int w_width, w_height;			/* view window size */
-  int m_width, m_height;			/* memory buffer size */
-  int i_width, i_height;			/* ideal whole size */
-  int pan_x, pan_y;				/* centered in window */
-  int tile_x, tile_y, tile_width, tile_height;	/* visible tiles */
-  int screen_x, screen_y, screen_width, screen_height; /* visible pixels */
+	/* scrolling */
+	int w_x, w_y;					/* view window position */
+	int w_width, w_height;			/* view window size */
+	int m_width, m_height;			/* memory buffer size */
+	int i_width, i_height;			/* ideal whole size */
+	int pan_x, pan_y;				/* centered in window */
+	int tile_x, tile_y, tile_width, tile_height;	/* visible tiles */
+	int screen_x, screen_y, screen_width, screen_height; /* visible pixels */
 
-/* tracking */
-  int orig_pan_x, orig_pan_y;
-  int last_x, last_y;
-  int last_button;
-  char *track_info;
-  char *message_var;
+  /* tracking */
+	int orig_pan_x, orig_pan_y;
+	int last_x, last_y;
+	int last_button;
+	char* track_info;
+	char* message_var;
 
-/* window system */
-  Tk_Window tkwin;
-  Tcl_Interp *interp;
-  int flags;
+	/* window system */
+	Tk_Window tkwin;
+	Tcl_Interp* interp;
+	int flags;
 
-  XDisplay *x;
-  XShmSegmentInfo *shminfo;
-  short **tiles;
-  short **other_tiles;
-  XImage *image;
-  XImage *other_image;
-  unsigned char *other_data;
-  Pixmap pixmap;
-  Pixmap pixmap2;
-  Pixmap overlay_pixmap;
-  Pixmap overlay_valid;
-  XFontStruct *fontPtr;
+	XDisplay* x;
+	XShmSegmentInfo* shminfo;
+	short** tiles;
+	short** other_tiles;
+	XImage* image;
+	XImage* other_image;
+	unsigned char* other_data;
+	Pixmap pixmap;
+	Pixmap pixmap2;
+	Pixmap overlay_pixmap;
+	Pixmap overlay_valid;
+	XFontStruct* fontPtr;
 
-/* timing */
-  int updates;
-  double update_real;
-  double update_user;
-  double update_system;
-  int update_context;
+	/* timing */
+	int updates;
+	double update_real;
+	double update_user;
+	double update_system;
+	int update_context;
 
-/* auto goto */
-  int auto_goto;
-  int auto_going;
-  int auto_x_goal, auto_y_goal;
-  int auto_speed;
-  struct SimSprite *follow;
+	/* auto goto */
+	int auto_goto;
+	int auto_going;
+	int auto_x_goal, auto_y_goal;
+	int auto_speed;
+	struct SimSprite* follow;
 
-/* sound */
-  int sound;
+	/* sound */
+	int sound;
 
-/* configuration */
-  int width, height;
+	/* configuration */
+	int width, height;
 
-/* overlay */
-  int show_overlay;
-  int overlay_mode;
-  struct timeval overlay_time;
-} SimView;
+	/* overlay */
+	int show_overlay;
+	int overlay_mode;
+	struct timeval overlay_time;
+};
 
 
 typedef struct SimGraph {
@@ -269,58 +281,52 @@ typedef struct SimDate {
 } SimDate;
 
 
-typedef struct SimSprite {
-  struct SimSprite *next;
-  char *name;
-  int type;
-  int frame;
-  int x, y;
-  int width, height;
-  int x_offset, y_offset;
-  int x_hot, y_hot;
-  int orig_x, orig_y;
-  int dest_x, dest_y;
-  int count, sound_count;
-  int dir, new_dir;
-  int step, flag, control;
-  int turn;
-  int accel;
-  int speed;
-} SimSprite;
+struct SimSprite
+{
+	struct SimSprite* next{ nullptr };
+	char* name{ nullptr };
+	int type{ 0 };
+	int frame{ 0 };
+	int x{ 0 }, y{ 0 };
+	int width{ 0 }, height{ 0 };
+	int x_offset{ 0 }, y_offset{ 0 };
+	int x_hot{ 0 }, y_hot{ 0 };
+	int orig_x{ 0 }, orig_y{ 0 };
+	int dest_x{ 0 }, dest_y{ 0 };
+	int count{ 0 }, sound_count{ 0 };
+	int dir{ 0 }, new_dir{ 0 };
+	int step{ 0 }, flag{ 0 }, control{ 0 };
+	int turn{ 0 };
+	int accel{ 0 };
+	int speed{ 0 };
+};
 
 
-#ifdef CAM
-#include "cam.h"
-#endif
+struct Person
+{
+	int id{ 0 };
+	char* name{ nullptr };
+};
 
 
-typedef struct Person {
-  int id;
-  char *name;
-} Person;
+struct Sim
+{
+	int editors{ 0 };
+	SimView* editor{ nullptr };
+	int maps{ 0 };
+	SimView* map{ nullptr };
+	int graphs{ 0 };
+	SimGraph* graph{ nullptr };
+	int dates{ 0 };
+	SimDate* date{ nullptr };
+	int sprites{ 0 };
+	SimSprite* sprite{ nullptr };
+	Ink* overlay{ nullptr };
+};
 
 
-typedef struct Sim {
-  int editors;
-  SimView *editor;
-  int maps;
-  SimView *map;
-  int graphs;
-  SimGraph *graph;
-  int dates;
-  SimDate *date;
-  int sprites;
-  SimSprite *sprite;
-#ifdef CAM
-  int scams;
-  SimCam *scam;
-#endif
-  Ink *overlay;
-} Sim;
-
-
-typedef struct Cmd {
-  char *name;
-  int (*cmd)();
-} Cmd;
-
+struct Cmd
+{
+	char* name{ nullptr };
+	int (*cmd)() { nullptr };
+};

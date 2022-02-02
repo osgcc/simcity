@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
 
 #if defined(MSDOS) || defined(OSF1) || defined(IS_INTEL)
@@ -454,7 +454,6 @@ LoadScenario(short s)
   InvalidateEditors();
   setSpeed(3);
   CityTax = 7;
-  gettimeofday(&start_time, NULL);
 
   _load_file(fname, ResourceDir);
 
@@ -501,7 +500,6 @@ int LoadCity(char *filename)
     filename = (char *)malloc(strlen(cp) + 1);
     strcpy(filename, cp);
     setCityName(filename);
-    gettimeofday(&start_time, NULL);
 
     InvalidateMaps();
     InvalidateEditors();

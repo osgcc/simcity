@@ -272,7 +272,7 @@ DoNewGame()
 }
 
 
-DoGeneratedCityImage(char *name, int time, int pop, char *class, int score)
+DoGeneratedCityImage(char *name, int time, int pop, char* _class, int score)
 {
   /* XXX: TODO: print city */
 }

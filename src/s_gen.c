@@ -92,8 +92,6 @@ GenerateSomeCity(int r)
     CityFileName = NULL;
   }
 
-  gettimeofday(&start_time, NULL);
-
   GenerateMap(r);
   ScenarioID = 0;
   CityTime = 0;

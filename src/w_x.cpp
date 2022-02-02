@@ -60,6 +60,7 @@
  * NOT APPLY TO YOU.
  */
 #include "main.h"
+#include "view.h"
 
 #include <algorithm>
 
@@ -258,7 +259,7 @@ SimView* InitNewView(SimView* view, char* title, int _class, int w, int h)
     view->next = NULL;
     view->title = t;
     view->type = -1;
-    view->class = class;
+    view->viewClass = _class;
     view->bigtiles = view->smalltiles = NULL;
     view->pixels = NULL;
     view->line_bytes = 0;
@@ -363,13 +364,13 @@ DestroyView(SimView *view)
 
   CancelRedrawView(view);
 
-  for (vp = ((view->class == Editor_Class) ?
+  for (vp = ((view->viewClass == Editor_Class) ?
 	     (&sim->editor) : (&sim->map));
        (*vp) != NULL;
        vp = &((*vp)->next)) {
     if ((*vp) == view) {
       (*vp) = view->next;
-      if (view->class == Editor_Class)
+      if (view->viewClass == Editor_Class)
 	sim->editors--;
       else
 	sim->maps--;
@@ -472,7 +473,7 @@ DoResizeView(SimView *view, int w, int h)
   view->w_width = w;
   view->w_height = h;
 
-  if (view->class == Map_Class) { /* Map_Class */
+  if (view->viewClass == Map_Class) { /* Map_Class */
     view->m_width = w;
     view->m_height = h;
 
@@ -790,12 +791,12 @@ DoResizeView(SimView *view, int w, int h)
 
  FINISH:
 
-  if (view->class == Editor_Class) {
+  if (view->viewClass == Editor_Class) {
 
     AllocTiles(view);
     DoAdjustPan(view);
 
-  } else if (view->class == Map_Class) {
+  } else if (view->viewClass == Map_Class) {
 
     if (view->type == X_Mem_View) { /* Memory Map */
 
@@ -993,141 +994,135 @@ DoPanBy(struct SimView *view, int dx, int dy)
 }
 
 
-DoPanTo(struct SimView *view, int x, int y)
+void DoPanTo(SimView* view, int x, int y)
 {
-  if (view->class != Editor_Class) {
-    return;
-  }
+    if (view->viewClass != Editor_Class)
+    {
+        return;
+    }
 
-  if (x < 0) x = 0;
-  if (y < 0) y = 0;
-  if (x > view->i_width) x = view->i_width - 1;
-  if (y > view->i_height) y = view->i_height - 1;
-  if ((view->pan_x != x) ||
-      (view->pan_y != y)) {
-    view->pan_x = x;
-    view->pan_y = y;
-    DoAdjustPan(view);
-  }
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x > view->i_width) x = view->i_width - 1;
+    if (y > view->i_height) y = view->i_height - 1;
+    if ((view->pan_x != x) || (view->pan_y != y))
+    {
+        view->pan_x = x;
+        view->pan_y = y;
+        DoAdjustPan(view);
+    }
 }
 
-/* #define DEBUG_PAN */
 
-DoAdjustPan(struct SimView *view)
+void DoAdjustPan(SimView* view)
 {
-  int ww2 = view->w_width >>1, wh2 = view->w_height >>1;
-  int px = view->pan_x, py = view->pan_y;
-  int last_tile_x = view->tile_x, last_tile_y = view->tile_y;
-  int last_tile_width = view->tile_width, last_tile_height = view->tile_height;
-  int total_width = view->m_width >>4, total_height = view->m_height >>4;
-//fprintf(stderr, "DoAdjustPan\n");
+    int ww2 = view->w_width >> 1, wh2 = view->w_height >> 1;
+    int px = view->pan_x, py = view->pan_y;
+    int last_tile_x = view->tile_x, last_tile_y = view->tile_y;
+    int last_tile_width = view->tile_width, last_tile_height = view->tile_height;
+    int total_width = view->m_width >> 4, total_height = view->m_height >> 4;
 
-#ifdef DEBUG_PAN
-  printf("AdjustPan window %d %d  ww2 %d wh2 %d  pan %d %d\n",
-	 view->w_width, view->w_height, ww2, wh2, px, py);
-  printf("  last tile %d %d %d %d\n",
-	 last_tile_x, last_tile_y, last_tile_width, last_tile_height);
-#endif
-
-  if ((view->tile_x = ((px - ww2) >>4)) < 0)
-    view->tile_x = 0;
-  if ((view->tile_y = ((py - wh2) >>4)) < 0)
-    view->tile_y = 0;
-
-#ifdef DEBUG_PAN
-  printf("  now tile %d %d\n", view->tile_x, view->tile_y);
-#endif
-
-  view->tile_width = ((15 + px + ww2) >>4);
-  view->tile_height = ((15 + py + wh2) >>4);
-
-#ifdef DEBUG_PAN
-  printf("    outer tile %d %d\n", view->tile_width, view->tile_height);
-#endif
-
-  if (view->tile_width > (view->i_width >>4))
-    view->tile_width = (view->i_width >>4);
-  view->tile_width -= view->tile_x;
-  if (view->tile_height > (view->i_height >>4))
-    view->tile_height = (view->i_height >>4);
-  view->tile_height -= view->tile_y;
-
-#ifdef DEBUG_PAN
-  printf("    tile size %d %d\n", view->tile_width, view->tile_height);
-#endif
-
-  if (view->tile_width > (view->m_width >>4))
-    view->tile_width = (view->m_width >>4);
-  if (view->tile_height > (view->m_height >>4))
-    view->tile_height = (view->m_height >>4);
-
-#ifdef DEBUG_PAN
-  printf("    clipped size %d %d\n", view->tile_width, view->tile_height);
-  printf("    maximum size %d %d\n", view->m_width >>4, view->m_height >>4);
-#endif
-
-  view->screen_x = (ww2 - px) + (view->tile_x <<4);
-  view->screen_y = (wh2 - py) + (view->tile_y <<4);
-  view->screen_width = (view->tile_width <<4);
-  view->screen_height = (view->tile_height <<4);
-
-#ifdef DEBUG_PAN
-  printf("    screen %d %d %d %d\n",
-	 view->screen_x, view->screen_y,
-	 view->screen_width, view->screen_height);
-#endif
-
-  view->overlay_mode = 0;
-//  view->skip = 0;
-  view->invalid = 1;
-  if (SimSpeed == 0) {
-    EventuallyRedrawView(view);
-  }
-/*  InvalidateEditors(); */
-  if (view->show_me) {
-    RedrawMaps();
-  }
-/*  FixMicropolisTimer(); */
-
-  { int dx = last_tile_x - view->tile_x,
-        dy = last_tile_y - view->tile_y;
-    short **want = view->other_tiles,
-    	  **have = view->tiles;
-
-#ifdef DEBUG_PAN
-    printf("scrolling %d %d\n", dx, dy);
-#endif
-
-    if ((dx != 0) || (dy != 0)) {
-      int row, col, x, y,
-          width = view->tile_width,
-          height = view->tile_height;
-
-      for (col = 0; col < width; col++)
-	memcpy(want[col], have[col], (height * sizeof(short)));
-
-      for (col = 0; col < total_width; col++) {
-	x = col - dx;
-	for (row = 0; row < total_height; row++) {
-	  y = row - dy;
-	  if ((x >= 0) && (x < width) &&
-	      (y >= 0) && (y < height)) {
-	    have[col][row] = want[x][y];
-	  } else {
-	    have[col][row] = -1;
-	  }
-	}
-      }
-
-      XCopyArea(view->x->dpy, view->pixmap, view->pixmap, view->x->gc,
-		0, 0, view->tile_width <<4, view->tile_height <<4,
-		dx <<4, dy <<4);
-
-      if (view->type == X_Mem_View) {
-	XSync(view->x->dpy, False);
-      }
+    if ((view->tile_x = ((px - ww2) >> 4)) < 0)
+    {
+        view->tile_x = 0;
     }
-  }
+    if ((view->tile_y = ((py - wh2) >> 4)) < 0)
+    {
+        view->tile_y = 0;
+    }
+
+    view->tile_width = ((15 + px + ww2) >> 4);
+    view->tile_height = ((15 + py + wh2) >> 4);
+
+    if (view->tile_width > (view->i_width >> 4))
+    {
+        view->tile_width = (view->i_width >> 4);
+    }
+    view->tile_width -= view->tile_x;
+
+    if (view->tile_height > (view->i_height >> 4))
+    {
+        view->tile_height = (view->i_height >> 4);
+    }
+    view->tile_height -= view->tile_y;
+
+
+    if (view->tile_width > (view->m_width >> 4))
+    {
+        view->tile_width = (view->m_width >> 4);
+    }
+    if (view->tile_height > (view->m_height >> 4))
+    {
+        view->tile_height = (view->m_height >> 4);
+    }
+
+    view->screen_x = (ww2 - px) + (view->tile_x << 4);
+    view->screen_y = (wh2 - py) + (view->tile_y << 4);
+    view->screen_width = (view->tile_width << 4);
+    view->screen_height = (view->tile_height << 4);
+
+    view->overlay_mode = 0;
+    view->invalid = 1;
+    if (SimSpeed == 0)
+    {
+        EventuallyRedrawView(view);
+    }
+    if (view->show_me)
+    {
+        RedrawMaps();
+    }
+
+    // FixMicropolisTimer();
+
+    {
+        int dx = last_tile_x - view->tile_x,
+            dy = last_tile_y - view->tile_y;
+        short** want = view->other_tiles,
+            ** have = view->tiles;
+
+        if ((dx != 0) || (dy != 0))
+        {
+            int row, col, x, y,
+                width = view->tile_width,
+                height = view->tile_height;
+
+            for (col = 0; col < width; col++)
+            {
+                memcpy(want[col], have[col], (height * sizeof(short)));
+            }
+
+            for (col = 0; col < total_width; col++)
+            {
+                x = col - dx;
+                for (row = 0; row < total_height; row++)
+                {
+                    y = row - dy;
+                    if ((x >= 0) && (x < width) && (y >= 0) && (y < height))
+                    {
+                        have[col][row] = want[x][y];
+                    }
+                    else
+                    {
+                        have[col][row] = -1;
+                    }
+                }
+            }
+
+            // \todo This looks like a blit call
+            /*
+            XCopyArea(view->x->dpy, view->pixmap, view->pixmap, view->x->gc,
+                0, 0, view->tile_width << 4, view->tile_height << 4,
+                dx << 4, dy << 4);
+             */
+
+            /*
+            if (view->type == X_Mem_View)
+            {
+                XSync(view->x->dpy, False);
+            }
+            */
+        }
+    }
 }
 
 
@@ -1184,8 +1179,7 @@ Ink *OldInk = NULL;
 
 /* XXX: todo: ink locking so someone doesn't erase ink that's being drawn */
 
-Ink *
-NewInk()
+Ink* NewInk()
 {
   Ink *ink;
 

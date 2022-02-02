@@ -59,7 +59,9 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+
+#include "main.h"
+#include "view.h"
 
 
 Tcl_HashTable EditorCmds;
@@ -835,7 +837,7 @@ DoNewEditor(SimView *view)
 }
 
 
-DoUpdateEditor(SimView *view)
+void DoUpdateEditor(SimView* view)
 {
   int dx, dy, i;
 

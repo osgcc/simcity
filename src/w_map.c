@@ -59,17 +59,15 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
 
+#include "main.h"
+#include "view.h"
 
 Tcl_HashTable MapCmds;
 
-
 extern Tk_ConfigSpec TileViewConfigSpecs[];
 
-
-Ink *NewInk();
-
+Ink* NewInk();
 
 MapCmdconfigure(VIEW_ARGS)
 {
@@ -340,80 +338,82 @@ DoNewMap(SimView *view)
 }
 
 
-int DoUpdateMap(SimView *view)
+int DoUpdateMap(SimView* view)
 {
-  int dx, dy, i;
+    int dx, dy, i;
 
-  view->updates++;
+    view->updates++;
 
-// fprintf(stderr, "UpdateMaps sim_skips %d skips %d skip %d visible %d\n", sim_skips, view->skips, view->skip, view->visible);
-
-  if (!view->visible) {
-    return 0;
-  }
-
-  if ((!ShakeNow) &&
-      (!view->update) &&
-      (sim_skips ||
-       view->skips)) {
-    if (sim_skips) {
-      if (sim_skip > 0) {
-	return 0;
-      }
-    } else {
-      if (view->skip > 0) {
-	--view->skip;
-	return 0;
-      } else {
-	view->skip = view->skips;
-      }
-    }
-  }
-
-  view->update = 0;
-  view->skip = 0;
-
-//  view->invalid = 1;
-
-  if (view->invalid || NewMap || ShakeNow) {
-
-    view->invalid = 0;
-
-    switch (view->type) {
-
-    case X_Mem_View:
-      MemDrawMap(view);
-      break;
-
-    case X_Wire_View:
-      WireDrawMap(view);
-      break;
+    if (!view->visible)
+    {
+        return 0;
     }
 
-  }
+    if ((!ShakeNow) && (!view->update) && (sim_skips || view->skips))
+    {
+        if (sim_skips)
+        {
+            if (sim_skip > 0)
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            if (view->skip > 0)
+            {
+                --view->skip;
+                return 0;
+            }
+            else
+            {
+                view->skip = view->skips;
+            }
+        }
+    }
 
-  /* XXX: don't do this stuff if just redrawing overlay */
+    view->update = 0;
+    view->skip = 0;
 
-  for (dx = dy = i = 0; i < ShakeNow; i++) {
-    dx += Rand(16) - 8;
-    dy += Rand(16) - 8;
-  }
+    if (view->invalid || NewMap || ShakeNow)
+    {
 
-  XCopyArea(view->x->dpy, view->pixmap, view->pixmap2, view->x->gc,
-	    dx, dy, view->w_width, view->w_height, 0, 0);
-  DrawMapInk(view);
+        view->invalid = 0;
 
-  /* XXX: do this if just redrawing overlay */
+        switch (view->type)
+        {
 
-  XCopyArea(view->x->dpy, view->pixmap2,
-	    Tk_WindowId(view->tkwin), view->x->gc,
-	    0, 0, view->w_width, view->w_height, 0, 0);
+        case X_Mem_View:
+            MemDrawMap(view);
+            break;
 
-  if (view->show_editors) {
-    DrawMapEditorViews(view);
-  }
+        case X_Wire_View:
+            WireDrawMap(view);
+            break;
+        }
 
-  return 1;
+    }
+
+    /* XXX: don't do this stuff if just redrawing overlay */
+    for (dx = dy = i = 0; i < ShakeNow; i++)
+    {
+        dx += Rand(16) - 8;
+        dy += Rand(16) - 8;
+    }
+
+    //\todo Blitting
+    //XCopyArea(view->x->dpy, view->pixmap, view->pixmap2, view->x->gc, dx, dy, view->w_width, view->w_height, 0, 0);
+    DrawMapInk(view);
+
+    /* XXX: do this if just redrawing overlay */
+    //XCopyArea(view->x->dpy, view->pixmap2, Tk_WindowId(view->tkwin), view->x->gc, 0, 0, view->w_width, view->w_height, 0, 0);
+
+    if (view->show_editors)
+    {
+        DrawMapEditorViews(view);
+    }
+
+    return 1;
 }
 
 

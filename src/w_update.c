@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
 
 short MustUpdateFunds;
@@ -70,25 +70,26 @@ long LastCityMonth;
 long LastFunds;
 long LastR, LastC, LastI;
 
-char *dateStr[12] = {
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+char *dateStr[12] =
+{
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
 
 
 void DoUpdateHeads()
 {
-  showValves();
-  doTimeStuff();
-  ReallyUpdateFunds();
-  updateOptions();
+    showValves();
+    doTimeStuff();
+    ReallyUpdateFunds();
+    updateOptions();
 }
 
 
 void UpdateEditors()
 {
-  InvalidateEditors();
-  DoUpdateHeads();
+    InvalidateEditors();
+    DoUpdateHeads();
 }
 
 
@@ -117,10 +118,10 @@ void UpdateHeads()
   DoUpdateHeads();
 }
 
-UpdateFunds(void)
+
+void UpdateFunds()
 {
   MustUpdateFunds = 1;
-//  Kick();
 }
 
 
