@@ -69,9 +69,6 @@
   }
 
 
-#define GRAPH_ARGS \
-	Graph *graph, Tcl_Interp *interp, int argc, char **argv
-
 #define DATE_ARGS \
 	SimDate *date, Tcl_Interp *interp, int argc, char **argv
 

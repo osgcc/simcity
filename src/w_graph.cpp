@@ -189,7 +189,7 @@ SimGraphEventProc(ClientData clientData, XEvent *eventPtr)
 }
 
 
-int GraphCmdconfigure(GRAPH_ARGS)
+int GraphCmdconfigure(Graph *graph, Tcl_Interp *interp, int argc, char **argv)
 {
   int result = TCL_OK;
 
@@ -207,7 +207,7 @@ int GraphCmdconfigure(GRAPH_ARGS)
 }
 
 
-int GraphCmdposition(GRAPH_ARGS)
+int GraphCmdposition(Graph *graph, Tcl_Interp *interp, int argc, char **argv)
 {
   int result = TCL_OK;
 
@@ -225,7 +225,7 @@ int GraphCmdposition(GRAPH_ARGS)
 }
 
 
-int GraphCmdsize(GRAPH_ARGS)
+int GraphCmdsize(Graph *graph, Tcl_Interp *interp, int argc, char **argv)
 {
   if ((argc != 2) && (argc != 4)) {
     return TCL_ERROR;
@@ -247,7 +247,7 @@ int GraphCmdsize(GRAPH_ARGS)
 }
 
 
-int GraphCmdVisible(GRAPH_ARGS)
+int GraphCmdVisible(Graph *graph, Tcl_Interp *interp, int argc, char **argv)
 {
   int visible;
 
@@ -272,7 +272,7 @@ int GraphCmdVisible(GRAPH_ARGS)
 }
 
 
-int GraphCmdRange(GRAPH_ARGS)
+int GraphCmdRange(Graph *graph, Tcl_Interp *interp, int argc, char **argv)
 {
   int range;
 
@@ -298,7 +298,7 @@ int GraphCmdRange(GRAPH_ARGS)
 }
 
 
-int GraphCmdMask(GRAPH_ARGS)
+int GraphCmdMask(Graph *graph, Tcl_Interp *interp, int argc, char **argv)
 {
   int mask;
 
