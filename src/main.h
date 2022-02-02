@@ -560,9 +560,6 @@ extern int sim_skip;
 extern int sim_paused;
 extern int sim_paused_speed;
 extern int sim_tty;
-#ifdef CAM
-extern int sim_just_cam;
-#endif
 extern int heat_steps;
 extern int heat_flow;
 extern int heat_rule;

@@ -411,30 +411,6 @@ int SimCmdHeatRule(Tcl_Interp *interp, int argc, char **argv)
 }
 
 
-#ifdef CAM
-
-int SimCmdJustCam(Tcl_Interp *interp, int argc, char **argv)
-{
-  int cam;
-
-  if ((argc != 2) && (argc != 3)) {
-    return (TCL_ERROR);
-  }
-
-  if (argc == 3) {
-    if (Tcl_GetInt(interp, argv[2], &cam) != TCL_OK) {
-      return (TCL_ERROR);
-    }
-    sim_just_cam = cam;
-  }
-
-  sprintf(interp->result, "%d", sim_just_cam);
-  return (TCL_OK);
-}
-
-#endif
-
-
 #ifdef NET
 
 int SimCmdListenTo(Tcl_Interp *interp, int argc, char **argv)
@@ -1585,9 +1561,6 @@ sim_command_init()
   SIM_CMD(HeatSteps);
   SIM_CMD(HeatFlow);
   SIM_CMD(HeatRule);
-#ifdef CAM
-  SIM_CMD(JustCam);
-#endif
 #ifdef NET
   SIM_CMD(ListenTo);
   SIM_CMD(HearFrom);
