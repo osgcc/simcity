@@ -69,9 +69,6 @@
   }
 
 
-#define CLIENT_ARGS \
-	ClientData clientData, Tcl_Interp *interp, int argc, char **argv
-
 #define VIEW_ARGS \
 	SimView *view, Tcl_Interp *interp, int argc, char **argv
 

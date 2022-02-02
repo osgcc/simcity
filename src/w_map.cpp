@@ -281,7 +281,7 @@ MapCmdViewAt(VIEW_ARGS)
 map_command_init()
 {
   int new;
-  extern int TileViewCmd(CLIENT_ARGS);
+  extern int TileViewCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
 
   Tcl_CreateCommand(tk_mainInterp, "mapview", TileViewCmd,
 		    (ClientData)MainWindow, (void (*)()) NULL);
@@ -303,7 +303,7 @@ map_command_init()
 
 
 int
-DoMapCmd(CLIENT_ARGS)
+DoMapCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
 {
   SimView *view = (SimView *) clientData;
   Tcl_HashEntry *ent;

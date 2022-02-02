@@ -754,7 +754,7 @@ int EditorCmdWriteJpeg(VIEW_ARGS)
 editor_command_init()
 {
   int new;
-  extern int TileViewCmd(CLIENT_ARGS);
+  extern int TileViewCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
 
   Tcl_CreateCommand(tk_mainInterp, "editorview", TileViewCmd,
 		    (ClientData)MainWindow, (void (*)()) NULL);
@@ -801,7 +801,7 @@ editor_command_init()
 
 
 int
-DoEditorCmd(CLIENT_ARGS)
+DoEditorCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
 {
   SimView *view = (SimView *) clientData;
   Tcl_HashEntry *ent;

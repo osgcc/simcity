@@ -368,7 +368,7 @@ int DateCmdSet(DATE_ARGS)
 
 
 int
-DoDateCmd(CLIENT_ARGS)
+DoDateCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
 {
   SimDate *date = (SimDate *) clientData;
   Tcl_HashEntry *ent;
@@ -394,7 +394,7 @@ DoDateCmd(CLIENT_ARGS)
 
 
 int
-DateViewCmd(CLIENT_ARGS)
+DateViewCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
 {
   SimDate *date;
   Tk_Window tkwin = (Tk_Window) clientData;

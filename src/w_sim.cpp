@@ -1500,7 +1500,7 @@ int SimCmdMultiPlayerMode(Tcl_Interp *interp, int argc, char **argv)
 
 /************************************************************************/
 
-int SimCmd(CLIENT_ARGS)
+int SimCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
 {
   Tcl_HashEntry *ent;
   int result = TCL_OK;

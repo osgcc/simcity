@@ -325,7 +325,7 @@ int GraphCmdMask(GRAPH_ARGS)
 
 
 int
-DoGraphCmd(CLIENT_ARGS)
+DoGraphCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
 {
   Graph *graph = (Graph *) clientData;
   Tcl_HashEntry *ent;
@@ -351,7 +351,7 @@ DoGraphCmd(CLIENT_ARGS)
 
 
 int
-GraphViewCmd(CLIENT_ARGS)
+GraphViewCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
 {
   Graph *graph;
   Tk_Window tkwin = (Tk_Window) clientData;

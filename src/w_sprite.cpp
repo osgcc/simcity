@@ -102,7 +102,7 @@ SimSprite *NewSprite(char *name, int type, int x, int y);
 
 
 int
-DoSpriteCmd(CLIENT_ARGS)
+DoSpriteCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
 {
   SimSprite *sprite = (SimSprite *) clientData;
   Tcl_HashEntry *ent;
@@ -128,7 +128,7 @@ DoSpriteCmd(CLIENT_ARGS)
 
 
 int
-SpriteCmd(CLIENT_ARGS)
+SpriteCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
 {
   SimSprite *sprite;
   int type;

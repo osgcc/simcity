@@ -106,7 +106,7 @@ Tk_ConfigSpec TileViewConfigSpecs[] =
 */
 
 
-int TileViewCmd(CLIENT_ARGS);
+int TileViewCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
 int ConfigureTileView(Tcl_Interp* interp, SimView* view, int argc, char** argv, int flags);
 static void TileViewEventProc(ClientData clientData, XEvent* eventPtr);
 static void DestroyTileView(ClientData clientData);
@@ -115,17 +115,17 @@ int ConfigureSimGraph(Tcl_Interp* interp, Graph* graph, int argc, char** argv, i
 
 static void MicropolisTimerProc(ClientData clientData);
 
-int SimCmd(CLIENT_ARGS);
-int DoEditorCmd(CLIENT_ARGS);
-int DoMapCmd(CLIENT_ARGS);
-int GraphViewCmd(CLIENT_ARGS);
-int DoGraphCmd(CLIENT_ARGS);
-int SpriteCmd(CLIENT_ARGS);
+int SimCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
+int DoEditorCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
+int DoMapCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
+int GraphViewCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
+int DoGraphCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
+int SpriteCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
 extern int Tk_PieMenuCmd();
 extern int Tk_IntervalCmd();
 
 
-int TileViewCmd(CLIENT_ARGS)
+int TileViewCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
 {
   Tk_Window tkwin = (Tk_Window) clientData;
   SimView *view;
