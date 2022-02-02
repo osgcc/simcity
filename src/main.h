@@ -60,6 +60,8 @@
  * NOT APPLY TO YOU.
  */
 
+#pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -81,11 +83,12 @@
 #define TRUE		 1
 #define FALSE		 0
 
-#define SimWidth	120
-#define SimHeight	100
+constexpr auto SimWidth = 120;
+constexpr auto SimHeight = 100;
 
-#define WORLD_X		SimWidth
-#define WORLD_Y		SimHeight
+constexpr auto WORLD_X = SimWidth;
+constexpr auto WORLD_Y = SimHeight;
+
 #define HWLDX		(SimWidth >>1)
 #define HWLDY		(SimHeight >>1)
 #define QWX		(SimWidth >>2)

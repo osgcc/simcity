@@ -60,6 +60,11 @@
  * NOT APPLY TO YOU.
  */
 
+#pragma once
+
+#include "main.h"
+
+
 #define ABS(x)		(((x) < 0) ? (-(x)) : (x))
 
 #define HASHED_CMD(scope, name) \
@@ -72,8 +77,11 @@
 
 /* tile bounds */
 
-#define TestBounds(x, y) \
-	(((x) >= 0) && ((x) < WORLD_X) && ((y) >= 0) && ((y) < WORLD_Y))
+
+bool TestBounds(int x, int y)
+{
+	return (((x) >= 0) && ((x) < WORLD_X) && ((y) >= 0) && ((y) < WORLD_Y));
+}
 
 /* For s_disasters.c */
 
