@@ -78,6 +78,11 @@
 #include "view.h"
 #include "macros.h"
 
+#include "w_sprite.h"
+
+
+#include <string>
+
  /* Constants */
 
 #define TRUE		 1
@@ -432,10 +437,10 @@ extern short PolicePop, FireStPop;
 extern short CoalPop, NuclearPop, PortPop, APortPop;
 extern short NeedHosp, NeedChurch;
 extern short CrimeAverage, PolluteAverage, LVAverage;
-extern char *MicropolisVersion;
-extern char *CityName;
-extern char *CityFileName;
-extern char *StartupName;
+extern const std::string MicropolisVersion;
+extern std::string CityName;
+extern std::string CityFileName;
+extern std::string StartupName;
 extern short StartingYear;
 extern long CityTime;
 extern long LastCityTime;
@@ -581,8 +586,8 @@ extern short Dozing;
 extern short toolSize[];
 extern short toolOffset[];
 extern long toolColors[];
-extern char *Displays;
-extern char *FirstDisplay;
+extern std::string Displays;
+extern std::string FirstDisplay;
 extern char *dateStr[12];
 
 extern short NewMap;
@@ -606,11 +611,11 @@ extern int GotXError;
 extern short Rand(short range);
 extern short RandInt(void);
 
-extern Sim *MakeNewSim();
-extern SimView *MakeNewView();
-extern SimSprite *GetSprite();
-extern SimSprite *MakeSprite();
-extern SimSprite *MakeNewSprite();
+extern Sim* MakeNewSim();
+extern SimView* MakeNewView();
+extern SimSprite* GetSprite();
+extern SimSprite* MakeSprite();
+extern SimSprite* MakeNewSprite();
 
 extern int setSpeed(short speed);
 extern int setSkips(int skips);
