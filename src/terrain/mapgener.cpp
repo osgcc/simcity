@@ -199,7 +199,7 @@ int xloc,yloc;
 	for (z=0; z<Dis; z++)	{
 		Dir = GRand(7);
 		MoveMap(Dir);
-		if (!(TestBounds(MapX,MapY))) return;
+		if (!(TestBounds(MapX,MapY, WORLD_X, WORLD_Y))) return;
 		if (Map[MapX][MapY] == 0)  Map[MapX][MapY] = WOODS+ BLN;
 	}
 }
@@ -221,7 +221,7 @@ far SmoothRiver()
  				bitindex = bitindex << 1;
  				Xtem = MapX + DX[z];
  				Ytem = MapY + DY[z];
- 				if (TestBounds(Xtem, Ytem))
+ 				if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y))
  					if ( Map[Xtem][Ytem]) bitindex++;
  			}
  			temp = REdTab[bitindex & 15];
@@ -246,7 +246,7 @@ far SmoothTrees()
  				bitindex = bitindex << 1;
  				Xtem = MapX + DX[z];
  				Ytem = MapY + DY[z];
- 				if (TestBounds(Xtem, Ytem))		
+ 				if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y))
  					if (Map[Xtem][Ytem] & BN) bitindex++;
  				
  			}
@@ -283,7 +283,7 @@ near DoBRiv()
 int temp, count;
 
 	count = 0;
-	while (TestBounds (MapX+4, MapY+4))		{
+	while (TestBounds (MapX+4, MapY+4, WORLD_X, WORLD_Y))		{
 		BRivPlop();
 		if (GRand(10) > 4) Dir++;
 		if (GRand(10) > 4) Dir--;
@@ -296,7 +296,7 @@ near DoSRiv()
 {
 int temp;
 
-	while (TestBounds (MapX+3, MapY+3))		{
+	while (TestBounds (MapX+3, MapY+3, WORLD_X, WORLD_Y))		{
 		SRivPlop();
 		if (GRand(10) > 5) Dir++;
 		if (GRand(10) > 5) Dir--;
@@ -361,7 +361,7 @@ register int Xloc, Yloc, temp;
 	if (Mchar == 0) return;
 	Xloc = MapX + Xoff;
 	Yloc = MapY + Yoff;
-	if (TestBounds (Xloc, Yloc) == FALSE) return (FALSE);
+	if (TestBounds (Xloc, Yloc, WORLD_X, WORLD_Y) == FALSE) return (FALSE);
 	if (temp = Map [Xloc][Yloc])	{
 		temp = temp & 1023;
 		if (temp == RIVER) 
@@ -372,7 +372,7 @@ register int Xloc, Yloc, temp;
 	Map [Xloc][Yloc] = Mchar;	
 }
 
-far TestBounds(x, y)
+far TestBounds(x, y, WORLD_X, WORLD_Y)
 register int x, y;
 {
 	if ((( x >= 0) && (x < WORLD_X)) && (( y >= 0) && (y < WORLD_Y)))

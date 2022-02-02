@@ -283,7 +283,7 @@ TreeSplash(short xloc, short yloc)
   for (z = 0; z < dis; z++) {
     dir = Rand(7);
     MoveMap(dir);
-    if (!(TestBounds(MapX, MapY)))
+    if (!(TestBounds(MapX, MapY, WORLD_X, WORLD_Y)))
       return;
     if ((Map[MapX][MapY] & LOMASK) == DIRT)
       Map[MapX][MapY] = WOODS + BLBNBIT;
@@ -330,7 +330,7 @@ SmoothRiver(void)
 	  bitindex = bitindex << 1;
 	  Xtem = MapX + DX[z];
 	  Ytem = MapY + DY[z];
-	  if (TestBounds(Xtem, Ytem) &&
+	  if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) &&
 	      ((Map[Xtem][Ytem] & LOMASK) != DIRT) &&
 	      (((Map[Xtem][Ytem]&LOMASK) < WOODS_LOW) ||
 	       ((Map[Xtem][Ytem]&LOMASK) > WOODS_HIGH)))
@@ -374,7 +374,7 @@ SmoothTrees(void)
 	  bitindex = bitindex << 1;
 	  Xtem = MapX + DX[z];
 	  Ytem = MapY + DY[z];
-	  if (TestBounds(Xtem, Ytem) &&
+	  if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) &&
 	      IsTree(Map[Xtem][Ytem])) {
 	    bitindex++;
 	  }
@@ -423,7 +423,7 @@ DoBRiv(void)
     r2 = CurveLevel + 100;
   }
 
-  while (TestBounds (MapX + 4, MapY + 4)) {
+  while (TestBounds (MapX + 4, MapY + 4, WORLD_X, WORLD_Y)) {
     BRivPlop();
     if (Rand(r1) < 10) {
       Dir = LastDir;
@@ -448,7 +448,7 @@ DoSRiv(void)
     r2 = CurveLevel + 100;
   }
 
-  while (TestBounds (MapX + 3, MapY + 3)) {
+  while (TestBounds (MapX + 3, MapY + 3, WORLD_X, WORLD_Y)) {
     SRivPlop();
     if (Rand(r1) < 10) {
       Dir = LastDir;
@@ -469,7 +469,7 @@ PutOnMap(short Mchar, short Xoff, short Yoff)
     return;
   Xloc = MapX + Xoff;
   Yloc = MapY + Yoff;
-  if (TestBounds(Xloc, Yloc) == FALSE)
+  if (TestBounds(Xloc, Yloc, WORLD_X, WORLD_Y) == FALSE)
     return;
   if (temp = Map[Xloc][Yloc]) {
     temp = temp & LOMASK;

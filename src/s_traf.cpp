@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
 
 /* Traffic Generation */
@@ -112,7 +112,7 @@ SetTrafMem(void)
 
   for (x = PosStackN; x > 0; x--) {
     PullPos();
-    if (TestBounds(SMapX, SMapY)) {
+    if (TestBounds(SMapX, SMapY, WORLD_X, WORLD_Y)) {
       z = Map[SMapX][SMapY] & LOMASK;
       if ((z >= ROADBASE) && (z < POWERBASE)) {
 	SimSprite *sprite;
@@ -166,7 +166,7 @@ FindPRoad(void)		/* look for road on edges of zone   */
   for (z = 0; z < 12; z++) {
 	  tx = SMapX + PerimX[z];
 	  ty = SMapY + PerimY[z];
-	  if (TestBounds(tx, ty)) {
+	  if (TestBounds(tx, ty, WORLD_X, WORLD_Y)) {
 		  if (RoadTest(Map[tx][ty])) {
 			  SMapX = tx;
 			  SMapY = ty;
@@ -187,7 +187,7 @@ FindPTele(void)		/* look for telecommunication on edges of zone */
   for (z = 0; z < 12; z++) {
 	  tx = SMapX + PerimX[z];
 	  ty = SMapY + PerimY[z];
-	  if (TestBounds(tx, ty)) {
+	  if (TestBounds(tx, ty, WORLD_X, WORLD_Y)) {
 	  	  tile = Map[tx][ty] & LOMASK;
 		  if ((tile >= TELEBASE) && (tile <= TELELAST)) {
 			  return (TRUE);

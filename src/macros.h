@@ -62,8 +62,6 @@
 
 #pragma once
 
-#include "main.h"
-
 #define HASHED_CMD(scope, name) \
   { int new; \
     Tcl_CreateHashEntry(&scope##Cmds, #name, &new)->clientData = \
@@ -75,9 +73,9 @@
 /* tile bounds */
 
 
-bool TestBounds(int x, int y)
+bool TestBounds(int x, int y, int width, int height)
 {
-	return (((x) >= 0) && ((x) < WORLD_X) && ((y) >= 0) && ((y) < WORLD_Y));
+	return (((x) >= 0) && ((x) < width) && ((y) >= 0) && ((y) < height));
 }
 
 /* For s_disasters.c */

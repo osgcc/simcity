@@ -841,7 +841,7 @@ DoBridge(void)
       for (z = 0; z < 7; z++) { /* Close  */
 	x = SMapX + VDx[z];
 	y = SMapY + VDy[z];
-	if (TestBounds(x, y))
+	if (TestBounds(x, y, WORLD_X, WORLD_Y))
 	  if ((Map[x][y] & LOMASK) == (VBRTAB[z] & LOMASK))
 	    Map[x][y] = VBRTAB2[z];
       }
@@ -853,7 +853,7 @@ DoBridge(void)
       for (z = 0; z < 7; z++) { /* Close  */
 	x = SMapX + HDx[z];
 	y = SMapY + HDy[z];
-	if (TestBounds(x, y))
+	if (TestBounds(x, y, WORLD_X, WORLD_Y))
 	  if ((Map[x][y] & LOMASK) == (HBRTAB[z] & LOMASK))
 	    Map[x][y] = HBRTAB2[z];
       }
@@ -867,7 +867,7 @@ DoBridge(void)
 	  for (z = 0; z < 7; z++) {
 	    x = SMapX + VDx[z];
 	    y = SMapY + VDy[z];
-	    if (TestBounds(x, y))  {
+	    if (TestBounds(x, y, WORLD_X, WORLD_Y))  {
 	      MPtem = Map[x][y];
 	      if ((MPtem == CHANNEL) ||
 		  ((MPtem & 15) == (VBRTAB2[z] & 15)))
@@ -883,7 +883,7 @@ DoBridge(void)
 	  for (z = 0; z < 7; z++) {
 	    x = SMapX + HDx[z];
 	    y = SMapY + HDy[z];
-	    if (TestBounds(x, y)) {
+	    if (TestBounds(x, y, WORLD_X, WORLD_Y)) {
 	      MPtem = Map[x][y];
 	      if (((MPtem & 15) == (HBRTAB2[z] & 15)) ||
 		  (MPtem == CHANNEL))
@@ -933,7 +933,7 @@ DoFire(void)
     if (!(Rand16() & 7)) {
       Xtem = SMapX + DX[z];
       Ytem = SMapY + DY[z];
-      if (TestBounds(Xtem, Ytem)) {
+      if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y)) {
 	c = Map[Xtem][Ytem];
 	if (c & BURNBIT) {
 	  if (c & ZONEBIT) {
@@ -1002,7 +1002,7 @@ RepairZone(short ZCent, short zsize)
       int xx = SMapX + x;
       int yy = SMapY + y;
       cnt++;
-      if (TestBounds(xx, yy)) {
+      if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
 	ThCh = Map[xx][yy];
 	if (ThCh & ZONEBIT) continue;
 	if (ThCh & ANIMBIT) continue;

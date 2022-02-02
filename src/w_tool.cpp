@@ -824,7 +824,7 @@ put3x3Rubble(short x, short y)
 	
   for (xx = x - 1; xx < x + 2; xx++) {
     for (yy = y - 1; yy < y + 2; yy++)  {
-      if (TestBounds(xx, yy)) {
+      if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
 	zz = Map[xx][yy] & LOMASK;
 	if ((zz != RADTILE) && (zz != 0)) {
 	  Map[xx][yy] =
@@ -846,7 +846,7 @@ put4x4Rubble(short x, short y)
 	
   for (xx = x - 1; xx < x + 3; xx++) {
     for (yy = y - 1; yy < y + 3; yy++) {
-      if (TestBounds(xx, yy)) {
+      if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
 	zz = Map[xx][yy] & LOMASK;
 	if ((zz != RADTILE) && (zz != 0)) {
 	  Map[xx][yy] =
@@ -868,7 +868,7 @@ put6x6Rubble(short x, short y)
 
   for (xx = x - 1; xx < x + 5; xx++) {
     for (yy = y - 1; yy < y + 5; yy++)  {
-      if (TestBounds(xx, yy)) {
+      if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
 	zz = Map[xx][yy] & LOMASK;
 	if ((zz != RADTILE) && (zz != 0)) {
 	  Map[xx][yy] =

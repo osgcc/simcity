@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
 
 /* Zone Stuff */
@@ -137,7 +137,7 @@ SetSmoke(int ZonePower)
   if (AniThis[z]) {
     int xx = SMapX + DX1[z];
     int yy = SMapY + DY1[z];
-    if (TestBounds(xx, yy)) {
+    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
       if (ZonePower) {
 	if ((Map[xx][yy] & LOMASK) == AniTabC[z]) {
 	  Map[xx][yy] =
@@ -465,7 +465,7 @@ BuildHouse(int value)
   for (z = 1; z < 9; z++) {
     int xx = SMapX + ZeX[z];
     int yy = SMapY + ZeY[z];
-    if (TestBounds(xx, yy)) {
+    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
       score = EvalLot(xx, yy);
       if (score != 0) {
 	if (score > hscore) {
@@ -480,7 +480,7 @@ BuildHouse(int value)
   if (BestLoc) {
     int xx = SMapX + ZeX[BestLoc];
     int yy = SMapY + ZeY[BestLoc];
-    if (TestBounds(xx, yy)) {
+    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
       Map[xx][yy] = HOUSE + BLBNCNBIT + Rand(2) + (value * 3);
     }
   }
@@ -528,7 +528,7 @@ EvalLot (int x, int y)
   for (z = 0; z < 4; z++) {
     int xx = x + DX[z];
     int yy = y + DY[z];
-    if (TestBounds(xx, yy) && 
+    if (TestBounds(xx, yy, WORLD_X, WORLD_Y) &&
 	Map[xx][yy] &&
 	((Map[xx][yy] & LOMASK) <= LASTROAD)) {
       score++;		/* look for road */
@@ -547,7 +547,7 @@ ZonePlop (int base)
   for (z = 0; z < 9; z++) {		/* check for fire  */
     int xx = SMapX + Zx[z];
     int yy = SMapY + Zy[z];
-    if (TestBounds(xx, yy)) {
+    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
       x = Map[xx][yy] & LOMASK;
       if ((x >= FLOOD) && (x < ROADBASE)) return (FALSE);
     }
@@ -555,7 +555,7 @@ ZonePlop (int base)
   for (z = 0; z < 9; z++) {
     int xx = SMapX + Zx[z];
     int yy = SMapY + Zy[z];
-    if (TestBounds(xx, yy)) {
+    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
       Map[xx][yy] = base + BNCNBIT;
     }
   base++;

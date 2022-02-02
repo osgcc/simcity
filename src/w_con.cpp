@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
 
 short _RoadTable[16] = {
@@ -99,7 +99,7 @@ ConnecTile(short x, short y, short *TileAdrPtr, short Command)
   int result = 1;
 
   /* make sure the array subscripts are in bounds */
-  if (!TestBounds(x, y)) {
+  if (!TestBounds(x, y, WORLD_X, WORLD_Y)) {
     return (0);
   }
 

@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
 
 /* Disasters */
@@ -272,7 +272,7 @@ MakeFlood(void)
       for (t = 0; t < 4; t++) {
 	xx = x + Dx[t];
 	yy = y + Dy[t];
-	if (TestBounds(xx, yy)) {
+	if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
 	  c = Map[xx][yy];
 	  /* TILE_IS_FLOODABLE(c) */
 	  if ((c == 0) || ((c & BULLBIT) && (c & BURNBIT))) {
@@ -300,7 +300,7 @@ DoFlood(void)
       if (!(Rand16() & 7)) {
 	xx = SMapX + Dx[z];
 	yy = SMapY + Dy[z];
-	if (TestBounds(xx, yy)) {
+	if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
 	  c = Map[xx][yy];
 	  t = c & LOMASK;
 	  /* TILE_IS_FLOODABLE2(c) */

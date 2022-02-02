@@ -515,7 +515,7 @@ short GetChar(int x, int y)
 {
   x >>= 4;
   y >>= 4;
-  if (!TestBounds(x, y))
+  if (!TestBounds(x, y, WORLD_X, WORLD_Y))
     return(-1);
   else
     return(Map[x][y] & LOMASK);
@@ -885,7 +885,7 @@ DoShipSprite(SimSprite *sprite)
       if (z == sprite->dir) continue;
       x = ((sprite->x + (48 - 1)) >>4) + BDx[z];
       y = (sprite->y >>4) + BDy[z];
-      if (TestBounds(x, y)) {
+      if (TestBounds(x, y, WORLD_X, WORLD_Y)) {
 	t = Map[x][y] & LOMASK;
 	if ((t == CHANNEL) || (t == BRWH) || (t == BRWV) ||
 	    TryOther(t, sprite->dir, z)) {
@@ -1342,7 +1342,7 @@ CanDriveOn(int x, int y)
 {
   int tile;
 
-  if (!TestBounds(x, y))
+  if (!TestBounds(x, y, WORLD_X, WORLD_Y))
     return 0;
 
   tile = Map[x][y] & LOMASK;
@@ -1424,7 +1424,7 @@ Destroy(int ox, int oy)
 	
   x = ox >>4;
   y = oy >>4;
-  if (!TestBounds(x, y))
+  if (!TestBounds(x, y, WORLD_X, WORLD_Y))
     return;
   z = Map[x][y];
   t = z & LOMASK;
