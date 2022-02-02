@@ -75,6 +75,9 @@ constexpr auto Button_Release = 2;
 constexpr auto VIEW_REDRAW_PENDING = 1;
 
 
+struct Graph;
+
+
 struct XPoint
 {
 	short x{ 0 };
@@ -200,18 +203,18 @@ struct SimView
 	short** tiles;
 	short** other_tiles;
 
-	XImage* image;
-	XImage* other_image;
+	//XImage* image;
+	//XImage* other_image;
 
 	unsigned char* other_data;
 
-	Pixmap pixmap;
-	Pixmap pixmap2;
+	//Pixmap pixmap;
+	//Pixmap pixmap2;
 
-	Pixmap overlay_pixmap;
-	Pixmap overlay_valid;
+	//Pixmap overlay_pixmap;
+	//Pixmap overlay_valid;
 
-	XFontStruct* fontPtr;
+	//XFontStruct* fontPtr;
 
 	/* timing */
 	int updates;
@@ -243,24 +246,33 @@ struct SimView
 
 
 
-typedef struct SimDate {
+typedef struct SimDate
+{
   struct SimDate *next;
   int reset;
   int month;
   int year;
   int lastmonth;
   int lastyear;
-  Tk_Window tkwin;
-  Tcl_Interp *interp;
+
+  //Tk_Window tkwin;
+  //Tcl_Interp *interp;
+
   int flags;
-  XDisplay *x;
+
+  //XDisplay *x;
+
   int visible;
   int w_x, w_y;
   int w_width, w_height;
-  Pixmap pixmap;
+
+  //Pixmap pixmap;
+
   int *pixels;
-  XFontStruct *fontPtr;
-  Tk_3DBorder border;
+
+  //XFontStruct *fontPtr;
+  //Tk_3DBorder border;
+
   int borderWidth;
   int padX;
   int padY;
@@ -269,7 +281,9 @@ typedef struct SimDate {
   int monthTabX;
   int yearTab;
   int yearTabX;
-  Tk_TimerToken draw_date_token;
+
+  //Tk_TimerToken draw_date_token;
+
 } SimDate;
 
 
