@@ -132,12 +132,13 @@ void ChangeEval()
 }
 
 
-scoreDoer(void)
+void scoreDoer()
 {
-  if (EvalChanged) {
-    doScoreCard();
-    EvalChanged = 0;
-  }
+	if (EvalChanged)
+	{
+		doScoreCard();
+		EvalChanged = 0;
+	}
 }
 
 

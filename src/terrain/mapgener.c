@@ -62,7 +62,7 @@
 
 /* Micropolis simulator code.	Copyright 1988, 1989 Maxis, Will Wright */
 
-#include "sim.h"
+#include "../main.h"
 
 #define TRUE 1
 #define FALSE 0

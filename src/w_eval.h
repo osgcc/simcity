@@ -2,3 +2,4 @@
 
 
 void ChangeEval();
+void scoreDoer();

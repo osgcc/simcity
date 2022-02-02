@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
 
 /* Generate Map */
@@ -152,13 +152,15 @@ GenerateMap(int r)
 }
 
 
-ClearMap(void)
+void ClearMap()
 {
-  register short x, y;
-
-  for (x = 0; x < WORLD_X; x++)
-    for (y = 0; y < WORLD_Y; y++)
-      Map[x][y] = DIRT;
+    for (short x = 0; x < WORLD_X; x++)
+    {
+        for (short y = 0; y < WORLD_Y; y++)
+        {
+            Map[x][y] = DIRT;
+        }
+    }
 }
 
 

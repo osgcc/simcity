@@ -245,7 +245,7 @@ drawPoliceRadius(SimView *view)
 }
 
 
-setUpMapProcs(void)
+void setUpMapProcs()
 {
   mapProcs[ALMAP] = drawAll;
   mapProcs[REMAP] = drawRes;

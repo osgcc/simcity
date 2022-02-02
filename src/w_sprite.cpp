@@ -59,7 +59,11 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+
+#include "w_sprite.h"
+
+#include "main.h"
+#include "view.h"
 
 
 Tcl_HashTable SpriteCmds;
@@ -611,56 +615,66 @@ int CheckSpriteCollision(SimSprite *s1, SimSprite *s2)
 }
 
 
-MoveObjects()
+void MoveObjects()
 {
-  SimSprite *sprite;
-
-  if (!SimSpeed) return;
-  Cycle++;
-
-  for (sprite = sim->sprite; sprite != NULL;) {
-    if (sprite->frame) {
-      switch (sprite->type) {
-      case TRA:
-	DoTrainSprite(sprite);
-	break;
-      case COP:
-	DoCopterSprite(sprite);
-	break;
-      case AIR:
-	DoAirplaneSprite(sprite);
-	break;
-      case SHI:
-	DoShipSprite(sprite);
-	break;
-      case GOD:
-	DoMonsterSprite(sprite);
-	break;
-      case TOR:
-	DoTornadoSprite(sprite);
-	break;
-      case EXP:
-	DoExplosionSprite(sprite);
-	break;
-      case BUS:
-	DoBusSprite(sprite);
-	break;
-      }
-      sprite = sprite->next;
-    } else {
-      if (sprite->name[0] == '\0') {
-	SimSprite *s = sprite;
-	sprite = sprite->next;
-	DestroySprite(s);
-      } else {
-	sprite = sprite->next;
-      }
+    if (!SimSpeed)
+    {
+        return;
     }
-  }
+
+    Cycle++;
+
+    for (SimSprite* sprite = sim->sprite; sprite != nullptr;)
+    {
+        if (sprite->frame)
+        {
+            switch (sprite->type)
+            {
+            case TRA:
+                DoTrainSprite(sprite);
+                break;
+            case COP:
+                DoCopterSprite(sprite);
+                break;
+            case AIR:
+                DoAirplaneSprite(sprite);
+                break;
+            case SHI:
+                DoShipSprite(sprite);
+                break;
+            case GOD:
+                DoMonsterSprite(sprite);
+                break;
+            case TOR:
+                DoTornadoSprite(sprite);
+                break;
+            case EXP:
+                DoExplosionSprite(sprite);
+                break;
+            case BUS:
+                DoBusSprite(sprite);
+                break;
+            }
+            sprite = sprite->next;
+        }
+        else
+        {
+            if (sprite->name[0] == '\0')
+            {
+                SimSprite* s = sprite;
+                sprite = sprite->next;
+                DestroySprite(s);
+            }
+            else
+            {
+                sprite = sprite->next;
+            }
+        }
+    }
 }
 
 
-DoTrainSprite(SimSprite *sprite)
+void DoTrainSprite(SimSprite *sprite)
 {
   static short Cx[4] = {   0,  16,   0, -16 };
   static short Cy[4] = { -16,   0,  16,   0 };

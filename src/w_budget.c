@@ -73,17 +73,17 @@ long policeMaxValue;
 long fireMaxValue;
 int MustDrawCurrPercents = 0;
 int MustDrawBudgetWindow = 0;
-int SetBudget(char *flowStr, char *previousStr,
-	      char *currentStr, char *collectedStr, short tax);
+int SetBudget(char *flowStr, char *previousStr, char *currentStr, char *collectedStr, short tax);
 
 
-void InitFundingLevel(void)
+
+void InitFundingLevel()
 {
-  firePercent = 1.0;		/* 1.0 */
+  firePercent = 1.0;
   fireValue = 0;
-  policePercent = 1.0;		/* 1.0 */
+  policePercent = 1.0;
   policeValue = 0;
-  roadPercent = 1.0;		/* 1.0 */
+  roadPercent = 1.0;
   roadValue = 0;
   drawBudgetWindow();
   drawCurrPercents();
@@ -293,32 +293,33 @@ ReallyDrawCurrPercents(void)
 }
 
 
-UpdateBudgetWindow()
+void UpdateBudgetWindow()
 {
-  if (MustDrawCurrPercents) {
-    ReallyDrawCurrPercents();
-    MustDrawCurrPercents = 0;
-  }
-  if (MustDrawBudgetWindow) {
-    ReallyDrawBudgetWindow();
-    MustDrawBudgetWindow = 0;
-  }
+    if (MustDrawCurrPercents)
+    {
+        ReallyDrawCurrPercents();
+        MustDrawCurrPercents = 0;
+    }
+    if (MustDrawBudgetWindow)
+    {
+        ReallyDrawBudgetWindow();
+        MustDrawBudgetWindow = 0;
+    }
 }
 
 
-UpdateBudget()
+void UpdateBudget()
 {
-  drawCurrPercents();
-  drawBudgetWindow();
-  Eval("UIUpdateBudget");
+    drawCurrPercents();
+    drawBudgetWindow();
+    Eval("UIUpdateBudget");
 }
 
 
-ShowBudgetWindowAndStartWaiting()
+void ShowBudgetWindowAndStartWaiting()
 {
-  Eval("UIShowBudgetAndWait");
-
-  Pause();
+    Eval("UIShowBudgetAndWait");
+    Pause();
 }
 
 

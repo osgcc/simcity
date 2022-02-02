@@ -519,35 +519,35 @@ doAllGraphs(void)
 }
 
 
-void
-ChangeCensus(void)
+extern short CensusChanged;
+
+void ChangeCensus()
 {
   CensusChanged = 1;
 }
 
 
-void
-graphDoer(void)
+void graphDoer()
 {
-  SimGraph *graph;
-
-  if (CensusChanged) {
-    doAllGraphs();
-    NewGraph = 1;
-    CensusChanged = 0;
-  }
-
-  if (NewGraph) {
-    for (graph = sim->graph; graph != NULL; graph = graph->next) {
-      EventuallyRedrawGraph(graph);
+    if (CensusChanged)
+    {
+        doAllGraphs();
+        NewGraph = 1;
+        CensusChanged = 0;
     }
-    NewGraph = 0;
-  }
+
+    if (NewGraph)
+    {
+        for (SimGraph* graph = sim->graph; graph != NULL; graph = graph->next)
+        {
+            EventuallyRedrawGraph(graph);
+        }
+        NewGraph = 0;
+    }
 }
 
 
-void
-initGraphs(void)
+void initGraphs()
 {
   int i;
   SimGraph *graph;

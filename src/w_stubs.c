@@ -82,16 +82,16 @@ short EvalChanged;
 short flagBlink;
 
 
-Spend(int dollars)
+void Spend(int dollars)
 {
-  SetFunds(TotalFunds - dollars);
+    SetFunds(TotalFunds - dollars);
 }
 
 
-SetFunds(int dollars)
+void SetFunds(int dollars)
 {
-  TotalFunds = dollars;
-  UpdateFunds();
+    TotalFunds = dollars;
+    UpdateFunds();
 }
 
 

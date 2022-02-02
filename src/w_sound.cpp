@@ -59,103 +59,125 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
+#include "view.h"
+#include "w_tk.h"
+
+#include <string>
 
 
 /* Sound routines */
 
 
 int SoundInitialized = 0;
-short Dozing;
+short Dozing = 0;
 
 
-InitializeSound()
+void InitializeSound()
 {
-  char cmd[256];
-
-  SoundInitialized = 1;
-
-  if (!UserSoundOn) return;
-
-  Eval("UIInitializeSound");
+    SoundInitialized = 1;
+    if (!UserSoundOn)
+    {
+        return;
+    }
+    Eval("UIInitializeSound");
 }
 
 
-ShutDownSound()
+void ShutDownSound()
 {
-  if (SoundInitialized) {
-    SoundInitialized = 0;
-    Eval("UIShutDownSound");
-  }
+    if (SoundInitialized)
+    {
+        SoundInitialized = 0;
+        Eval("UIShutDownSound");
+    }
 }
 
 
-MakeSound(char *channel, char *id)
+void MakeSound(const char* channel, const char* id)
 {
-  char buf[256];
+    char buf[256]{};
 
-  if (!UserSoundOn) return;
-  if (!SoundInitialized) InitializeSound();
+    if (!UserSoundOn) return;
+    if (!SoundInitialized) InitializeSound();
 
-  sprintf(buf, "UIMakeSound \"%s\" \"%s\"", channel, id);
-  Eval(buf);
+    sprintf(buf, "UIMakeSound \"%s\" \"%s\"", channel, id);
+    Eval(buf);
 }
 
 
-MakeSoundOn(SimView *view, char *channel, char *id)
+void MakeSoundOn(SimView* view, const char* channel, const char* id)
 {
-  char buf[256];
+    char buf[256]{};
 
-  if (!UserSoundOn) return;
-  if (!SoundInitialized) InitializeSound();
+    if (!UserSoundOn)
+    {
+        return;
+    }
+    if (!SoundInitialized)
+    {
+        InitializeSound();
+    }
 
-  sprintf(buf, "UIMakeSoundOn %s \"%s\" \"%s\"",
-	  Tk_PathName(view->tkwin), channel, id);
-  Eval(buf);
+    sprintf(buf, "UIMakeSoundOn %s \"%s\" \"%s\"",
+        /*Tk_PathName(view->tkwin)*/ "window-path",
+        channel, id);
+    Eval(buf);
 }
 
 
-StartBulldozer(void)
+void StartBulldozer()
 {
-  if (!UserSoundOn) return;
-  if (!SoundInitialized) InitializeSound();
-  if (!Dozing) {
-    DoStartSound("edit", "1");
-    Dozing = 1;
-  }
+    if (!UserSoundOn)
+    {
+        return;
+    }
+    if (!SoundInitialized)
+    {
+        InitializeSound();
+    }
+    if (!Dozing)
+    {
+        DoStartSound("edit", "1");
+        Dozing = 1;
+    }
 }
 
 
-StopBulldozer(void)
+void StopBulldozer()
 {
-  if ((!UserSoundOn) || (!SoundInitialized)) return;
-  DoStopSound("1");
-  Dozing = 0;
+    if ((!UserSoundOn) || (!SoundInitialized))
+    {
+        return;
+    }
+
+    DoStopSound("1");
+    Dozing = 0;
 }
 
 
-/* comefrom: doKeyEvent */
-SoundOff(void)
+void SoundOff()
 {
-  if (!SoundInitialized) InitializeSound();
-  Eval("UISoundOff");
-  Dozing = 0;
+    if (!SoundInitialized)
+    {
+        InitializeSound();
+    }
+    Eval("UISoundOff");
+    Dozing = 0;
 }
 
 
-DoStartSound(char *channel, char *id)
+void DoStartSound(const char* channel, const char* id)
 {
-  char buf[256];
+char buf[256]{};
 
-  sprintf(buf, "UIStartSound %s %s", channel, id);
-  Eval(buf);
+    sprintf(buf, "UIStartSound %s %s", channel, id);
+    Eval(buf);
 }
 
 
-DoStopSound(char *id)
+void DoStopSound(const char* id)
 {
-  char buf[256];
-
-  sprintf(buf, "UIStopSound %s", id);
-  Eval(buf);
+    const std::string command = "UIStopSound " + std::string(id);
+    Eval(command.c_str());
 }

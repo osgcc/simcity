@@ -61,8 +61,19 @@
  */
 #include "main.h"
 
+#include "g_map.h"
+
+#include "s_alloc.h"
+#include "s_gen.h"
+#include "s_init.h"
+
+#include "w_budget.h"
 #include "w_editor.h"
 #include "w_eval.h"
+#include "w_graph.h"
+#include "w_map.h"
+#include "w_sound.h"
+#include "w_stubs.h"
 #include "w_tk.h"
 #include "w_update.h"
 #include "w_x.h"
@@ -266,31 +277,31 @@ void sim_update_maps()
 }
 
 
-sim_update_graphs(void)
+void sim_update_graphs()
 {
   graphDoer();
 }
 
 
-sim_update_budgets(void)
+void sim_update_budgets()
 {
-  if ((sim_skips != 0) &&
-      (sim_skip != 0)) {
-    return;
-  }
+    if ((sim_skips != 0) && (sim_skip != 0))
+    {
+        return;
+    }
 
-  UpdateBudgetWindow();
+    UpdateBudgetWindow();
 }
 
 
-sim_update_evaluations(void)
+void sim_update_evaluations()
 {
-  if ((sim_skips != 0) &&
-      (sim_skip != 0)) {
-    return;
-  }
+    if ((sim_skips != 0) && (sim_skip != 0))
+    {
+        return;
+    }
 
-  scoreDoer();
+    scoreDoer();
 }
 
 
@@ -323,27 +334,27 @@ short *CellDst = nullptr;
 
 #define CLIPPER_LOOP_BODY(CODE) \
     src = CellSrc; dst = CellDst; \
-    for (x = 0; x < WORLD_X;) { \
+    for (int x = 0; x < WORLD_X;) { \
       short nw, n, ne, w, c, e, sw, s, se; \
       \
       src = CellSrc + (x * SRCCOL); dst = CellDst + (x * DSTCOL); \
       w = src[0]; c = src[SRCCOL]; e = src[2 * SRCCOL]; \
       sw = src[1]; s = src[SRCCOL + 1]; se = src[(2 * SRCCOL) + 1]; \
       \
-      for (y = 0; y < WORLD_Y; y++) { \
+      for (int y = 0; y < WORLD_Y; y++) { \
         nw = w; w = sw; sw = src[2]; \
 	n = c; c = s; s = src[SRCCOL + 2]; \
 	ne = e; e = se; se = src[(2 * SRCCOL) + 2]; \
 	{ CODE } \
 	src++; dst++; \
       } \
-      x++; /* src += SRCCOL - 3; dst += DSTCOL - 1; */ \
+      x++; \
       src = CellSrc + ((x + 1) * SRCCOL) - 3; dst = CellDst + ((x + 1) * DSTCOL) - 1; \
       \
       nw = src[1]; n = src[SRCCOL + 1]; ne = src[(2 * SRCCOL) + 1]; \
       w = src[2]; c = src[SRCCOL + 2]; e = src[(2 * SRCCOL) + 2]; \
       \
-      for (y = WORLD_Y - 1; y >= 0; y--) { \
+      for (int y = WORLD_Y - 1; y >= 0; y--) { \
         sw = w; w = nw; nw = src[0]; \
         s = c; c = n; n = src[SRCCOL]; \
         se = e; e = ne; ne = src[2 * SRCCOL]; \
@@ -353,112 +364,112 @@ short *CellDst = nullptr;
       x++; /* src += SRCCOL + 3; dst += DSTCOL + 1; */ \
     }
 
-void
-sim_heat(void)
+constexpr auto ECOMASK = 0x3fc;
+
+void sim_heat()
 {
-  int x, y, l, r, u, d;
-  static int a = 0;
-  short *src, *dst;
-  register int fl = heat_flow;
+    static int a = 0;
+    short* src, * dst;
+    int fl = heat_flow;
 
-  if (CellSrc == nullptr) {
-    CellSrc = (short *)malloc((WORLD_X + 2) * (WORLD_Y + 2) * sizeof (short));
-    CellDst = &Map[0][0];
-  }
-
-  src = CellSrc + SRCCOL + 1;
-  dst = CellDst;
-
-/*
- * Copy wrapping edges:
- *
- *	0	ff	f0 f1 ... fe ff		f0
- *
- *	1	0f	00 01 ... 0e 0f		00
- *	2	1f	10 11 ... 1e 1f		10
- *		..	.. ..     .. ..		..
- *		ef	e0 e1 ... ee ef		e0
- *	h	ff	f0 f1 ... fe ff		f0
- *
- *	h+1	0f	00 01 ... 0e 0f		00
- *
- * wrap value:	effect:
- *	0	no effect
- *	1	copy future=>past, no wrap
- *	2	no copy, wrap edges
- *	3	copy future=>past, wrap edges
- *	4	copy future=>past, same edges
- */
-
-  switch (heat_wrap) {
-  case 0:
-    break;
-  case 1:
-    for (x = 0; x < WORLD_X; x++) {
-      memcpy(src, dst, WORLD_Y * sizeof (short));
-      src += SRCCOL;
-      dst += DSTCOL;
+    if (CellSrc == nullptr)
+    {
+        CellSrc = (short*)malloc((WORLD_X + 2) * (WORLD_Y + 2) * sizeof(short));
+        CellDst = &Map[0][0];
     }
-    break;
-  case 2:
-    for (x = 0; x < WORLD_X; x++) {
-      src[-1] = src[WORLD_Y - 1];
-      src[WORLD_Y] = src[0];
-      src += SRCCOL;
-      dst += DSTCOL;
+
+    src = CellSrc + SRCCOL + 1;
+    dst = CellDst;
+
+    /*
+     * Copy wrapping edges:
+     *
+     *	0	ff	f0 f1 ... fe ff		f0
+     *
+     *	1	0f	00 01 ... 0e 0f		00
+     *	2	1f	10 11 ... 1e 1f		10
+     *		..	.. ..     .. ..		..
+     *		ef	e0 e1 ... ee ef		e0
+     *	h	ff	f0 f1 ... fe ff		f0
+     *
+     *	h+1	0f	00 01 ... 0e 0f		00
+     *
+     * wrap value:	effect:
+     *	0	no effect
+     *	1	copy future=>past, no wrap
+     *	2	no copy, wrap edges
+     *	3	copy future=>past, wrap edges
+     *	4	copy future=>past, same edges
+     */
+
+    switch (heat_wrap)
+    {
+    case 0:
+        break;
+    case 1:
+        for (int x = 0; x < WORLD_X; x++)
+        {
+            memcpy(src, dst, WORLD_Y * sizeof(short));
+            src += SRCCOL;
+            dst += DSTCOL;
+        }
+        break;
+    case 2:
+        for (int x = 0; x < WORLD_X; x++)
+        {
+            src[-1] = src[WORLD_Y - 1];
+            src[WORLD_Y] = src[0];
+            src += SRCCOL;
+            dst += DSTCOL;
+        }
+        memcpy(CellSrc, CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(short));
+        memcpy(CellSrc + SRCCOL * (WORLD_X + 1), CellSrc + SRCCOL, SRCCOL * sizeof(short));
+        break;
+    case 3:
+        for (int x = 0; x < WORLD_X; x++)
+        {
+            memcpy(src, dst, WORLD_Y * sizeof(short));
+            src[-1] = src[WORLD_Y - 1];
+            src[WORLD_Y] = src[0];
+            src += SRCCOL;
+            dst += DSTCOL;
+        }
+        memcpy(CellSrc, CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(short));
+        memcpy(CellSrc + SRCCOL * (WORLD_X + 1), CellSrc + SRCCOL, SRCCOL * sizeof(short));
+        break;
+    case 4:
+        src[0] = dst[0];
+        src[1 + WORLD_Y] = dst[WORLD_Y - 1];
+        src[(1 + WORLD_X) * SRCCOL] = dst[(WORLD_X - 1) * DSTCOL];
+        src[((2 + WORLD_X) * SRCCOL) - 1] = dst[(WORLD_X * WORLD_Y) - 1];
+        for (int x = 0; x < WORLD_X; x++)
+        {
+            memcpy(src, dst, WORLD_Y * sizeof(short));
+            src[-1] = src[0];
+            src[WORLD_Y] = src[WORLD_Y - 1];
+            src += SRCCOL;
+            dst += DSTCOL;
+        }
+        memcpy(CellSrc + (SRCCOL * (WORLD_X + 1)), CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(short));
+        memcpy(CellSrc, CellSrc + SRCCOL, SRCCOL * sizeof(short));
+        break;
     }
-    memcpy(CellSrc,CellSrc + (SRCCOL * WORLD_X), 
-	  SRCCOL * sizeof (short));
-    memcpy(CellSrc + SRCCOL * (WORLD_X + 1), CellSrc + SRCCOL,
-	  SRCCOL * sizeof (short));
-    break;
-  case 3:
-    for (x = 0; x < WORLD_X; x++) {
-      memcpy(src, dst, WORLD_Y * sizeof (short));
-      src[-1] = src[WORLD_Y - 1];
-      src[WORLD_Y] = src[0];
-      src += SRCCOL;
-      dst += DSTCOL;
-    }
-    memcpy(CellSrc, CellSrc + (SRCCOL * WORLD_X),
-	   SRCCOL * sizeof (short));
-    memcpy(CellSrc + SRCCOL * (WORLD_X + 1), CellSrc + SRCCOL,
-	   SRCCOL * sizeof (short));
-    break;
-  case 4:
-    src[0] = dst[0];
-    src[1 + WORLD_Y] = dst[WORLD_Y - 1];
-    src[(1 + WORLD_X) * SRCCOL] = dst[(WORLD_X - 1) * DSTCOL];
-    src[((2 + WORLD_X) * SRCCOL) - 1] = dst[(WORLD_X * WORLD_Y) - 1];
-    for (x = 0; x < WORLD_X; x++) {
-      memcpy(src, dst, WORLD_Y * sizeof (short));
-      src[-1] = src[0];
-      src[WORLD_Y] =  src[WORLD_Y - 1];
-      src += SRCCOL;
-      dst += DSTCOL;
-    }
-    memcpy(CellSrc + (SRCCOL * (WORLD_X + 1)), CellSrc + (SRCCOL * WORLD_X),
-	   SRCCOL * sizeof (short));
-    memcpy(CellSrc, CellSrc + SRCCOL,
-	   SRCCOL * sizeof (short));
-    break;
-  }
 
 
-  switch (heat_rule) {
+    switch (heat_rule)
+    {
 
-  case 0:
+    case 0:
 #define HEAT \
 	a += nw + n + ne + w + e + sw + s + se + fl; \
 	dst[0] = ((a >> 3) & LOMASK) | \
 		     (ANIMBIT | BURNBIT | BULLBIT); \
 	a &= 7;
 
-    CLIPPER_LOOP_BODY(HEAT);
-    break;
+        CLIPPER_LOOP_BODY(HEAT);
+        break;
 
-  case 1:
-#define ECOMASK 0x3fc
+    case 1:
 #define ECO \
       c -= fl; n -= fl; s -= fl; e -= fl; w -= fl; \
       ne -= fl; nw -= fl; se -= fl; sw -= fl; \
@@ -488,19 +499,19 @@ sim_heat(void)
       c += fl; n += fl; s += fl; e += fl; w += fl; \
       ne += fl; nw += fl; se += fl; sw += fl;
 
-    CLIPPER_LOOP_BODY(ECO);
-    break;
-  }
+        CLIPPER_LOOP_BODY(ECO);
+        break;
+    }
 }
 
 
-void
-sim_timeout_loop(short doSim)
+void sim_timeout_loop(short doSim)
 {
-  if (SimSpeed) {
-    sim_loop(doSim);
-  }
-  DoTimeoutListen();
+    if (SimSpeed)
+    {
+        sim_loop(doSim);
+    }
+    DoTimeoutListen();
 }
 
 

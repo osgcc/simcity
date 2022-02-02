@@ -120,9 +120,6 @@
     <ClCompile Include="src\w_map.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_net.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\w_piem.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -133,12 +130,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\w_sim.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\w_sound.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\w_sprite.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\w_stubs.c">
@@ -157,6 +148,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\w_x.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w_sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w_sprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -198,6 +195,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\g_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\w_sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\s_alloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\w_graph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\w_budget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\s_init.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\s_gen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\w_stubs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\w_sprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -53,13 +53,12 @@
     <ClCompile Include="src\w_inter.c" />
     <ClCompile Include="src\w_keys.c" />
     <ClCompile Include="src\w_map.c" />
-    <ClCompile Include="src\w_net.c" />
     <ClCompile Include="src\w_piem.c" />
     <ClCompile Include="src\w_print.c" />
     <ClCompile Include="src\w_resrc.c" />
     <ClCompile Include="src\w_sim.c" />
-    <ClCompile Include="src\w_sound.c" />
-    <ClCompile Include="src\w_sprite.c" />
+    <ClCompile Include="src\w_sound.cpp" />
+    <ClCompile Include="src\w_sprite.cpp" />
     <ClCompile Include="src\w_stubs.c" />
     <ClCompile Include="src\w_tk.c" />
     <ClCompile Include="src\w_tool.c" />
@@ -68,16 +67,24 @@
     <ClCompile Include="src\w_x.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\s_gen.h" />
+    <ClInclude Include="src\s_init.h" />
+    <ClInclude Include="src\w_budget.h" />
+    <ClInclude Include="src\w_graph.h" />
     <ClInclude Include="src\animtab.h" />
     <ClInclude Include="src\cam.h" />
     <ClInclude Include="src\g_map.h" />
     <ClInclude Include="src\mac.h" />
     <ClInclude Include="src\macros.h" />
     <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\s_alloc.h" />
     <ClInclude Include="src\view.h" />
     <ClInclude Include="src\w_editor.h" />
     <ClInclude Include="src\w_eval.h" />
     <ClInclude Include="src\w_map.h" />
+    <ClInclude Include="src\w_sound.h" />
+    <ClInclude Include="src\w_sprite.h" />
+    <ClInclude Include="src\w_stubs.h" />
     <ClInclude Include="src\w_tk.h" />
     <ClInclude Include="src\w_update.h" />
     <ClInclude Include="src\w_x.h" />

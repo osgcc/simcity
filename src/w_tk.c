@@ -671,8 +671,7 @@ Kick()
 }
 
 
-void
-StopEarthquake()
+void StopEarthquake()
 {
   ShakeNow = 0;
   if (earthquake_timer_set) {
@@ -695,7 +694,7 @@ DoEarthQuake(void)
 }
 
 
-int Eval(char* buf)
+int Eval(const char* buf)
 {
     /*
     int result = Tcl_Eval(tk_mainInterp, buf, 0, (char**)NULL);
