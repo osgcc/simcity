@@ -138,79 +138,8 @@ void env_init()
 }
 
 
-void sim_init()
-{
-  signal_init();
-
-  UserSoundOn = 1;
-  MustUpdateOptions = 1;
-  HaveLastMessage = 0;
-  ScenarioID = 0;
-  StartingYear = 1900;
-  tileSynch = 0x01;
-  sim_skips = sim_skip = 0;
-  autoGo = 1;
-  CityTax = 7;
-  CityTime = 50;
-  NoDisasters = 0;
-  PunishCnt = 0;
-  autoBulldoze = 1;
-  autoBudget = 1;
-  MesNum = 0;
-  LastMesTime = 0;
-  flagBlink = 1;
-  SimSpeed = 3;
-  ChangeEval();
-  MessagePort = 0;
-  MesX = 0;
-  MesY = 0;
-  sim_paused = 0;
-  sim_loops = 0;
-  InitSimLoad = 2;
-  ExitReturn = 0;
-
-  InitializeSound();
-  initMapArrays();
-  initGraphs();
-  InitFundingLevel();
-  setUpMapProcs();
-  StopEarthquake();
-  ResetMapState();
-  ResetEditorState();
-  ClearMap();
-  InitWillStuff();
-  SetFunds(5000);
-  SetGameLevelFunds(StartupGameLevel);
-  setSpeed(0);
-  setSkips(0);
-}
-
-
 void signal_init()
 {
-}
-
-
-void sim_update()
-{
-    /* -- blink speed of 0.5 seconds
-    gettimeofday(&now_time, nullptr);
-    flagBlink = (now_time.tv_usec < 500000) ? 1 : -1;
-    */
-
-    if (SimSpeed && !heat_steps)
-    {
-        TilesAnimated = 0;
-    }
-
-    sim_update_editors();
-
-    sim_update_maps();
-    sim_update_graphs();
-    sim_update_budgets();
-    sim_update_evaluations();
-
-    UpdateFlush();
 }
 
 
@@ -468,13 +397,27 @@ void sim_heat()
 }
 
 
-void sim_timeout_loop(short doSim)
+
+void sim_update()
 {
-    if (SimSpeed)
+    /* -- blink speed of 0.5 seconds
+    gettimeofday(&now_time, nullptr);
+    flagBlink = (now_time.tv_usec < 500000) ? 1 : -1;
+    */
+
+    if (SimSpeed && !heat_steps)
     {
-        sim_loop(doSim);
+        TilesAnimated = 0;
     }
-    DoTimeoutListen();
+
+    sim_update_editors();
+
+    sim_update_maps();
+    sim_update_graphs();
+    sim_update_budgets();
+    sim_update_evaluations();
+
+    UpdateFlush();
 }
 
 
@@ -510,12 +453,66 @@ void sim_loop(int doSim)
 }
 
 
+void sim_timeout_loop(short doSim)
+{
+    if (SimSpeed)
+    {
+        sim_loop(doSim);
+    }
+    DoTimeoutListen();
+}
+
+
+void sim_init()
+{
+    signal_init();
+
+    UserSoundOn = 1;
+    MustUpdateOptions = 1;
+    HaveLastMessage = 0;
+    ScenarioID = 0;
+    StartingYear = 1900;
+    tileSynch = 0x01;
+    sim_skips = sim_skip = 0;
+    autoGo = 1;
+    CityTax = 7;
+    CityTime = 50;
+    NoDisasters = 0;
+    PunishCnt = 0;
+    autoBulldoze = 1;
+    autoBudget = 1;
+    MesNum = 0;
+    LastMesTime = 0;
+    flagBlink = 1;
+    SimSpeed = 3;
+    ChangeEval();
+    MessagePort = 0;
+    MesX = 0;
+    MesY = 0;
+    sim_paused = 0;
+    sim_loops = 0;
+    InitSimLoad = 2;
+    ExitReturn = 0;
+
+    InitializeSound();
+    initMapArrays();
+    initGraphs();
+    InitFundingLevel();
+    setUpMapProcs();
+    StopEarthquake();
+    ResetMapState();
+    ResetEditorState();
+    ClearMap();
+    InitWillStuff();
+    SetFunds(5000);
+    SetGameLevelFunds(StartupGameLevel);
+    setSpeed(0);
+    setSkips(0);
+}
+
+
 int main(int argc, char* argv[])
 {
-    printf("Welcome to X11 Multi Player Micropolis version %s by Will Wright, Don Hopkins.\n", MicropolisVersion);
-    printf("Copyright (C) 2002 by Electronic Arts, Maxis. All rights reserved.\n");
-
-
     std::cout << "Starting Micropolis-SDL2 version " << MicropolisVersion << " originally by Will Wright and Don Hopkins." << std::endl;
     std::cout << "Original code Copyright © 2002 by Electronic Arts, Maxis. Released under the GPL v3" << std::endl;
     std::cout << "Modifications Copyright © 2022 by Leeor Dicker. Available under the terms of the GPL v3" << std::endl << std::endl;
