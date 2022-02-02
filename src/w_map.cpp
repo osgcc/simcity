@@ -69,7 +69,7 @@ extern Tk_ConfigSpec TileViewConfigSpecs[];
 
 Ink* NewInk();
 
-MapCmdconfigure(VIEW_ARGS)
+MapCmdconfigure(SimView *view, Tcl_Interp *interp, int argc, char **argv)
 {
   int result = TCL_OK;
 
@@ -86,7 +86,7 @@ MapCmdconfigure(VIEW_ARGS)
   return result;
 }
 
-MapCmdposition(VIEW_ARGS)
+MapCmdposition(SimView *view, Tcl_Interp *interp, int argc, char **argv)
 {
   if ((argc != 2) && (argc != 4)) {
     return TCL_ERROR;
@@ -101,7 +101,7 @@ MapCmdposition(VIEW_ARGS)
   return TCL_OK;
 }
 
-MapCmdsize(VIEW_ARGS)
+MapCmdsize(SimView *view, Tcl_Interp *interp, int argc, char **argv)
 {
   if ((argc != 2) && (argc != 4)) {
     return TCL_ERROR;
@@ -122,7 +122,7 @@ MapCmdsize(VIEW_ARGS)
   return TCL_OK;
 }
 
-MapCmdMapState(VIEW_ARGS)
+MapCmdMapState(SimView *view, Tcl_Interp *interp, int argc, char **argv)
 {
   int state;
 
@@ -143,7 +143,7 @@ MapCmdMapState(VIEW_ARGS)
   return TCL_OK;
 }
 
-MapCmdShowEditors(VIEW_ARGS)
+MapCmdShowEditors(SimView *view, Tcl_Interp *interp, int argc, char **argv)
 {
   int val;
 
@@ -163,7 +163,7 @@ MapCmdShowEditors(VIEW_ARGS)
   return TCL_OK;
 }
 
-MapCmdPanStart(VIEW_ARGS)
+MapCmdPanStart(SimView *view, Tcl_Interp *interp, int argc, char **argv)
 {
   int x, y, left, right, top, bottom, width, height;
   SimView *ed;
@@ -206,7 +206,7 @@ gotit:
   return TCL_OK;
 }
 
-MapCmdPanTo(VIEW_ARGS)
+MapCmdPanTo(SimView *view, Tcl_Interp *interp, int argc, char **argv)
 {
   int x, y, dx, dy;
   SimView *ed;
@@ -236,7 +236,7 @@ MapCmdPanTo(VIEW_ARGS)
   return TCL_OK;
 }
 
-MapCmdVisible(VIEW_ARGS)
+MapCmdVisible(SimView *view, Tcl_Interp *interp, int argc, char **argv)
 {
   int visible;
 
@@ -258,7 +258,7 @@ MapCmdVisible(VIEW_ARGS)
   return TCL_OK;
 }
 
-MapCmdViewAt(VIEW_ARGS)
+MapCmdViewAt(SimView *view, Tcl_Interp *interp, int argc, char **argv)
 {
   int x, y;
 

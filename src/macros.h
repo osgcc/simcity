@@ -69,9 +69,6 @@
   }
 
 
-#define VIEW_ARGS \
-	SimView *view, Tcl_Interp *interp, int argc, char **argv
-
 #define GRAPH_ARGS \
 	Graph *graph, Tcl_Interp *interp, int argc, char **argv
 
