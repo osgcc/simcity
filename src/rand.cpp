@@ -31,7 +31,7 @@
  * SUCH DAMAGE.
  */
 
-#include "sim.h"
+#include "main.h"
 
 #include <sys/types.h>
 #include <stdlib.h>

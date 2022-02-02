@@ -1016,67 +1016,82 @@ DrawOutside(SimView *view)
 
 char CursorDashes[] = { 4, 4 };
 
-DrawPending(SimView *view)
+void DrawPending(SimView* view)
 {
-  Pixmap pm = view->pixmap2;
-  int left = (view->w_width / 2) - view->pan_x;
-  int top = (view->w_height / 2) - view->pan_y;
-  int x, y, size;
-  char *iconname = NULL;
+    /*
+    Pixmap pm = view->pixmap2;
+    int left = (view->w_width / 2) - view->pan_x;
+    int top = (view->w_height / 2) - view->pan_y;
+    int x, y, size;
+    char* iconname = NULL;
 
-  x = (PendingX - toolOffset[PendingTool]) <<4;
-  y = (PendingY - toolOffset[PendingTool]) <<4;
-  size = toolSize[PendingTool] <<4;
-  x += left; y += top;
+    x = (PendingX - toolOffset[PendingTool]) << 4;
+    y = (PendingY - toolOffset[PendingTool]) << 4;
 
-  XSetStipple(view->x->dpy, view->x->gc, view->x->gray50_stipple);
-  XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
-  XSetForeground(view->x->dpy, view->x->gc, view->x->pixels[COLOR_BLACK]);
-  XSetFillStyle(view->x->dpy, view->x->gc, FillStippled);
-  XFillRectangle(view->x->dpy, pm, view->x->gc,
-		 x, y, size, size);
-  XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
+    size = toolSize[PendingTool] << 4;
 
-  switch (PendingTool) {
-  case residentialState:
-    iconname = "@images/res.xpm"; break;
-  case commercialState:
-    iconname = "@images/com.xpm"; break;
-  case industrialState:
-    iconname = "@images/ind.xpm"; break;
-  case fireState:
-    iconname = "@images/fire.xpm"; break;
-  case policeState:
-    iconname = "@images/police.xpm"; break;
-  case stadiumState:
-    iconname = "@images/stadium.xpm"; break;
-  case seaportState:
-    iconname = "@images/seaport.xpm"; break;
-  case powerState:
-    iconname = "@images/coal.xpm"; break;
-  case nuclearState:
-    iconname = "@images/nuclear.xpm"; break;
-  case airportState:
-    iconname = "@images/airport.xpm"; break;
-  default:
-    break;
-  }
+    x += left;
+    y += top;
 
-  if (iconname != NULL) {
-    Pixmap icon = Tk_GetPixmap(view->interp, view->tkwin, iconname);
-    float f;
-    int i;
+    XSetStipple(view->x->dpy, view->x->gc, view->x->gray50_stipple);
+    XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
+    XSetForeground(view->x->dpy, view->x->gc, view->x->pixels[COLOR_BLACK]);
+    XSetFillStyle(view->x->dpy, view->x->gc, FillStippled);
+    XFillRectangle(view->x->dpy, pm, view->x->gc, x, y, size, size);
+    XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
 
-    gettimeofday(&now_time, NULL);
-    f = (2 * now_time.tv_usec / 1000000.0);
-    if (f > 1.0) f = 2.0 - f;
-    i = (int)(f * BobHeight * (Players - Votes));
-
-    if (icon != None) {
-      XCopyArea(view->x->dpy, icon, pm, view->x->gc, 
-		0, 0, size, size, x + i, y - i);
+    switch (PendingTool) {
+    case residentialState:
+        iconname = "@images/res.xpm";
+        break;
+    case commercialState:
+        iconname = "@images/com.xpm";
+        break;
+    case industrialState:
+        iconname = "@images/ind.xpm";
+        break;
+    case fireState:
+        iconname = "@images/fire.xpm";
+        break;
+    case policeState:
+        iconname = "@images/police.xpm";
+        break;
+    case stadiumState:
+        iconname = "@images/stadium.xpm";
+        break;
+    case seaportState:
+        iconname = "@images/seaport.xpm";
+        break;
+    case powerState:
+        iconname = "@images/coal.xpm";
+        break;
+    case nuclearState:
+        iconname = "@images/nuclear.xpm";
+        break;
+    case airportState:
+        iconname = "@images/airport.xpm";
+        break;
+    default:
+        break;
     }
-  }
+
+    if (iconname != NULL)
+    {
+        Pixmap icon = Tk_GetPixmap(view->interp, view->tkwin, iconname);
+        float f;
+        int i;
+
+        gettimeofday(&now_time, NULL);
+        f = (2 * now_time.tv_usec / 1000000.0);
+        if (f > 1.0) f = 2.0 - f;
+        i = (int)(f * BobHeight * (Players - Votes));
+
+        if (icon != None)
+        {
+            XCopyArea(view->x->dpy, icon, pm, view->x->gc, 0, 0, size, size, x + i, y - i);
+        }
+    }
+    */
 }
 
 
