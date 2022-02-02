@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClCompile Include="src\g_ani.cpp" />
     <ClCompile Include="src\g_bigmap.cpp" />
-    <ClCompile Include="src\g_cam.cpp" />
     <ClCompile Include="src\g_map.cpp" />
     <ClCompile Include="src\g_setup.cpp" />
     <ClCompile Include="src\g_smmaps.cpp" />
@@ -44,7 +43,6 @@
     <ClCompile Include="src\terrain\terra.cpp" />
     <ClCompile Include="src\terrain\terragen.cpp" />
     <ClCompile Include="src\w_budget.cpp" />
-    <ClCompile Include="src\w_cam.cpp" />
     <ClCompile Include="src\w_con.cpp" />
     <ClCompile Include="src\w_date.cpp" />
     <ClCompile Include="src\w_editor.cpp" />
@@ -69,10 +67,10 @@
   <ItemGroup>
     <ClInclude Include="src\s_gen.h" />
     <ClInclude Include="src\s_init.h" />
+    <ClInclude Include="src\s_sim.h" />
     <ClInclude Include="src\w_budget.h" />
     <ClInclude Include="src\w_graph.h" />
     <ClInclude Include="src\animtab.h" />
-    <ClInclude Include="src\cam.h" />
     <ClInclude Include="src\g_map.h" />
     <ClInclude Include="src\mac.h" />
     <ClInclude Include="src\macros.h" />

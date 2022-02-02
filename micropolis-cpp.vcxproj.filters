@@ -24,9 +24,6 @@
     <ClCompile Include="src\g_bigmap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_cam.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\g_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -82,9 +79,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\w_budget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\w_cam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\w_con.cpp">
@@ -161,9 +155,6 @@
     <ClInclude Include="src\animtab.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\cam.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -219,6 +210,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\w_sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\s_sim.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
