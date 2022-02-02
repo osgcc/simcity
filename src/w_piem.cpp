@@ -19,17 +19,7 @@
  *
  */
 
-
-#if 0
-/* workaround to make gcc work on suns */
-#ifndef SOLARIS2
-#define _PTRDIFF_T
-#define _SIZE_T
-#ifndef sgi
-typedef unsigned int size_t;
-#endif
-#endif
-#endif
+#include <cmath>
 
 #include "tkconfig.h"
 #include "default.h"
@@ -67,7 +57,6 @@ typedef unsigned int size_t;
 #define MAX(x,y) ((x)>(y)?(x):(y))
 #define MIN(x,y) ((x)<(y)?(x):(y))
 #endif
-#define ABS(x)	 (((x)<0)?(-(x)):(x))
 
 static int HaveShape = -1;
 
@@ -1903,9 +1892,9 @@ ActivatePieMenuEntry(menuPtr, index, preview)
     else if ((y) < 0) (longrant) = ((x) < 0 ? 2 : 3); \
     else (longrant) = ((x) > 0 ? 0 : 2); \
     if ((longrant) & 1) { \
-	(numerator) = ABS((x)); (denominator) = ABS((y)); \
+	(numerator) =  std::abs(x); (denominator) = std::abs(y); \
     } else { \
-	(numerator) = ABS((y)); (denominator) = ABS((x)); \
+	(numerator) = std::abs(y); (denominator) = std::abs(x); \
     }
 
 
@@ -2164,7 +2153,7 @@ LayoutPieMenu(menu)
 	  ly = ldy * radius + last->y_offset;
 
 	  /* Translate x y with respect to label size and position */
-	  if (ABS(x) <= 2) {
+	  if (std::abs(x) <= 2) {
 	    x -= width/2;
 	    if (y < 0)
 	      y -= height;
@@ -2174,7 +2163,7 @@ LayoutPieMenu(menu)
 	    y -= height/2;
 	  }
 
-	  if (ABS(lx) <= 2) {
+	  if (std::abs(lx) <= 2) {
 	    lx -= lwidth/2;
 	    if (ly < 0)
 	      ly -= lheight;
@@ -2215,7 +2204,7 @@ LayoutPieMenu(menu)
     it->y = radius * it->dy + it->y_offset;
 
     /* Translate x y with respect to label size and position */
-    if (ABS(it->x) <= 2) {
+    if (std::abs(it->x) <= 2) {
       it->x -= it->width/2;
       if (it->y < 0)
 	it->y -= it->height;

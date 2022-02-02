@@ -59,8 +59,9 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "sim.h"
+#include "main.h"
 
+#include <cmath>
 
 short specialBase = CHURCH;
 int OverRide = 0;
@@ -1632,7 +1633,7 @@ ToolDrag(SimView *view, int px, int py)
       return;
     }
 
-    adx = ABS(dx); ady = ABS(dy);
+    adx = std::abs(dx); ady = std::abs(dy);
 
     if (adx > ady) {
       step = .3 / adx;
@@ -1647,8 +1648,8 @@ ToolDrag(SimView *view, int px, int py)
       for (i = 0.0; i <= 1 + step; i += step) {
 	tx = (view->last_x >>4) + i * dx;
 	ty = (view->last_y >>4) + i * dy;
-	dtx = ABS(tx - lx);
-	dty = ABS(ty - ly);
+	dtx = std::abs(tx - lx);
+	dty = std::abs(ty - ly);
 	if (dtx >= 1 || dty >= 1) {
 	  /* fill in corners */
 	  if ((dtx >= 1) && (dty >= 1)) {
@@ -1667,8 +1668,8 @@ ToolDrag(SimView *view, int px, int py)
       for (i = 0.0; i <= 1 + step; i += step) {
 	tx = (view->last_x >>4) + i * dx;
 	ty = (view->last_y >>4) + i * dy;
-	dtx = ABS(tx - lx);
-	dty = ABS(ty - ly);
+	dtx = std::abs(tx - lx);
+	dty = std::abs(ty - ly);
 	lx = (int)(tx + rx);
 	ly = (int)(ty + ry);
 	current_tool(view, lx <<4, ly <<4, 0);

@@ -64,9 +64,6 @@
 
 #include "main.h"
 
-
-#define ABS(x)		(((x) < 0) ? (-(x)) : (x))
-
 #define HASHED_CMD(scope, name) \
   { int new; \
     Tcl_CreateHashEntry(&scope##Cmds, #name, &new)->clientData = \
