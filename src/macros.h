@@ -69,23 +69,20 @@
   }
 
 
-#define ARGS \
-	Tcl_Interp *interp, int argc, char **argv
-
 #define CLIENT_ARGS \
-	ClientData clientData, ARGS
+	ClientData clientData, Tcl_Interp *interp, int argc, char **argv
 
 #define VIEW_ARGS \
-	SimView *view, ARGS
+	SimView *view, Tcl_Interp *interp, int argc, char **argv
 
 #define GRAPH_ARGS \
-	Graph *graph, ARGS
+	Graph *graph, Tcl_Interp *interp, int argc, char **argv
 
 #define DATE_ARGS \
-	SimDate *date, ARGS
+	SimDate *date, Tcl_Interp *interp, int argc, char **argv
 
 #define SPRITE_ARGS \
-	SimSprite *sprite, ARGS
+	SimSprite *sprite, Tcl_Interp *interp, int argc, char **argv
 
 
 /* tile bounds */
