@@ -411,56 +411,6 @@ int SimCmdHeatRule(Tcl_Interp *interp, int argc, char **argv)
 }
 
 
-#ifdef NET
-
-int SimCmdListenTo(Tcl_Interp *interp, int argc, char **argv)
-{
-  int port, sock;
-
-  if (argc != 3) {
-    return (TCL_ERROR);
-  }
-
-  if (Tcl_GetInt(interp, argv[2], &port) != TCL_OK) {
-    return (TCL_ERROR);
-  }
-
-#ifdef NET
-  sock = udp_listen(port);
-#endif  
-
-  sprintf(interp->result, "%d", sock);
-
-  return (TCL_OK);
-}
-
-
-int SimCmdHearFrom(Tcl_Interp *interp, int argc, char **argv)
-{
-  int sock;
-
-  if (argc != 3) {
-    return (TCL_ERROR);
-  }
-
-  if ((argv[2][0] != 'f') ||
-      (argv[2][1] != 'i') ||
-      (argv[2][2] != 'l') ||
-      (argv[2][3] != 'e') ||
-      (Tcl_GetInt(interp, argv[2] + 4, &sock) != TCL_OK)) {
-    return (TCL_ERROR);
-  }
-
-#ifdef NET
-  udp_hear(sock);
-#endif  
-
-  return (TCL_OK);
-}
-
-#endif /* NET */
-
-
 int SimCmdFunds(Tcl_Interp *interp, int argc, char **argv)
 {
   int funds;
@@ -1561,10 +1511,6 @@ sim_command_init()
   SIM_CMD(HeatSteps);
   SIM_CMD(HeatFlow);
   SIM_CMD(HeatRule);
-#ifdef NET
-  SIM_CMD(ListenTo);
-  SIM_CMD(HearFrom);
-#endif
   SIM_CMD(Funds);
   SIM_CMD(TaxRate);
   SIM_CMD(FireFund);
