@@ -61,6 +61,8 @@
  */
 #include "main.h"
 
+#include "w_x.h"
+
 #include <string>
 
 /* Sim City */
@@ -112,7 +114,7 @@ void sim_really_exit(int val)
 
 
 #define COPY(FROM, TO) \
-  TO = ckalloc(strlen(FROM) + 1); \
+  TO = malloc(strlen(FROM) + 1); \
   strcpy(TO, FROM);
 
 
@@ -414,7 +416,7 @@ sim_heat(void)
   register int fl = heat_flow;
 
   if (CellSrc == nullptr) {
-    CellSrc = (short *)ckalloc((WORLD_X + 2) * (WORLD_Y + 2) * sizeof (short));
+    CellSrc = (short *)malloc((WORLD_X + 2) * (WORLD_Y + 2) * sizeof (short));
     CellDst = &Map[0][0];
   }
 

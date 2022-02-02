@@ -212,7 +212,7 @@ Pixmap *
 GetObjectXpms(XDisplay *xd, int id, int frames)
 {
   int i;
-  Pixmap *pixmaps = (Pixmap *)ckalloc(2 * frames * sizeof (Pixmap));
+  Pixmap *pixmaps = (Pixmap *)malloc(2 * frames * sizeof (Pixmap));
   XpmAttributes attributes;
   char name[256];
 
@@ -271,7 +271,7 @@ GetPixmaps(XDisplay *xd)
   if (xd->objects == NULL) {
     Pixmap **pm;
 
-    xd->objects = pm = (Pixmap **)ckalloc(OBJN * sizeof (Pixmap *));
+    xd->objects = pm = (Pixmap **)malloc(OBJN * sizeof (Pixmap *));
 
     pm[0] = NULL; /* no object number 0 */
     pm[TRA] = GetObjectXpms(xd, TRA, 5);
@@ -375,7 +375,7 @@ GetViewTiles(SimView *view)
 
       /* from is 4 pixels wide per 3 pixel wide tile */
       from = (unsigned char *)view->x->small_tile_image->data;
-      to = (unsigned char *)ckalloc(4 * 4 * TILE_COUNT * pixelBytes);
+      to = (unsigned char *)malloc(4 * 4 * TILE_COUNT * pixelBytes);
       view->smalltiles = to;
 
       switch (pixelBytes) {

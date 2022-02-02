@@ -426,7 +426,7 @@ Tk_PieMenuCmd(clientData, interp, argc, argv)
      * Initialize the data structure for the menu.
      */
 
-    menuPtr = (PieMenu *) ckalloc(sizeof(PieMenu));
+    menuPtr = (PieMenu *) malloc(sizeof(PieMenu));
     menuPtr->tkwin = new;
     menuPtr->interp = interp;
     menuPtr->title = NULL;
@@ -607,8 +607,8 @@ PieMenuWidgetCmd(clientData, interp, argc, argv)
 	 * and process options for it.
 	 */
 
-	mePtr = (PieMenuEntry *) ckalloc(sizeof(PieMenuEntry));
-	newEntries = (PieMenuEntry **) ckalloc((unsigned)
+	mePtr = (PieMenuEntry *) malloc(sizeof(PieMenuEntry));
+	newEntries = (PieMenuEntry **) malloc((unsigned)
 		((menuPtr->numEntries+1)*sizeof(PieMenuEntry *)));
 	if (menuPtr->numEntries != 0) {
 	    memcpy((VOID *) newEntries, (VOID *) menuPtr->entries,
@@ -2279,7 +2279,7 @@ LayoutPieMenu(menu)
       ckfree((char *)menu->segments);
   }
   menu->segments = (XSegment *)
-    ckalloc(menu->numEntries * sizeof(XSegment));
+    malloc(menu->numEntries * sizeof(XSegment));
 
   if (menu->numEntries > 1) {
     XSegment *seg = menu->segments;

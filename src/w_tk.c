@@ -151,7 +151,7 @@ TileViewCmd(CLIENT_ARGS)
     return TCL_ERROR;
   }
 
-  view = (SimView *)ckalloc(sizeof (SimView));
+  view = (SimView *)malloc(sizeof (SimView));
 
   view->tkwin = tkwin;
   view->interp = interp;

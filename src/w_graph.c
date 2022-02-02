@@ -368,7 +368,7 @@ GraphViewCmd(CLIENT_ARGS)
     return TCL_ERROR;
   }
 
-  graph = (SimGraph *)ckalloc(sizeof (SimGraph));
+  graph = (SimGraph *)malloc(sizeof (SimGraph));
 
   graph->tkwin = tkwin;
   graph->interp = interp;
@@ -560,8 +560,8 @@ initGraphs(void)
   if (!HistoryInitialized) {
     HistoryInitialized = 1;
     for (i = 0; i < HISTORIES; i++) {
-      History10[i] = (unsigned char *)ckalloc(120);
-      History120[i] = (unsigned char *)ckalloc(120);
+      History10[i] = (unsigned char *)malloc(120);
+      History120[i] = (unsigned char *)malloc(120);
     }
   }
 }

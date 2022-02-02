@@ -254,10 +254,10 @@ NewSprite(char *name, int type, int x, int y)
     sprite = FreeSprites;
     FreeSprites = sprite->next;
   } else {
-    sprite = (SimSprite *)ckalloc(sizeof (SimSprite));
+    sprite = (SimSprite *)malloc(sizeof (SimSprite));
   }
 
-  sprite->name = (char *)ckalloc(strlen(name) + 1);
+  sprite->name = (char *)malloc(strlen(name) + 1);
   strcpy(sprite->name, name);
   sprite->type = type;
 

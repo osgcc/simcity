@@ -303,7 +303,7 @@ CamCmd(CLIENT_ARGS)
     return TCL_ERROR;
   }
 
-  scam = (SimCam *)ckalloc(sizeof (SimCam));
+  scam = (SimCam *)malloc(sizeof (SimCam));
 
   scam->w_x = 0;
   scam->w_y = 0;
@@ -712,7 +712,7 @@ DoResizeCam(SimCam *scam, int w, int h)
   }
 
   if (scam->x->shared) {
-    scam->shminfo = (XShmSegmentInfo *)ckalloc(sizeof (XShmSegmentInfo));
+    scam->shminfo = (XShmSegmentInfo *)malloc(sizeof (XShmSegmentInfo));
 
     scam->image =
       XShmCreateImage(scam->x->dpy, scam->x->visual, scam->x->depth,
@@ -794,7 +794,7 @@ DoResizeCam(SimCam *scam, int w, int h)
     }
     scam->data = NULL;
     scam->line_bytes = scam->w_width;
-    scam->data = (Byte *)ckalloc(scam->line_bytes * scam->w_height);
+    scam->data = (Byte *)malloc(scam->line_bytes * scam->w_height);
     scam->image = 
       XCreateImage(scam->x->dpy, scam->x->visual,
 		   scam->x->depth,

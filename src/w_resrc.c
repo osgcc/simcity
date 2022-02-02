@@ -98,7 +98,7 @@ Handle GetResource(char *name, long id)
     r = r->next;
   }
 
-  r = (struct Resource *)ckalloc(sizeof(struct Resource));
+  r = (struct Resource *)malloc(sizeof(struct Resource));
 
   r->name[0] = name[0];
   r->name[1] = name[1];
@@ -112,7 +112,7 @@ Handle GetResource(char *name, long id)
 
   if ((stat(fname, &st) < 0) ||
       ((r->size = st.st_size) == 0) ||
-      ((r->buf = (char *)ckalloc(r->size)) == NULL) ||
+      ((r->buf = (char *)malloc(r->size)) == NULL) ||
       ((fp = fopen(fname, PERMSTR)) == NULL) ||
       (fread(r->buf, sizeof(char), r->size, fp) != r->size)) {
     if (fp)
@@ -180,7 +180,7 @@ GetIndString(char *str, int id, short num)
     long i, lines, size;
     char *buf;
 
-    st = (struct StringTable *)ckalloc(sizeof (struct StringTable));
+    st = (struct StringTable *)malloc(sizeof (struct StringTable));
     st->id = id;
     h = GetResource("stri", id);
     size = ResourceSize(h);
@@ -191,7 +191,7 @@ GetIndString(char *str, int id, short num)
 	lines++;
       }
     st->lines = lines;
-    st->strings = (char **)ckalloc(size * sizeof(char *));
+    st->strings = (char **)malloc(size * sizeof(char *));
     for (i=0; i<lines; i++) {
       st->strings[i] = buf;
       buf += strlen(buf) + 1;

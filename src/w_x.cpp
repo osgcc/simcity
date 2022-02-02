@@ -211,15 +211,12 @@ Sim* MakeNewSim()
 {
     Sim* sim;
 
-    sim = (Sim*)ckalloc(sizeof(Sim));
-    sim->editors = 0; sim->editor = NULL;
-    sim->maps = 0; sim->map = NULL;
-    sim->graphs = 0; sim->graph = NULL;
-    sim->sprites = 0; sim->sprite = NULL;
-#ifdef CAM
-    sim->scams = 0; sim->scam = NULL;
-#endif
-    sim->overlay = NULL;
+    sim = (Sim*)malloc(sizeof(Sim));
+    sim->editors = 0; sim->editor = nullptr;
+    sim->maps = 0; sim->map = nullptr;
+    sim->graphs = 0; sim->graph = nullptr;
+    sim->sprites = 0; sim->sprite = nullptr;
+    sim->overlay = nullptr;
 
     return (sim);
 }
@@ -255,7 +252,7 @@ SimView* InitNewView(SimView* view, char* title, int _class, int w, int h)
     XGCValues values;
     XColor rgb, * color;
 
-    t = (char*)ckalloc(strlen(title) + 1);
+    t = (char*)malloc(strlen(title) + 1);
     strcpy(t, title);
 
     view->next = NULL;
@@ -459,7 +456,7 @@ AllocPixels(int len, unsigned char pixel)
   int i;
   unsigned char *data, *cp;
 
-  cp = data = (unsigned char *)ckalloc(len);
+  cp = data = (unsigned char *)malloc(len);
   for (i = len; i > 0; i--) {
     *(cp++) = pixel;
   }
@@ -581,7 +578,7 @@ DoResizeView(SimView *view, int w, int h)
 #endif
 
     if (!view->shminfo) {
-      view->shminfo = (XShmSegmentInfo *)ckalloc(sizeof (XShmSegmentInfo));
+      view->shminfo = (XShmSegmentInfo *)malloc(sizeof (XShmSegmentInfo));
     }
 
     view->image =
@@ -1145,18 +1142,18 @@ AllocTiles(SimView *view)
     FreeTiles(view);
 
   have = view->tiles =
-    (short **)ckalloc(n);
+    (short **)malloc(n);
 
   want = view->other_tiles =
-    (short **)ckalloc(n);
+    (short **)malloc(n);
 
   have[w] = want[w] = NULL;
 
   n = h * sizeof(short);
   for (col = 0; col < w; col++) {
 
-    have[col] = (short *)ckalloc(n);
-    want[col] = (short *)ckalloc(n);
+    have[col] = (short *)malloc(n);
+    want[col] = (short *)malloc(n);
     for (row = 0; row < h; row++) {
       have[col][row] = -1;
       want[col][row] = -1;
@@ -1196,9 +1193,9 @@ NewInk()
     ink = OldInk;
     OldInk = OldInk->next;
   } else {
-    ink = (Ink *)ckalloc(sizeof(Ink));
+    ink = (Ink *)malloc(sizeof(Ink));
     ink->maxlength = POINT_BATCH;
-    ink->points = (XPoint *)ckalloc(POINT_BATCH * sizeof(XPoint));
+    ink->points = (XPoint *)malloc(POINT_BATCH * sizeof(XPoint));
   }
   ink->length = 0;
   ink->color = COLOR_WHITE;

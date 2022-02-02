@@ -343,7 +343,7 @@ Tk_IntervalCmd(clientData, interp, argc, argv)
      * (e.g. resource pointers).
      */
 
-    intervalPtr = (Interval *) ckalloc(sizeof(Interval));
+    intervalPtr = (Interval *) malloc(sizeof(Interval));
     intervalPtr->tkwin = new;
     intervalPtr->interp = interp;
     intervalPtr->minValue = 0;

@@ -411,7 +411,7 @@ DateViewCmd(CLIENT_ARGS)
     return TCL_ERROR;
   }
 
-  date = (SimDate *)ckalloc(sizeof (SimDate));
+  date = (SimDate *)malloc(sizeof (SimDate));
 
   date->tkwin = tkwin;
   date->interp = interp;

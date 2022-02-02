@@ -205,7 +205,7 @@ int SimCmdCityFileName(ARGS)
       CityFileName = NULL;
     }
     if (argv[2][0] != '\0') {
-      CityFileName = (char *)ckalloc(strlen(argv[0]) + 1);
+      CityFileName = (char *)malloc(strlen(argv[0]) + 1);
       strcpy(CityFileName, argv[2]);
     }
   }

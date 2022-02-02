@@ -485,7 +485,7 @@ int LoadCity(char *filename)
   if (loadFile(filename)) {
     if (CityFileName != NULL)
       ckfree(CityFileName);
-    CityFileName = (char *)ckalloc(strlen(filename) + 1);
+    CityFileName = (char *)malloc(strlen(filename) + 1);
     strcpy(CityFileName, filename);
 
     if (cp = (char *)rindex(filename, '.'))
@@ -498,7 +498,7 @@ int LoadCity(char *filename)
       cp++;
     else
       cp = filename;
-    filename = (char *)ckalloc(strlen(cp) + 1);
+    filename = (char *)malloc(strlen(cp) + 1);
     strcpy(filename, cp);
     setCityName(filename);
     gettimeofday(&start_time, NULL);
@@ -577,7 +577,7 @@ SaveCityAs(char *filename)
 
   if (CityFileName != NULL)
     ckfree(CityFileName);
-  CityFileName = (char *)ckalloc(strlen(filename) + 1);
+  CityFileName = (char *)malloc(strlen(filename) + 1);
   strcpy(CityFileName, filename);
 
   if (saveFile(CityFileName)) {
@@ -591,7 +591,7 @@ SaveCityAs(char *filename)
       cp++;
     else
       cp = filename;
-    filename = (char *)ckalloc(strlen(cp) + 1);
+    filename = (char *)malloc(strlen(cp) + 1);
     strcpy(filename, cp);
     setCityName(cp);
     DidSaveCity();
