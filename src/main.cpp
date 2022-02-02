@@ -104,7 +104,7 @@ int heat_steps = 0;
 int heat_flow = -7;
 int heat_rule = 0;
 int heat_wrap = 3;
-struct timeval now_time, last_now_time;
+//struct timeval now_time;
 int Startup = 0;
 int StartupGameLevel = 0;
 int WireMode = 0;
