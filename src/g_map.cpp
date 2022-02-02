@@ -63,6 +63,8 @@
 #include "main.h"
 #include "view.h"
 
+#include <stdexcept>
+
 #define VAL_NONE	0
 #define VAL_LOW		1
 #define VAL_MEDIUM	2
@@ -79,169 +81,191 @@ short valMap[] =
   COLOR_DARKGREEN, COLOR_LIGHTGREEN, COLOR_ORANGE, COLOR_YELLOW
 };
 
-short valGrayMap[] =
+
+void (*mapProcs[NMAPS])(SimView*);
+
+void drawAll(SimView *view);
+void drawLilTransMap(SimView* view);
+void drawRes(SimView *view);
+void drawCom(SimView *view);
+void drawInd(SimView *view);
+void drawDynamic(SimView *view);
+void drawPower(SimView *view);
+
+void maybeDrawRect(SimView* view, int val, int x, int y, int w, int h);
+
+//int drawPopDensity(SimView *view);
+//int drawRateOfGrowth(SimView *view);
+//int drawTrafMap(SimView *view);
+//int drawPolMap(SimView *view);
+//int drawCrimeMap(SimView *view);
+//int drawLandMap(SimView *view);
+//int drawFireRadius(SimView *view);
+//int drawPoliceRadius(SimView *view);
+
+
+/**
+ * What does 'CI' mean?
+ */
+short GetColorIndex(short x)
 {
-  -1, 31, 127, 191, 255,
-  223, 255, 31, 0
-};
-
-
-int (*mapProcs[NMAPS])();
-
-int drawAll(SimView *view);
-int drawRes(SimView *view);
-int drawCom(SimView *view);
-int drawInd(SimView *view);
-int drawPower(SimView *view);
-int drawLilTransMap(SimView *view);
-int drawPopDensity(SimView *view);
-int drawRateOfGrowth(SimView *view);
-int drawTrafMap(SimView *view);
-int drawPolMap(SimView *view);
-int drawCrimeMap(SimView *view);
-int drawLandMap(SimView *view);
-int drawFireRadius(SimView *view);
-int drawPoliceRadius(SimView *view);
-int drawDynamic(SimView *view);
-
-
-short GetCI(short x)
-{
-  if (x < 50)	return(VAL_NONE);
-  if (x < 100)	return(VAL_LOW);
-  if (x < 150)	return(VAL_MEDIUM);
-  if (x < 200)	return(VAL_HIGH);
-  return(VAL_VERYHIGH);
-}
-
-
-drawPopDensity(SimView *view)
-{
-  short x, y;
-
-  drawAll(view);
-  for (x = 0; x < HWLDX; x++) {
-    for (y = 0; y < HWLDY; y++) {
-      maybeDrawRect(view, GetCI(PopDensity[x][y]),
-		    x * 6, y * 6, 6, 6);
-    }
-  }
-}
-
-
-drawRateOfGrowth(SimView *view)
-{
-  short x, y;
-
-  drawAll(view);
-  for (x = 0; x < SmX; x++) {
-    for (y = 0; y < SmY; y++) {
-      short val, z = RateOGMem[x][y];
-
-      if (z > 100) val = VAL_VERYPLUS;
-      else {
-	if (z > 20)  val = VAL_PLUS;
-	else {
-	  if (z < -100) val = VAL_VERYMINUS;
-	  else {
-	    if (z < -20) val = VAL_MINUS;
-	    else val = VAL_NONE;
-	  }
+	if (x < 50)
+	{
+		return VAL_NONE;
 	}
-      }
-      maybeDrawRect(view, val,
-		    x * 24, y * 24, 24, 24);
-    }
-  }
+	if (x < 100)
+	{
+		return VAL_LOW;
+	}
+	if (x < 150)
+	{
+		return VAL_MEDIUM;
+	}
+	if (x < 200)
+	{
+		return VAL_HIGH;
+	}
+
+	return VAL_VERYHIGH;
 }
 
 
-drawTrafMap(SimView *view)
+void drawPopDensity(SimView* view)
 {
-  short x;
-  short y;
-
-  drawLilTransMap(view);
-
-  for (x = 0; x < HWLDX; x++) {
-    for (y = 0; y < HWLDY; y++) {
-      maybeDrawRect(view, GetCI(TrfDensity[x][y]),
-		    x * 6, y * 6, 6, 6);
-    }
-  }
+	drawAll(view);
+	for (int x = 0; x < HWLDX; x++)
+	{
+		for (int y = 0; y < HWLDY; y++)
+		{
+			maybeDrawRect(view, GetColorIndex(PopDensity[x][y]), x * 6, y * 6, 6, 6);
+		}
+	}
 }
 
 
-drawPolMap(SimView *view)
+void drawRateOfGrowth(SimView* view)
 {
-  short x, y;
+	drawAll(view);
+	for (int x = 0; x < SmX; x++)
+	{
+		for (int y = 0; y < SmY; y++)
+		{
+			short val, z = RateOGMem[x][y];
 
-  drawAll(view);
-
-  for (x = 0; x < HWLDX; x++) {
-    for (y = 0; y < HWLDY; y++) {
-      maybeDrawRect(view, GetCI(10 + PollutionMem[x][y]),
-		    x * 6, y * 6, 6, 6);
-    }
-  } 
+			if (z > 100)
+			{
+				val = VAL_VERYPLUS;
+			}
+			else
+			{
+				if (z > 20)
+				{
+					val = VAL_PLUS;
+				}
+				else
+				{
+					if (z < -100)
+					{
+						val = VAL_VERYMINUS;
+					}
+					else
+					{
+						if (z < -20)
+						{
+							val = VAL_MINUS;
+						}
+						else
+						{
+							val = VAL_NONE;
+						}
+					}
+				}
+			}
+			maybeDrawRect(view, val, x * 24, y * 24, 24, 24);
+		}
+	}
 }
 
 
-drawCrimeMap(SimView *view)
+void drawTrafficMap(SimView* view)
 {
-  short x, y;
+	drawLilTransMap(view);
 
-  drawAll(view);
-
-  for (x = 0; x < HWLDX; x++) {
-    for (y = 0; y < HWLDY; y++) {
-      maybeDrawRect(view, GetCI(CrimeMem[x][y]),
-		    x * 6, y * 6, 6, 6);
-    }
-  }
+	for (int x = 0; x < HWLDX; x++)
+	{
+		for (int y = 0; y < HWLDY; y++)
+		{
+			maybeDrawRect(view, GetColorIndex(TrfDensity[x][y]), x * 6, y * 6, 6, 6);
+		}
+	}
 }
 
 
-drawLandMap(SimView *view)
+void drawPollutionMap(SimView* view)
 {
-  short x, y;
+	drawAll(view);
 
-  drawAll(view);
-
-  for (x = 0; x < HWLDX; x++) {
-    for (y = 0; y < HWLDY; y++) {
-      maybeDrawRect(view, GetCI(LandValueMem[x][y]),
-		    x * 6, y * 6, 6, 6);
-    }
-  }
+	for (int x = 0; x < HWLDX; x++)
+	{
+		for (int y = 0; y < HWLDY; y++)
+		{
+			maybeDrawRect(view, GetColorIndex(10 + PollutionMem[x][y]), x * 6, y * 6, 6, 6);
+		}
+	}
 }
 
 
-drawFireRadius(SimView *view)
+void drawCrimeMap(SimView* view)
 {
-  short x, y;
+	drawAll(view);
 
-  drawAll(view);
-  for (x = 0; x < SmY; x++) {
-    for (y = 0; y < SmY; y++) {
-      maybeDrawRect(view, GetCI(FireRate[x][y]),
-		    x * 24, y * 24, 24, 24);
-    }
-  }
+	for (int x = 0; x < HWLDX; x++)
+	{
+		for (int y = 0; y < HWLDY; y++)
+		{
+			maybeDrawRect(view, GetColorIndex(CrimeMem[x][y]), x * 6, y * 6, 6, 6);
+		}
+	}
 }
 
 
-drawPoliceRadius(SimView *view)
+void drawLandMap(SimView* view)
 {
-  short x, y;
+	drawAll(view);
 
-  drawAll(view);
-  for (x = 0; x < SmX; x++) {
-    for (y = 0; y < SmY; y++) {
-      maybeDrawRect(view, GetCI(PoliceMapEffect[x][y]),
-		    x * 24, y * 24, 24, 24);
-    }
-  }
+	for (int x = 0; x < HWLDX; x++)
+	{
+		for (int y = 0; y < HWLDY; y++)
+		{
+			maybeDrawRect(view, GetColorIndex(LandValueMem[x][y]), x * 6, y * 6, 6, 6);
+		}
+	}
+}
+
+
+void drawFireRadius(SimView* view)
+{
+	drawAll(view);
+	for (int x = 0; x < SmY; x++)
+	{
+		for (int y = 0; y < SmY; y++)
+		{
+			maybeDrawRect(view, GetColorIndex(FireRate[x][y]), x * 24, y * 24, 24, 24);
+		}
+	}
+}
+
+
+void drawPoliceRadius(SimView* view)
+{
+	drawAll(view);
+	for (int x = 0; x < SmX; x++)
+	{
+		for (int y = 0; y < SmY; y++)
+		{
+			maybeDrawRect(view, GetColorIndex(PoliceMapEffect[x][y]), x * 24, y * 24, 24, 24);
+		}
+	}
 }
 
 
@@ -255,8 +279,8 @@ void setUpMapProcs()
   mapProcs[RDMAP] = drawLilTransMap;
   mapProcs[PDMAP] = drawPopDensity;
   mapProcs[RGMAP] = drawRateOfGrowth;
-  mapProcs[TDMAP] = drawTrafMap;
-  mapProcs[PLMAP] = drawPolMap;
+  mapProcs[TDMAP] = drawTrafficMap;
+  mapProcs[PLMAP] = drawPollutionMap;
   mapProcs[CRMAP] = drawCrimeMap;
   mapProcs[LVMAP] = drawLandMap;
   mapProcs[FIMAP] = drawFireRadius;
@@ -268,254 +292,212 @@ void setUpMapProcs()
 void MemDrawMap(SimView* view)
 {
 	(*mapProcs[view->map_state])(view);
-	if (!view->x->color)
+}
+
+
+/**
+ * \c pixel	Maps to a given color. See table above (valMap) for mapping.
+ */
+void drawRect(SimView* view, int pixel, int solid, int x, int y, int w, int h)
+{
+	/*
+	int W = view->m_width, H = view->m_height;
+
+	if (x < 0)
 	{
-		ditherMap(view);
-		XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_BLACK]);
-		XSetBackground(view->x->dpy, view->x->gc, view->pixels[COLOR_WHITE]);
-		XPutImage(view->x->dpy, view->pixmap, view->x->gc, view->image, 0, 0, 0, 0, view->m_width, view->m_height);
+		if ((w += x) < 0) w = 0;
+		x = 0;
 	}
-}
-
-
-ditherMap(SimView *view)
-{
-  int i, x, y, width, height;
-  int err, pixel1, pixel8;
-  int line_bytes1 = view->line_bytes;
-  int line_bytes8 = view->line_bytes8;
-  unsigned char *image1 = view->data;
-  unsigned char *image8 = view->data8;
-  int *errors;
-
-  width = view->m_width; height = view->m_height;
-
-  errors = (int *)malloc(sizeof(int) * (width));
-
-  for (i = 0; i < width; i++)
-    errors[i] = (Rand16() & 15) - 7;
-
-  err = (Rand16() & 15) - 7;
-
-  for (y = 0; y < height; y += 2) {
-    unsigned char *i1 = image1; 
-    unsigned char *i8 = image8;
-
-    image1 += line_bytes1;
-    image8 += line_bytes8;
-
-    for (x = 0; x < width; x += 8) {
-      pixel1 = 0;
-      for (i = 0; i < 8; i++) {
-	pixel1 <<= 1;
-	pixel8 = *(i8++) + err + errors[x + i];
-	if (pixel8 > 127) {
-	  err = pixel8 - 255;
-	} else {
-	  pixel1 |= 1;
-	  err = pixel8;
+	else if (x > W)
+	{
+		x = 0; w = 0;
 	}
-	errors[x + i] = err/2;
-	err = err/2;
-      }
-      *(i1++) = pixel1;
-    }
-
-    i1 = image1 + (width / 8) - 1;
-    i8 = image8 + width - 1;
-
-    image1 += line_bytes1;
-    image8 += line_bytes8;
-
-    for (x = width - 8; x >= 0; x -= 8) {
-      pixel1 = 0;
-      for (i = 7; i >= 0; i--) {
-	pixel1 >>= 1;
-	pixel8 = *(i8--) + err + errors[x + i];
-	if (pixel8 > 127) {
-	  err = pixel8 - 255;
-	} else {
-	  pixel1 |= 128;
-	  err = pixel8;
+	if (x + w > W)
+	{
+		w = W - x;
 	}
-	errors[x + i] = err/2;
-	err = err/2;
-      }
-      *(i1--) = pixel1;
-    }
-  }
-
-  free(errors);
-}
-
-
-maybeDrawRect(SimView *view, int val,
-	    int x, int y, int w, int h)
-{
-  if (val == VAL_NONE) return;
-
-  if (view->x->color) {
-    drawRect(view, view->pixels[valMap[val]], 0, x, y, w, h);
-  } else {
-    drawRect(view, valGrayMap[val], 1, x, y, w, h);
-  }
-}
-
-
-drawRect(SimView *view, int pixel, int solid,
-	 int x, int y, int w, int h)
-{
-  int W = view->m_width, H = view->m_height;
-
-  if (x < 0) {
-    if ((w += x) < 0) w = 0;
-    x = 0;
-  } else if (x > W) {
-    x = 0; w = 0;
-  }
-  if (x + w > W) {
-    w = W - x;
-  }
-  if (y < 0) {
-    if ((h += y) < 0) h = 0;
-    y = 0;
-  } else if (y > H) {
-    y = 0; h = 0;
-  }
-  if (y + h > H) {
-    h = H - y;
-  }
-
-  if (w && h) {
-    int i, j, stipple = (x ^ y) & 1;
-    unsigned char *data =
-      view->x->color ? view->data : view->data8;
-
-    /* In the case of black and white, we use an 8 bit buffer and dither it. */
-    int pixelBytes = 
-      view->x->color ? view->pixel_bytes : 1;
-    long line = 
-      view->x->color ? view->line_bytes : view->line_bytes8;
-
-    unsigned char *image =
-      &(data[(line * y) + (x * pixelBytes)]);
-
-    switch (pixelBytes) {
-
-    case 1:
-      {
-	unsigned char *data = 
-	  view->data8;
-	unsigned char *image = 
-	  &data[(line * y) + (x * pixelBytes)];
-
-	if (solid) {
-	  for (i = h; i > 0; i--) {
-	    for (j = w; j > 0; j--) {
-	      *image = pixel;
-	      image++;
-	    }
-	    image += line - w;
-	  }
-	} else {
-	  for (i = h; i > 0; i--) {
-	    for (j = w; j > 0; j--) {
-	      if (stipple++ & 1)
-		*image = pixel;
-	      image++;
-	    }
-	    if (!(w & 1))
-	      stipple++;
-	    image += line - w;
-	  }
+	if (y < 0)
+	{
+		if ((h += y) < 0) h = 0;
+		y = 0;
 	}
-      }
-      break;
-
-    case 2:
-      {
-	unsigned short *data = 
-	  (unsigned short *)view->data;
-	unsigned short *image;
-	line >>= 1; /* Convert from byte offset to short offset */
-	image = 
-	  &data[(line * y) + x];
-
-	if (solid) {
-	  for (i = h; i > 0; i--) {
-	    for (j = w; j > 0; j--) {
-	      *image = pixel;
-	      image++;
-	    }
-	    image += line - w;
-	  }
-	} else {
-	  for (i = h; i > 0; i--) {
-	    for (j = w; j > 0; j--) {
-	      if (stipple++ & 1)
-		*image = pixel;
-	      image++;
-	    }
-	    if (!(w & 1))
-	      stipple++;
-	    image += line - w;
-	  }
+	else if (y > H)
+	{
+		y = 0; h = 0;
 	}
-      }
-      break;
+	if (y + h > H)
+	{
+		h = H - y;
+	}
 
-    case 3:
-    case 4:
-      {
-	unsigned char *data = 
-	  (unsigned char *)view->data;
-	unsigned char *image;
-	int bitmapPad = view->x->small_tile_image->bitmap_pad;
-	int rowBytes = view->x->small_tile_image->bytes_per_line;
-	line = rowBytes >> 1; /* Convert from byte offset to short offset */
-	image = 
-	  &data[(line * y) + x];
+	if (w && h)
+	{
+		int i, j, stipple = (x ^ y) & 1;
+		//unsigned char* data = view->x->color ? view->data : view->data8;
+		unsigned char* data = view->data;
 
-	if (solid) {
-	  for (i = h; i > 0; i--) {
-	    for (j = w; j > 0; j--) {
-	      *(image++) = (pixel >> 0) & 0xff;
-	      *(image++) = (pixel >> 8) & 0xff;
-	      *(image++) = (pixel >> 16) & 0xff;
-	      if (bitmapPad == 32) {
-	        image++;
-	      }
-	    }
-	    image += line - w;
-	  }
-	} else {
-	  for (i = h; i > 0; i--) {
-	    for (j = w; j > 0; j--) {
-	      if (stipple++ & 1) {
-		*(image++) = (pixel >> 0) & 0xff;
-		*(image++) = (pixel >> 8) & 0xff;
-		*(image++) = (pixel >> 16) & 0xff;
-	        if (bitmapPad == 32) {
-		  image++;
+		// In the case of black and white, we use an 8 bit buffer and dither it.
+		//int pixelBytes = view->x->color ? view->pixel_bytes : 1;
+		//long line = view->x->color ? view->line_bytes : view->line_bytes8;
+		int pixelBytes = view->pixel_bytes;
+		long line = view->line_bytes;
+
+		unsigned char* image = &(data[(line * y) + (x * pixelBytes)]);
+
+		switch (pixelBytes)
+		{
+
+		case 1:
+		{
+			unsigned char* data = view->data8;
+			unsigned char* image = &data[(line * y) + (x * pixelBytes)];
+
+			if (solid)
+			{
+				for (i = h; i > 0; i--)
+				{
+					for (j = w; j > 0; j--)
+					{
+						*image = pixel;
+						image++;
+					}
+					image += line - w;
+				}
+			}
+			else
+			{
+				for (i = h; i > 0; i--)
+				{
+					for (j = w; j > 0; j--)
+					{
+						if (stipple++ & 1)
+						{
+							*image = pixel;
+						}
+						image++;
+					}
+					if (!(w & 1))
+					{
+						stipple++;
+					}
+					image += line - w;
+				}
+			}
+			throw std::runtime_error("black and white");
 		}
-	      }
-	    }
-	    if (!(w & 1)) {
-	      stipple++;
-	    }
-	    image += line - w;
-	  }
+		break;
+
+		case 2:
+		{
+			unsigned short* data = (unsigned short*)view->data;
+			unsigned short* image;
+			line >>= 1; // Convert from byte offset to short offset
+			image = &data[(line * y) + x];
+
+			if (solid)
+			{
+				for (i = h; i > 0; i--)
+				{
+					for (j = w; j > 0; j--)
+					{
+						*image = pixel;
+						image++;
+					}
+					image += line - w;
+				}
+			}
+			else
+			{
+				for (i = h; i > 0; i--)
+				{
+					for (j = w; j > 0; j--)
+					{
+						if (stipple++ & 1)
+						{
+							*image = pixel;
+						}
+						image++;
+					}
+					if (!(w & 1))
+					{
+						stipple++;
+					}
+					image += line - w;
+				}
+			}
+			throw std::runtime_error("2-byte color? 16bit?");
+		}
+		break;
+
+		case 3:
+		case 4:
+		{
+			unsigned char* data = (unsigned char*)view->data;
+			unsigned char* image;
+			int bitmapPad = view->x->small_tile_image->bitmap_pad;
+			int rowBytes = view->x->small_tile_image->bytes_per_line;
+			line = rowBytes >> 1; // Convert from byte offset to short offset
+			image = &data[(line * y) + x];
+
+			if (solid)
+			{
+				for (i = h; i > 0; i--)
+				{
+					for (j = w; j > 0; j--)
+					{
+						*(image++) = (pixel >> 0) & 0xff;
+						*(image++) = (pixel >> 8) & 0xff;
+						*(image++) = (pixel >> 16) & 0xff;
+						if (bitmapPad == 32)
+						{
+							image++;
+						}
+					}
+					image += line - w;
+				}
+			}
+			else
+			{
+				for (i = h; i > 0; i--)
+				{
+					for (j = w; j > 0; j--)
+					{
+						if (stipple++ & 1)
+						{
+							*(image++) = (pixel >> 0) & 0xff;
+							*(image++) = (pixel >> 8) & 0xff;
+							*(image++) = (pixel >> 16) & 0xff;
+							if (bitmapPad == 32)
+							{
+								image++;
+							}
+						}
+					}
+					if (!(w & 1))
+					{
+						stipple++;
+					}
+					image += line - w;
+				}
+			}
+		}
+		break;
+
+		default:
+			assert(0); // Undefined depth
+			break;
+		}
 	}
-      }
-      break;
-
-    default:
-      assert(0); /* Undefined depth */
-      break;
-    }
-
-  }
+	*/
 }
 
 
+void maybeDrawRect(SimView* view, int val, int x, int y, int w, int h)
+{
+	if (val == VAL_NONE)
+	{
+		return;
+	}
 
+	drawRect(view, view->pixels[valMap[val]], 0, x, y, w, h);
+}

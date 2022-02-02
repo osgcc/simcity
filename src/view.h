@@ -145,8 +145,8 @@ struct SimView
 	int pixel_bytes;
 	int depth;
 	unsigned char* data;
-	int line_bytes8;
-	unsigned char* data8;
+	//int line_bytes8;
+	//unsigned char* data8;
 	int visible;
 	int invalid;
 	int skips;
