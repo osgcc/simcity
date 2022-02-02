@@ -69,9 +69,6 @@
   }
 
 
-#define SPRITE_ARGS \
-	SimSprite *sprite, Tcl_Interp *interp, int argc, char **argv
-
 
 /* tile bounds */
 

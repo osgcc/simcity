@@ -82,7 +82,7 @@ SimSprite *NewSprite(char *name, int type, int x, int y);
 #define BUS_GROOVE_Y 6
 
 #define SPRITECMD_ACCESS_INT(var) \
-  int SpriteCmd##var(SPRITE_ARGS) { \
+  int SpriteCmd##var(SimSprite *sprite, Tcl_Interp *interp, int argc, char **argv) { \
     int val; \
     if ((argc != 2) && (argc != 3)) return (TCL_ERROR); \
     if (argc == 3) { \
@@ -95,7 +95,7 @@ SimSprite *NewSprite(char *name, int type, int x, int y);
 
 
 #define SPRITECMD_GET_STR(var) \
-  int SpriteCmd##var(SPRITE_ARGS) { \
+  int SpriteCmd##var(SimSprite *sprite, Tcl_Interp *interp, int argc, char **argv) { \
     sprintf(interp->result, "%s", sprite->var); \
     return (TCL_OK); \
   }
@@ -177,14 +177,14 @@ SPRITECMD_ACCESS_INT(accel)
 SPRITECMD_ACCESS_INT(speed)
 
 
-int SpriteCmdExplode(SPRITE_ARGS)
+int SpriteCmdExplode(SimSprite *sprite, Tcl_Interp *interp, int argc, char **argv)
 {
   ExplodeSprite(sprite);
   return TCL_OK;
 }
 
 
-int SpriteCmdInit(SPRITE_ARGS)
+int SpriteCmdInit(SimSprite *sprite, Tcl_Interp *interp, int argc, char **argv)
 {
   int x, y;
 
