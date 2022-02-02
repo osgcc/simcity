@@ -208,8 +208,7 @@ Ptr MickGetHexa(short theID)
 }
 
 
-Pixmap *
-GetObjectXpms(XDisplay *xd, int id, int frames)
+Pixmap* GetObjectXpms(XDisplay *xd, int id, int frames)
 {
   int i;
   Pixmap *pixmaps = (Pixmap *)malloc(2 * frames * sizeof (Pixmap));

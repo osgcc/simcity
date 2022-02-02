@@ -18,136 +18,109 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\terrain\mapgener.c">
-      <Filter>Source Files\terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="src\terrain\terra.c">
-      <Filter>Source Files\terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="src\terrain\terragen.c">
-      <Filter>Source Files\terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_ani.c">
+    <ClCompile Include="src\g_ani.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_bigmap.c">
+    <ClCompile Include="src\g_bigmap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_cam.c">
+    <ClCompile Include="src\g_cam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_map.c">
+    <ClCompile Include="src\g_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_setup.c">
+    <ClCompile Include="src\g_setup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_smmaps.c">
+    <ClCompile Include="src\g_smmaps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\rand.c">
+    <ClCompile Include="src\rand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\random.c">
+    <ClCompile Include="src\random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_alloc.c">
+    <ClCompile Include="src\s_alloc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_disast.c">
+    <ClCompile Include="src\s_disast.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_eval.c">
+    <ClCompile Include="src\s_eval.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_fileio.c">
+    <ClCompile Include="src\s_fileio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_gen.c">
+    <ClCompile Include="src\s_gen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_init.c">
+    <ClCompile Include="src\s_init.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_msg.c">
+    <ClCompile Include="src\s_msg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_power.c">
+    <ClCompile Include="src\s_power.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_scan.c">
+    <ClCompile Include="src\s_scan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_sim.c">
+    <ClCompile Include="src\s_sim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_traf.c">
+    <ClCompile Include="src\s_traf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_zone.c">
+    <ClCompile Include="src\s_zone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_budget.c">
+    <ClCompile Include="src\w_budget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_cam.c">
+    <ClCompile Include="src\w_cam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_con.c">
+    <ClCompile Include="src\w_con.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_date.c">
+    <ClCompile Include="src\w_date.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_editor.c">
+    <ClCompile Include="src\w_editor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_eval.c">
+    <ClCompile Include="src\w_eval.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_graph.c">
+    <ClCompile Include="src\w_graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_inter.c">
+    <ClCompile Include="src\w_inter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_keys.c">
+    <ClCompile Include="src\w_keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_map.c">
+    <ClCompile Include="src\w_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_piem.c">
+    <ClCompile Include="src\w_piem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_print.c">
+    <ClCompile Include="src\w_print.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_resrc.c">
+    <ClCompile Include="src\w_resrc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_sim.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\w_stubs.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\w_tk.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\w_tool.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\w_update.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\w_util.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\w_x.cpp">
+    <ClCompile Include="src\w_sim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\w_sound.cpp">
@@ -155,6 +128,33 @@
     </ClCompile>
     <ClCompile Include="src\w_sprite.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w_stubs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w_tk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w_tool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w_update.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w_util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w_x.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\terrain\mapgener.cpp">
+      <Filter>Source Files\terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\terrain\terra.cpp">
+      <Filter>Source Files\terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\terrain\terragen.cpp">
+      <Filter>Source Files\terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
