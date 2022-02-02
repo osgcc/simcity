@@ -568,16 +568,6 @@ DoResizeView(SimView *view, int w, int h)
       view->image = NULL;
     }
 
-#if 0
-    /* XShmPixmapFormat is documented but does not exist !!! */
-    if (XShmPixmapFormat(view->x->dpy) != ZPixmap) {
-      fprintf(stderr,
-	      "Darn, display \"%s\" has the wrong shared memory format.\n",
-	      view->x->display);
-      goto FALL_BACK;
-    }
-#endif
-
     if (!view->shminfo) {
       view->shminfo = (XShmSegmentInfo *)malloc(sizeof (XShmSegmentInfo));
     }

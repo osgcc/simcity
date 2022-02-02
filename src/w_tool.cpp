@@ -135,13 +135,6 @@ int DoSetWandState(SimView *view, short state);
 
 setWandState(SimView *view, short state)
 {
-#if 0
-  if (state < 0) {
-    specialBase = -state;
-    state = specialState;
-  }
-#endif
-
   view->tool_state = state;
   DoUpdateHeads();
   DoSetWandState(view, state);
@@ -1275,25 +1268,6 @@ network_tool(SimView *view, short x, short y)
 }
 
 
-#if 0
-int
-special_tool(SimView *view, short x, short y)
-{
-  int result;
-
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
-    return -1;
-  }
-
-  result = check3x3(view, x, y, specialBase, specialState);
-  if (result == 1) {
-    DidTool(view, "Special", x, y);
-  }
-  return result;
-}
-#endif
-
 int
 ChalkTool(SimView *view, short x, short y, short color, short first)
 {
@@ -1345,12 +1319,6 @@ ChalkTo(SimView *view, int x, int y)
 			      view->tool_last_event_time,
 			      view->tool_event_time,
 			      &n);
-#if 0
-printf("got %d events at %x from %d to %d (%d elapsed)\n",
-       n, coords,
-       view->tool_last_event_time, view->tool_event_time,
-       view->tool_event_time - view->tool_last_event_time);
-#endif
     if (n) {
       lx = ink->last_x; ly = ink->last_y;
 
@@ -1358,10 +1326,6 @@ printf("got %d events at %x from %d to %d (%d elapsed)\n",
 	ViewToPixelCoords(view, coord->x, coord->y, &x0, &y0);
 	lx = (lx + lx + lx + x0) >>2;
 	ly = (ly + ly + ly + y0) >>2;
-#if 0
-printf("adding %d %d => %d %d => %d %d\n",
-       coord->x, coord->y, x0, y0, lx, ly);
-#endif
 	AddInk(ink, lx, ly);
       }
     }

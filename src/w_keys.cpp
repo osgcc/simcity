@@ -269,18 +269,6 @@ doKeyDown(SimView *view, short charCode)
       break;
     }
 
-#if 0
-    /***** shift wand state to query *****/
-    case 'Q':
-    case 'q':
-    case 'Q'-'@': {
-      if (view->tool_state_save == -1)
-	view->tool_state_save = view->tool_state;
-      setWandState(view, queryState);
-      break;
-    }
-#endif
-
     case 27: {
       SoundOff();
       break;

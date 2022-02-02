@@ -781,28 +781,6 @@ PieMenuWidgetCmd(clientData, interp, argc, argv)
 	 */
 
 	x -= menuPtr->center_x; y -= menuPtr->center_y;
-#if 0
-	ix = x; iy = y;
-
-	tmp = WidthOfScreen(Tk_Screen(menuPtr->tkwin))
-		- Tk_Width(menuPtr->tkwin);
-	if (x > tmp) {
-	    x = tmp;
-	}
-	if (x < 0) {
-	    x = 0;
-	}
-	tmp = HeightOfScreen(Tk_Screen(menuPtr->tkwin))
-		- Tk_Height(menuPtr->tkwin);
-	if (y > tmp) {
-	    y = tmp;
-	}
-	if (y < 0) {
-	    y = 0;
-	}
-
-	/* XXX: warp pointer by (x-ix, y-iy) upon popup */
-#endif
 
 	Tk_MakeWindowExist(menuPtr->tkwin);
 	XRaiseWindow(Tk_Display(menuPtr->tkwin), Tk_WindowId(menuPtr->tkwin));
@@ -1818,36 +1796,37 @@ ActivatePieMenuEntry(menuPtr, index, preview)
     int index;				/* Index of entry to activate, or
 					 * -1 to deactivate all entries. */
     int preview;			/* 1 to execute previewer */
-{
-    register PieMenuEntry *mePtr;
-    int result = TCL_OK;
+	{
+		register PieMenuEntry* mePtr;
+		int result = TCL_OK;
 
-    if (menuPtr->active >= 0) {
-	mePtr = menuPtr->entries[menuPtr->active];
+		if (menuPtr->active >= 0) {
+			mePtr = menuPtr->entries[menuPtr->active];
 
-	EventuallyRedrawPieMenu(menuPtr, menuPtr->active);
-    }
-    menuPtr->active = index;
-    if (index >= 0) {
-	mePtr = menuPtr->entries[index];
-	EventuallyRedrawPieMenu(menuPtr, index);
-	if (preview) {
-	  Tk_Preserve((ClientData) mePtr);
-	  if (mePtr->preview != NULL) {
-	      result = Tcl_GlobalEval(menuPtr->interp, mePtr->preview);
-	  }
-	  Tk_Release((ClientData) mePtr);
+			EventuallyRedrawPieMenu(menuPtr, menuPtr->active);
+		}
+		menuPtr->active = index;
+		if (index >= 0) {
+			mePtr = menuPtr->entries[index];
+			EventuallyRedrawPieMenu(menuPtr, index);
+			if (preview) {
+				Tk_Preserve((ClientData)mePtr);
+				if (mePtr->preview != NULL) {
+					result = Tcl_GlobalEval(menuPtr->interp, mePtr->preview);
+				}
+				Tk_Release((ClientData)mePtr);
+			}
+		}
+		else {
+			/* We're doing this in tcl these days, for finer control.
+
+			  if (preview && menuPtr->preview) {
+				result = Tcl_GlobalEval(menuPtr->interp, menuPtr->preview);
+			  }
+		 */
+		}
+		return result;
 	}
-    } else {
-/* We're doing this in tcl these days, for finer control. */
-#if 0
-      if (preview && menuPtr->preview) {
-	    result = Tcl_GlobalEval(menuPtr->interp, menuPtr->preview);
-      }
-#endif
-    }
-    return result;
-}
 
 
 /*

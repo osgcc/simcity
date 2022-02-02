@@ -1245,14 +1245,7 @@ PixelToValue(intervalPtr, x, y)
 	return (0);
     }
     value -= intervalPtr->offset + intervalPtr->borderWidth;
-#if 0
-    if (value < 0) {
-	value = 0;
-    }
-    if (value > pixelRange) {
-	value = pixelRange;
-    }
-#endif
+
     if (intervalPtr->toValue > intervalPtr->fromValue) {
 	value = intervalPtr->fromValue +
 		((value * (intervalPtr->toValue - intervalPtr->fromValue))

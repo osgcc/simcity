@@ -578,9 +578,6 @@ moveagn:
 					DisableMenus();	/* locks to current process */
 					newMapFlags[CYMAP]=0;
 					DrawBigMap();
-#if 0
-					DrawObjects();
-#endif
 					EnableMenus();
 					goto moveagn;
 				}

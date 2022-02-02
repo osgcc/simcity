@@ -83,13 +83,6 @@ MakeTraf(int Zt)
   Zsource = Zt;
   PosStackN = 0;
 
-#if 0
-  if ((!Rand(2)) && FindPTele()) {
-/* printf("Telecommute!\n"); */
-    return (TRUE);
-  }
-#endif
-
   if (FindPRoad()) {		/* look for road on zone perimeter */
     if (TryDrive()) {		/* attempt to drive somewhere */
       SetTrafMem();		/* if sucessful, inc trafdensity */
@@ -225,11 +218,8 @@ TryGo(int z)
 {
   short x, rdir, realdir;
 
-#if 0
-  rdir = Rand(3); /* XXX: Heaviest user of Rand */
-#else
   rdir = Rand16() & 3;
-#endif
+
   for (x = rdir; x < (rdir + 4); x++) {	/* for the 4 directions */
     realdir = x & 3;
     if (realdir == LDir) continue;	/* skip last direction */
@@ -272,46 +262,22 @@ GetFromMap(int x)
 
 
 /* comefrom: TryDrive */
-DriveDone(void)
+bool DriveDone()
 {
-  static short TARGL[3] = {COMBASE, LHTHR, LHTHR};
-  static short TARGH[3] = {NUCLEAR, PORT, COMBASE};	/* for destinations */
-  register short x, z, l, h;
+    static short TARGL[3] = { COMBASE, LHTHR, LHTHR };
+    static short TARGH[3] = { NUCLEAR, PORT, COMBASE };	/* for destinations */
+    //register short l, h;
 
-/* unwound -Don */
-#if 0
-  for (x = 0; x < 4; x++) {	/* R>C C>I I>R  */
-    z = GetFromMap(x);
-    if ((z >= TARGL[Zsource]) && (z <= TARGH[Zsource]))
-      return (TRUE);
-  }
-#else
-  l = TARGL[Zsource];
-  h = TARGH[Zsource];
+    for (short x = 0; x < 4; x++) /* R>C C>I I>R  */
+    {
+        short z = GetFromMap(x);
+        if ((z >= TARGL[Zsource]) && (z <= TARGH[Zsource]))
+        {
+            return true;
+        }
+    }
 
-  if (SMapY > 0) {
-    z = Map[SMapX][SMapY - 1] & LOMASK;
-    if ((z >= l) && (z <= h))
-      return (TRUE);
-  }
-  if (SMapX < (WORLD_X - 1)) {
-    z = Map[SMapX + 1][SMapY] & LOMASK;
-    if ((z >= l) && (z <= h))
-      return (TRUE);
-  }
-  if (SMapY < (WORLD_Y - 1)) {
-    z = Map[SMapX][SMapY + 1] & LOMASK;
-    if ((z >= l) && (z <= h))
-      return (TRUE);
-  }
-  if (SMapX > 0) {
-    z = Map[SMapX - 1][SMapY] & LOMASK;
-    if ((z >= l) && (z <= h))
-      return (TRUE);
-  }
-#endif
-
-  return (FALSE);
+    return false;
 }
 
 

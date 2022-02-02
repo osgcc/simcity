@@ -385,20 +385,6 @@ constexpr auto WORLD_Y = SimHeight;
 #define firstState residentialState
 #define lastState networkState
 
-#if 0
-#define specialState 16
-#define monsterGoalState 17
-#define helicopterGoalState 18
-#define blackState 19
-#define whiteState 20
-#define redState 21
-#define orangeState 23
-#define blueState 24
-#define greenState 25
-#define brownState 26
-#endif
-
-
 #define STATE_CMD 0
 #define STATE_TILES 1
 #define STATE_OVERLAYS 2

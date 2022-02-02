@@ -618,15 +618,7 @@ DoUpdateDate(SimDate *date)
 
   XSetFont(date->x->dpy, date->x->gc, date->fontPtr->fid);
 
-#if 0
-  if (date->x->color) {
-    XSetForeground(dpy, gc, pix[COLOR_LIGHTGRAY]);
-  } else {
-    XSetForeground(dpy, gc, pix[COLOR_WHITE]);
-  }
-#else
   XSetForeground(dpy, gc, Tk_3DBorderColor(date->border)->pixel);
-#endif
 
   XFillRectangle(dpy, pm, gc, 0, 0, w, h);
 
