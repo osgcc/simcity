@@ -88,7 +88,7 @@ void drawAll(SimView * view)
             unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                unsigned long l = mem[1];
+                unsigned long l = mem[i];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;
@@ -129,7 +129,7 @@ void drawRes(SimView* view)
             unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                unsigned long l = mem[1];
+                unsigned long l = mem[i];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;
@@ -170,7 +170,7 @@ void drawCom(SimView* view)
             unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                unsigned long l = mem[1];
+                unsigned long l = mem[i];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;
@@ -214,7 +214,7 @@ void drawInd(SimView* view)
             unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                unsigned long l = mem[1];
+                unsigned long l = mem[i];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;
@@ -257,7 +257,7 @@ void drawLilTransMap(SimView* view)
             unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                unsigned long l = mem[1];
+                unsigned long l = mem[i];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;
@@ -274,164 +274,168 @@ void drawLilTransMap(SimView* view)
 #define CONDUCTIVE	COLOR_LIGHTGRAY
 
 
-void drawPower(SimView *view)
+void drawPower(SimView* view)
 {
-  short col, row;
-  unsigned short tile;
-  short *mp;
-  unsigned char *image, *imageBase;
-  unsigned long *mem;
-  unsigned long l;
-  int lineBytes = view->line_bytes8;
-  int pixelBytes = view->pixel_bytes;
+    int lineBytes = view->line_bytes;
+    int pixelBytes = view->pixel_bytes;
 
-  int pix;
-  int powered, unpowered, conductive;
+    int pix = 0;
 
-  if (view->x->color) {
-    powered = view->pixels[POWERED];
-    unpowered = view->pixels[UNPOWERED];
-    conductive = view->pixels[CONDUCTIVE];
-  } else {
-    powered = 255;
-    unpowered = 0;
-    conductive = 127;
-  }
+    int powered = view->pixels[POWERED];
+    int unpowered = view->pixels[UNPOWERED];
+    int conductive = view->pixels[CONDUCTIVE];
 
-  mp = &Map[0][0];
-  imageBase = view->x->color ? view->data : view->data8;
+    short* mp = &Map[0][0];
+    unsigned char* imageBase = view->data;
 
-  for (col = 0; col < WORLD_X; col++) {
-    image = imageBase + (3 * pixelBytes * col);
-    for (row = 0; row < WORLD_Y; row++) {
-      tile = *(mp++);
+    for (int col = 0; col < WORLD_X; col++)
+    {
+        unsigned char* image = imageBase + (3 * pixelBytes * col);
+        for (int row = 0; row < WORLD_Y; row++)
+        {
+            unsigned short tile = *(mp++);
 
-      if ((tile & LOMASK) >= TILE_COUNT) tile -= TILE_COUNT;
+            if ((tile & LOMASK) >= TILE_COUNT)
+            {
+                tile -= TILE_COUNT;
+            }
 
-      if ((unsigned short)(tile & LOMASK) <= (unsigned short)63) {
-		tile &= LOMASK;
-		pix = -1;
-      } else if (tile & ZONEBIT) {
-		pix = (tile & PWRBIT) ? powered : unpowered;
-      } else {
-		if (tile & CONDBIT) {
-		  pix = conductive;
-		} else {
-		  tile = 0;
-		  pix = -1;
-		}
-      }
+            if ((unsigned short)(tile & LOMASK) <= (unsigned short)63)
+            {
+                tile &= LOMASK;
+                pix = -1;
+            }
+            else if (tile & ZONEBIT)
+            {
+                pix = (tile & PWRBIT) ? powered : unpowered;
+            }
+            else
+            {
+                if (tile & CONDBIT)
+                {
+                    pix = conductive;
+                }
+                else
+                {
+                    tile = 0;
+                    pix = -1;
+                }
+            }
 
-      if (pix < 0) {
-		mem = (unsigned long *)&view->smalltiles[tile * 4 * 4 * pixelBytes];
-		ROW3
-      } else {
-		switch (view->x->depth) {
-
-		case 1:
-		case 8:
-		  image[0] = image[1] = image[2] = pix;
-		  image += lineBytes;
-		  image[0] = image[1] = image[2] = pix;
-		  image += lineBytes;
-		  image[0] = image[1] = image[2] = pix;
-		  image += lineBytes;
-		  break;
-
-		case 15:
-		case 16:
-		  { 
-			unsigned short *p;
-			p = (short *)image;
-			p[0] = p[1] = p[2] = pix;
-			image += lineBytes;
-			p = (short *)image;
-			p[0] = p[1] = p[2] = pix;
-			image += lineBytes;
-			p = (short *)image;
-			p[0] = p[1] = p[2] = pix;
-			image += lineBytes;
-		  }
-		  break;
-
-		case 24:
-		case 32:
-		  { 
-			int x, y;
-			for (y = 0; y < 3; y++) {
-			  unsigned char *img =
-				image;
-			  for (x = 0; x < 4; x++) {
-				*(img++) = (pix >> 0) & 0xff;
-				*(img++) = (pix >> 8) & 0xff;
-				*(img++) = (pix >> 16) & 0xff;
-				if (pixelBytes == 4) {
-				  img++;
-				} // if
-			  } // for x
-			  image += lineBytes;
-			} // for y
-		  }
-		  break;
-
-		default:
-		  assert(0); /* Undefined depth */
-		  break;
-
-		}
-      }
+            if (pix < 0)
+            {
+                unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+                for (int i = 0; i < 3; ++i)
+                {
+                    unsigned long l = mem[i];
+                    image[0] = l >> 24;
+                    image[1] = l >> 16;
+                    image[2] = l >> 8;
+                    image += lineBytes;
+                }
+            }
+            else
+            {
+                for (int y = 0; y < 3; y++)
+                {
+                    unsigned char* img = image;
+                    for (int x = 0; x < 4; x++)
+                    {
+                        *(img++) = (pix >> 0) & 0xff;
+                        *(img++) = (pix >> 8) & 0xff;
+                        *(img++) = (pix >> 16) & 0xff;
+                        if (pixelBytes == 4)
+                        {
+                            img++;
+                        }
+                    }
+                    image += lineBytes;
+                }
+            }
+        }
     }
-  }
 }
 
 
 int dynamicFilter(int col, int row)
 {
-  int r, c, x;
+    int x;
 
-  r = row >>1;
-  c = col >>1;
+    int r = row >> 1;
+    int c = col >> 1;
 
-  if (((DynamicData[0] > DynamicData[1]) ||
-       ((x = PopDensity[c][r])			>= DynamicData[0]) &&
-       (x								<= DynamicData[1])) &&
-      ((DynamicData[2] > DynamicData[3]) ||
-       ((x = RateOGMem[c>>2][r>>2])		>= ((2 * DynamicData[2]) - 256)) &&
-       (x								<= ((2 * DynamicData[3]) - 256))) &&
-      ((DynamicData[4] > DynamicData[5]) ||
-       ((x = TrfDensity[c][r])			>= DynamicData[4]) &&
-       (x								<= DynamicData[5])) &&
-      ((DynamicData[6] > DynamicData[7]) ||
-       ((x = PollutionMem[c][r])		>= DynamicData[6]) &&
-       (x								<= DynamicData[7])) &&
-      ((DynamicData[8] > DynamicData[9]) ||
-       ((x = CrimeMem[c][r])			>= DynamicData[8]) &&
-       (x								<= DynamicData[9])) &&
-      ((DynamicData[10] > DynamicData[11]) ||
-       ((x = LandValueMem[c][r])		>= DynamicData[10]) &&
-       (x								<= DynamicData[11])) &&
-      ((DynamicData[12] > DynamicData[13]) ||
-       ((x = PoliceMapEffect[c>>2][r>>2]) >= DynamicData[12]) &&
-       (x								<= DynamicData[13])) &&
-      ((DynamicData[14] > DynamicData[15]) ||
-       ((x = FireRate[c>>2][r>>2])		>= DynamicData[14]) &&
-       (x								<= DynamicData[15]))) {
-    return 1;
-  } else {
-    return 0;
-  } // if
+    if (((DynamicData[0] > DynamicData[1]) ||
+        ((x = PopDensity[c][r]) >= DynamicData[0]) &&
+        (x <= DynamicData[1])) &&
+        ((DynamicData[2] > DynamicData[3]) ||
+            ((x = RateOGMem[c >> 2][r >> 2]) >= ((2 * DynamicData[2]) - 256)) &&
+            (x <= ((2 * DynamicData[3]) - 256))) &&
+        ((DynamicData[4] > DynamicData[5]) ||
+            ((x = TrfDensity[c][r]) >= DynamicData[4]) &&
+            (x <= DynamicData[5])) &&
+        ((DynamicData[6] > DynamicData[7]) ||
+            ((x = PollutionMem[c][r]) >= DynamicData[6]) &&
+            (x <= DynamicData[7])) &&
+        ((DynamicData[8] > DynamicData[9]) ||
+            ((x = CrimeMem[c][r]) >= DynamicData[8]) &&
+            (x <= DynamicData[9])) &&
+        ((DynamicData[10] > DynamicData[11]) ||
+            ((x = LandValueMem[c][r]) >= DynamicData[10]) &&
+            (x <= DynamicData[11])) &&
+        ((DynamicData[12] > DynamicData[13]) ||
+            ((x = PoliceMapEffect[c >> 2][r >> 2]) >= DynamicData[12]) &&
+            (x <= DynamicData[13])) &&
+        ((DynamicData[14] > DynamicData[15]) ||
+            ((x = FireRate[c >> 2][r >> 2]) >= DynamicData[14]) &&
+            (x <= DynamicData[15]))) {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 
-void drawDynamic(SimView *view)
+void drawDynamic(SimView* view)
 {
-  DRAW_BEGIN
-    if (tile > 63) {
-      if (!dynamicFilter(col, row)) {
-	tile = 0;
-      } // if
-    } // if
-  DRAW_END
+    int lineBytes = view->line_bytes;
+    int pixelBytes = view->pixel_bytes;
+
+    short* mp = &Map[0][0];
+    unsigned char* imageBase = view->data;
+
+    for (int col = 0; col < WORLD_X; col++)
+    {
+        unsigned char* image = imageBase + (3 * pixelBytes * col);
+        for (int row = 0; row < WORLD_Y; row++)
+        {
+
+            unsigned short tile = *(mp++) & LOMASK;
+            if (tile >= TILE_COUNT)
+            {
+                tile -= TILE_COUNT;
+            }
+
+            ////////
+            if (tile > 63)
+            {
+                if (!dynamicFilter(col, row))
+                {
+                    tile = 0;
+                }
+            }
+            ////////
+
+            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            for (int i = 0; i < 3; ++i)
+            {
+                unsigned long l = mem[i];
+                image[0] = l >> 24;
+                image[1] = l >> 16;
+                image[2] = l >> 8;
+                image += lineBytes;
+            }
+        }
+    }
 }
-
-
