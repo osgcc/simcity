@@ -206,5 +206,8 @@
     <ClInclude Include="src\w_resrc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\rand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
