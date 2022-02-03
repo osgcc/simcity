@@ -65,85 +65,8 @@
 int DynamicData[32];
 
 
-#define DRAW_BEGIN \
-  int col, row; \
-  unsigned short tile; \
-  short *mp; \
-  unsigned char *imageBase; \
-  unsigned char *image; \
-  unsigned long *mem; \
-  unsigned long l; \
-  int lineBytes = view->line_bytes8; \
-  int pixelBytes = view->pixel_bytes; \
-  mp = &Map[0][0]; \
-  imageBase = view->x->color ? view->data : view->data8; \
-  for (col = 0; col < WORLD_X; col++) { \
-    image = imageBase + (3 * pixelBytes * col); \
-    for (row = 0; row < WORLD_Y; row++) { \
-      tile = *(mp++) & LOMASK; \
-      if (tile >= TILE_COUNT) tile -= TILE_COUNT;
-
-
-#define ROW1_8(n) \
-      l = mem[n]; \
-      image[0] = l >>24; \
-      image[1] = l >>16; \
-      image[2] = l >>8; \
-      image += lineBytes;
-
-#define ROW1_16(n) \
-      l = mem[n]; /* XXX: WRONG. handle depth */ \
-      image[0] = l >>24; \
-      image[1] = l >>16; \
-      image[2] = l >>8; \
-      image += lineBytes;
-
-#define ROW1_24(n) \
-      l = mem[n]; /* XXX: WRONG. handle depth */ \
-      image[0] = l >>24; \
-      image[1] = l >>16; \
-      image[2] = l >>8; \
-      image += lineBytes;
-
-#define ROW1_32(n) \
-      l = mem[n]; /* XXX: WRONG. handle depth */ \
-      image[0] = l >>24; \
-      image[1] = l >>16; \
-      image[2] = l >>8; \
-      image += lineBytes;
-
-
-#define ROW3_8 ROW1_8(0) ROW1_8(1) ROW1_8(2)
-#define ROW3_16 ROW1_16(0) ROW1_16(1) ROW1_16(2)
-#define ROW3_24 ROW1_24(0) ROW1_24(1) ROW1_24(2)
-#define ROW3_32 ROW1_32(0) ROW1_32(1) ROW1_32(2)
-
-#define ROW3 \
-	  switch (view->x->depth) { \
-		case 1: \
-		case 8: \
-		  ROW3_8 \
-		  break; \
-		case 15: \
-		case 16: \
-		  ROW3_16 \
-		  break; \
-		case 24: \
-		  ROW3_24 \
-		  break; \
-		case 32: \
-		  ROW3_32 \
-		  break; \
-		default: \
-		  assert(0); /* Undefined depth */ \
-		  break; \
-	  }
-
-#define DRAW_END \
-      mem = (unsigned long *)&view->smalltiles[tile * 4 * 4 * pixelBytes]; \
-      ROW3 \
-    } \
-  }
+#define DRAW_BEGIN
+#define DRAW_END
 
 
 void drawAll(SimView * view)
