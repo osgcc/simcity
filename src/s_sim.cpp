@@ -1229,7 +1229,7 @@ Rand16Signed(void)
 }
 
 
-RandomlySeedRand()
+void RandomlySeedRand()
 {
   struct timeval time;
 
@@ -1239,7 +1239,7 @@ RandomlySeedRand()
 }
 
 
-SeedRand(int seed)
+void SeedRand(int seed)
 {
-  sim_srand(seed);
+    sim_srand(seed);
 }

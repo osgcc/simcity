@@ -61,6 +61,12 @@
  */
 #include "main.h"
 
+#include "s_alloc.h"
+#include "s_init.h"
+#include "s_sim.h"
+
+#include "w_tk.h"
+#include "w_update.h"
 
 /* Generate Map */
 
@@ -71,6 +77,9 @@
 #define WOODS_HIGH	UNUSED_TRASH2 /* 39 */
 
 
+constexpr auto RADIUS = 18;
+
+
 int XStart, YStart, MapX, MapY;
 int Dir, LastDir;
 int TreeLevel = -1;		/* level for tree creation */
@@ -79,76 +88,86 @@ int CurveLevel = -1;		/* level for river curviness */
 int CreateIsland = -1;		/* -1 => 10%, 0 => never, 1 => always */
 
 
-GenerateNewCity(void) 
+void GenerateNewCity()
 {
-  GenerateSomeCity(Rand16());
+    GenerateSomeCity(Rand16());
 }
 
 
-GenerateSomeCity(int r)
+void GenerateSomeCity(int r)
 {
-  if (CityFileName != NULL) {
-    free(CityFileName);
-    CityFileName = NULL;
-  }
+    GenerateMap(r);
+    ScenarioID = 0;
+    CityTime = 0;
+    InitSimLoad = 2;
+    DoInitialEval = 0;
 
-  GenerateMap(r);
-  ScenarioID = 0;
-  CityTime = 0;
-  InitSimLoad = 2;
-  DoInitialEval = 0;
-
-  InitWillStuff();
-  ResetMapState();
-  ResetEditorState();
-  InvalidateEditors();
-  InvalidateMaps();
-  UpdateFunds();
-  DoSimInit();
-  Eval("UIDidGenerateNewCity");
-  Kick();
+    InitWillStuff();
+    ResetMapState();
+    ResetEditorState();
+    InvalidateEditors();
+    InvalidateMaps();
+    UpdateFunds();
+    DoSimInit();
+    Eval("UIDidGenerateNewCity");
+    Kick();
 }
 
 
-ERand(int limit)
+int ERand(int limit)
 {
   int x, z;
 
   z = Rand(limit);
   x = Rand(limit);
-  if (z < x)
-    return (z);
-  return (x);
+  
+  if (z < x) { return z; }
+  return x;
 }
 
 
-GenerateMap(int r)
+void GenerateMap(int r)
 {
-  SeedRand(r);
+    SeedRand(r);
 
-  if (CreateIsland < 0) {
-    if (Rand(100) < 10) { /* chance that island is generated */
-      MakeIsland();
-      return;
+    if (CreateIsland < 0)
+    {
+        if (Rand(100) < 10) // chance that island is generated
+        {
+            MakeIsland();
+            return;
+        }
     }
-  }
-  if (CreateIsland == 1) {
-    MakeNakedIsland();
-  } else {
-    ClearMap();
-  }
-  GetRandStart();
-  if (CurveLevel != 0) {
-    DoRivers();
-  }
-  if (LakeLevel != 0) {
-    MakeLakes();
-  }
-  SmoothRiver();
-  if (TreeLevel != 0) {
-    DoTrees();
-  }
-  RandomlySeedRand();
+
+    if (CreateIsland == 1)
+    {
+        MakeNakedIsland();
+    }
+    else
+    {
+        ClearMap();
+    }
+
+    GetRandStart();
+
+    if (CurveLevel != 0)
+    {
+        DoRivers();
+    }
+
+    if (LakeLevel != 0)
+    {
+        MakeLakes();
+    }
+
+    SmoothRiver();
+
+    if (TreeLevel != 0)
+    {
+        DoTrees();
+    }
+
+    RandomlySeedRand();
 }
 
 
@@ -164,480 +183,595 @@ void ClearMap()
 }
 
 
-ClearUnnatural(void)
+void ClearUnnatural()
 {
-  register int x, y;
-
-  for (x = 0; x < WORLD_X; x++) {
-    for (y = 0; y < WORLD_Y; y++) {
-      if (Map[x][y] > WOODS) {
-	Map[x][y] = DIRT;
-      }
+    for (int x = 0; x < WORLD_X; x++)
+    {
+        for (int y = 0; y < WORLD_Y; y++)
+        {
+            if (Map[x][y] > WOODS)
+            {
+                Map[x][y] = DIRT;
+            }
+        }
     }
-  }
 }
 
 
-#define RADIUS 18
-
-MakeNakedIsland()
+void MakeNakedIsland()
 {
-  register int x, y;
+    register int x, y;
 
-  for (x = 0; x < WORLD_X; x++)
-    for (y = 0; y < WORLD_Y; y++)
-      Map[x][y] = RIVER;
-  for (x = 5; x < WORLD_X - 5; x++)
-    for (y = 5; y < WORLD_Y - 5; y++)
-      Map[x][y] = DIRT;
-  for (x = 0; x < WORLD_X - 5; x += 2) {
-    MapX = x ;
-    MapY = ERand(RADIUS);
-    BRivPlop();
-    MapY = (WORLD_Y - 10) - ERand(RADIUS);
-    BRivPlop();
-    MapY = 0;
-    SRivPlop();
-    MapY = (WORLD_Y - 6);
-    SRivPlop();
-  }
-  for (y = 0; y < WORLD_Y - 5; y += 2) {
-    MapY = y ;
-    MapX = ERand(RADIUS);
-    BRivPlop();
-    MapX = (WORLD_X - 10) - ERand(RADIUS);
-    BRivPlop();
-    MapX = 0;
-    SRivPlop();
-    MapX = (WORLD_X - 6);
-    SRivPlop();
-  }
-}
-
-
-MakeIsland(void)
-{
-  MakeNakedIsland();
-  SmoothRiver();
-  DoTrees();
-}
-
-
-MakeLakes(void)
-{
-  int Lim1, Lim2, t, z;
-  register int x, y;
-
-  if (LakeLevel < 0) {
-    Lim1 = Rand(10);
-  } else {
-    Lim1 = LakeLevel / 2;
-  }
-  for (t = 0; t < Lim1; t++) {
-    x = Rand(WORLD_X - 21) + 10;
-    y = Rand(WORLD_Y - 20) + 10;
-    Lim2 = Rand(12) + 2;
-    for (z = 0; z < Lim2; z++) {
-      MapX = x - 6 + Rand(12);
-      MapY = y - 6 + Rand(12);
-      if (Rand(4))
-	SRivPlop();
-      else
-	BRivPlop();
+    for (x = 0; x < WORLD_X; x++)
+    {
+        for (y = 0; y < WORLD_Y; y++)
+        {
+            Map[x][y] = RIVER;
+            for (x = 5; x < WORLD_X - 5; x++)
+            {
+                for (y = 5; y < WORLD_Y - 5; y++)
+                {
+                    Map[x][y] = DIRT;
+                    for (x = 0; x < WORLD_X - 5; x += 2)
+                    {
+                        MapX = x;
+                        MapY = ERand(RADIUS);
+                        BRivPlop();
+                        MapY = (WORLD_Y - 10) - ERand(RADIUS);
+                        BRivPlop();
+                        MapY = 0;
+                        SRivPlop();
+                        MapY = (WORLD_Y - 6);
+                        SRivPlop();
+                    }
+                }
+                for (y = 0; y < WORLD_Y - 5; y += 2)
+                {
+                    MapY = y;
+                    MapX = ERand(RADIUS);
+                    BRivPlop();
+                    MapX = (WORLD_X - 10) - ERand(RADIUS);
+                    BRivPlop();
+                    MapX = 0;
+                    SRivPlop();
+                    MapX = (WORLD_X - 6);
+                    SRivPlop();
+                }
+            }
+        }
     }
-  }
 }
 
 
-GetRandStart(void)
+void MakeIsland()
 {
-  XStart = 40 + Rand(WORLD_X - 80);
-  YStart = 33 + Rand(WORLD_Y - 67);
-  MapX = XStart;
-  MapY = YStart;
+    MakeNakedIsland();
+    SmoothRiver();
+    DoTrees();
 }
 
 
-MoveMap(int dir)
+void MakeLakes()
 {
-  static int DirTab[2][8] = { { 0, 1, 1, 1, 0, -1, -1, -1},
-				{-1,-1, 0, 1, 1,  1,  0, -1} };
-  dir = dir & 7;
-  MapX += DirTab[0][dir];
-  MapY += DirTab[1][dir];
-}
+    int Lim1 = 0;
+    int Lim2 = 0;
 
-
-TreeSplash(int xloc, int yloc)
-{
-  int dis, dir;
-  register int xoff, yoff, z;
-
-  if (TreeLevel < 0) {
-    dis = Rand(150) + 50;
-  } else {
-    dis = Rand(100 + (TreeLevel * 2)) + 50;
-  }
-  MapX = xloc;
-  MapY = yloc;
-  for (z = 0; z < dis; z++) {
-    dir = Rand(7);
-    MoveMap(dir);
-    if (!(TestBounds(MapX, MapY, WORLD_X, WORLD_Y)))
-      return;
-    if ((Map[MapX][MapY] & LOMASK) == DIRT)
-      Map[MapX][MapY] = WOODS + BLBNBIT;
-  }
-}
-
-
-DoTrees(void)
-{
-  int Amount, x, xloc, yloc;
-
-  if (TreeLevel < 0) {
-    Amount = Rand(100) + 50;
-  } else {
-    Amount = TreeLevel + 3;
-  }
-  for(x = 0; x < Amount; x++) {
-    xloc = Rand(WORLD_X - 1);
-    yloc = Rand(WORLD_Y - 1);
-    TreeSplash(xloc, yloc);
-  }
-  SmoothTrees();
-  SmoothTrees();
-}
-
-
-SmoothRiver(void)
-{
-  static int DX[4] = {-1, 0, 1, 0};
-  static int DY[4] = { 0, 1, 0,-1};
-  static int REdTab[16] = {
-    13+BULLBIT,	13+BULLBIT,	17+BULLBIT,	15+BULLBIT,
-    5+BULLBIT,	2,		19+BULLBIT,	17+BULLBIT,
-    9+BULLBIT,	11+BULLBIT,	2,		13+BULLBIT,
-    7+BULLBIT,	9+BULLBIT,	5+BULLBIT,	2 };
-  int bitindex, z, Xtem, Ytem;
-  register int temp, MapX, MapY;
-
-  for (MapX = 0; MapX < WORLD_X; MapX++) {
-    for (MapY = 0; MapY < WORLD_Y; MapY++) {
-      if (Map[MapX][MapY] == REDGE) {
-	bitindex = 0;
-	for (z = 0; z < 4; z++) {
-	  bitindex = bitindex << 1;
-	  Xtem = MapX + DX[z];
-	  Ytem = MapY + DY[z];
-	  if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) &&
-	      ((Map[Xtem][Ytem] & LOMASK) != DIRT) &&
-	      (((Map[Xtem][Ytem]&LOMASK) < WOODS_LOW) ||
-	       ((Map[Xtem][Ytem]&LOMASK) > WOODS_HIGH)))
-	      bitindex++;
-	}
-	temp = REdTab[bitindex & 15];
-	if ((temp != RIVER) && (Rand(1)))
-	  temp++;
-	Map[MapX][MapY] = temp;
-      }
+    if (LakeLevel < 0)
+    {
+        Lim1 = Rand(10);
     }
-  }
+    else
+    {
+        Lim1 = LakeLevel / 2;
+    }
+
+    for (int t = 0; t < Lim1; t++)
+    {
+        int  x = Rand(WORLD_X - 21) + 10;
+        int y = Rand(WORLD_Y - 20) + 10;
+
+        Lim2 = Rand(12) + 2;
+
+        for (int z = 0; z < Lim2; z++)
+        {
+            MapX = x - 6 + Rand(12);
+            MapY = y - 6 + Rand(12);
+
+            if (Rand(4))
+            {
+                SRivPlop();
+            }
+            else
+            {
+                BRivPlop();
+            }
+        }
+    }
 }
 
 
-IsTree(int cell)
+void GetRandStart()
 {
-  if (((cell & LOMASK) >= WOODS_LOW) &&
-      ((cell & LOMASK) <= WOODS_HIGH))
-    return TRUE;
-  return FALSE;
+    XStart = 40 + Rand(WORLD_X - 80);
+    YStart = 33 + Rand(WORLD_Y - 67);
+    MapX = XStart;
+    MapY = YStart;
+}
+
+
+void MoveMap(int dir)
+{
+    static int DirTab[2][8] =
+    {
+        { 0, 1, 1, 1, 0, -1, -1, -1},
+                  {-1,-1, 0, 1, 1,  1,  0, -1}
+    };
+
+    MapX += DirTab[0][dir & 7];
+    MapY += DirTab[1][dir & 7];
+}
+
+
+void TreeSplash(int xloc, int yloc)
+{
+    int dis = TreeLevel < 0 ? dis = Rand(150) + 50 : Rand(100 + (TreeLevel * 2)) + 50;
+
+    MapX = xloc;
+    MapY = yloc;
+
+    for (int z = 0; z < dis; z++)
+    {
+        int dir = Rand(7);
+
+        MoveMap(dir);
+        
+        if (!(TestBounds(MapX, MapY, WORLD_X, WORLD_Y)))
+        {
+            return;
+        }
+        
+        if ((Map[MapX][MapY] & LOMASK) == DIRT)
+        {
+            Map[MapX][MapY] = WOODS + BLBNBIT;
+        }
+    }
+}
+
+
+void DoTrees()
+{
+    int Amount, x, xloc, yloc;
+
+    if (TreeLevel < 0)
+    {
+        Amount = Rand(100) + 50;
+    }
+    else
+    {
+        Amount = TreeLevel + 3;
+    }
+    for (x = 0; x < Amount; x++)
+    {
+        xloc = Rand(WORLD_X - 1);
+        yloc = Rand(WORLD_Y - 1);
+        TreeSplash(xloc, yloc);
+    }
+    SmoothTrees();
+    SmoothTrees();
+}
+
+
+void SmoothRiver()
+{
+    static int DX[4] = { -1, 0, 1, 0 };
+    static int DY[4] = { 0, 1, 0,-1 };
+
+    static int REdTab[16] =
+    {
+        13 + BULLBIT, 13 + BULLBIT, 17 + BULLBIT, 15 + BULLBIT,
+        5 + BULLBIT, 2, 19 + BULLBIT, 17 + BULLBIT,
+        9 + BULLBIT, 11 + BULLBIT, 2, 13 + BULLBIT,
+        7 + BULLBIT, 9 + BULLBIT, 5 + BULLBIT, 2
+    };
+
+    for (int MapX = 0; MapX < WORLD_X; MapX++)
+    {
+        for (int MapY = 0; MapY < WORLD_Y; MapY++)
+        {
+            if (Map[MapX][MapY] == REDGE)
+            {
+                int bitindex = 0;
+
+                for (int z = 0; z < 4; z++)
+                {
+                    bitindex = bitindex << 1;
+                    int Xtem = MapX + DX[z];
+                    int Ytem = MapY + DY[z];
+                    if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) &&
+                        ((Map[Xtem][Ytem] & LOMASK) != DIRT) &&
+                        (((Map[Xtem][Ytem] & LOMASK) < WOODS_LOW) ||
+                            ((Map[Xtem][Ytem] & LOMASK) > WOODS_HIGH)))
+                    {
+                        bitindex++;
+                    }
+
+                }
+
+                int temp = REdTab[bitindex & 15];
+
+                if ((temp != RIVER) && (Rand(1)))
+                {
+                    temp++;
+                }
+
+                Map[MapX][MapY] = temp;
+            }
+        }
+    }
+}
+
+
+bool IsTree(int cell)
+{
+    return (((cell & LOMASK) >= WOODS_LOW) && ((cell & LOMASK) <= WOODS_HIGH));
 }
  
 
-SmoothTrees(void)
+void SmoothTrees()
 {
-  static int DX[4] = {-1, 0, 1, 0};
-  static int DY[4] = { 0, 1, 0,-1};
-  static int TEdTab[16] = { 0, 0, 0, 34,
-			      0, 0, 36, 35,
-			      0, 32, 0, 33,
-			      30, 31, 29, 37 };
-  int   bitindex, z, Xtem, Ytem;
-  register int temp, MapX, MapY;
+    static int DX[4] = { -1, 0, 1, 0 };
+    static int DY[4] = { 0, 1, 0,-1 };
 
-  for (MapX = 0; MapX < WORLD_X; MapX++) {
-    for (MapY = 0; MapY < WORLD_Y; MapY++) {
-      if (IsTree(Map[MapX][MapY])) {
-	bitindex = 0;
-	for (z = 0; z < 4; z++) {
-	  bitindex = bitindex << 1;
-	  Xtem = MapX + DX[z];
-	  Ytem = MapY + DY[z];
-	  if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) &&
-	      IsTree(Map[Xtem][Ytem])) {
-	    bitindex++;
-	  }
-	}
-	temp = TEdTab[bitindex & 15];
-	if (temp) {
-	  if (temp != WOODS)
-	    if ((MapX + MapY) & 1)
-	      temp = temp - 8;
-	  Map[MapX][MapY] = temp + BLBNBIT;
-	}
-	else Map[MapX][MapY] = temp;
-      }
+    static int TEdTab[16] =
+    {
+        0, 0, 0, 34,
+        0, 0, 36, 35,
+        0, 32, 0, 33,
+        30, 31, 29, 37
+    };
+
+    for (int MapX = 0; MapX < WORLD_X; MapX++)
+    {
+        for (int MapY = 0; MapY < WORLD_Y; MapY++)
+        {
+            if (IsTree(Map[MapX][MapY]))
+            {
+                int bitindex = 0;
+                for (int z = 0; z < 4; z++)
+                {
+                    bitindex = bitindex << 1;
+
+                    int Xtem = MapX + DX[z];
+                    int Ytem = MapY + DY[z];
+
+                    if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) && IsTree(Map[Xtem][Ytem]))
+                    {
+                        bitindex++;
+                    }
+                }
+
+                int temp = TEdTab[bitindex & 15];
+
+                if (temp)
+                {
+                    if (temp != WOODS)
+                    {
+                        if ((MapX + MapY) & 1)
+                        {
+                            temp = temp - 8;
+                        }
+                    }
+                    Map[MapX][MapY] = temp + BLBNBIT;
+                }
+                else
+                {
+                    Map[MapX][MapY] = temp;
+                }
+            }
+        }
     }
-  }
 }
 
 
-DoRivers(void)
-{	
-
-  LastDir = Rand(3);
-  Dir = LastDir;
-  DoBRiv();
-  MapX = XStart;
-  MapY = YStart;
-  LastDir = LastDir ^ 4;
-  Dir = LastDir;
-  DoBRiv();	
-  MapX = XStart;
-  MapY = YStart;
-  LastDir = Rand(3);
-  DoSRiv();
-}
-
-
-DoBRiv(void)
+void DoRivers()
 {
-  int r1, r2;
+    LastDir = Rand(3);
+    Dir = LastDir;
+    DoBRiv();
+    MapX = XStart;
+    MapY = YStart;
+    LastDir = LastDir ^ 4;
+    Dir = LastDir;
+    DoBRiv();
+    MapX = XStart;
+    MapY = YStart;
+    LastDir = Rand(3);
+    DoSRiv();
+}
 
-  if (CurveLevel < 0) {
-    r1 = 100;
-    r2 = 200;
-  } else {
-    r1 = CurveLevel + 10;
-    r2 = CurveLevel + 100;
-  }
 
-  while (TestBounds (MapX + 4, MapY + 4, WORLD_X, WORLD_Y)) {
-    BRivPlop();
-    if (Rand(r1) < 10) {
-      Dir = LastDir;
-    } else {
-      if (Rand(r2) > 90) Dir++;
-      if (Rand(r2) > 90) Dir--;
+void DoBRiv()
+{
+    int r1, r2;
+
+    if (CurveLevel < 0)
+    {
+        r1 = 100;
+        r2 = 200;
     }
-    MoveMap(Dir);
-  }
-}
-
-
-DoSRiv(void)
-{
-  int r1, r2;
-
-  if (CurveLevel < 0) {
-    r1 = 100;
-    r2 = 200;
-  } else {
-    r1 = CurveLevel + 10;
-    r2 = CurveLevel + 100;
-  }
-
-  while (TestBounds (MapX + 3, MapY + 3, WORLD_X, WORLD_Y)) {
-    SRivPlop();
-    if (Rand(r1) < 10) {
-      Dir = LastDir;
-    } else {
-      if (Rand(r2) > 90) Dir++;
-      if (Rand(r2) > 90) Dir--;
+    else
+    {
+        r1 = CurveLevel + 10;
+        r2 = CurveLevel + 100;
     }
-    MoveMap(Dir);
-  }
-}
 
-
-PutOnMap(int Mchar, int Xoff, int Yoff)
-{
-  register int Xloc, Yloc, temp;
-
-  if (Mchar == 0)
-    return;
-  Xloc = MapX + Xoff;
-  Yloc = MapY + Yoff;
-  if (TestBounds(Xloc, Yloc, WORLD_X, WORLD_Y) == FALSE)
-    return;
-  if (temp = Map[Xloc][Yloc]) {
-    temp = temp & LOMASK;
-    if (temp == RIVER)
-      if (Mchar != CHANNEL)
-	return;
-    if (temp == CHANNEL)
-      return;
-  }
-  Map[Xloc][Yloc] = Mchar;	
-}
-
-
-BRivPlop(void)
-{
-  static int BRMatrix[9][9] = {
-    { 0, 0, 0, 3, 3, 3, 0, 0, 0 },
-    { 0, 0, 3, 2, 2, 2, 3, 0, 0 },
-    { 0, 3, 2, 2, 2, 2, 2, 3, 0 },
-    { 3, 2, 2, 2, 2, 2, 2, 2, 3 },
-    { 3, 2, 2, 2, 4, 2, 2, 2, 3 },
-    { 3, 2, 2, 2, 2, 2, 2, 2, 3 },
-    { 0, 3, 2, 2, 2, 2, 2, 3, 0 },
-    { 0, 0, 3, 2, 2, 2, 3, 0, 0 },
-    { 0, 0, 0, 3, 3, 3, 0, 0, 0 } };
-  int x, y;
-
-  for (x = 0; x < 9; x++)
-    for (y = 0; y < 9; y++)
-      PutOnMap(BRMatrix[y][x], x, y);
-}
-
-
-SRivPlop(void)
-{
-  static int SRMatrix[6][6] = {
-    { 0, 0, 3, 3, 0, 0 },
-    { 0, 3, 2, 2, 3, 0 },
-    { 3, 2, 2, 2, 2, 3 },
-    { 3, 2, 2, 2, 2, 3 },
-    { 0, 3, 2, 2, 3, 0 },
-    { 0, 0, 3, 3, 0, 0 } };
-  int x, y;
-
-  for (x = 0; x < 6; x++)
-    for (y = 0; y < 6; y++)
-      PutOnMap(SRMatrix[y][x], x, y);
-}
-
-
-SmoothWater()
-{
-  int x, y;
-
-  for(x = 0; x < WORLD_X; x++) {
-    for(y = 0; y < WORLD_Y; y++) {
-      /* If water: */
-      if (((Map[x][y] & LOMASK) >= WATER_LOW) &&
-	  ((Map[x][y] & LOMASK) <= WATER_HIGH)) {
-	if (x > 0) {
-	  /* If nearest object is not water: */
-	  if (((Map[x - 1][y] & LOMASK) < WATER_LOW) ||
-	      ((Map[x - 1][y] & LOMASK) > WATER_HIGH)) {
-	    goto edge;
-	  }
-	}
-	if (x < (WORLD_X - 1)) {
-	  /* If nearest object is not water: */
-	  if (((Map[x+1][y]&LOMASK) < WATER_LOW) ||
-	      ((Map[x+1][y]&LOMASK) > WATER_HIGH)) {
-	    goto edge;
-	  }
-	}
-	if (y > 0) {
-	  /* If nearest object is not water: */
-	  if (((Map[x][y - 1] & LOMASK) < WATER_LOW) ||
-	      ((Map[x][y-1]&LOMASK) > WATER_HIGH)) {
-	    goto edge;
-	  }
-	}
-	if (y < (WORLD_Y - 1)) {
-	  /* If nearest object is not water: */
-	  if (((Map[x][y + 1] & LOMASK) < WATER_LOW) ||
-	      ((Map[x][y + 1] & LOMASK) > WATER_HIGH)) {
-	  edge:
-	    Map[x][y]=REDGE; /* set river edge */
-	    continue;
-	  }
-	}
-      }
+    while (TestBounds(MapX + 4, MapY + 4, WORLD_X, WORLD_Y))
+    {
+        BRivPlop();
+        if (Rand(r1) < 10)
+        {
+            Dir = LastDir;
+        }
+        else
+        {
+            if (Rand(r2) > 90) Dir++;
+            if (Rand(r2) > 90) Dir--;
+        }
+        MoveMap(Dir);
     }
-  }
-  for (x = 0; x < WORLD_X; x++) {
-    for (y = 0; y < WORLD_Y; y++) {
-      /* If water which is not a channel: */
-      if (((Map[x][y] & LOMASK) != CHANNEL) &&
-	  ((Map[x][y] & LOMASK) >= WATER_LOW) &&
-	  ((Map[x][y] & LOMASK) <= WATER_HIGH)) {
-	if (x > 0) {
-	  /* If nearest object is not water; */
-	  if (((Map[x - 1][y] & LOMASK) < WATER_LOW) ||
-	      ((Map[x - 1][y] & LOMASK) > WATER_HIGH)) {
-	    continue;
-	  }
-	}
-	if (x < (WORLD_X - 1)) {
-	  /* If nearest object is not water: */
-	  if (((Map[x + 1][y] & LOMASK) < WATER_LOW) ||
-	      ((Map[x + 1][y] & LOMASK) > WATER_HIGH)) {
-	    continue;
-	  }
-	}
-	if (y > 0) {
-	  /* If nearest object is not water: */
-	  if (((Map[x][y - 1] & LOMASK) < WATER_LOW) ||
-	      ((Map[x][y - 1] & LOMASK) > WATER_HIGH)) {
-	    continue;
-	  }
-	}
-	if (y < (WORLD_Y - 1)) {
-	  /* If nearest object is not water: */
-	  if (((Map[x][y + 1] & LOMASK) < WATER_LOW) ||
-	      ((Map[x][y + 1] & LOMASK) > WATER_HIGH)) {
-	    continue;
-	  }
-	}
-	Map[x][y] = RIVER; /* make it a river */
-      }
+}
+
+
+void DoSRiv()
+{
+    int r1, r2;
+
+    if (CurveLevel < 0)
+    {
+        r1 = 100;
+        r2 = 200;
     }
-  }
-  for (x = 0; x < WORLD_X; x++) {
-    for (y = 0; y < WORLD_Y; y++) {
-      /* If woods: */
-      if (((Map[x][y] & LOMASK) >= WOODS_LOW) &&
-	  ((Map[x][y] & LOMASK) <= WOODS_HIGH)) {
-	if (x > 0) {
-	  /* If nearest object is water: */
-	  if ((Map[x - 1][y] == RIVER) ||
-	      (Map[x - 1][y] == CHANNEL)) {
-	    Map[x][y] = REDGE; /* make it water's edge */
-	    continue;
-	  }
-	}
-	if (x < (WORLD_X - 1)) {
-	  /* If nearest object is water: */
-	  if ((Map[x + 1][y] == RIVER) ||
-	      (Map[x + 1][y] == CHANNEL)) {
-	    Map[x][y] = REDGE; /* make it water's edge */
-	    continue;
-	  }
-	}
-	if (y > 0) {
-	  /* If nearest object is water: */
-	  if ((Map[x][y - 1] == RIVER) ||
-	      (Map[x][y - 1] == CHANNEL)) {
-	    Map[x][y] = REDGE; /* make it water's edge */
-	    continue;
-	  }
-	}
-	if (y < (WORLD_Y - 1)) {
-	  /* If nearest object is water; */
-	  if ((Map[x][y + 1] == RIVER) ||
-	      (Map[x][y + 1] == CHANNEL)) {
-	    Map[x][y] = REDGE; /* make it water's edge */
-	    continue;
-	  }
-	}
-      }
+    else
+    {
+        r1 = CurveLevel + 10;
+        r2 = CurveLevel + 100;
     }
-  }
+
+    while (TestBounds(MapX + 3, MapY + 3, WORLD_X, WORLD_Y))
+    {
+        SRivPlop();
+        if (Rand(r1) < 10)
+        {
+            Dir = LastDir;
+        }
+        else
+        {
+            if (Rand(r2) > 90) Dir++;
+            if (Rand(r2) > 90) Dir--;
+        }
+        MoveMap(Dir);
+    }
+}
+
+
+void PutOnMap(int Mchar, int Xoff, int Yoff)
+{
+    if (Mchar == 0)
+    {
+        return;
+    }
+
+    int Xloc = MapX + Xoff;
+    int Yloc = MapY + Yoff;
+
+    if (!TestBounds(Xloc, Yloc, WORLD_X, WORLD_Y))
+    {
+        return;
+    }
+
+    int temp = 0;
+    if (temp = Map[Xloc][Yloc])
+    {
+        temp = temp & LOMASK;
+        if (temp == RIVER)
+        {
+            if (Mchar != CHANNEL)
+            {
+                return;
+            }
+        }
+        if (temp == CHANNEL)
+        {
+            return;
+        }
+    }
+ 
+    Map[Xloc][Yloc] = Mchar;
+}
+
+
+void BRivPlop()
+{
+    static int BRMatrix[9][9] =
+    {
+        { 0, 0, 0, 3, 3, 3, 0, 0, 0 },
+        { 0, 0, 3, 2, 2, 2, 3, 0, 0 },
+        { 0, 3, 2, 2, 2, 2, 2, 3, 0 },
+        { 3, 2, 2, 2, 2, 2, 2, 2, 3 },
+        { 3, 2, 2, 2, 4, 2, 2, 2, 3 },
+        { 3, 2, 2, 2, 2, 2, 2, 2, 3 },
+        { 0, 3, 2, 2, 2, 2, 2, 3, 0 },
+        { 0, 0, 3, 2, 2, 2, 3, 0, 0 },
+        { 0, 0, 0, 3, 3, 3, 0, 0, 0 }
+    };
+
+    for (int x = 0; x < 9; x++)
+    {
+        for (int y = 0; y < 9; y++)
+        {
+            PutOnMap(BRMatrix[y][x], x, y);
+        }
+    }
+}
+
+
+void SRivPlop(void)
+{
+    static int SRMatrix[6][6] =
+    {
+        { 0, 0, 3, 3, 0, 0 },
+        { 0, 3, 2, 2, 3, 0 },
+        { 3, 2, 2, 2, 2, 3 },
+        { 3, 2, 2, 2, 2, 3 },
+        { 0, 3, 2, 2, 3, 0 },
+        { 0, 0, 3, 3, 0, 0 }
+    };
+
+    for (int x = 0; x < 6; x++)
+    {
+        for (int y = 0; y < 6; y++)
+        {
+            PutOnMap(SRMatrix[y][x], x, y);
+        }
+    }
+}
+
+
+void SmoothWater()
+{
+    for (int x = 0; x < WORLD_X; x++)
+    {
+        for (int y = 0; y < WORLD_Y; y++)
+        {
+            /* If water: */
+            if (((Map[x][y] & LOMASK) >= WATER_LOW) && ((Map[x][y] & LOMASK) <= WATER_HIGH))
+            {
+                if (x > 0)
+                {
+                    /* If nearest object is not water: */
+                    if (((Map[x - 1][y] & LOMASK) < WATER_LOW) || ((Map[x - 1][y] & LOMASK) > WATER_HIGH))
+                    {
+                        goto edge;
+                    }
+                }
+                if (x < (WORLD_X - 1))
+                {
+                    /* If nearest object is not water: */
+                    if (((Map[x + 1][y] & LOMASK) < WATER_LOW) || ((Map[x + 1][y] & LOMASK) > WATER_HIGH))
+                    {
+                        goto edge;
+                    }
+                }
+                if (y > 0)
+                {
+                    /* If nearest object is not water: */
+                    if (((Map[x][y - 1] & LOMASK) < WATER_LOW) || ((Map[x][y - 1] & LOMASK) > WATER_HIGH))
+                    {
+                        goto edge;
+                    }
+                }
+                if (y < (WORLD_Y - 1))
+                {
+                    /* If nearest object is not water: */
+                    if (((Map[x][y + 1] & LOMASK) < WATER_LOW) || ((Map[x][y + 1] & LOMASK) > WATER_HIGH))
+                    {
+                    edge:
+                        Map[x][y] = REDGE; /* set river edge */
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+
+    for (int x = 0; x < WORLD_X; x++)
+    {
+        for (int y = 0; y < WORLD_Y; y++)
+        {
+            /* If water which is not a channel: */
+            if (((Map[x][y] & LOMASK) != CHANNEL) && ((Map[x][y] & LOMASK) >= WATER_LOW) && ((Map[x][y] & LOMASK) <= WATER_HIGH))
+            {
+                if (x > 0)
+                {
+                    /* If nearest object is not water; */
+                    if (((Map[x - 1][y] & LOMASK) < WATER_LOW) || ((Map[x - 1][y] & LOMASK) > WATER_HIGH))
+                    {
+                        continue;
+                    }
+                }
+                if (x < (WORLD_X - 1))
+                {
+                    /* If nearest object is not water: */
+                    if (((Map[x + 1][y] & LOMASK) < WATER_LOW) || ((Map[x + 1][y] & LOMASK) > WATER_HIGH))
+                    {
+                        continue;
+                    }
+                }
+                if (y > 0)
+                {
+                    /* If nearest object is not water: */
+                    if (((Map[x][y - 1] & LOMASK) < WATER_LOW) || ((Map[x][y - 1] & LOMASK) > WATER_HIGH))
+                    {
+                        continue;
+                    }
+                }
+                if (y < (WORLD_Y - 1))
+                {
+                    /* If nearest object is not water: */
+                    if (((Map[x][y + 1] & LOMASK) < WATER_LOW) || ((Map[x][y + 1] & LOMASK) > WATER_HIGH))
+                    {
+                        continue;
+                    }
+                }
+                Map[x][y] = RIVER; /* make it a river */
+            }
+        }
+    }
+
+    for (int x = 0; x < WORLD_X; x++)
+    {
+        for (int y = 0; y < WORLD_Y; y++)
+        {
+            /* If woods: */
+            if (((Map[x][y] & LOMASK) >= WOODS_LOW) && ((Map[x][y] & LOMASK) <= WOODS_HIGH))
+            {
+                if (x > 0)
+                {
+                    /* If nearest object is water: */
+                    if ((Map[x - 1][y] == RIVER) || (Map[x - 1][y] == CHANNEL))
+                    {
+                        Map[x][y] = REDGE; /* make it water's edge */
+                        continue;
+                    }
+                }
+                if (x < (WORLD_X - 1))
+                {
+                    /* If nearest object is water: */
+                    if ((Map[x + 1][y] == RIVER) || (Map[x + 1][y] == CHANNEL))
+                    {
+                        Map[x][y] = REDGE; /* make it water's edge */
+                        continue;
+                    }
+                }
+                if (y > 0)
+                {
+                    /* If nearest object is water: */
+                    if ((Map[x][y - 1] == RIVER) || (Map[x][y - 1] == CHANNEL))
+                    {
+                        Map[x][y] = REDGE; /* make it water's edge */
+                        continue;
+                    }
+                }
+                if (y < (WORLD_Y - 1))
+                {
+                    /* If nearest object is water; */
+                    if ((Map[x][y + 1] == RIVER) || (Map[x][y + 1] == CHANNEL))
+                    {
+                        Map[x][y] = REDGE; /* make it water's edge */
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }
