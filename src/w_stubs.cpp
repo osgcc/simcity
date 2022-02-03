@@ -61,6 +61,8 @@
  */
 #include "main.h"
 
+#include "w_stubs.h"
+
 
 /* Stubs */
 
@@ -107,11 +109,9 @@ long TickCount()
 }
 
 
-Ptr
-NewPtr(size)
-int size;
+Ptr NewPtr(int size)
 {
-  return ((Ptr)calloc(size, sizeof(Byte)));
+    return ((Ptr)calloc(size, sizeof(Byte)));
 }
 
 
