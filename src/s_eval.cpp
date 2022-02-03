@@ -61,6 +61,7 @@
  */
 #include "main.h"
 
+#include "w_eval.h"
 
 /* City Evaluation */
 
