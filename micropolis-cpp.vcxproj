@@ -84,6 +84,7 @@
     <ClInclude Include="src\w_stubs.h" />
     <ClInclude Include="src\w_tk.h" />
     <ClInclude Include="src\w_update.h" />
+    <ClInclude Include="src\w_util.h" />
     <ClInclude Include="src\w_x.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

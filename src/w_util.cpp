@@ -210,20 +210,7 @@ UpdateGameLevel()
 }
 
 
-setCityName(char *name)
-{
-  char *cp = name;
-
-  while (*cp) {
-    if (!isalnum(*cp))
-      *cp = '_';
-    cp++;
-  }
-  setAnyCityName(name);
-}
-
-
-setAnyCityName(char *name)
+void setAnyCityName(const char *name)
 {
   char buf[1024];
 
