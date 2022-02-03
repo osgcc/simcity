@@ -390,9 +390,11 @@ constexpr auto WORLD_Y = SimHeight;
 #define STATE_OVERLAYS 2
 #define STATE_GRAPHS 3
 
-
 typedef unsigned char Byte;
 
+
+struct Pixmap
+{};
 
 extern short *Map[WORLD_X];		/* Main Map 120 x 100  */
 extern Byte *PopDensity[HWLDX];		/* 2X2 Maps  60 x 50 */
