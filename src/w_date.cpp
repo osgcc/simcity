@@ -558,7 +558,7 @@ DestroyDate(SimDate *date)
 
   DecRefDisplay(date->x);
 
-  ckfree((char *) date);
+  free((char *) date);
 }
 
 

@@ -409,7 +409,7 @@ DestroySprite(SimSprite *sprite)
   }
 
   if (sprite->name != NULL) {
-    ckfree(sprite->name);
+    free(sprite->name);
     sprite->name = NULL;
   }
 

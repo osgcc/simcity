@@ -520,10 +520,10 @@ DestroyInterval(clientData)
     register Interval *intervalPtr = (Interval *) clientData;
 
     if (intervalPtr->command != NULL) {
-	ckfree(intervalPtr->command);
+	free(intervalPtr->command);
     }
     if (intervalPtr->label != NULL) {
-	ckfree(intervalPtr->label);
+	free(intervalPtr->label);
     }
     if (intervalPtr->bgBorder != NULL) {
 	Tk_Free3DBorder(intervalPtr->bgBorder);
@@ -546,7 +546,7 @@ DestroyInterval(clientData)
     if (intervalPtr->cursor != None) {
 	Tk_FreeCursor(intervalPtr->cursor);
     }
-    ckfree((char *) intervalPtr);
+    free((char *) intervalPtr);
 }
 
 /*

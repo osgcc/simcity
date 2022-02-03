@@ -257,7 +257,7 @@ int ConfigureTileView(Tcl_Interp* interp, SimView* view, int argc, char** argv, 
 }
 
 
-InvalidateMaps()
+void InvalidateMaps()
 {
     //fprintf(stderr, "InvalidateMaps\n");
     for (SimView* view = sim->map; view != NULL; view = view->next)
@@ -270,7 +270,7 @@ InvalidateMaps()
 }
 
 
-InvalidateEditors()
+void InvalidateEditors()
 {
     //fprintf(stderr, "InvalidateEditors\n");
     for (SimView* view = sim->editor; view != NULL; view = view->next)

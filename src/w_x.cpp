@@ -380,7 +380,7 @@ DestroyView(SimView *view)
   }
 
   if (view->title != NULL) {
-    ckfree (view->title);
+    free (view->title);
     view->title = NULL;
   }
 
@@ -409,7 +409,7 @@ DestroyView(SimView *view)
     XShmDetach(view->x->dpy, view->shminfo);
     shmdt(view->shminfo->shmaddr);
     shmctl(view->shminfo->shmid, IPC_RMID, 0);
-    ckfree(view->shminfo);
+    free(view->shminfo);
     view->shminfo = NULL;
     if (view->image) {
       view->image->data = NULL;
@@ -421,7 +421,7 @@ DestroyView(SimView *view)
 #endif
     if (view->image) {
       if (view->image->data) {
-	ckfree(view->image->data);
+	free(view->image->data);
 	view->image->data = NULL;
       }
       view->data = NULL;
@@ -434,7 +434,7 @@ DestroyView(SimView *view)
 
   if (view->other_image) {
       if (view->other_image->data) {
-	ckfree(view->other_image->data);
+	free(view->other_image->data);
 	view->other_image->data = NULL;
       }
       view->other_data = NULL;
@@ -447,7 +447,7 @@ DestroyView(SimView *view)
 
   DecRefDisplay(view->x);
 
-  ckfree((char *) view);
+  free((char *) view);
 }
 
 
@@ -690,7 +690,7 @@ DoResizeView(SimView *view, int w, int h)
 	} // if
         result = shmdt(view->shminfo->shmaddr);
         result = shmctl(view->shminfo->shmid, IPC_RMID, 0);
-        ckfree(view->shminfo);
+        free(view->shminfo);
         view->shminfo = NULL;
         if (view->image) {
           view->image->data = NULL;
@@ -737,7 +737,7 @@ DoResizeView(SimView *view, int w, int h)
       }
       shmctl(view->shminfo->shmid, IPC_RMID, 0);
     }
-    ckfree((char *)view->shminfo);
+    free((char *)view->shminfo);
     view->shminfo = NULL;
   }
 #endif
@@ -1152,12 +1152,12 @@ FreeTiles(SimView *view)
   int col;
 
   for (col = 0; view->tiles[col] != NULL; col++) {
-    ckfree ((char *)view->tiles[col]);
-    ckfree ((char *)view->other_tiles[col]);
+    free ((char *)view->tiles[col]);
+    free ((char *)view->other_tiles[col]);
   }
-  ckfree ((char *)view->tiles);
+  free ((char *)view->tiles);
   view->tiles = NULL;
-  ckfree ((char *)view->other_tiles);
+  free ((char *)view->other_tiles);
   view->other_tiles = NULL;
 }
 

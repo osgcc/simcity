@@ -88,7 +88,7 @@ GenerateNewCity(void)
 GenerateSomeCity(int r)
 {
   if (CityFileName != NULL) {
-    ckfree(CityFileName);
+    free(CityFileName);
     CityFileName = NULL;
   }
 

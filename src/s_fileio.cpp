@@ -61,17 +61,19 @@
  */
 #include "main.h"
 
-#define SWAP_SHORTS(a, b)
-#define SWAP_LONGS(a, b)
-#define HALF_SWAP_LONGS(a, b)
+#include "s_alloc.h"
+#include "s_init.h"
+#include "s_sim.h"
 
+#include "w_budget.h"
+#include "w_graph.h"
+#include "w_stubs.h"
+#include "w_tk.h"
 
 static int _load_short(int *buf, int len, FILE *f)
 {
   if (fread(buf, sizeof(int), len, f) != len)
      return 0;
-
-  SWAP_SHORTS(buf, len);	/* to intel */
 
   return 1;
 }
@@ -82,21 +84,14 @@ static int _load_long(int *buf, int len, FILE *f)
   if (fread(buf, sizeof(int), len, f) != len)
      return 0;
 
-  SWAP_LONGS(buf, len);	/* to intel */
-
   return 1;
 }
 
 
 static int _save_short(int *buf, int len, FILE *f)
 {
-
-  SWAP_SHORTS(buf, len);	/* to MAC */
-
   if (fwrite(buf, sizeof(int), len, f) != len)
      return 0;
-
-  SWAP_SHORTS(buf, len);	/* back to intel */
 
   return 1;
 }
@@ -104,13 +99,8 @@ static int _save_short(int *buf, int len, FILE *f)
 
 static int _save_long(int *buf, int len, FILE *f)
 {
-
-  SWAP_LONGS(buf, len);	/* to MAC */
-
   if (fwrite(buf, sizeof(int), len, f) != len)
      return 0;
-
-  SWAP_LONGS(buf, len);	/* back to intel */
 
   return 1;
 }
@@ -179,11 +169,9 @@ int loadFile(char *filename)
   /* find the address, cast the ptr to a lontPtr, take contents */
 
   l = *(int *)(MiscHis + 50);
-  HALF_SWAP_LONGS(&l, 1);
   SetFunds(l);
 
   l = *(int *)(MiscHis + 8);
-  HALF_SWAP_LONGS(&l, 1);
   CityTime = l;
 
   autoBulldoze = MiscHis[52];	/* flag for autoBulldoze */
@@ -199,15 +187,12 @@ int loadFile(char *filename)
   /* yayaya */
 
   l = *(int *)(MiscHis + 58);
-  HALF_SWAP_LONGS(&l, 1);
   policePercent = l / 65536.0;
 
   l = *(int *)(MiscHis + 60);
-  HALF_SWAP_LONGS(&l, 1);
   firePercent = l / 65536.0;
 
   l = *(int *)(MiscHis + 62);
-  HALF_SWAP_LONGS(&l, 1);
   roadPercent = l / 65536.0;
 
   policePercent = (*(int*)(MiscHis + 58)) / 65536.0;	/* and 59 */
@@ -254,11 +239,9 @@ int saveFile(char *filename)
   /* find the address, cast the ptr to a lontPtr, take contents */
 
   l = TotalFunds;
-  HALF_SWAP_LONGS(&l, 1);
   (*(int *)(MiscHis + 50)) = l;
 
   l = CityTime;
-  HALF_SWAP_LONGS(&l, 1);
   (*(int *)(MiscHis + 8)) = l;
 
   MiscHis[52] = autoBulldoze;	/* flag for autoBulldoze */
@@ -271,15 +254,12 @@ int saveFile(char *filename)
   /* yayaya */
 
   l = (int)(policePercent * 65536);
-  HALF_SWAP_LONGS(&l, 1);
   (*(int *)(MiscHis + 58)) = l;
 
   l = (int)(firePercent * 65536);
-  HALF_SWAP_LONGS(&l, 1);
   (*(int *)(MiscHis + 60)) = l;
 
   l = (int)(roadPercent * 65536);
-  HALF_SWAP_LONGS(&l, 1);
   (*(int *)(MiscHis + 62)) = l;
 
   if ((_save_short(ResHis, HISTLEN / 2, f) == 0) ||
@@ -301,12 +281,12 @@ int saveFile(char *filename)
 }
 
 
-LoadScenario(int s)
+void LoadScenario(int s)
 {
   char *name, *fname;
 
   if (CityFileName != NULL) {
-    ckfree(CityFileName);
+    free(CityFileName);
     CityFileName = NULL;
   }
 
@@ -408,7 +388,7 @@ int LoadCity(char *filename)
 
   if (loadFile(filename)) {
     if (CityFileName != NULL)
-      ckfree(CityFileName);
+      free(CityFileName);
     CityFileName = (char *)malloc(strlen(filename) + 1);
     strcpy(CityFileName, filename);
 
@@ -495,7 +475,7 @@ SaveCityAs(char *filename)
   char *cp;
 
   if (CityFileName != NULL)
-    ckfree(CityFileName);
+    free(CityFileName);
   CityFileName = (char *)malloc(strlen(filename) + 1);
   strcpy(CityFileName, filename);
 

@@ -663,7 +663,7 @@ DestroyGraph(Graph* graph)
 
     DecRefDisplay(graph->x);
 
-    ckfree((char*)graph);
+    free((char*)graph);
 }
 
 

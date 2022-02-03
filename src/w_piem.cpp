@@ -602,7 +602,7 @@ PieMenuWidgetCmd(clientData, interp, argc, argv)
 	if (menuPtr->numEntries != 0) {
 	    memcpy((VOID *) newEntries, (VOID *) menuPtr->entries,
 		    menuPtr->numEntries*sizeof(PieMenuEntry *));
-	    ckfree((char *) menuPtr->entries);
+	    free((char *) menuPtr->entries);
 	}
 	menuPtr->entries = newEntries;
 	menuPtr->entries[menuPtr->numEntries] = mePtr;
@@ -935,7 +935,7 @@ DestroyPieMenu(clientData)
 	DestroyPieMenuEntry((ClientData) menuPtr->entries[i]);
     }
     if (menuPtr->entries != NULL) {
-	ckfree((char *) menuPtr->entries);
+	free((char *) menuPtr->entries);
     }
     if (menuPtr->border != NULL) {
 	Tk_Free3DBorder(menuPtr->border);
@@ -961,7 +961,7 @@ DestroyPieMenu(clientData)
     if (menuPtr->cursor != None) {
 	Tk_FreeCursor(menuPtr->cursor);
     }
-    ckfree((char *) menuPtr);
+    free((char *) menuPtr);
 }
 
 /*
@@ -996,7 +996,7 @@ DestroyPieMenuEntry(clientData)
 	}
     }
     if (mePtr->label != NULL) {
-	ckfree(mePtr->label);
+	free(mePtr->label);
     }
     if (mePtr->bitmap != None) {
 	Tk_FreePixmap(mePtr->bitmap);
@@ -1017,12 +1017,12 @@ DestroyPieMenuEntry(clientData)
 	Tk_FreeGC(mePtr->activeGC);
     }
     if (mePtr->command != NULL) {
-	ckfree(mePtr->command);
+	free(mePtr->command);
     }
     if (mePtr->name != NULL) {
-	ckfree(mePtr->name);
+	free(mePtr->name);
     }
-    ckfree((char *) mePtr);
+    free((char *) mePtr);
 }
 
 /*
@@ -2244,7 +2244,7 @@ LayoutPieMenu(menu)
   }
 
   if (menu->segments != NULL) {
-      ckfree((char *)menu->segments);
+      free((char *)menu->segments);
   }
   menu->segments = (XSegment *)
     malloc(menu->numEntries * sizeof(XSegment));

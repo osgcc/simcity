@@ -201,7 +201,7 @@ int SimCmdCityFileName(Tcl_Interp *interp, int argc, char **argv)
 
   if (argc == 3) {
     if (CityFileName != NULL) {
-      ckfree(CityFileName);
+      free(CityFileName);
       CityFileName = NULL;
     }
     if (argv[2][0] != '\0') {
