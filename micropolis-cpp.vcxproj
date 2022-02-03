@@ -73,7 +73,6 @@
     <ClInclude Include="src\w_graph.h" />
     <ClInclude Include="src\animtab.h" />
     <ClInclude Include="src\g_map.h" />
-    <ClInclude Include="src\mac.h" />
     <ClInclude Include="src\macros.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\s_alloc.h" />
@@ -81,6 +80,7 @@
     <ClInclude Include="src\w_editor.h" />
     <ClInclude Include="src\w_eval.h" />
     <ClInclude Include="src\w_map.h" />
+    <ClInclude Include="src\w_resrc.h" />
     <ClInclude Include="src\w_sound.h" />
     <ClInclude Include="src\w_sprite.h" />
     <ClInclude Include="src\w_stubs.h" />
