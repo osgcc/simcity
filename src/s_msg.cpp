@@ -61,6 +61,11 @@
  */
 #include "main.h"
 
+#include "w_resrc.h"
+#include "w_sound.h"
+#include "w_stubs.h"
+#include "w_tk.h"
+
 
 int LastCityPop;
 int LastCategory;
@@ -68,13 +73,24 @@ int LastPicNum;
 int autoGo;
 int HaveLastMessage = 0;
 char LastMessage[256];
-int DoAutoGoto(int x, int y, char *msg);
-int DoShowPicture(int id);
+
+void ClearMes();
+int SendMes(int Mnum);
+
+void CheckGrowth();
+void DoAutoGoto(int x, int y, char *msg);
+void DoShowPicture(int id);
+void DoScenarioScore(int type);
+void DoShowPicture(int id);
+void DoLoseGame();
+void DoWinGame();
+void SetMessageField(char* str);
+
 
 /* comefrom: Simulate */
-SendMessages(void)
+void SendMessages()
 {
-  register z;
+  register int z;
   int PowerPop;
   float TM;
 
@@ -186,7 +202,7 @@ SendMessages(void)
 
 
 /* comefrom: SendMessages */
-CheckGrowth(void)
+void CheckGrowth()
 {
   int ThisCityPop;
   int z;
@@ -212,7 +228,7 @@ CheckGrowth(void)
 
 
 /* comefrom: SendMessages */
-DoScenarioScore(int type)
+void DoScenarioScore(int type)
 {
   int z;
 
@@ -251,7 +267,7 @@ DoScenarioScore(int type)
 }
 
 
-ClearMes(void)
+void ClearMes()
 {
   MessagePort = 0;
   MesX = 0;
@@ -262,7 +278,7 @@ ClearMes(void)
 
 /* comefrom: MakeEarthquake MakeFire MakeFire MakeFlood SendMessages 
 	     CheckGrowth DoScenarioScore DoPowerScan */
-SendMes(int Mnum)
+int SendMes(int Mnum)
 {
   if (Mnum < 0) {
     if (Mnum != LastPicNum) {
@@ -294,7 +310,7 @@ void SendMesAt(int Mnum, int x, int y)
 }
 
 
-doMessage(void) 
+void doMessage() 
 {
   char messageStr[256];
   int pictId;
@@ -401,7 +417,7 @@ doMessage(void)
 }
 
 
-DoAutoGoto(int x, int y, char *msg)
+void DoAutoGoto(int x, int y, char *msg)
 {
   char buf[256];
 
@@ -411,7 +427,7 @@ DoAutoGoto(int x, int y, char *msg)
 }
 
 
-SetMessageField(char *str)
+void SetMessageField(char *str)
 {
   char buf[256];
 
@@ -425,7 +441,7 @@ SetMessageField(char *str)
 }
 
 
-DoShowPicture(int id)
+void DoShowPicture(int id)
 {
   char buf[256];
 
@@ -434,13 +450,13 @@ DoShowPicture(int id)
 }
 
 
-DoLoseGame()
+void DoLoseGame()
 {
   Eval("UILoseGame");
 }
 
 
-DoWinGame()
+void DoWinGame()
 {
   Eval("UIWinGame");
 }
