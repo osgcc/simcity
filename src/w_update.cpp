@@ -64,11 +64,11 @@
 
 int MustUpdateFunds;
 int MustUpdateOptions;
-long LastCityTime;
-long LastCityYear;
-long LastCityMonth;
-long LastFunds;
-long LastR, LastC, LastI;
+int LastCityTime;
+int LastCityYear;
+int LastCityMonth;
+int LastFunds;
+int LastR, LastC, LastI;
 
 char *dateStr[12] =
 {

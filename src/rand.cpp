@@ -37,7 +37,7 @@
 
 constexpr auto SIM_RAND_MAX = 0xffff;
 
-static unsigned long next = 1;
+static unsigned int next = 1;
 
 int sim_rand()
 {

@@ -117,7 +117,7 @@
 static int degrees[MAX_TYPES] =	{ DEG_0, DEG_1, DEG_2, DEG_3, DEG_4 };
 static int seps [MAX_TYPES] =	{ SEP_0, SEP_1, SEP_2, SEP_3, SEP_4 };
 
-long sim_random();
+int sim_random();
 void sim_srandom();
 char *sim_initstate();
 char *sim_setstate();
@@ -136,7 +136,7 @@ char *sim_setstate();
  *	MAX_TYPES * (rptr - state) + TYPE_3 == TYPE_3.
  */
 
-static long randtbl[DEG_3 + 1] = {
+static int randtbl[DEG_3 + 1] = {
 	TYPE_3,
 	0x9a319039, 0x32d9c024, 0x9b663182, 0x5da1f342, 0xde3b81e0, 0xdf0a6fb5,
 	0xf103bc02, 0x48f340fb, 0x7449e56b, 0xbeb1dbb0, 0xab5c5918, 0x946554fd,
@@ -160,8 +160,8 @@ static long randtbl[DEG_3 + 1] = {
  * in the initialization of randtbl) because the state table pointer is set
  * to point to randtbl[1] (as explained below).
  */
-static long *fptr = &randtbl[SEP_3 + 1];
-static long *rptr = &randtbl[1];
+static int *fptr = &randtbl[SEP_3 + 1];
+static int *rptr = &randtbl[1];
 
 /*
  * The following things are the pointer to the state information table, the
@@ -173,11 +173,11 @@ static long *rptr = &randtbl[1];
  * this is more efficient than indexing every time to find the address of
  * the last element to see if the front and rear pointers have wrapped.
  */
-static long *state = &randtbl[1];
+static int *state = &randtbl[1];
 static int rand_type = TYPE_3;
 static int rand_deg = DEG_3;
 static int rand_sep = SEP_3;
-static long *end_ptr = &randtbl[DEG_3 + 1];
+static int *end_ptr = &randtbl[DEG_3 + 1];
 
 /*
  * srandom:
@@ -263,7 +263,7 @@ char * sim_initstate(unsigned int seed, char *arg_state, int n)
 		rand_deg = DEG_4;
 		rand_sep = SEP_4;
 	}
-	state = &(((long *)arg_state)[1]);	/* first location */
+	state = &(((int *)arg_state)[1]);	/* first location */
 	end_ptr = &state[rand_deg];	/* must set end_ptr before srandom */
 	sim_srandom(seed);
 	if (rand_type == TYPE_0)
@@ -290,7 +290,7 @@ char * sim_initstate(unsigned int seed, char *arg_state, int n)
  */
 char *sim_setstate(char *arg_state)
 {
-	register long *new_state = (long *)arg_state;
+	register int *new_state = (int *)arg_state;
 	register int type = new_state[0] % MAX_TYPES;
 	register int rear = new_state[0] / MAX_TYPES;
 	char *ostate = (char *)(&state[-1]);
@@ -339,10 +339,10 @@ char *sim_setstate(char *arg_state)
  *
  * Returns a 31-bit random number.
  */
-long
+int
 sim_random()
 {
-	long i;
+	int i;
 
 	if (rand_type == TYPE_0)
 		i = state[0] = (state[0] * 1103515245 + 12345) & 0x7fffffff;

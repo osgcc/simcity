@@ -1843,9 +1843,9 @@ ActivatePieMenuEntry(menuPtr, index, preview)
  *               |     x>0, y>=0
  *  x<=0, y>0 <--+       y/x
  *    -x/y       |        ^
- *        long 1 | long 0 |     X
+ *        int 1 | int 0 |     X
  * -----+--------+--------+----> 
- *      | long 2 | long 3
+ *      | int 2 | int 3
  *      V        |      -x/y
  *   x<0, y<=0   +--> x>=0, y<0
  *     y/x       |
@@ -1957,10 +1957,10 @@ CalcPieMenuItem(menu, x, y)
   while (1) {
 
 /* Legend: c = cursor, e = edge
-   <cursor long>,<edge long>
-         long 1 | long 0
+   <cursor int>,<edge int>
+         int 1 | int 0
          -------+-------
-         long 2 | long 3
+         int 2 | int 3
 */
 
     /* Set order = 1, if shortest direction from edge to cursor is ccw */

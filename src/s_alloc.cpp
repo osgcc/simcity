@@ -80,7 +80,7 @@ int CoalPop, NuclearPop, PortPop, APortPop;
 int NeedHosp, NeedChurch;
 int CrimeAverage, PolluteAverage, LVAverage;
 
-long CityTime;
+int CityTime;
 int StartingYear;
 
 int* Map[WORLD_X];
@@ -93,10 +93,10 @@ int CensusChanged;
 int MessagePort;
 int MesX, MesY;
 
-long RoadSpend, PoliceSpend, FireSpend;
-long RoadFund, PoliceFund, FireFund;
+int RoadSpend, PoliceSpend, FireSpend;
+int RoadFund, PoliceFund, FireFund;
 int RoadEffect, PoliceEffect, FireEffect;
-long TaxFund; 
+int TaxFund; 
 int CityTax, TaxFlag;
 unsigned char tileSynch = 0x01;
 

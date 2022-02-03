@@ -87,10 +87,10 @@ void drawAll(SimView * view)
                 tile -= TILE_COUNT;
             }
 
-            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            unsigned int* mem = (unsigned int*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                unsigned long l = mem[i];
+                unsigned int l = mem[i];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;
@@ -128,10 +128,10 @@ void drawRes(SimView* view)
             }
             ////////
 
-            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            unsigned int* mem = (unsigned int*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                unsigned long l = mem[i];
+                unsigned int l = mem[i];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;
@@ -169,10 +169,10 @@ void drawCom(SimView* view)
             }
             ////////
 
-            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            unsigned int* mem = (unsigned int*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                unsigned long l = mem[i];
+                unsigned int l = mem[i];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;
@@ -213,10 +213,10 @@ void drawInd(SimView* view)
             }
             ////////
 
-            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            unsigned int* mem = (unsigned int*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                unsigned long l = mem[i];
+                unsigned int l = mem[i];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;
@@ -256,10 +256,10 @@ void drawLilTransMap(SimView* view)
             }
             ////////
 
-            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            unsigned int* mem = (unsigned int*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                unsigned long l = mem[i];
+                unsigned int l = mem[i];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;
@@ -326,10 +326,10 @@ void drawPower(SimView* view)
 
             if (pix < 0)
             {
-                unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+                unsigned int* mem = (unsigned int*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
                 for (int i = 0; i < 3; ++i)
                 {
-                    unsigned long l = mem[i];
+                    unsigned int l = mem[i];
                     image[0] = l >> 24;
                     image[1] = l >> 16;
                     image[2] = l >> 8;
@@ -429,10 +429,10 @@ void drawDynamic(SimView* view)
             }
             ////////
 
-            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            unsigned int* mem = (unsigned int*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                unsigned long l = mem[i];
+                unsigned int l = mem[i];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;

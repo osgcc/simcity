@@ -115,8 +115,8 @@ typedef struct XDisplay
   int *pixels;
   GC gc;
   int shared;
-  unsigned long last_request_read;
-  unsigned long request;
+  unsigned int last_request_read;
+  unsigned int request;
   XImage *big_tile_image;
   XImage *small_tile_image;
   Pixmap big_tile_pixmap;

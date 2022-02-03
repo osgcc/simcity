@@ -71,8 +71,8 @@ int ProblemTable[PROBNUM];
 int ProblemTaken[PROBNUM];
 int ProblemVotes[PROBNUM];		/* these are the votes for each  */
 int ProblemOrder[4];			/* sorted index to above  */
-long CityPop, deltaCityPop;
-long CityAssValue;
+int CityPop, deltaCityPop;
+int CityAssValue;
 int CityClass;			/*  0..5  */
 int CityScore, deltaCityScore, AverageCityScore;
 int TrafficAverage;
@@ -122,7 +122,7 @@ EvalInit(void)
 /* comefrom: CityEvaluation */
 GetAssValue(void)
 {
-  long z;
+  int z;
 
   z = RoadTotal * 5;
   z += RailTotal * 10;
@@ -141,7 +141,7 @@ GetAssValue(void)
 /* comefrom: CityEvaluation */
 DoPopNum(void)
 {
-  long OldCityPop;
+  int OldCityPop;
 
   OldCityPop = CityPop;
   CityPop = ((ResPop) + (ComPop * 8L) + (IndPop *8L)) * 20L;
@@ -223,7 +223,7 @@ VoteProblems(void)
 /* comefrom: DoProblems */
 AverageTrf(void)
 {
-  long TrfTotal;
+  int TrfTotal;
   register int x, y, count;
 
   TrfTotal = 0;

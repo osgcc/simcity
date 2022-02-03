@@ -71,7 +71,7 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 {
 	int lineBytes = view->line_bytes;
 	int pixelBytes = view->pixel_bytes;
-	long ii, mm;
+	int ii, mm;
 	unsigned int* map;
 	unsigned int tile;
 	unsigned char blink = (flagBlink <= 0), * bt = view->bigtiles;
@@ -110,10 +110,10 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 
 	//if (view->x->color)
 	//{
-	unsigned long* image, * mem;
+	unsigned int* image, * mem;
 
-	image = (unsigned long*)view->data;
-	ii = ((lineBytes * h * 16) - 16) / sizeof(unsigned long);
+	image = (unsigned int*)view->data;
+	ii = ((lineBytes * h * 16) - 16) / sizeof(unsigned int);
 	map = (unsigned int*)&Map[x][y];
 	mm = WORLD_Y - h;
 	have = view->tiles;
@@ -125,7 +125,7 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 	for (int col = 0; col < w; col++)
 	{
 		ha = &have[col][0];
-		image = (unsigned long*)(view->data + (col * 16 * pixelBytes));
+		image = (unsigned int*)(view->data + (col * 16 * pixelBytes));
 		for (int row = 0; row < h; row++, ha++)
 		{
 			tile = *(map++);
@@ -151,12 +151,12 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 
 			if (tile == *ha)
 			{
-				image = (unsigned long*)(((unsigned char*)image) + (lineBytes * 16));
+				image = (unsigned int*)(((unsigned char*)image) + (lineBytes * 16));
 			}
 			else
 			{
 				*ha = tile;
-				mem = (unsigned long*)&(bt[tile * 256 * pixelBytes]);
+				mem = (unsigned int*)&(bt[tile * 256 * pixelBytes]);
 
 				/* XXX: handle depth for big tiles */
 
@@ -167,7 +167,7 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 				{
 					image[0] = mem[0]; image[1] = mem[1];
 					image[2] = mem[2]; image[3] = mem[3];
-					image = (unsigned long*)(((unsigned char*)image) + lineBytes);
+					image = (unsigned int*)(((unsigned char*)image) + lineBytes);
 					mem += 4;
 				}
 
@@ -240,7 +240,7 @@ void WireDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 	unsigned int* map;
 	unsigned int tile;
 	unsigned char blink = (flagBlink <= 0);
-	long mm;
+	int mm;
 	int** have, * ha;
 
 	if (x < view->tile_x)

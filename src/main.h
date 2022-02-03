@@ -118,8 +118,8 @@ constexpr auto WORLD_Y = SimHeight;
 #define POWERMAPROW		((WORLD_X + 15) / 16)
 
 #ifdef MEGA
-#define POWERMAPLEN		((long)(2 * POWERMAPROW * WORLD_Y))
-#define POWERWORD(x, y)		((((long)(x)) >>4) + (((long)(y)) * POWERMAPROW))
+#define POWERMAPLEN		((int)(2 * POWERMAPROW * WORLD_Y))
+#define POWERWORD(x, y)		((((int)(x)) >>4) + (((int)(y)) * POWERMAPROW))
 #else
 #define POWERMAPLEN		1700 /* ??? PWRMAPSIZE */
 #define POWERWORD(x, y)		(((x) >>4) + ((y) <<3))
@@ -420,17 +420,17 @@ extern std::string CityName;
 extern std::string CityFileName;
 extern std::string StartupName;
 extern int StartingYear;
-extern long CityTime;
-extern long LastCityTime;
-extern long LastCityMonth;
-extern long LastCityYear;
-extern long LastFunds;
-extern long LastR, LastC, LastI;
+extern int CityTime;
+extern int LastCityTime;
+extern int LastCityMonth;
+extern int LastCityYear;
+extern int LastFunds;
+extern int LastR, LastC, LastI;
 extern int GameLevel;
 extern int Cycle;
 extern int ScenarioID;
 extern int ShakeNow;
-extern long DonDither;
+extern int DonDither;
 extern int DoOverlay;
 
 extern int *ResHis, ResHisMax;
@@ -440,14 +440,14 @@ extern int *MoneyHis, *CrimeHis, *PollutionHis, *MiscHis;
 extern int *PowerMap;
 
 extern float roadPercent, policePercent, firePercent;
-extern long RoadSpend, PoliceSpend, FireSpend;
-extern long roadMaxValue, policeMaxValue, fireMaxValue;
-extern long TaxFund, RoadFund, PoliceFund, FireFund;
+extern int RoadSpend, PoliceSpend, FireSpend;
+extern int roadMaxValue, policeMaxValue, fireMaxValue;
+extern int TaxFund, RoadFund, PoliceFund, FireFund;
 extern int RoadEffect, PoliceEffect, FireEffect;
 extern int TaxFlag, CityTax;
-extern long TotalFunds;
+extern int TotalFunds;
 
-extern long costOf[];
+extern int costOf[];
 
 extern int flagBlink;
 extern unsigned char tileSynch;
@@ -461,7 +461,7 @@ extern unsigned char ColorIntensities[];
 
 extern int MesX, MesY;
 extern int MesNum, MessagePort;
-extern long LastMesTime;
+extern int LastMesTime;
 
 extern int SimSpeed;
 extern int SimMetaSpeed;
@@ -511,13 +511,13 @@ extern int CrimeMaxX, CrimeMaxY;
 extern int FloodX, FloodY;
 extern int CrashX, CrashY;
 extern int CCx, CCy;
-extern long CityPop, deltaCityPop;
+extern int CityPop, deltaCityPop;
 extern char *cityClassStr[6];
 extern int CityYes, CityNo;
 extern int ProblemTable[PROBNUM];
 extern int ProblemVotes[PROBNUM];
 extern int ProblemOrder[4];
-extern long CityAssValue;
+extern int CityAssValue;
 
 extern int InitSimLoad;
 extern int DoInitialEval;
@@ -560,7 +560,7 @@ extern int PunishCnt;
 extern int Dozing;
 extern int toolSize[];
 extern int toolOffset[];
-extern long toolColors[];
+extern int toolColors[];
 extern std::string Displays;
 extern std::string FirstDisplay;
 extern char *dateStr[12];

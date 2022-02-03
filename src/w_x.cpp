@@ -247,7 +247,7 @@ SimView* InitNewView(SimView* view, char* title, int _class, int w, int h)
 {
     int type, i;
     int d = 8;
-    unsigned long valuemask = 0;
+    unsigned int valuemask = 0;
     char* t;
     struct XDisplay* xd;
     XGCValues values;
@@ -531,7 +531,7 @@ DoResizeView(SimView *view, int w, int h)
 	return;
       }
       if (view->x->overlay_gc == NULL) {
-	unsigned long valuemask = 0;
+	unsigned int valuemask = 0;
 	XGCValues values;
 
 	view->x->overlay_gc =

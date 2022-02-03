@@ -78,14 +78,14 @@ char *HomeDir, *ResourceDir, *KeyDir, *HostName;
 struct Resource *Resources = NULL;
 
 struct StringTable {
-  long id;
+  int id;
   int lines;
   char **strings;
   struct StringTable *next;
 } *StringTables;
 
 
-Handle GetResource(char *name, long id)
+Handle GetResource(char *name, int id)
 {
   struct Resource *r = Resources;
   char fname[256];
@@ -137,7 +137,7 @@ ReleaseResource(Handle r)
 }
 
 
-long
+int
 ResourceSize(Handle h)
 {
   struct Resource *r = (struct Resource *)h;
@@ -161,7 +161,7 @@ GetIndString(char *str, int id, int num)
     tp = &((*tp)->next);
   }
   if (!st) {
-    long i, lines, size;
+    int i, lines, size;
     char *buf;
 
     st = (struct StringTable *)malloc(sizeof (struct StringTable));

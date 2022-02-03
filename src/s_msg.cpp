@@ -62,7 +62,7 @@
 #include "main.h"
 
 
-long LastCityPop;
+int LastCityPop;
 int LastCategory;
 int LastPicNum;
 int autoGo;
@@ -188,7 +188,7 @@ SendMessages(void)
 /* comefrom: SendMessages */
 CheckGrowth(void)
 {
-  long ThisCityPop;
+  int ThisCityPop;
   int z;
 
   if (!(CityTime & 3)) {

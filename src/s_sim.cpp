@@ -658,7 +658,7 @@ CollectTax(void)
     PoliceFund = PolicePop * 100;
     FireFund   = FireStPop * 100;
     RoadFund   = (RoadTotal + (RailTotal * 2)) * RLevels[GameLevel];
-    TaxFund = (((long)TotalPop * LVAverage) / 120) *
+    TaxFund = (((int)TotalPop * LVAverage) / 120) *
       	      CityTax * FLevels[GameLevel];
     if (TotalPop) {	/* if there are people to tax  */
       CashFlow = TaxFund - (PoliceFund + FireFund + RoadFund);

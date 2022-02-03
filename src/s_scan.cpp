@@ -70,7 +70,7 @@ int NewMapFlags[NMAPS];
 int CCx, CCy, CCx2, CCy2;
 int PolMaxX, PolMaxY;
 int CrimeMaxX, CrimeMaxY;
-long DonDither = 0;
+int DonDither = 0;
 
 
 /* comefrom: Simulate SpecialInit */
@@ -92,7 +92,7 @@ FireAnalysis(void)		/* Make firerate map from firestation map  */
 /* comefrom: Simulate SpecialInit */
 PopDenScan(void)		/*  sets: PopDensity, , , ComRate  */
 {
-  long Xtot, Ytot, Ztot;
+  int Xtot, Ytot, Ztot;
   register int x, y, z;
 
   ClrTemArray();
@@ -166,7 +166,7 @@ GetPDen(int Ch9)
 /* comefrom: Simulate SpecialInit */
 PTLScan(void)   	/* Does pollution, terrain, land value   */
 {
-  long ptot, LVtot;
+  int ptot, LVtot;
   register int x, y, z, dis;
   int Plevel, LVflag, loc, zx, zy, Mx, My, pnum, LVnum, pmax;
 
@@ -300,7 +300,7 @@ GetDisCC(int x, int y)
 CrimeScan(void)
 {
   int numz;
-  long totz;
+  int totz;
   register int x, y, z;
   int cmax;
 

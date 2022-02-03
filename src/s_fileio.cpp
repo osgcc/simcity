@@ -81,13 +81,13 @@ _swap_shorts(int *buf, int len)
 }
 
 static void
-_swap_longs(long *buf, int len)
+_swap_longs(int *buf, int len)
 {
   int i;
 
-  /* Flip bytes in each long! */
+  /* Flip bytes in each int! */
   for (i = 0; i < len; i++) {	
-    long l = *buf;
+    int l = *buf;
     *buf =
       ((l & 0x000000ff) << 24) |
       ((l & 0x0000ff00) << 8) |
@@ -98,13 +98,13 @@ _swap_longs(long *buf, int len)
 }
 
 static void
-_half_swap_longs(long *buf, int len)
+_half_swap_longs(int *buf, int len)
 {
   int i;
 
-  /* Flip bytes in each long! */
+  /* Flip bytes in each int! */
   for (i = 0; i < len; i++) {	
-    long l = *buf;
+    int l = *buf;
     *buf =
       ((l & 0x0000ffff) << 16) |
       ((l & 0xffff0000) >> 16);
@@ -134,9 +134,9 @@ _load_short(int *buf, int len, FILE *f)
 
 
 static int
-_load_long(long *buf, int len, FILE *f)
+_load_long(int *buf, int len, FILE *f)
 {
-  if (fread(buf, sizeof(long), len, f) != len)
+  if (fread(buf, sizeof(int), len, f) != len)
      return 0;
 
   SWAP_LONGS(buf, len);	/* to intel */
@@ -161,12 +161,12 @@ _save_short(int *buf, int len, FILE *f)
 
 
 static int
-_save_long(long *buf, int len, FILE *f)
+_save_long(int *buf, int len, FILE *f)
 {
 
   SWAP_LONGS(buf, len);	/* to MAC */
 
-  if (fwrite(buf, sizeof(long), len, f) != len)
+  if (fwrite(buf, sizeof(int), len, f) != len)
      return 0;
 
   SWAP_LONGS(buf, len);	/* back to intel */
@@ -181,7 +181,7 @@ _load_file(char *filename, char *dir)
 {
   FILE *f;
   char path[512];
-  long size;
+  int size;
 
 #ifdef MSDOS
   if (dir != NULL) {
@@ -240,20 +240,20 @@ _load_file(char *filename, char *dir)
 
 int loadFile(char *filename)
 {
-  long l;
+  int l;
 
   if (_load_file(filename, NULL) == 0)
     return(0);
 
-  /* total funds is a long.....    MiscHis is array of shorts */
+  /* total funds is a int.....    MiscHis is array of shorts */
   /* total funds is being put in the 50th & 51th word of MiscHis */
   /* find the address, cast the ptr to a lontPtr, take contents */
 
-  l = *(long *)(MiscHis + 50);
+  l = *(int *)(MiscHis + 50);
   HALF_SWAP_LONGS(&l, 1);
   SetFunds(l);
 
-  l = *(long *)(MiscHis + 8);
+  l = *(int *)(MiscHis + 8);
   HALF_SWAP_LONGS(&l, 1);
   CityTime = l;
 
@@ -269,21 +269,21 @@ int loadFile(char *filename)
 
   /* yayaya */
 
-  l = *(long *)(MiscHis + 58);
+  l = *(int *)(MiscHis + 58);
   HALF_SWAP_LONGS(&l, 1);
   policePercent = l / 65536.0;
 
-  l = *(long *)(MiscHis + 60);
+  l = *(int *)(MiscHis + 60);
   HALF_SWAP_LONGS(&l, 1);
   firePercent = l / 65536.0;
 
-  l = *(long *)(MiscHis + 62);
+  l = *(int *)(MiscHis + 62);
   HALF_SWAP_LONGS(&l, 1);
   roadPercent = l / 65536.0;
 
-  policePercent = (*(long*)(MiscHis + 58)) / 65536.0;	/* and 59 */
-  firePercent = (*(long*)(MiscHis + 60)) / 65536.0;	/* and 61 */
-  roadPercent =(*(long*)(MiscHis + 62)) / 65536.0;	/* and 63 */
+  policePercent = (*(int*)(MiscHis + 58)) / 65536.0;	/* and 59 */
+  firePercent = (*(int*)(MiscHis + 60)) / 65536.0;	/* and 61 */
+  roadPercent =(*(int*)(MiscHis + 62)) / 65536.0;	/* and 63 */
 
   if (CityTime < 0)
     CityTime = 0;
@@ -312,7 +312,7 @@ int loadFile(char *filename)
 
 int saveFile(char *filename)
 {
-  long l;
+  int l;
   FILE *f;
 
 #ifdef MSDOS
@@ -324,17 +324,17 @@ int saveFile(char *filename)
     return(0);
   }
 
-  /* total funds is a long.....    MiscHis is array of ints */
+  /* total funds is a int.....    MiscHis is array of ints */
   /* total funds is bien put in the 50th & 51th word of MiscHis */
   /* find the address, cast the ptr to a lontPtr, take contents */
 
   l = TotalFunds;
   HALF_SWAP_LONGS(&l, 1);
-  (*(long *)(MiscHis + 50)) = l;
+  (*(int *)(MiscHis + 50)) = l;
 
   l = CityTime;
   HALF_SWAP_LONGS(&l, 1);
-  (*(long *)(MiscHis + 8)) = l;
+  (*(int *)(MiscHis + 8)) = l;
 
   MiscHis[52] = autoBulldoze;	/* flag for autoBulldoze */
   MiscHis[53] = autoBudget;	/* flag for autoBudget */
@@ -347,15 +347,15 @@ int saveFile(char *filename)
 
   l = (int)(policePercent * 65536);
   HALF_SWAP_LONGS(&l, 1);
-  (*(long *)(MiscHis + 58)) = l;
+  (*(int *)(MiscHis + 58)) = l;
 
   l = (int)(firePercent * 65536);
   HALF_SWAP_LONGS(&l, 1);
-  (*(long *)(MiscHis + 60)) = l;
+  (*(int *)(MiscHis + 60)) = l;
 
   l = (int)(roadPercent * 65536);
   HALF_SWAP_LONGS(&l, 1);
-  (*(long *)(MiscHis + 62)) = l;
+  (*(int *)(MiscHis + 62)) = l;
 
   if ((_save_short(ResHis, HISTLEN / 2, f) == 0) ||
       (_save_short(ComHis, HISTLEN / 2, f) == 0) ||

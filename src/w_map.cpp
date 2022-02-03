@@ -474,7 +474,7 @@ DrawMapEditorViews(SimView *view)
 int max_pix = MAX_PIX;
 
 struct Pix {
-  long color;
+  int color;
   int x, y;
 };
 

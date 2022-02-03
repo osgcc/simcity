@@ -135,7 +135,7 @@ typedef struct {
     GC textGC;			/* GC for drawing text in normal mode. */
     int width;			/* Desired narrow dimension of interval,
 				 * in pixels. */
-    int length;			/* Desired long dimension of interval,
+    int length;			/* Desired int dimension of interval,
 				 * in pixels. */
     int relief;			/* Indicates whether window as a whole is
 				 * raised, sunken, or flat. */

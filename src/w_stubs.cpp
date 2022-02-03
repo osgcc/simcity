@@ -67,10 +67,10 @@
 /* Stubs */
 
 
-long TotalFunds;
+int TotalFunds;
 int PunishCnt;
 int autoBulldoze, autoBudget;
-long LastMesTime;
+int LastMesTime;
 int GameLevel;
 int InitSimLoad;
 int ScenarioID;
@@ -99,13 +99,13 @@ void SetFunds(int dollars)
 
 /* Mac */
 
-long TickCount()
+int TickCount()
 {
   struct timeval time;
 
   gettimeofday(&time, 0);
 
-  return (long)((time.tv_sec / 60) + (time.tv_usec * 1000000 / 60));
+  return (int)((time.tv_sec / 60) + (time.tv_usec * 1000000 / 60));
 }
 
 
