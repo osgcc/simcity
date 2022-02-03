@@ -146,10 +146,62 @@ int DynamicData[32];
   }
 
 
-void drawAll(SimView *view)
+void drawAll(SimView * view)
 {
-  DRAW_BEGIN
-  DRAW_END
+    int col, row;
+
+    unsigned short tile;
+
+    short* mp;
+
+    unsigned char* imageBase;
+    unsigned char* image;
+    unsigned long* mem;
+    unsigned long l;
+
+    int lineBytes = view->line_bytes8;
+    int pixelBytes = view->pixel_bytes;
+
+    mp = &Map[0][0];
+
+    imageBase = view->x->color ? view->data : view->data8;
+
+    for (col = 0; col < WORLD_X; col++)
+    {
+        image = imageBase + (3 * pixelBytes * col);
+        for (row = 0; row < WORLD_Y; row++)
+        {
+
+            tile = *(mp++) & LOMASK;
+            if (tile >= TILE_COUNT)
+            {
+                tile -= TILE_COUNT;
+            }
+
+            mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            switch (view->x->depth)
+            {
+            case 1:
+            case 8:
+            case 15:
+            case 16:
+            case 24:
+            case 32:
+                for (int i = 0; i < 3; ++i)
+                {
+                    l = mem[1];
+                    image[0] = l >> 24;
+                    image[1] = l >> 16;
+                    image[2] = l >> 8;
+                    image += lineBytes;
+                }
+                break;
+            default:
+                assert(0); /* Undefined depth */
+                break;
+            }
+        }
+    }
 }
 
 
