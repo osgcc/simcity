@@ -61,6 +61,7 @@
  */
 #include "main.h"
 
+#include "s_alloc.h"
 #include "w_eval.h"
 
 /* City Evaluation */
@@ -77,24 +78,6 @@ int CityAssValue;
 int CityClass;			/*  0..5  */
 int CityScore, deltaCityScore, AverageCityScore;
 int TrafficAverage;
-
-
-void CityEvaluation()
-{
-  EvalValid = 0;
-  if (TotalPop) {
-    GetAssValue();
-    DoPopNum();
-    DoProblems();
-    GetScore();
-    DoVotes();
-    ChangeEval();
-  } else {
-    EvalInit();
-    ChangeEval();
-  }
-  EvalValid = 1;
-}
 
 
 void EvalInit()
@@ -154,43 +137,6 @@ void DoPopNum()
   if (CityPop > 50000)	CityClass++;	/* capital */
   if (CityPop > 100000)	CityClass++;	/* metropolis */
   if (CityPop > 500000)	CityClass++;	/* megalopolis */
-}
-
-
-void DoProblems()
-{
-  register int x, z;
-  int ThisProb, Max;
-
-  for (z = 0; z < PROBNUM; z++)
-    ProblemTable[z] = 0;
-  ProblemTable[0] = CrimeAverage;		/* Crime */
-  ProblemTable[1] = PolluteAverage;		/* Pollution */
-  ProblemTable[2] = LVAverage * .7;		/* Housing */
-  ProblemTable[3] = CityTax * 10;		/* Taxes */
-  ProblemTable[4] = AverageTrf();		/* Traffic */
-  ProblemTable[5] = GetUnemployment();		/* Unemployment */
-  ProblemTable[6] = GetFire();			/* Fire */
-  VoteProblems();
-  for (z = 0; z < PROBNUM; z++)
-    ProblemTaken[z] = 0;
-  for (z = 0; z < 4; z++) {
-    Max = 0;
-    for (x = 0; x < 7; x++) {
-      if ((ProblemVotes[x] > Max) && (!ProblemTaken[x])) {
-	ThisProb = x;
-	Max = ProblemVotes[x];
-      }
-    }
-    if (Max) {
-      ProblemTaken[ThisProb] = 1;
-      ProblemOrder[z] = ThisProb;
-    }
-    else {
-      ProblemOrder[z] = 7;
-      ProblemTable[7] = 0;
-    }
-  }
 }
 
 
@@ -332,4 +278,59 @@ void DoVotes()
     else
       CityNo++;
   }
+}
+
+
+void DoProblems()
+{
+  register int x, z;
+  int ThisProb, Max;
+
+  for (z = 0; z < PROBNUM; z++)
+    ProblemTable[z] = 0;
+  ProblemTable[0] = CrimeAverage;		/* Crime */
+  ProblemTable[1] = PolluteAverage;		/* Pollution */
+  ProblemTable[2] = LVAverage * .7;		/* Housing */
+  ProblemTable[3] = CityTax * 10;		/* Taxes */
+  ProblemTable[4] = AverageTrf();		/* Traffic */
+  ProblemTable[5] = GetUnemployment();		/* Unemployment */
+  ProblemTable[6] = GetFire();			/* Fire */
+  VoteProblems();
+  for (z = 0; z < PROBNUM; z++)
+    ProblemTaken[z] = 0;
+  for (z = 0; z < 4; z++) {
+    Max = 0;
+    for (x = 0; x < 7; x++) {
+      if ((ProblemVotes[x] > Max) && (!ProblemTaken[x])) {
+	ThisProb = x;
+	Max = ProblemVotes[x];
+      }
+    }
+    if (Max) {
+      ProblemTaken[ThisProb] = 1;
+      ProblemOrder[z] = ThisProb;
+    }
+    else {
+      ProblemOrder[z] = 7;
+      ProblemTable[7] = 0;
+    }
+  }
+}
+
+
+void CityEvaluation()
+{
+  EvalValid = 0;
+  if (TotalPop) {
+    GetAssValue();
+    DoPopNum();
+    DoProblems();
+    GetScore();
+    DoVotes();
+    ChangeEval();
+  } else {
+    EvalInit();
+    ChangeEval();
+  }
+  EvalValid = 1;
 }
