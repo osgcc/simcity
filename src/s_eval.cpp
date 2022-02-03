@@ -79,7 +79,7 @@ int TrafficAverage;
 
 
 /* comefrom: SpecialInit Simulate */
-CityEvaluation(void)
+void CityEvaluation()
 {
   EvalValid = 0;
   if (TotalPop) {
@@ -98,7 +98,7 @@ CityEvaluation(void)
 
 
 /* comefrom: CityEvaluation SetCommonInits */
-EvalInit(void)
+void EvalInit()
 {
   register int x, z;
 
@@ -120,7 +120,7 @@ EvalInit(void)
 
 
 /* comefrom: CityEvaluation */
-GetAssValue(void)
+void GetAssValue()
 {
   int z;
 
@@ -139,7 +139,7 @@ GetAssValue(void)
 
 
 /* comefrom: CityEvaluation */
-DoPopNum(void)
+void DoPopNum()
 {
   int OldCityPop;
 
@@ -160,7 +160,7 @@ DoPopNum(void)
 
 
 /* comefrom: CityEvaluation */
-DoProblems(void)
+void DoProblems()
 {
   register int x, z;
   int ThisProb, Max;
@@ -198,7 +198,7 @@ DoProblems(void)
 
 
 /* comefrom: DoProblems */
-VoteProblems(void)
+void VoteProblems()
 {
   register x, z, count;
 
@@ -221,7 +221,7 @@ VoteProblems(void)
 
 
 /* comefrom: DoProblems */
-AverageTrf(void)
+int  AverageTrf()
 {
   int TrfTotal;
   register int x, y, count;
@@ -241,7 +241,7 @@ AverageTrf(void)
 
 
 /* comefrom: DoProblems */
-GetUnemployment(void)
+int GetUnemployment()
 {
   float r;
   int b;
@@ -260,7 +260,7 @@ GetUnemployment(void)
 
 
 /* comefrom: DoProblems GetScore */
-GetFire(void)
+int GetFire()
 {
   int z;
 
@@ -273,7 +273,7 @@ GetFire(void)
 
 
 /* comefrom: CityEvaluation */
-GetScore(void)
+void GetScore()
 {
   register x, z;
   int OldCityScore;
@@ -329,7 +329,7 @@ GetScore(void)
 
 
 /* comefrom: CityEvaluation */
-DoVotes(void)
+void DoVotes()
 {
   register z;
 
