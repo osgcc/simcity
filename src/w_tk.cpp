@@ -63,6 +63,9 @@
 #include "main.h"
 #include "view.h"
 
+
+#include <iostream>
+
 //Tcl_Interp *tk_mainInterp = NULL;
 //Tcl_CmdBuf buffer = NULL;
 //Tk_TimerToken sim_timer_token = 0;
@@ -737,6 +740,7 @@ DoEarthQuake(void)
 
 int Eval(const char* buf)
 {
+    std::cout << buf << std::endl;
     /*
     int result = Tcl_Eval(tk_mainInterp, buf, 0, (char**)NULL);
     if (result != TCL_OK)

@@ -39,9 +39,6 @@
     <ClCompile Include="src\s_sim.cpp" />
     <ClCompile Include="src\s_traf.cpp" />
     <ClCompile Include="src\s_zone.cpp" />
-    <ClCompile Include="src\terrain\mapgener.cpp" />
-    <ClCompile Include="src\terrain\terra.cpp" />
-    <ClCompile Include="src\terrain\terragen.cpp" />
     <ClCompile Include="src\w_budget.cpp" />
     <ClCompile Include="src\w_con.cpp" />
     <ClCompile Include="src\w_date.cpp" />
