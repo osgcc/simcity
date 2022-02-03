@@ -433,12 +433,6 @@ extern int ShakeNow;
 extern int DonDither;
 extern int DoOverlay;
 
-extern int *ResHis, ResHisMax;
-extern int *ComHis, ComHisMax;
-extern int *IndHis, IndHisMax;
-extern int *MoneyHis, *CrimeHis, *PollutionHis, *MiscHis;
-extern int *PowerMap;
-
 extern float roadPercent, policePercent, firePercent;
 extern int RoadSpend, PoliceSpend, FireSpend;
 extern int roadMaxValue, policeMaxValue, fireMaxValue;
