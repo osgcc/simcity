@@ -7,3 +7,4 @@ void UpdateGraphs();
 void UpdateEvaluation();
 void UpdateHeads();
 void UpdateFunds();
+void DoUpdateHeads();

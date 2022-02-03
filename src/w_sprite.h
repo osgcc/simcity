@@ -24,3 +24,4 @@ struct SimSprite
 
 void MoveObjects();
 void DoTrainSprite(SimSprite* sprite);
+void DestroyAllSprites();

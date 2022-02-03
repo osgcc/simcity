@@ -385,13 +385,14 @@ InitSprite(SimSprite *sprite, int x, int y)
 }
 
 
-DestroyAllSprites()
+void DestroyAllSprites()
 {
-  SimSprite *sprite;
+    SimSprite* sprite;
 
-  for (sprite = sim->sprite; sprite != NULL; sprite = sprite->next) {
-    sprite->frame = 0;
-  }
+    for (sprite = sim->sprite; sprite != NULL; sprite = sprite->next)
+    {
+        sprite->frame = 0;
+    }
 }
 
 

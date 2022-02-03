@@ -568,9 +568,9 @@ void initGraphs()
 
 
 /* comefrom: InitWillStuff */
-InitGraphMax(void)
+void InitGraphMax()
 {
-  register x;
+  register int x;
 
   ResHisMax = 0;
   ComHisMax = 0;

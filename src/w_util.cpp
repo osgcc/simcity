@@ -253,7 +253,7 @@ DoSetMapState(SimView *view, int state)
 }
 
 
-DoNewGame()
+void DoNewGame()
 {
   Eval("UINewGame");
 }

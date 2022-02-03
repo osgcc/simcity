@@ -4,3 +4,4 @@ void initGraphs();
 
 void ChangeCensus();
 void graphDoer();
+void InitGraphMax();
