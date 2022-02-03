@@ -60,6 +60,7 @@
  * NOT APPLY TO YOU.
  */
 #include "main.h"
+#include "w_stubs.h"
 
 
 /* Allocate Stuff */
