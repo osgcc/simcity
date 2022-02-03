@@ -88,32 +88,6 @@ int CurveLevel = -1;		/* level for river curviness */
 int CreateIsland = -1;		/* -1 => 10%, 0 => never, 1 => always */
 
 
-void GenerateNewCity()
-{
-    GenerateSomeCity(Rand16());
-}
-
-
-void GenerateSomeCity(int r)
-{
-    GenerateMap(r);
-    ScenarioID = 0;
-    CityTime = 0;
-    InitSimLoad = 2;
-    DoInitialEval = 0;
-
-    InitWillStuff();
-    ResetMapState();
-    ResetEditorState();
-    InvalidateEditors();
-    InvalidateMaps();
-    UpdateFunds();
-    DoSimInit();
-    Eval("UIDidGenerateNewCity");
-    Kick();
-}
-
-
 int ERand(int limit)
 {
   int x, z;
@@ -126,48 +100,9 @@ int ERand(int limit)
 }
 
 
-void GenerateMap(int r)
+bool IsTree(int cell)
 {
-    SeedRand(r);
-
-    if (CreateIsland < 0)
-    {
-        if (Rand(100) < 10) // chance that island is generated
-        {
-            MakeIsland();
-            return;
-        }
-    }
-
-    if (CreateIsland == 1)
-    {
-        MakeNakedIsland();
-    }
-    else
-    {
-        ClearMap();
-    }
-
-    GetRandStart();
-
-    if (CurveLevel != 0)
-    {
-        DoRivers();
-    }
-
-    if (LakeLevel != 0)
-    {
-        MakeLakes();
-    }
-
-    SmoothRiver();
-
-    if (TreeLevel != 0)
-    {
-        DoTrees();
-    }
-
-    RandomlySeedRand();
+    return (((cell & LOMASK) >= WOODS_LOW) && ((cell & LOMASK) <= WOODS_HIGH));
 }
 
 
@@ -195,6 +130,339 @@ void ClearUnnatural()
             }
         }
     }
+}
+
+
+void MoveMap(int dir)
+{
+    static int DirTab[2][8] =
+    {
+        { 0, 1, 1, 1, 0, -1, -1, -1},
+        {-1,-1, 0, 1, 1,  1,  0, -1}
+    };
+
+    MapX += DirTab[0][dir & 7];
+    MapY += DirTab[1][dir & 7];
+}
+
+
+void PutOnMap(int Mchar, int Xoff, int Yoff)
+{
+    if (Mchar == 0)
+    {
+        return;
+    }
+
+    int Xloc = MapX + Xoff;
+    int Yloc = MapY + Yoff;
+
+    if (!TestBounds(Xloc, Yloc, WORLD_X, WORLD_Y))
+    {
+        return;
+    }
+
+    int temp = 0;
+    if (temp = Map[Xloc][Yloc])
+    {
+        temp = temp & LOMASK;
+        if (temp == RIVER)
+        {
+            if (Mchar != CHANNEL)
+            {
+                return;
+            }
+        }
+        if (temp == CHANNEL)
+        {
+            return;
+        }
+    }
+
+    Map[Xloc][Yloc] = Mchar;
+}
+
+
+void SmoothTrees()
+{
+    static int DX[4] = { -1, 0, 1, 0 };
+    static int DY[4] = { 0, 1, 0,-1 };
+
+    static int TEdTab[16] =
+    {
+        0, 0, 0, 34,
+        0, 0, 36, 35,
+        0, 32, 0, 33,
+        30, 31, 29, 37
+    };
+
+    for (int MapX = 0; MapX < WORLD_X; MapX++)
+    {
+        for (int MapY = 0; MapY < WORLD_Y; MapY++)
+        {
+            if (IsTree(Map[MapX][MapY]))
+            {
+                int bitindex = 0;
+                for (int z = 0; z < 4; z++)
+                {
+                    bitindex = bitindex << 1;
+
+                    int Xtem = MapX + DX[z];
+                    int Ytem = MapY + DY[z];
+
+                    if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) && IsTree(Map[Xtem][Ytem]))
+                    {
+                        bitindex++;
+                    }
+                }
+
+                int temp = TEdTab[bitindex & 15];
+
+                if (temp)
+                {
+                    if (temp != WOODS)
+                    {
+                        if ((MapX + MapY) & 1)
+                        {
+                            temp = temp - 8;
+                        }
+                    }
+                    Map[MapX][MapY] = temp + BLBNBIT;
+                }
+                else
+                {
+                    Map[MapX][MapY] = temp;
+                }
+            }
+        }
+    }
+}
+
+
+void SmoothRiver()
+{
+    static int DX[4] = { -1, 0, 1, 0 };
+    static int DY[4] = { 0, 1, 0,-1 };
+
+    static int REdTab[16] =
+    {
+        13 + BULLBIT, 13 + BULLBIT, 17 + BULLBIT, 15 + BULLBIT,
+        5 + BULLBIT, 2, 19 + BULLBIT, 17 + BULLBIT,
+        9 + BULLBIT, 11 + BULLBIT, 2, 13 + BULLBIT,
+        7 + BULLBIT, 9 + BULLBIT, 5 + BULLBIT, 2
+    };
+
+    for (int MapX = 0; MapX < WORLD_X; MapX++)
+    {
+        for (int MapY = 0; MapY < WORLD_Y; MapY++)
+        {
+            if (Map[MapX][MapY] == REDGE)
+            {
+                int bitindex = 0;
+
+                for (int z = 0; z < 4; z++)
+                {
+                    bitindex = bitindex << 1;
+                    int Xtem = MapX + DX[z];
+                    int Ytem = MapY + DY[z];
+                    if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) &&
+                        ((Map[Xtem][Ytem] & LOMASK) != DIRT) &&
+                        (((Map[Xtem][Ytem] & LOMASK) < WOODS_LOW) ||
+                            ((Map[Xtem][Ytem] & LOMASK) > WOODS_HIGH)))
+                    {
+                        bitindex++;
+                    }
+
+                }
+
+                int temp = REdTab[bitindex & 15];
+
+                if ((temp != RIVER) && (Rand(1)))
+                {
+                    temp++;
+                }
+
+                Map[MapX][MapY] = temp;
+            }
+        }
+    }
+}
+
+
+
+void TreeSplash(int xloc, int yloc)
+{
+    int dis = TreeLevel < 0 ? dis = Rand(150) + 50 : Rand(100 + (TreeLevel * 2)) + 50;
+
+    MapX = xloc;
+    MapY = yloc;
+
+    for (int z = 0; z < dis; z++)
+    {
+        int dir = Rand(7);
+
+        MoveMap(dir);
+
+        if (!(TestBounds(MapX, MapY, WORLD_X, WORLD_Y)))
+        {
+            return;
+        }
+
+        if ((Map[MapX][MapY] & LOMASK) == DIRT)
+        {
+            Map[MapX][MapY] = WOODS + BLBNBIT;
+        }
+    }
+}
+
+
+void DoTrees()
+{
+    int Amount, x, xloc, yloc;
+
+    if (TreeLevel < 0)
+    {
+        Amount = Rand(100) + 50;
+    }
+    else
+    {
+        Amount = TreeLevel + 3;
+    }
+    for (x = 0; x < Amount; x++)
+    {
+        xloc = Rand(WORLD_X - 1);
+        yloc = Rand(WORLD_Y - 1);
+        TreeSplash(xloc, yloc);
+    }
+    SmoothTrees();
+    SmoothTrees();
+}
+
+
+void BRivPlop()
+{
+    static int BRMatrix[9][9] =
+    {
+        { 0, 0, 0, 3, 3, 3, 0, 0, 0 },
+        { 0, 0, 3, 2, 2, 2, 3, 0, 0 },
+        { 0, 3, 2, 2, 2, 2, 2, 3, 0 },
+        { 3, 2, 2, 2, 2, 2, 2, 2, 3 },
+        { 3, 2, 2, 2, 4, 2, 2, 2, 3 },
+        { 3, 2, 2, 2, 2, 2, 2, 2, 3 },
+        { 0, 3, 2, 2, 2, 2, 2, 3, 0 },
+        { 0, 0, 3, 2, 2, 2, 3, 0, 0 },
+        { 0, 0, 0, 3, 3, 3, 0, 0, 0 }
+    };
+
+    for (int x = 0; x < 9; x++)
+    {
+        for (int y = 0; y < 9; y++)
+        {
+            PutOnMap(BRMatrix[y][x], x, y);
+        }
+    }
+}
+
+
+void SRivPlop(void)
+{
+    static int SRMatrix[6][6] =
+    {
+        { 0, 0, 3, 3, 0, 0 },
+        { 0, 3, 2, 2, 3, 0 },
+        { 3, 2, 2, 2, 2, 3 },
+        { 3, 2, 2, 2, 2, 3 },
+        { 0, 3, 2, 2, 3, 0 },
+        { 0, 0, 3, 3, 0, 0 }
+    };
+
+    for (int x = 0; x < 6; x++)
+    {
+        for (int y = 0; y < 6; y++)
+        {
+            PutOnMap(SRMatrix[y][x], x, y);
+        }
+    }
+}
+
+
+void DoBRiv()
+{
+    int r1, r2;
+
+    if (CurveLevel < 0)
+    {
+        r1 = 100;
+        r2 = 200;
+    }
+    else
+    {
+        r1 = CurveLevel + 10;
+        r2 = CurveLevel + 100;
+    }
+
+    while (TestBounds(MapX + 4, MapY + 4, WORLD_X, WORLD_Y))
+    {
+        BRivPlop();
+        if (Rand(r1) < 10)
+        {
+            Dir = LastDir;
+        }
+        else
+        {
+            if (Rand(r2) > 90) Dir++;
+            if (Rand(r2) > 90) Dir--;
+        }
+        MoveMap(Dir);
+    }
+}
+
+
+void DoSRiv()
+{
+    int r1, r2;
+
+    if (CurveLevel < 0)
+    {
+        r1 = 100;
+        r2 = 200;
+    }
+    else
+    {
+        r1 = CurveLevel + 10;
+        r2 = CurveLevel + 100;
+    }
+
+    while (TestBounds(MapX + 3, MapY + 3, WORLD_X, WORLD_Y))
+    {
+        SRivPlop();
+        if (Rand(r1) < 10)
+        {
+            Dir = LastDir;
+        }
+        else
+        {
+            if (Rand(r2) > 90) Dir++;
+            if (Rand(r2) > 90) Dir--;
+        }
+        MoveMap(Dir);
+    }
+}
+
+
+void DoRivers()
+{
+    LastDir = Rand(3);
+    Dir = LastDir;
+    DoBRiv();
+    MapX = XStart;
+    MapY = YStart;
+    LastDir = LastDir ^ 4;
+    Dir = LastDir;
+    DoBRiv();
+    MapX = XStart;
+    MapY = YStart;
+    LastDir = Rand(3);
+    DoSRiv();
 }
 
 
@@ -296,344 +564,6 @@ void GetRandStart()
     YStart = 33 + Rand(WORLD_Y - 67);
     MapX = XStart;
     MapY = YStart;
-}
-
-
-void MoveMap(int dir)
-{
-    static int DirTab[2][8] =
-    {
-        { 0, 1, 1, 1, 0, -1, -1, -1},
-                  {-1,-1, 0, 1, 1,  1,  0, -1}
-    };
-
-    MapX += DirTab[0][dir & 7];
-    MapY += DirTab[1][dir & 7];
-}
-
-
-void TreeSplash(int xloc, int yloc)
-{
-    int dis = TreeLevel < 0 ? dis = Rand(150) + 50 : Rand(100 + (TreeLevel * 2)) + 50;
-
-    MapX = xloc;
-    MapY = yloc;
-
-    for (int z = 0; z < dis; z++)
-    {
-        int dir = Rand(7);
-
-        MoveMap(dir);
-        
-        if (!(TestBounds(MapX, MapY, WORLD_X, WORLD_Y)))
-        {
-            return;
-        }
-        
-        if ((Map[MapX][MapY] & LOMASK) == DIRT)
-        {
-            Map[MapX][MapY] = WOODS + BLBNBIT;
-        }
-    }
-}
-
-
-void DoTrees()
-{
-    int Amount, x, xloc, yloc;
-
-    if (TreeLevel < 0)
-    {
-        Amount = Rand(100) + 50;
-    }
-    else
-    {
-        Amount = TreeLevel + 3;
-    }
-    for (x = 0; x < Amount; x++)
-    {
-        xloc = Rand(WORLD_X - 1);
-        yloc = Rand(WORLD_Y - 1);
-        TreeSplash(xloc, yloc);
-    }
-    SmoothTrees();
-    SmoothTrees();
-}
-
-
-void SmoothRiver()
-{
-    static int DX[4] = { -1, 0, 1, 0 };
-    static int DY[4] = { 0, 1, 0,-1 };
-
-    static int REdTab[16] =
-    {
-        13 + BULLBIT, 13 + BULLBIT, 17 + BULLBIT, 15 + BULLBIT,
-        5 + BULLBIT, 2, 19 + BULLBIT, 17 + BULLBIT,
-        9 + BULLBIT, 11 + BULLBIT, 2, 13 + BULLBIT,
-        7 + BULLBIT, 9 + BULLBIT, 5 + BULLBIT, 2
-    };
-
-    for (int MapX = 0; MapX < WORLD_X; MapX++)
-    {
-        for (int MapY = 0; MapY < WORLD_Y; MapY++)
-        {
-            if (Map[MapX][MapY] == REDGE)
-            {
-                int bitindex = 0;
-
-                for (int z = 0; z < 4; z++)
-                {
-                    bitindex = bitindex << 1;
-                    int Xtem = MapX + DX[z];
-                    int Ytem = MapY + DY[z];
-                    if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) &&
-                        ((Map[Xtem][Ytem] & LOMASK) != DIRT) &&
-                        (((Map[Xtem][Ytem] & LOMASK) < WOODS_LOW) ||
-                            ((Map[Xtem][Ytem] & LOMASK) > WOODS_HIGH)))
-                    {
-                        bitindex++;
-                    }
-
-                }
-
-                int temp = REdTab[bitindex & 15];
-
-                if ((temp != RIVER) && (Rand(1)))
-                {
-                    temp++;
-                }
-
-                Map[MapX][MapY] = temp;
-            }
-        }
-    }
-}
-
-
-bool IsTree(int cell)
-{
-    return (((cell & LOMASK) >= WOODS_LOW) && ((cell & LOMASK) <= WOODS_HIGH));
-}
- 
-
-void SmoothTrees()
-{
-    static int DX[4] = { -1, 0, 1, 0 };
-    static int DY[4] = { 0, 1, 0,-1 };
-
-    static int TEdTab[16] =
-    {
-        0, 0, 0, 34,
-        0, 0, 36, 35,
-        0, 32, 0, 33,
-        30, 31, 29, 37
-    };
-
-    for (int MapX = 0; MapX < WORLD_X; MapX++)
-    {
-        for (int MapY = 0; MapY < WORLD_Y; MapY++)
-        {
-            if (IsTree(Map[MapX][MapY]))
-            {
-                int bitindex = 0;
-                for (int z = 0; z < 4; z++)
-                {
-                    bitindex = bitindex << 1;
-
-                    int Xtem = MapX + DX[z];
-                    int Ytem = MapY + DY[z];
-
-                    if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) && IsTree(Map[Xtem][Ytem]))
-                    {
-                        bitindex++;
-                    }
-                }
-
-                int temp = TEdTab[bitindex & 15];
-
-                if (temp)
-                {
-                    if (temp != WOODS)
-                    {
-                        if ((MapX + MapY) & 1)
-                        {
-                            temp = temp - 8;
-                        }
-                    }
-                    Map[MapX][MapY] = temp + BLBNBIT;
-                }
-                else
-                {
-                    Map[MapX][MapY] = temp;
-                }
-            }
-        }
-    }
-}
-
-
-void DoRivers()
-{
-    LastDir = Rand(3);
-    Dir = LastDir;
-    DoBRiv();
-    MapX = XStart;
-    MapY = YStart;
-    LastDir = LastDir ^ 4;
-    Dir = LastDir;
-    DoBRiv();
-    MapX = XStart;
-    MapY = YStart;
-    LastDir = Rand(3);
-    DoSRiv();
-}
-
-
-void DoBRiv()
-{
-    int r1, r2;
-
-    if (CurveLevel < 0)
-    {
-        r1 = 100;
-        r2 = 200;
-    }
-    else
-    {
-        r1 = CurveLevel + 10;
-        r2 = CurveLevel + 100;
-    }
-
-    while (TestBounds(MapX + 4, MapY + 4, WORLD_X, WORLD_Y))
-    {
-        BRivPlop();
-        if (Rand(r1) < 10)
-        {
-            Dir = LastDir;
-        }
-        else
-        {
-            if (Rand(r2) > 90) Dir++;
-            if (Rand(r2) > 90) Dir--;
-        }
-        MoveMap(Dir);
-    }
-}
-
-
-void DoSRiv()
-{
-    int r1, r2;
-
-    if (CurveLevel < 0)
-    {
-        r1 = 100;
-        r2 = 200;
-    }
-    else
-    {
-        r1 = CurveLevel + 10;
-        r2 = CurveLevel + 100;
-    }
-
-    while (TestBounds(MapX + 3, MapY + 3, WORLD_X, WORLD_Y))
-    {
-        SRivPlop();
-        if (Rand(r1) < 10)
-        {
-            Dir = LastDir;
-        }
-        else
-        {
-            if (Rand(r2) > 90) Dir++;
-            if (Rand(r2) > 90) Dir--;
-        }
-        MoveMap(Dir);
-    }
-}
-
-
-void PutOnMap(int Mchar, int Xoff, int Yoff)
-{
-    if (Mchar == 0)
-    {
-        return;
-    }
-
-    int Xloc = MapX + Xoff;
-    int Yloc = MapY + Yoff;
-
-    if (!TestBounds(Xloc, Yloc, WORLD_X, WORLD_Y))
-    {
-        return;
-    }
-
-    int temp = 0;
-    if (temp = Map[Xloc][Yloc])
-    {
-        temp = temp & LOMASK;
-        if (temp == RIVER)
-        {
-            if (Mchar != CHANNEL)
-            {
-                return;
-            }
-        }
-        if (temp == CHANNEL)
-        {
-            return;
-        }
-    }
- 
-    Map[Xloc][Yloc] = Mchar;
-}
-
-
-void BRivPlop()
-{
-    static int BRMatrix[9][9] =
-    {
-        { 0, 0, 0, 3, 3, 3, 0, 0, 0 },
-        { 0, 0, 3, 2, 2, 2, 3, 0, 0 },
-        { 0, 3, 2, 2, 2, 2, 2, 3, 0 },
-        { 3, 2, 2, 2, 2, 2, 2, 2, 3 },
-        { 3, 2, 2, 2, 4, 2, 2, 2, 3 },
-        { 3, 2, 2, 2, 2, 2, 2, 2, 3 },
-        { 0, 3, 2, 2, 2, 2, 2, 3, 0 },
-        { 0, 0, 3, 2, 2, 2, 3, 0, 0 },
-        { 0, 0, 0, 3, 3, 3, 0, 0, 0 }
-    };
-
-    for (int x = 0; x < 9; x++)
-    {
-        for (int y = 0; y < 9; y++)
-        {
-            PutOnMap(BRMatrix[y][x], x, y);
-        }
-    }
-}
-
-
-void SRivPlop(void)
-{
-    static int SRMatrix[6][6] =
-    {
-        { 0, 0, 3, 3, 0, 0 },
-        { 0, 3, 2, 2, 3, 0 },
-        { 3, 2, 2, 2, 2, 3 },
-        { 3, 2, 2, 2, 2, 3 },
-        { 0, 3, 2, 2, 3, 0 },
-        { 0, 0, 3, 3, 0, 0 }
-    };
-
-    for (int x = 0; x < 6; x++)
-    {
-        for (int y = 0; y < 6; y++)
-        {
-            PutOnMap(SRMatrix[y][x], x, y);
-        }
-    }
 }
 
 
@@ -774,4 +704,75 @@ void SmoothWater()
             }
         }
     }
+}
+
+
+void GenerateMap(int r)
+{
+    SeedRand(r);
+
+    if (CreateIsland < 0)
+    {
+        if (Rand(100) < 10) // chance that island is generated
+        {
+            MakeIsland();
+            return;
+        }
+    }
+
+    if (CreateIsland == 1)
+    {
+        MakeNakedIsland();
+    }
+    else
+    {
+        ClearMap();
+    }
+
+    GetRandStart();
+
+    if (CurveLevel != 0)
+    {
+        DoRivers();
+    }
+
+    if (LakeLevel != 0)
+    {
+        MakeLakes();
+    }
+
+    SmoothRiver();
+
+    if (TreeLevel != 0)
+    {
+        DoTrees();
+    }
+
+    RandomlySeedRand();
+}
+
+
+void GenerateSomeCity(int r)
+{
+    GenerateMap(r);
+    ScenarioID = 0;
+    CityTime = 0;
+    InitSimLoad = 2;
+    DoInitialEval = 0;
+
+    InitWillStuff();
+    ResetMapState();
+    ResetEditorState();
+    InvalidateEditors();
+    InvalidateMaps();
+    UpdateFunds();
+    DoSimInit();
+    Eval("UIDidGenerateNewCity");
+    Kick();
+}
+
+
+void GenerateNewCity()
+{
+    GenerateSomeCity(Rand16());
 }
