@@ -65,46 +65,30 @@
 int DynamicData[32];
 
 
-#define DRAW_BEGIN
-#define DRAW_END
-
-
 void drawAll(SimView * view)
 {
-    int col, row;
-
-    unsigned short tile;
-
-    short* mp;
-
-    unsigned char* imageBase;
-    unsigned char* image;
-    unsigned long* mem;
-    unsigned long l;
-
-    int lineBytes = view->line_bytes8;
+    int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
-    mp = &Map[0][0];
+    short* mp = &Map[0][0];
+    unsigned char* imageBase = view->data;
 
-    imageBase = view->x->color ? view->data : view->data8;
-
-    for (col = 0; col < WORLD_X; col++)
+    for (int col = 0; col < WORLD_X; col++)
     {
-        image = imageBase + (3 * pixelBytes * col);
-        for (row = 0; row < WORLD_Y; row++)
+        unsigned char* image = imageBase + (3 * pixelBytes * col);
+        for (int row = 0; row < WORLD_Y; row++)
         {
 
-            tile = *(mp++) & LOMASK;
+            unsigned short tile = *(mp++) & LOMASK;
             if (tile >= TILE_COUNT)
             {
                 tile -= TILE_COUNT;
             }
 
-            mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
             for (int i = 0; i < 3; ++i)
             {
-                l = mem[1];
+                unsigned long l = mem[1];
                 image[0] = l >> 24;
                 image[1] = l >> 16;
                 image[2] = l >> 8;
@@ -156,36 +140,131 @@ void drawRes(SimView* view)
 }
 
 
-void drawCom(SimView *view)
+void drawCom(SimView* view)
 {
-  DRAW_BEGIN
-    if ((tile > 609) ||
-	((tile >= 232) && (tile < 423)))
-      tile = 0;
-  DRAW_END
+    int lineBytes = view->line_bytes;
+    int pixelBytes = view->pixel_bytes;
+
+    short* mp = &Map[0][0];
+    unsigned char* imageBase = view->data;
+
+    for (int col = 0; col < WORLD_X; col++)
+    {
+        unsigned char* image = imageBase + (3 * pixelBytes * col);
+        for (int row = 0; row < WORLD_Y; row++)
+        {
+
+            unsigned short tile = *(mp++) & LOMASK;
+            if (tile >= TILE_COUNT)
+            {
+                tile -= TILE_COUNT;
+            }
+
+            ////////
+            if ((tile > 609) || ((tile >= 232) && (tile < 423)))
+            {
+                tile = 0;
+            }
+            ////////
+
+            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            for (int i = 0; i < 3; ++i)
+            {
+                unsigned long l = mem[1];
+                image[0] = l >> 24;
+                image[1] = l >> 16;
+                image[2] = l >> 8;
+                image += lineBytes;
+            }
+        }
+    }
 }
 
 
-void drawInd(SimView *view)
+void drawInd(SimView* view)
 {
-  DRAW_BEGIN
-    if (((tile >= 240) && (tile <= 611)) ||
-	((tile >= 693) && (tile <= 851)) ||
-	((tile >= 860) && (tile <= 883)) ||
-	(tile >= 932))
-      tile = 0;
-  DRAW_END
+    int lineBytes = view->line_bytes;
+    int pixelBytes = view->pixel_bytes;
+
+    short* mp = &Map[0][0];
+    unsigned char* imageBase = view->data;
+
+    for (int col = 0; col < WORLD_X; col++)
+    {
+        unsigned char* image = imageBase + (3 * pixelBytes * col);
+        for (int row = 0; row < WORLD_Y; row++)
+        {
+
+            unsigned short tile = *(mp++) & LOMASK;
+            if (tile >= TILE_COUNT)
+            {
+                tile -= TILE_COUNT;
+            }
+
+            ////////
+            if (((tile >= 240) && (tile <= 611)) ||
+                ((tile >= 693) && (tile <= 851)) ||
+                ((tile >= 860) && (tile <= 883)) ||
+                (tile >= 932))
+            {
+                tile = 0;
+            }
+            ////////
+
+            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            for (int i = 0; i < 3; ++i)
+            {
+                unsigned long l = mem[1];
+                image[0] = l >> 24;
+                image[1] = l >> 16;
+                image[2] = l >> 8;
+                image += lineBytes;
+            }
+        }
+    }
 }
 
 
-void drawLilTransMap(SimView *view)
+void drawLilTransMap(SimView* view)
 {
-  DRAW_BEGIN
-    if ((tile >= 240) ||
-	((tile >= 207) && tile <= 220) ||
-	(tile == 223))
-      tile = 0;
-  DRAW_END
+    int lineBytes = view->line_bytes;
+    int pixelBytes = view->pixel_bytes;
+
+    short* mp = &Map[0][0];
+    unsigned char* imageBase = view->data;
+
+    for (int col = 0; col < WORLD_X; col++)
+    {
+        unsigned char* image = imageBase + (3 * pixelBytes * col);
+        for (int row = 0; row < WORLD_Y; row++)
+        {
+
+            unsigned short tile = *(mp++) & LOMASK;
+            if (tile >= TILE_COUNT)
+            {
+                tile -= TILE_COUNT;
+            }
+
+            ////////
+            if ((tile >= 240) ||
+                ((tile >= 207) && tile <= 220) ||
+                (tile == 223))
+            {
+                tile = 0;
+            }
+            ////////
+
+            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            for (int i = 0; i < 3; ++i)
+            {
+                unsigned long l = mem[1];
+                image[0] = l >> 24;
+                image[1] = l >> 16;
+                image[2] = l >> 8;
+                image += lineBytes;
+            }
+        }
+    }
 }
 
 
