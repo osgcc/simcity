@@ -69,45 +69,28 @@
 #include "w_graph.h"
 #include "w_stubs.h"
 #include "w_tk.h"
+#include "w_update.h"
+#include "w_util.h"
 
-static int _load_short(int *buf, int len, FILE *f)
+#include <iostream>
+#include <string>
+
+
+static bool _load_int(int& buf, size_t len, FILE* f)
 {
-  if (fread(buf, sizeof(int), len, f) != len)
-     return 0;
-
-  return 1;
+    return fread(&buf, sizeof(int), len, f) == len;
 }
 
 
-static int _load_long(int *buf, int len, FILE *f)
+static bool _save_int(int& buf, size_t len, FILE* f)
 {
-  if (fread(buf, sizeof(int), len, f) != len)
-     return 0;
-
-  return 1;
+    return fwrite(&buf, sizeof(int), len, f) == len;
 }
 
 
-static int _save_short(int *buf, int len, FILE *f)
+static int _load_file(std::string filename, char* dir)
 {
-  if (fwrite(buf, sizeof(int), len, f) != len)
-     return 0;
-
-  return 1;
-}
-
-
-static int _save_long(int *buf, int len, FILE *f)
-{
-  if (fwrite(buf, sizeof(int), len, f) != len)
-     return 0;
-
-  return 1;
-}
-
-
-static int _load_file(char *filename, char *dir)
-{
+    /*
   FILE *f;
   char path[512];
   int size;
@@ -116,7 +99,7 @@ static int _load_file(char *filename, char *dir)
     sprintf(path, "%s/%s", dir, filename);
     filename = path;
   }
-  if ((f = fopen(filename, "r")) == NULL) {
+  if ((f = fopen(filename.c_str(), "r")) == NULL) {
     return (0);
   }
 
@@ -125,13 +108,13 @@ static int _load_file(char *filename, char *dir)
   fseek(f, 0L, SEEK_SET);
 
   switch (size) {
-  case 27120: /* Normal city */
+  case 27120: /* Normal city
     break;
 
-  case 99120: /* 2x2 city */
+  case 99120: /* 2x2 city
     break;
 
-  case 219120: /* 3x3 city */
+  case 219120: /* 3x3 city
     break;
 
   default:
@@ -147,26 +130,29 @@ static int _load_file(char *filename, char *dir)
       (_load_short(MiscHis, MISCHISTLEN / 2, f) == 0) ||
       (_load_short((&Map[0][0]), WORLD_X * WORLD_Y, f) < 0)) {
 
-    /* TODO:  report error */
+    /* TODO:  report error
     fclose(f);
     return(0);
   }
 
   fclose(f);
-  return(1);
+      */
+
+    return 1;
 }
 
 
 int loadFile(char *filename)
 {
+    /*
   int l;
 
   if (_load_file(filename, NULL) == 0)
     return(0);
 
-  /* total funds is a int.....    MiscHis is array of shorts */
-  /* total funds is being put in the 50th & 51th word of MiscHis */
-  /* find the address, cast the ptr to a lontPtr, take contents */
+  /* total funds is a int.....    MiscHis is array of shorts
+  /* total funds is being put in the 50th & 51th word of MiscHis
+  /* find the address, cast the ptr to a lontPtr, take contents
 
   l = *(int *)(MiscHis + 50);
   SetFunds(l);
@@ -174,30 +160,30 @@ int loadFile(char *filename)
   l = *(int *)(MiscHis + 8);
   CityTime = l;
 
-  autoBulldoze = MiscHis[52];	/* flag for autoBulldoze */
-  autoBudget = MiscHis[53];	/* flag for autoBudget */
-  autoGo = MiscHis[54];		/* flag for autoGo */
-  UserSoundOn = MiscHis[55];	/* flag for the sound on/off */
+  autoBulldoze = MiscHis[52];	/* flag for autoBulldoze
+  autoBudget = MiscHis[53];	/* flag for autoBudget
+  autoGo = MiscHis[54];		/* flag for autoGo
+  UserSoundOn = MiscHis[55];	/* flag for the sound on/off
   CityTax = MiscHis[56];
   SimSpeed = MiscHis[57];
   //  sim_skips = sim_skip = 0;
   ChangeCensus();
   MustUpdateOptions = 1;
 
-  /* yayaya */
+  /* yayaya
 
   l = *(int *)(MiscHis + 58);
-  policePercent = l / 65536.0;
+  policePercent = l / 65536.0f;
 
   l = *(int *)(MiscHis + 60);
-  firePercent = l / 65536.0;
+  firePercent = l / 65536.0f;
 
   l = *(int *)(MiscHis + 62);
-  roadPercent = l / 65536.0;
+  roadPercent = l / 65536.0f;
 
-  policePercent = (*(int*)(MiscHis + 58)) / 65536.0;	/* and 59 */
-  firePercent = (*(int*)(MiscHis + 60)) / 65536.0;	/* and 61 */
-  roadPercent =(*(int*)(MiscHis + 62)) / 65536.0;	/* and 63 */
+  policePercent = (*(int*)(MiscHis + 58)) / 65536.0f;	/* and 59
+  firePercent = (*(int*)(MiscHis + 60)) / 65536.0f;	/* and 61
+  roadPercent =(*(int*)(MiscHis + 62)) / 65536.0f;	/* and 63
 
   if (CityTime < 0)
     CityTime = 0;
@@ -211,7 +197,7 @@ int loadFile(char *filename)
 
   InitFundingLevel();
 
-  /* set the scenario id to 0 */
+  /* set the scenario id to 0
   InitWillStuff();
   ScenarioID = 0;
   InitSimLoad = 1;
@@ -219,24 +205,26 @@ int loadFile(char *filename)
   DoSimInit();
   InvalidateEditors();
   InvalidateMaps();
+  */
 
-  return (1);
+  return 1;
 }
 
 
-int saveFile(char *filename)
+int saveFile(const std::string& filename)
 {
+    /*
   int l;
   FILE *f;
 
-  if ((f = fopen(filename, "w")) == NULL) {
-    /* TODO: report error */
+  if ((f = fopen(filename.c_str(), "w")) == NULL) {
+    /* TODO: report error 
     return(0);
   }
 
-  /* total funds is a int.....    MiscHis is array of ints */
-  /* total funds is bien put in the 50th & 51th word of MiscHis */
-  /* find the address, cast the ptr to a lontPtr, take contents */
+  /* total funds is a int.....    MiscHis is array of ints
+  /* total funds is bien put in the 50th & 51th word of MiscHis
+  /* find the address, cast the ptr to a lontPtr, take contents
 
   l = TotalFunds;
   (*(int *)(MiscHis + 50)) = l;
@@ -244,14 +232,14 @@ int saveFile(char *filename)
   l = CityTime;
   (*(int *)(MiscHis + 8)) = l;
 
-  MiscHis[52] = autoBulldoze;	/* flag for autoBulldoze */
-  MiscHis[53] = autoBudget;	/* flag for autoBudget */
-  MiscHis[54] = autoGo;		/* flag for autoGo */
-  MiscHis[55] = UserSoundOn;	/* flag for the sound on/off */
+  MiscHis[52] = autoBulldoze;	/* flag for autoBulldoze
+  MiscHis[53] = autoBudget;	/* flag for autoBudget
+  MiscHis[54] = autoGo;		/* flag for autoGo
+  MiscHis[55] = UserSoundOn;	/* flag for the sound on/off
   MiscHis[57] = SimSpeed;
-  MiscHis[56] = CityTax;	/* post release */
+  MiscHis[56] = CityTax;	/* post release
 
-  /* yayaya */
+  /* yayaya
 
   l = (int)(policePercent * 65536);
   (*(int *)(MiscHis + 58)) = l;
@@ -271,111 +259,18 @@ int saveFile(char *filename)
       (_save_short(MiscHis, MISCHISTLEN / 2, f) == 0) ||
       (_save_short((&Map[0][0]), WORLD_X * WORLD_Y, f) < 0)) {
 
-    /* TODO:  report error */
+    /* TODO:  report error
     fclose(f);
     return(0);
   }
 
-  fclose(f);
-  return(1);
+  fclose(f)
+  */
+  return 1;
 }
 
 
-void LoadScenario(int s)
-{
-  char *name, *fname;
-
-  if (CityFileName != NULL) {
-    free(CityFileName);
-    CityFileName = NULL;
-  }
-
-  SetGameLevel(0);
-
-  if ((s < 1) || (s > 8)) s = 1;
-
-  switch (s) {
-  case 1:
-    name = "Dullsville";
-    fname = "snro.111";
-    ScenarioID = 1;
-    CityTime = ((1900 - 1900) * 48) + 2;
-    SetFunds(5000);
-    break;
-  case 2:
-    name = "San Francisco";
-    fname = "snro.222";
-    ScenarioID = 2;
-    CityTime = ((1906 - 1900) * 48) + 2;
-    SetFunds(20000);
-    break;
-  case 3:
-    name = "Hamburg";
-    fname = "snro.333";
-    ScenarioID = 3;
-    CityTime = ((1944 - 1900) * 48) + 2;
-    SetFunds(20000);
-    break;
-  case 4:
-    name = "Bern";
-    fname = "snro.444";
-    ScenarioID = 4;
-    CityTime = ((1965 - 1900) * 48) + 2;
-    SetFunds(20000);
-    break;
-  case 5:
-    name = "Tokyo";
-    fname = "snro.555";
-    ScenarioID = 5;
-    CityTime = ((1957 - 1900) * 48) + 2;
-    SetFunds(20000);
-    break;
-  case 6:
-    name = "Detroit";
-    fname = "snro.666";
-    ScenarioID = 6;
-    CityTime = ((1972 - 1900) * 48) + 2;
-    SetFunds(20000);
-    break;
-  case 7:
-    name = "Boston";
-    fname = "snro.777";
-    ScenarioID = 7;
-    CityTime = ((2010 - 1900) * 48) + 2;
-    SetFunds(20000);
-    break;
-  case 8:
-    name = "Rio de Janeiro";
-    fname = "snro.888";
-    ScenarioID = 8;
-    CityTime = ((2047 - 1900) * 48) + 2;
-    SetFunds(20000);
-    break;
-  }
-
-  setAnyCityName(name);
-  //  sim_skips = sim_skip = 0;
-  InvalidateMaps();
-  InvalidateEditors();
-  setSpeed(3);
-  CityTax = 7;
-
-  _load_file(fname, ResourceDir);
-
-  InitWillStuff();
-  InitFundingLevel();
-  UpdateFunds();
-  InvalidateEditors();
-  InvalidateMaps();
-  InitSimLoad = 1;
-  DoInitialEval = 0;
-  DoSimInit();
-  DidLoadScenario();
-  Kick();
-}
-
-
-DidLoadScenario()
+void DidLoadScenario()
 {
   Eval("UIDidLoadScenario");
 }
@@ -383,24 +278,17 @@ DidLoadScenario()
 
 int LoadCity(char *filename)
 {
-  char *cp;
+  /*
+    char *cp;
   char msg[256];
 
-  if (loadFile(filename)) {
-    if (CityFileName != NULL)
-      free(CityFileName);
-    CityFileName = (char *)malloc(strlen(filename) + 1);
-    strcpy(CityFileName, filename);
+  if (loadFile(filename))
+  {
+      CityFileName = filename;
 
-    if (cp = (char *)rindex(filename, '.'))
-      *cp = 0;
-    if (cp = (char *)rindex(filename, '/'))
-      cp++;
-    else
-      cp = filename;
-    filename = (char *)malloc(strlen(cp) + 1);
+      filename = (char *)malloc(strlen(cp) + 1);
     strcpy(filename, cp);
-    setCityName(filename);
+    setAnyCityName(filename);
 
     InvalidateMaps();
     InvalidateEditors();
@@ -412,65 +300,49 @@ int LoadCity(char *filename)
 	    errno ? strerror(errno) : "");
     DidntLoadCity(msg);
     return (0);
+
   }
+  */
+
+    return 0;
 }
 
 
-DidLoadCity()
+void DidLoadCity()
 {
   Eval("UIDidLoadCity");
 }
 
 
-DidntLoadCity(char *msg)
+void DidntLoadCity(const std::string& msg)
 {
-  char buf[1024];
-  sprintf(buf, "UIDidntLoadCity {%s}", msg);
-  Eval(buf);
+    std::string buf = "UIDidntLoadCity {" + msg + "}";
+    Eval(buf.c_str());
 }
 
 
-SaveCity()
+void DoSaveCityAs()
 {
-  char msg[256];
-
-  if (CityFileName == NULL) {
-    DoSaveCityAs();
-  } else {
-    if (saveFile(CityFileName))
-      DidSaveCity();
-    else {
-      sprintf(msg, "Unable to save the city to the file named \"%s\". %s",
-	      CityFileName ? CityFileName : "(null)",
-	      errno ? strerror(errno) : "");
-      DidntSaveCity(msg);
-    }
-  }
+    Eval("UISaveCityAs");
 }
 
 
-DoSaveCityAs()
+void DidSaveCity()
 {
-  Eval("UISaveCityAs");
+    Eval("UIDidSaveCity");
 }
 
 
-DidSaveCity()
+void DidntSaveCity(const std::string& msg)
 {
-  Eval("UIDidSaveCity");
+    std::string buf = "UIDidntSaveCity {" + msg + "}";
+    Eval(buf.c_str());
 }
 
 
-DidntSaveCity(char *msg)
+void SaveCityAs(const std::string& filename)
 {
-  char buf[1024];
-  sprintf(buf, "UIDidntSaveCity {%s}", msg);
-  Eval(buf);
-}
-
-
-SaveCityAs(char *filename)
-{
+    /*
   char msg[256];
   char *cp;
 
@@ -492,8 +364,120 @@ SaveCityAs(char *filename)
     DidSaveCity();
   } else {
     sprintf(msg, "Unable to save the city to the file named \"%s\". %s",
-	    CityFileName ? CityFileName : "(null)",
-	    errno ? strerror(errno) : "");
+        CityFileName ? CityFileName : "(null)",
+        errno ? strerror(errno) : "");
     DidntSaveCity(msg);
   }
+  */
+}
+
+
+void SaveCity()
+{
+    if (CityFileName.empty())
+    {
+        DoSaveCityAs();
+    }
+    else
+    {
+        if (saveFile(CityFileName))
+        {
+            DidSaveCity();
+        }
+        else
+        {
+            DidntSaveCity("Unable to save the city to the file named '" + CityFileName + "'.");
+        }
+    }
+}
+
+
+void LoadScenario(int s)
+{
+    std::string name;
+    std::string fname;
+
+    SetGameLevel(0);
+
+    if ((s < 1) || (s > 8)) { s = 1; }
+
+    switch (s)
+    {
+    case 1:
+        name = "Dullsville";
+        fname = "snro.111";
+        ScenarioID = 1;
+        CityTime = ((1900 - 1900) * 48) + 2;
+        SetFunds(5000);
+        break;
+    case 2:
+        name = "San Francisco";
+        fname = "snro.222";
+        ScenarioID = 2;
+        CityTime = ((1906 - 1900) * 48) + 2;
+        SetFunds(20000);
+        break;
+    case 3:
+        name = "Hamburg";
+        fname = "snro.333";
+        ScenarioID = 3;
+        CityTime = ((1944 - 1900) * 48) + 2;
+        SetFunds(20000);
+        break;
+    case 4:
+        name = "Bern";
+        fname = "snro.444";
+        ScenarioID = 4;
+        CityTime = ((1965 - 1900) * 48) + 2;
+        SetFunds(20000);
+        break;
+    case 5:
+        name = "Tokyo";
+        fname = "snro.555";
+        ScenarioID = 5;
+        CityTime = ((1957 - 1900) * 48) + 2;
+        SetFunds(20000);
+        break;
+    case 6:
+        name = "Detroit";
+        fname = "snro.666";
+        ScenarioID = 6;
+        CityTime = ((1972 - 1900) * 48) + 2;
+        SetFunds(20000);
+        break;
+    case 7:
+        name = "Boston";
+        fname = "snro.777";
+        ScenarioID = 7;
+        CityTime = ((2010 - 1900) * 48) + 2;
+        SetFunds(20000);
+        break;
+    case 8:
+        name = "Rio de Janeiro";
+        fname = "snro.888";
+        ScenarioID = 8;
+        CityTime = ((2047 - 1900) * 48) + 2;
+        SetFunds(20000);
+        break;
+    }
+
+    setAnyCityName(name.c_str());
+    //  sim_skips = sim_skip = 0;
+    InvalidateMaps();
+    InvalidateEditors();
+    setSpeed(3);
+    CityTax = 7;
+
+    _load_file(fname, ResourceDir);
+
+    InitWillStuff();
+    InitFundingLevel();
+    UpdateFunds();
+    InvalidateEditors();
+    InvalidateMaps();
+    InitSimLoad = 1;
+    DoInitialEval = 0;
+    DoSimInit();
+    DidLoadScenario();
+    Kick();
 }
