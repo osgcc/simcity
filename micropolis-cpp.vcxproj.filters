@@ -212,5 +212,8 @@
     <ClInclude Include="src\w_util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\w_keys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

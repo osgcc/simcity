@@ -77,6 +77,7 @@
     <ClInclude Include="src\view.h" />
     <ClInclude Include="src\w_editor.h" />
     <ClInclude Include="src\w_eval.h" />
+    <ClInclude Include="src\w_keys.h" />
     <ClInclude Include="src\w_map.h" />
     <ClInclude Include="src\w_resrc.h" />
     <ClInclude Include="src\w_sound.h" />

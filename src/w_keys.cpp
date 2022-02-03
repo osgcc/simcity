@@ -79,14 +79,14 @@ static char LastKeys[5];
 */
 
 
-ResetLastKeys()
+void ResetLastKeys()
 {
-  LastKeys[0] = ' ';
-  LastKeys[1] = ' ';
-  LastKeys[2] = ' ';
-  LastKeys[3] = ' ';
-  LastKeys[4] = '\0';
-  PunishCnt = 0;
+    LastKeys[0] = ' ';
+    LastKeys[1] = ' ';
+    LastKeys[2] = ' ';
+    LastKeys[3] = ' ';
+    LastKeys[4] = '\0';
+    PunishCnt = 0;
 }
 
 
