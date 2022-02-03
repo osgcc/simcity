@@ -67,9 +67,6 @@
 
 #include <algorithm>
 
-/* Disasters */
-
-
 int ShakeNow;
 int FloodCount;
 int FloodX, FloodY;
@@ -93,7 +90,6 @@ void SendMesAt(int, int, int);
 void DoEarthQuake();
 
 
-/* comefrom: ScenarioDisaster */
 void MakeMeltdown()
 {
     for (int x = 0; x < (WORLD_X - 1); x++)
@@ -121,7 +117,6 @@ void FireBomb()
 }
 
 
-/* comefrom: MakeEarthquake */
 bool Vulnerable(int tem)
 {
     int tem2 = tem & LOMASK;
@@ -129,7 +124,6 @@ bool Vulnerable(int tem)
 }
 
 
-/* comefrom: DoDisasters ScenarioDisaster */
 void MakeEarthquake()
 {
     DoEarthQuake();
@@ -161,7 +155,6 @@ void MakeEarthquake()
 }
 
 
-/* comefrom: DoDisasters */
 void SetFire()
 {
     int x = Rand(WORLD_X - 1);
@@ -183,7 +176,6 @@ void SetFire()
 }
 
 
-/* comefrom: DoDisasters */
 void MakeFire()
 {
     for (int t = 0; t < 40; t++)
@@ -206,7 +198,6 @@ void MakeFire()
 }
 
 
-/* comefrom: DoDisasters ScenarioDisaster */
 void MakeFlood()
 {
     static int Dx[4] = { 0, 1, 0,-1 };
@@ -245,7 +236,6 @@ void MakeFlood()
 }
 
 
-/* comefrom: MapScan */
 void DoFlood()
 {
     static int Dx[4] = { 0, 1, 0,-1 };
@@ -287,7 +277,6 @@ void DoFlood()
 }
 
 
-/* comefrom: DoDisasters */
 void ScenarioDisaster()
 {
     switch (DisasterEvent)
@@ -338,10 +327,9 @@ void ScenarioDisaster()
 }
 
 
-/* comefrom: Simulate */
 void DoDisasters()
 {
-    /* Chance of disasters at lev 0 1 2 */
+    // Chance of disasters at lev 0 1 2
     static int DisChance[3] = { 10 * 48, 5 * 48, 60 };
 
     if (FloodCount)
