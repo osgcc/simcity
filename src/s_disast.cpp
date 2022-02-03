@@ -61,6 +61,9 @@
  */
 #include "main.h"
 
+#include "s_alloc.h"
+
+#include "s_sim.h"
 
 /* Disasters */
 
@@ -69,51 +72,23 @@ short ShakeNow;
 short FloodCnt;
 short FloodX, FloodY;
 
+// fordward declare from w_stubs
+void DropFireBombs();
 
+// forward declare from s_sim
+void DoMeltdown(int, int);
+
+/// Forward declares from w_sprite
 void MakeMonster();
+void MakeTornado();
+void MakeExplosion(int, int);
 
+// forward declare from s_msg
+void ClearMes();
+void SendMesAt(short, short, short);
 
-/* comefrom: Simulate */
-void DoDisasters()
-{ 
-  /* Chance of disasters at lev 0 1 2 */
-  static short DisChance[3] = { 10*48, 5*48, 60}; 
-  register short x;
-
-  if (FloodCnt) FloodCnt--;
-  if (DisasterEvent) 
-    ScenarioDisaster();
-
-  x = GameLevel;
-  if (x > 2) x = 0;
-
-  if (NoDisasters) return;		/*post*/
-  if (!Rand(DisChance[x])) {
-    x = Rand(8);
-    switch (x) {
-    case 0:
-    case 1:
-      SetFire();
-      break;
-    case 2:
-    case 3:
-      MakeFlood();
-      break;
-    case 4:
-      break;
-    case 5:
-      MakeTornado();
-      break;
-    case 6:
-      MakeEarthquake();
-      break;
-    case 7:
-    case 8:
-      if (PolluteAverage > /* 80 */ 60) MakeMonster();
-      break;
-    }
-  }
-}
+// forward declare from w_tk
+void DoEarthQuake();
 
 
 /* comefrom: DoDisasters */
@@ -320,4 +295,57 @@ void DoFlood()
   else
     if (!(Rand16() & 15))
       Map[SMapX][SMapY] = 0;
+}
+
+
+/* comefrom: Simulate */
+void DoDisasters()
+{
+    /* Chance of disasters at lev 0 1 2 */
+    static short DisChance[3] = { 10 * 48, 5 * 48, 60 };
+    register short x;
+
+    if (FloodCnt) FloodCnt--;
+    if (DisasterEvent)
+    {
+        ScenarioDisaster();
+    }
+
+    x = GameLevel;
+    if (x > 2) x = 0;
+
+    if (NoDisasters)
+    {
+        return;
+    }
+
+    if (!Rand(DisChance[x]))
+    {
+        x = Rand(8);
+        switch (x) {
+        case 0:
+        case 1:
+            SetFire();
+            break;
+        case 2:
+        case 3:
+            MakeFlood();
+            break;
+        case 4:
+            break;
+        case 5:
+            MakeTornado();
+            break;
+        case 6:
+            MakeEarthquake();
+            break;
+        case 7:
+        case 8:
+            if (PolluteAverage > /* 80 */ 60)
+            {
+                MakeMonster();
+            }
+            break;
+        }
+    }
 }
