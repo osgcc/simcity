@@ -84,29 +84,6 @@ int DynamicData[32];
       if (tile >= TILE_COUNT) tile -= TILE_COUNT;
 
 
-#if defined(MSDOS) || defined(OSF1) || defined(IS_INTEL)
-
-#define ROW1_8(n) \
-      l = mem[n]; \
-      image[0] = l; \
-      image[1] = l >>8; \
-      image[2] = l >>16; \
-      image += lineBytes;
-
-#define ROW1_16(n) \
-      memcpy((char *)image, ((char *)mem) + (n * 4 * 2), (3 * 2)); \
-      image += lineBytes;
-
-#define ROW1_24(n) \
-      memcpy((char *)image, ((char *)mem) + (n * 4 * 3), (3 * 3)); \
-      image += lineBytes;
-
-#define ROW1_32(n) \
-      memcpy((char *)image, ((char *)mem) + (n * 4 * 4), (3 * 4)); \
-      image += lineBytes;
-
-#else
-
 #define ROW1_8(n) \
       l = mem[n]; \
       image[0] = l >>24; \
@@ -135,7 +112,6 @@ int DynamicData[32];
       image[2] = l >>8; \
       image += lineBytes;
 
-#endif
 
 #define ROW3_8 ROW1_8(0) ROW1_8(1) ROW1_8(2)
 #define ROW3_16 ROW1_16(0) ROW1_16(1) ROW1_16(2)
