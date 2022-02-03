@@ -78,7 +78,6 @@ int CityScore, deltaCityScore, AverageCityScore;
 int TrafficAverage;
 
 
-/* comefrom: SpecialInit Simulate */
 void CityEvaluation()
 {
   EvalValid = 0;
@@ -97,7 +96,6 @@ void CityEvaluation()
 }
 
 
-/* comefrom: CityEvaluation SetCommonInits */
 void EvalInit()
 {
   register int x, z;
@@ -119,7 +117,7 @@ void EvalInit()
 }
 
 
-/* comefrom: CityEvaluation */
+// AssValue?
 void GetAssValue()
 {
   int z;
@@ -138,7 +136,6 @@ void GetAssValue()
 }
 
 
-/* comefrom: CityEvaluation */
 void DoPopNum()
 {
   int OldCityPop;
@@ -159,7 +156,6 @@ void DoPopNum()
 }
 
 
-/* comefrom: CityEvaluation */
 void DoProblems()
 {
   register int x, z;
@@ -197,7 +193,6 @@ void DoProblems()
 }
 
 
-/* comefrom: DoProblems */
 void VoteProblems()
 {
   register x, z, count;
@@ -220,8 +215,7 @@ void VoteProblems()
 }
 
 
-/* comefrom: DoProblems */
-int  AverageTrf()
+int AverageTrf()
 {
   int TrfTotal;
   register int x, y, count;
@@ -240,7 +234,6 @@ int  AverageTrf()
 }
 
 
-/* comefrom: DoProblems */
 int GetUnemployment()
 {
   float r;
@@ -259,7 +252,6 @@ int GetUnemployment()
 }
 
 
-/* comefrom: DoProblems GetScore */
 int GetFire()
 {
   int z;
@@ -272,7 +264,6 @@ int GetFire()
 }
 
 
-/* comefrom: CityEvaluation */
 void GetScore()
 {
   register x, z;
@@ -328,7 +319,6 @@ void GetScore()
 }
 
 
-/* comefrom: CityEvaluation */
 void DoVotes()
 {
   register z;
