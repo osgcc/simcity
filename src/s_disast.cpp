@@ -71,7 +71,7 @@
 
 
 int ShakeNow;
-int FloodCnt;
+int FloodCount;
 int FloodX, FloodY;
 
 // fordward declare from w_stubs
@@ -232,7 +232,7 @@ void MakeFlood()
                     if ((cell == 0) || ((cell & BULLBIT) && (cell & BURNBIT)))
                     {
                         Map[xx][yy] = FLOOD;
-                        FloodCnt = 30;
+                        FloodCount = 30;
                         SendMesAt(-42, xx, yy);
                         FloodX = xx;
                         FloodY = yy;
@@ -251,7 +251,7 @@ void DoFlood()
     static int Dx[4] = { 0, 1, 0,-1 };
     static int Dy[4] = { -1, 0, 1, 0 };
 
-    if (FloodCnt)
+    if (FloodCount)
     {
         for (int z = 0; z < 4; z++)
         {
@@ -344,9 +344,9 @@ void DoDisasters()
     /* Chance of disasters at lev 0 1 2 */
     static int DisChance[3] = { 10 * 48, 5 * 48, 60 };
 
-    if (FloodCnt)
+    if (FloodCount)
     {
-        FloodCnt--;
+        FloodCount--;
     }
 
     if (DisasterEvent)
