@@ -61,68 +61,12 @@
  */
 #include "main.h"
 
-
-#if defined(MSDOS) || defined(OSF1) || defined(IS_INTEL)
-
-#define SWAP_SHORTS(a,b)	_swap_shorts(a,b)
-#define SWAP_LONGS(a,b)		_swap_longs(a,b)
-#define HALF_SWAP_LONGS(a,b)	_half_swap_longs(a,b)
-
-static void
-_swap_shorts(int *buf, int len)
-{
-  int i;
-
-  /* Flip bytes in each int! */
-  for (i = 0; i < len; i++) {	
-    *buf = ((*buf & 0xFF) <<8) | ((*buf &0xFF00) >>8);
-    buf++;
-  }
-}
-
-static void
-_swap_longs(int *buf, int len)
-{
-  int i;
-
-  /* Flip bytes in each int! */
-  for (i = 0; i < len; i++) {	
-    int l = *buf;
-    *buf =
-      ((l & 0x000000ff) << 24) |
-      ((l & 0x0000ff00) << 8) |
-      ((l & 0x00ff0000) >> 8) |
-      ((l & 0xff000000) >> 24);
-    buf++;
-  }
-}
-
-static void
-_half_swap_longs(int *buf, int len)
-{
-  int i;
-
-  /* Flip bytes in each int! */
-  for (i = 0; i < len; i++) {	
-    int l = *buf;
-    *buf =
-      ((l & 0x0000ffff) << 16) |
-      ((l & 0xffff0000) >> 16);
-    buf++;
-  }
-}
-
-#else
-
 #define SWAP_SHORTS(a, b)
 #define SWAP_LONGS(a, b)
 #define HALF_SWAP_LONGS(a, b)
 
-#endif
 
-
-static int
-_load_short(int *buf, int len, FILE *f)
+static int _load_short(int *buf, int len, FILE *f)
 {
   if (fread(buf, sizeof(int), len, f) != len)
      return 0;
@@ -133,8 +77,7 @@ _load_short(int *buf, int len, FILE *f)
 }
 
 
-static int
-_load_long(int *buf, int len, FILE *f)
+static int _load_long(int *buf, int len, FILE *f)
 {
   if (fread(buf, sizeof(int), len, f) != len)
      return 0;
@@ -145,8 +88,7 @@ _load_long(int *buf, int len, FILE *f)
 }
 
 
-static int
-_save_short(int *buf, int len, FILE *f)
+static int _save_short(int *buf, int len, FILE *f)
 {
 
   SWAP_SHORTS(buf, len);	/* to MAC */
@@ -160,8 +102,7 @@ _save_short(int *buf, int len, FILE *f)
 }
 
 
-static int
-_save_long(int *buf, int len, FILE *f)
+static int _save_long(int *buf, int len, FILE *f)
 {
 
   SWAP_LONGS(buf, len);	/* to MAC */
@@ -175,23 +116,12 @@ _save_long(int *buf, int len, FILE *f)
 }
 
 
-static
-int 
-_load_file(char *filename, char *dir)
+static int _load_file(char *filename, char *dir)
 {
   FILE *f;
   char path[512];
   int size;
 
-#ifdef MSDOS
-  if (dir != NULL) {
-    sprintf(path, "%s\\%s", dir, filename);
-    filename = path;
-  }
-  if ((f = fopen(filename, "rb")) == NULL) {
-    return 0;
-  }
-#else
   if (dir != NULL) {
     sprintf(path, "%s/%s", dir, filename);
     filename = path;
@@ -199,7 +129,6 @@ _load_file(char *filename, char *dir)
   if ((f = fopen(filename, "r")) == NULL) {
     return (0);
   }
-#endif
 
   fseek(f, 0L, SEEK_END);
   size = ftell(f);
@@ -315,11 +244,7 @@ int saveFile(char *filename)
   int l;
   FILE *f;
 
-#ifdef MSDOS
-  if ((f = fopen(filename, "wb")) == NULL) {
-#else
   if ((f = fopen(filename, "w")) == NULL) {
-#endif
     /* TODO: report error */
     return(0);
   }
@@ -489,11 +414,7 @@ int LoadCity(char *filename)
 
     if (cp = (char *)rindex(filename, '.'))
       *cp = 0;
-#ifdef MSDOS
-    if (cp = (char *)rindex(filename, '\\'))
-#else
     if (cp = (char *)rindex(filename, '/'))
-#endif
       cp++;
     else
       cp = filename;
@@ -581,11 +502,7 @@ SaveCityAs(char *filename)
   if (saveFile(CityFileName)) {
     if (cp = (char *)rindex(filename, '.'))
       *cp = 0;
-#ifdef MSDOS
-    if (cp = (char *)rindex(filename, '\\'))
-#else
     if (cp = (char *)rindex(filename, '/'))
-#endif
       cp++;
     else
       cp = filename;
@@ -600,5 +517,3 @@ SaveCityAs(char *filename)
     DidntSaveCity(msg);
   }
 }
-
-
