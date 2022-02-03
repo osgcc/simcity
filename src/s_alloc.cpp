@@ -83,7 +83,7 @@ short CrimeAverage, PolluteAverage, LVAverage;
 long CityTime;
 short StartingYear;
 
-short *Map[WORLD_X];
+short* Map[WORLD_X];
 
 short ResHisMax, Res2HisMax;
 short ComHisMax, Com2HisMax;
@@ -100,15 +100,15 @@ long TaxFund;
 short CityTax, TaxFlag;
 unsigned char tileSynch = 0x01;
 
-Byte *PopDensity[HWLDX];
-Byte *TrfDensity[HWLDX];
-Byte *PollutionMem[HWLDX];
-Byte *LandValueMem[HWLDX];
-Byte *CrimeMem[HWLDX];
-Byte *tem[HWLDX];
-Byte *tem2[HWLDX];
-Byte *TerrainMem[QWX];
-Byte *Qtem[QWX];
+Byte* PopDensity[HWLDX];
+Byte* TrfDensity[HWLDX];
+Byte* PollutionMem[HWLDX];
+Byte* LandValueMem[HWLDX];
+Byte* CrimeMem[HWLDX];
+Byte* tem[HWLDX];
+Byte* tem2[HWLDX];
+Byte* TerrainMem[QWX];
+Byte* Qtem[QWX];
 
 short RateOGMem[SmX][SmY];
 short FireStMap[SmX][SmY];
@@ -150,19 +150,16 @@ short *PowerMap;
 
 void initMapArrays()
 {
-    short i;
-    unsigned short* auxPtr, * temp1;
-
     if (!mapPtr)
     {
         mapPtr = (unsigned short*)NewPtr(sizeof(unsigned short) * WORLD_X * WORLD_Y);
     }
 
-    auxPtr = mapPtr;
+   auto auxPtr = mapPtr;
 
-    for (i = 0; i < WORLD_X; i++)
+    for (int i = 0; i < WORLD_X; i++)
     {
-        temp1 = auxPtr + i * WORLD_Y;
+        auto temp1 = auxPtr + i * WORLD_Y;
         Map[i] = (short*)temp1;
     }
 
@@ -181,7 +178,7 @@ void initMapArrays()
     auxLandPtr = landPtr;
     auxCrimePtr = crimePtr;
 
-    for (i = 0; i < HWLDX; i++)
+    for (int i = 0; i < HWLDX; i++)
     {
         PopDensity[i] = (Byte*)auxPopPtr + (i * HWLDY);
         TrfDensity[i] = (Byte*)auxTrfPtr + (i * HWLDY);
@@ -198,7 +195,7 @@ void initMapArrays()
     terrainBase = NewPtr(QWX * QWY);
     qTemBase = NewPtr(QWX * QWY);
 
-    for (i = 0; i < QWX; i++)
+    for (int i = 0; i < QWX; i++)
     {
         TerrainMem[i] = (Byte*)terrainBase + (i * QWY);
         Qtem[i] = (Byte*)qTemBase + (i * QWY);
