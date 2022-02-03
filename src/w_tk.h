@@ -8,3 +8,4 @@ void StopEarthquake();
 void tk_main();
 void InvalidateEditors();
 void InvalidateMaps();
+void Kick();
