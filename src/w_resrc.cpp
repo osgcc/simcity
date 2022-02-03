@@ -61,6 +61,7 @@
  */
 #include "main.h"
 
+#include "w_resrc.h"
 
 #ifdef MSDOS
 #define PATHSTR	"%s\\%c%c%c%c.%d"
@@ -69,6 +70,7 @@
 #define PATHSTR	"%s/%c%c%c%c.%d"
 #define PERMSTR	"r"
 #endif
+
 
 
 char *HomeDir, *ResourceDir, *KeyDir, *HostName;
@@ -141,24 +143,6 @@ ResourceSize(Handle h)
   struct Resource *r = (struct Resource *)h;
 
   return (r->size);
-}
-
-
-char *
-ResourceName(Handle h)
-{
-  struct Resource *r = (struct Resource *)h;
-
-  return (r->name);
-}
-
-
-long
-ResourceID(Handle h)
-{
-  struct Resource *r = (struct Resource *)h;
-
-  return (r->id);
 }
 
 
