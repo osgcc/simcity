@@ -65,6 +65,8 @@
 
 #include "s_sim.h"
 
+#include <algorithm>
+
 /* Disasters */
 
 
@@ -120,40 +122,31 @@ void FireBomb()
 
 
 /* comefrom: MakeEarthquake */
-int Vunerable(int tem)
+bool Vulnerable(int tem)
 {
-    register int tem2;
-
-    tem2 = tem & LOMASK;
-    if ((tem2 < RESBASE) || (tem2 > LASTZONE) || (tem & ZONEBIT))
-    {
-        return FALSE;
-    }
-
-    return TRUE;
+    int tem2 = tem & LOMASK;
+    return !(tem2 < RESBASE) || (tem2 > LASTZONE) || (tem & ZONEBIT);
 }
 
 
 /* comefrom: DoDisasters ScenarioDisaster */
 void MakeEarthquake()
 {
-    register short x, y, z;
-    short time;
-
     DoEarthQuake();
-
     SendMesAt(-23, CCx, CCy);
-    time = Rand(700) + 300;
-    for (z = 0; z < time; z++)
+
+    int time = Rand(700) + 300;
+
+    for (int z = 0; z < time; z++)
     {
-        x = Rand(WORLD_X - 1);
-        y = Rand(WORLD_Y - 1);
+        int x = Rand(WORLD_X - 1);
+        int y = Rand(WORLD_Y - 1);
         if ((x < 0) || (x > (WORLD_X - 1)) || (y < 0) || (y > (WORLD_Y - 1)))
         {
             continue;
         }
         /* TILE_IS_VULNERABLE(Map[x][y]) */
-        if (Vunerable(Map[x][y]))
+        if (Vulnerable(Map[x][y]))
         {
             if (z & 0x3)
             {
@@ -171,11 +164,10 @@ void MakeEarthquake()
 /* comefrom: DoDisasters */
 void SetFire()
 {
-    register short x, y, z;
+    int x = Rand(WORLD_X - 1);
+    int y = Rand(WORLD_Y - 1);
+    int z = Map[x][y];
 
-    x = Rand(WORLD_X - 1);
-    y = Rand(WORLD_Y - 1);
-    z = Map[x][y];
     /* TILE_IS_ARSONABLE(z) */
     if (!(z & ZONEBIT))
     {
@@ -183,7 +175,8 @@ void SetFire()
         if ((z > LHTHR) && (z < LASTZONE))
         {
             Map[x][y] = FIRE + ANIMBIT + (Rand16() & 7);
-            CrashX = x; CrashY = y;
+            CrashX = x;
+            CrashY = y;
             SendMesAt(-20, x, y);
         }
     }
@@ -193,12 +186,11 @@ void SetFire()
 /* comefrom: DoDisasters */
 void MakeFire()
 {
-    short t, x, y, z;
-    for (t = 0; t < 40; t++)
+    for (int t = 0; t < 40; t++)
     {
-        x = Rand(WORLD_X - 1);
-        y = Rand(WORLD_Y - 1);
-        z = Map[x][y];
+        int x = Rand(WORLD_X - 1);
+        int y = Rand(WORLD_Y - 1);
+        int z = Map[x][y];
         /* !(z & BURNBIT) && TILE_IS_ARSONABLE(z) */
         if ((!(z & ZONEBIT)) && (z & BURNBIT))
         {
@@ -219,31 +211,31 @@ void MakeFlood()
 {
     static short Dx[4] = { 0, 1, 0,-1 };
     static short Dy[4] = { -1, 0, 1, 0 };
-    register short xx, yy, c;
-    short z, t, x, y;
 
-    for (z = 0; z < 300; z++)
+    for (int z = 0; z < 300; z++)
     {
-        x = Rand(WORLD_X - 1);
-        y = Rand(WORLD_Y - 1);
-        c = Map[x][y] & LOMASK; /* XXX: & LOMASK */
+        int x = Rand(WORLD_X - 1);
+        int y = Rand(WORLD_Y - 1);
+        int cell = Map[x][y] & LOMASK; /* XXX: & LOMASK */
+
         /* TILE_IS_RIVER_EDGE(c) */
-        if ((c > 4) && (c < 21))		/* if riveredge  */
+        if ((cell > 4) && (cell < 21))		/* if riveredge  */
         {
-            for (t = 0; t < 4; t++)
+            for (int t = 0; t < 4; t++)
             {
-                xx = x + Dx[t];
-                yy = y + Dy[t];
+                int xx = x + Dx[t];
+                int yy = y + Dy[t];
                 if (TestBounds(xx, yy, WORLD_X, WORLD_Y))
                 {
-                    c = Map[xx][yy];
+                    cell = Map[xx][yy];
                     /* TILE_IS_FLOODABLE(c) */
-                    if ((c == 0) || ((c & BULLBIT) && (c & BURNBIT)))
+                    if ((cell == 0) || ((cell & BULLBIT) && (cell & BURNBIT)))
                     {
                         Map[xx][yy] = FLOOD;
                         FloodCnt = 30;
                         SendMesAt(-42, xx, yy);
-                        FloodX = xx; FloodY = yy;
+                        FloodX = xx;
+                        FloodY = yy;
                         return;
                     }
                 }
@@ -258,26 +250,26 @@ void DoFlood()
 {
     static short Dx[4] = { 0, 1, 0,-1 };
     static short Dy[4] = { -1, 0, 1, 0 };
-    register short z, c, xx, yy, t;
 
     if (FloodCnt)
     {
-        for (z = 0; z < 4; z++)
+        for (int z = 0; z < 4; z++)
         {
             if (!(Rand16() & 7))
             {
-                xx = SMapX + Dx[z];
-                yy = SMapY + Dy[z];
+                int xx = SMapX + Dx[z];
+                int yy = SMapY + Dy[z];
                 if (TestBounds(xx, yy, WORLD_X, WORLD_Y))
                 {
-                    c = Map[xx][yy];
-                    t = c & LOMASK;
+                    int cell = Map[xx][yy];
+                    int terrain = cell & LOMASK;
+
                     /* TILE_IS_FLOODABLE2(c) */
-                    if ((c & BURNBIT) || (c == 0) || ((t >= WOODS5 /* XXX */) && (t < FLOOD)))
+                    if ((cell & BURNBIT) || (cell == 0) || ((terrain >= WOODS5 /* XXX */) && (terrain < FLOOD)))
                     {
-                        if (c & ZONEBIT)
+                        if (cell & ZONEBIT)
                         {
-                            FireZone(xx, yy, c);
+                            FireZone(xx, yy, cell);
                         }
                         Map[xx][yy] = FLOOD + Rand(2);
                     }
@@ -351,26 +343,28 @@ void DoDisasters()
 {
     /* Chance of disasters at lev 0 1 2 */
     static short DisChance[3] = { 10 * 48, 5 * 48, 60 };
-    register short x;
 
-    if (FloodCnt) FloodCnt--;
+    if (FloodCnt)
+    {
+        FloodCnt--;
+    }
+
     if (DisasterEvent)
     {
         ScenarioDisaster();
     }
 
-    x = GameLevel;
-    if (x > 2) x = 0;
-
     if (NoDisasters)
     {
         return;
     }
-
-    if (!Rand(DisChance[x]))
+    
+    int disasterChance = DisChance[std::clamp(GameLevel, 0, 2)];
+    if (disasterChance == 0)
     {
-        x = Rand(8);
-        switch (x) {
+        int disasterType = Rand(8);
+        switch (disasterType)
+        {
         case 0:
         case 1:
             SetFire();

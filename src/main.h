@@ -426,7 +426,7 @@ extern long LastCityMonth;
 extern long LastCityYear;
 extern long LastFunds;
 extern long LastR, LastC, LastI;
-extern short GameLevel;
+extern int GameLevel;
 extern short Cycle;
 extern short ScenarioID;
 extern short ShakeNow;

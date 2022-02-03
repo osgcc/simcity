@@ -71,7 +71,7 @@ long TotalFunds;
 short PunishCnt;
 short autoBulldoze, autoBudget;
 long LastMesTime;
-short GameLevel;
+int GameLevel;
 short InitSimLoad;
 short ScenarioID;
 short SimSpeed;
