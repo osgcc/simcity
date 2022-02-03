@@ -61,6 +61,8 @@
  */
 #include "main.h"
 
+#include "s_alloc.h"
+
 
 int DynamicData[32];
 

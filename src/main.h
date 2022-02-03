@@ -396,16 +396,6 @@ typedef unsigned char Byte;
 struct Pixmap
 {};
 
-extern short *Map[WORLD_X];		/* Main Map 120 x 100  */
-extern Byte *PopDensity[HWLDX];		/* 2X2 Maps  60 x 50 */
-extern Byte *TrfDensity[HWLDX];
-extern Byte *PollutionMem[HWLDX];
-extern Byte *LandValueMem[HWLDX];
-extern Byte *CrimeMem[HWLDX];
-extern Byte *tem[HWLDX];
-extern Byte *tem2[HWLDX];
-extern Byte *TerrainMem[QWX];		/* 4X4 Maps  30 x 25 */
-extern Byte *Qtem[QWX];
 extern short RateOGMem[SmX][SmY];
 extern short FireStMap[SmX][SmY];	/* 8X8 Maps  15 x 13 */
 extern short PoliceMap[SmX][SmY];

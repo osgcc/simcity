@@ -62,6 +62,7 @@
 #include "main.h"
 #include "animtab.h"
 
+#include "s_alloc.h"
 
 /* comefrom: moveWorld doEditWindow scoreDoer doMapInFront graphDoer */
 void animateTiles()

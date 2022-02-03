@@ -63,6 +63,9 @@
 #include "main.h"
 #include "view.h"
 
+#include "s_alloc.h"
+
+
 #include <stdexcept>
 
 #define VAL_NONE	0
