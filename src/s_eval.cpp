@@ -196,7 +196,7 @@ void DoProblems()
 
 void VoteProblems()
 {
-  register x, z, count;
+  register int x, z, count;
 
   for (z = 0; z < PROBNUM; z++)
     ProblemVotes[z] = 0;
@@ -267,7 +267,7 @@ int GetFire()
 
 void GetScore()
 {
-  register x, z;
+  register int x, z;
   int OldCityScore;
   float SM, TM;
 
@@ -322,7 +322,7 @@ void GetScore()
 
 void DoVotes()
 {
-  register z;
+  register int z;
 
   CityYes = 0;
   CityNo = 0;
