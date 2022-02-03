@@ -68,20 +68,20 @@
 
 
 long TotalFunds;
-short PunishCnt;
-short autoBulldoze, autoBudget;
+int PunishCnt;
+int autoBulldoze, autoBudget;
 long LastMesTime;
 int GameLevel;
-short InitSimLoad;
-short ScenarioID;
-short SimSpeed;
-short SimMetaSpeed;
-short UserSoundOn;
+int InitSimLoad;
+int ScenarioID;
+int SimSpeed;
+int SimMetaSpeed;
+int UserSoundOn;
 char *CityName;
-short NoDisasters;
-short MesNum;
-short EvalChanged;
-short flagBlink;
+int NoDisasters;
+int MesNum;
+int EvalChanged;
+int flagBlink;
 
 
 void Spend(int dollars)

@@ -62,21 +62,21 @@
 #include "main.h"
 
 
-short _RoadTable[16] = {
+int _RoadTable[16] = {
   66, 67, 66, 68,
   67, 67, 69, 73,
   66, 71, 66, 72,
   70, 75, 74, 76
 };
 
-short _RailTable[16] = {
+int _RailTable[16] = {
   226, 227, 226, 228,
   227, 227, 229, 233,
   226, 231, 226, 232,
   230, 235, 234, 236
 };
 
-short _WireTable[16] = {
+int _WireTable[16] = {
   210, 211, 210, 212,
   211, 211, 213, 217,
   210, 215, 210, 216,
@@ -93,9 +93,9 @@ short _WireTable[16] = {
 
 /* comefrom: check3Border check4Border check5Border processWand */
 int
-ConnecTile(short x, short y, short *TileAdrPtr, short Command)
+ConnecTile(int x, int y, int *TileAdrPtr, int Command)
 {
-  short Tile;
+  int Tile;
   int result = 1;
 
   /* make sure the array subscripts are in bounds */
@@ -152,9 +152,9 @@ ConnecTile(short x, short y, short *TileAdrPtr, short Command)
 
 /* comefrom: ConnecTile */
 int
-_LayDoze(int x, int y, short *TileAdrPtr)
+_LayDoze(int x, int y, int *TileAdrPtr)
 {
-  short Tile;
+  int Tile;
 
   if (!(TotalFunds)) {
     return -2;			/* no mas dinero. */
@@ -200,9 +200,9 @@ _LayDoze(int x, int y, short *TileAdrPtr)
 
 /* comefrom: ConnecTile */
 int
-_LayRoad(int x, int y, short *TileAdrPtr)
+_LayRoad(int x, int y, int *TileAdrPtr)
 {
-  short Tile;
+  int Tile;
   int cost = 10;
 
   if (TotalFunds < 10) {
@@ -306,9 +306,9 @@ _LayRoad(int x, int y, short *TileAdrPtr)
 
 /* comefrom: ConnecTile */
 int
-_LayRail(int x, int y, short *TileAdrPtr)
+_LayRail(int x, int y, int *TileAdrPtr)
 {
-  short Tile;
+  int Tile;
   int cost = 20;
 
   if (TotalFunds < 20) {
@@ -397,9 +397,9 @@ _LayRail(int x, int y, short *TileAdrPtr)
 
 /* comefrom: ConnecTile */
 int
-_LayWire(int x, int y, short *TileAdrPtr)
+_LayWire(int x, int y, int *TileAdrPtr)
 {
-  short Tile;
+  int Tile;
   int cost = 5;
 
   if (TotalFunds < 5) {
@@ -494,7 +494,7 @@ _LayWire(int x, int y, short *TileAdrPtr)
 
 
 /* comefrom: ConnecTile */
-_FixZone(int x, int y, short *TileAdrPtr)
+_FixZone(int x, int y, int *TileAdrPtr)
 {
   _FixSingle(x,y, &TileAdrPtr[0]);
 
@@ -518,10 +518,10 @@ _FixZone(int x, int y, short *TileAdrPtr)
 
 
 /* comefrom: _FixZone */
-_FixSingle(int x, int y, short *TileAdrPtr)
+_FixSingle(int x, int y, int *TileAdrPtr)
 {
-  short Tile;
-  short adjTile = 0;
+  int Tile;
+  int adjTile = 0;
 
   Tile = (*TileAdrPtr) & LOMASK;
   NeutralizeRoad(Tile);

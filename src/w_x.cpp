@@ -1067,7 +1067,7 @@ void DoAdjustPan(SimView* view)
     {
         int dx = last_tile_x - view->tile_x,
             dy = last_tile_y - view->tile_y;
-        short** want = view->other_tiles,
+        int** want = view->other_tiles,
             ** have = view->tiles;
 
         if ((dx != 0) || (dy != 0))
@@ -1078,7 +1078,7 @@ void DoAdjustPan(SimView* view)
 
             for (col = 0; col < width; col++)
             {
-                memcpy(want[col], have[col], (height * sizeof(short)));
+                memcpy(want[col], have[col], (height * sizeof(int)));
             }
 
             for (col = 0; col < total_width; col++)
@@ -1119,26 +1119,26 @@ void DoAdjustPan(SimView* view)
 AllocTiles(SimView *view)
 {
   int row, col;
-  short **have, **want;
+  int **have, **want;
   int w = view->m_width / 16, h = view->m_height / 16;
-  int n = (w + 1) * sizeof (short *);
+  int n = (w + 1) * sizeof (int *);
 
   if (view->tiles)
     FreeTiles(view);
 
   have = view->tiles =
-    (short **)malloc(n);
+    (int **)malloc(n);
 
   want = view->other_tiles =
-    (short **)malloc(n);
+    (int **)malloc(n);
 
   have[w] = want[w] = NULL;
 
-  n = h * sizeof(short);
+  n = h * sizeof(int);
   for (col = 0; col < w; col++) {
 
-    have[col] = (short *)malloc(n);
-    want[col] = (short *)malloc(n);
+    have[col] = (int *)malloc(n);
+    want[col] = (int *)malloc(n);
     for (row = 0; row < h; row++) {
       have[col][row] = -1;
       want[col][row] = -1;

@@ -78,7 +78,7 @@
 #define VAL_MINUS	7
 #define VAL_VERYMINUS	8
 
-short valMap[] =
+int valMap[] =
 {
   -1, COLOR_LIGHTGRAY, COLOR_YELLOW, COLOR_ORANGE, COLOR_RED,
   COLOR_DARKGREEN, COLOR_LIGHTGREEN, COLOR_ORANGE, COLOR_YELLOW
@@ -110,7 +110,7 @@ void maybeDrawRect(SimView* view, int val, int x, int y, int w, int h);
 /**
  * What does 'CI' mean?
  */
-short GetColorIndex(short x)
+int GetColorIndex(int x)
 {
 	if (x < 50)
 	{
@@ -153,7 +153,7 @@ void drawRateOfGrowth(SimView* view)
 	{
 		for (int y = 0; y < SmY; y++)
 		{
-			short val, z = RateOGMem[x][y];
+			int val, z = RateOGMem[x][y];
 
 			if (z > 100)
 			{
@@ -392,9 +392,9 @@ void drawRect(SimView* view, int pixel, int solid, int x, int y, int w, int h)
 
 		case 2:
 		{
-			unsigned short* data = (unsigned short*)view->data;
-			unsigned short* image;
-			line >>= 1; // Convert from byte offset to short offset
+			unsigned int* data = (unsigned int*)view->data;
+			unsigned int* image;
+			line >>= 1; // Convert from byte offset to int offset
 			image = &data[(line * y) + x];
 
 			if (solid)
@@ -439,7 +439,7 @@ void drawRect(SimView* view, int pixel, int solid, int x, int y, int w, int h)
 			unsigned char* image;
 			int bitmapPad = view->x->small_tile_image->bitmap_pad;
 			int rowBytes = view->x->small_tile_image->bytes_per_line;
-			line = rowBytes >> 1; // Convert from byte offset to short offset
+			line = rowBytes >> 1; // Convert from byte offset to int offset
 			image = &data[(line * y) + x];
 
 			if (solid)

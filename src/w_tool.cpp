@@ -63,7 +63,7 @@
 
 #include <cmath>
 
-short specialBase = CHURCH;
+int specialBase = CHURCH;
 int OverRide = 0;
 int Expensive = 1000;
 int Players = 1;
@@ -82,7 +82,7 @@ long CostOf[] = {
 };
 
 
-short toolSize[] = {
+int toolSize[] = {
   3, 3, 3, 3,
   1, 3, 1, 1,
   1, 1, 0, 0,
@@ -91,7 +91,7 @@ short toolSize[] = {
 };
 
 
-short toolOffset[] = {
+int toolOffset[] = {
   1, 1, 1, 1,
   0, 1, 0, 0,
   0, 0, 0, 0,
@@ -125,15 +125,15 @@ long toolColors[] = {
 
 Ink *NewInk();
 
-short tally(short tileValue);
-int DoSetWandState(SimView *view, short state);
+int tally(int tileValue);
+int DoSetWandState(SimView *view, int state);
 
 
 /*************************************************************************/
 /* UTILITIES */
 
 
-setWandState(SimView *view, short state)
+setWandState(SimView *view, int state)
 {
   view->tool_state = state;
   DoUpdateHeads();
@@ -142,9 +142,9 @@ setWandState(SimView *view, short state)
 
 
 int
-putDownPark(SimView *view, short mapH, short mapV)
+putDownPark(SimView *view, int mapH, int mapV)
 {
-  short value, tile;
+  int value, tile;
 
   if (TotalFunds - CostOf[parkState] >= 0) {
     value = Rand(4);
@@ -167,7 +167,7 @@ putDownPark(SimView *view, short mapH, short mapV)
 
 
 int
-putDownNetwork(SimView *view, short mapH, short mapV)
+putDownNetwork(SimView *view, int mapH, int mapV)
 {
   int tile = Map[mapH][mapV] & LOMASK;
 
@@ -190,8 +190,8 @@ putDownNetwork(SimView *view, short mapH, short mapV)
 }
 
 
-short
-checkBigZone(short id, short *deltaHPtr, short *deltaVPtr)
+int
+checkBigZone(int id, int *deltaHPtr, int *deltaVPtr)
 {
   switch (id) {
   case POWERPLANT:	/* check coal plant */
@@ -268,8 +268,8 @@ checkBigZone(short id, short *deltaHPtr, short *deltaVPtr)
 }
 
 
-short
-tally(short tileValue)
+int
+tally(int tileValue)
 {
   /* can we autobulldoze this tile? */
   if (((tileValue >= FIRSTRIVEDGE) &&
@@ -285,8 +285,8 @@ tally(short tileValue)
 }
 
 
-short
-checkSize(short temp)
+int
+checkSize(int temp)
 {
   /* check for the normal com, resl, ind 3x3 zones & the fireDept & PoliceDept */
   if (((temp >= (RESBASE - 1)) && (temp  <= (PORTBASE - 1))) ||
@@ -305,10 +305,10 @@ checkSize(short temp)
 
 
 void
-check3x3border(short xMap, short yMap)
+check3x3border(int xMap, int yMap)
 {
-  short xPos, yPos;
-  short cnt;
+  int xPos, yPos;
+  int cnt;
 
   xPos = xMap; yPos = yMap - 1;
   for (cnt = 0; cnt < 3; cnt++) {
@@ -341,14 +341,14 @@ check3x3border(short xMap, short yMap)
 
 
 int
-check3x3(SimView *view, short mapH, short mapV, short base, short tool)
+check3x3(SimView *view, int mapH, int mapV, int base, int tool)
 {
-  register short rowNum, columnNum;
-  register short holdMapH, holdMapV;
-  short xPos, yPos;
-  short cost = 0;
-  short tileValue;
-  short flag;
+  register int rowNum, columnNum;
+  register int holdMapH, holdMapV;
+  int xPos, yPos;
+  int cost = 0;
+  int tileValue;
+  int flag;
 
   mapH--; mapV--;
   if ((mapH < 0) || (mapH > (WORLD_X - 3)) ||
@@ -432,11 +432,11 @@ check3x3(SimView *view, short mapH, short mapV, short base, short tool)
 
 
 void
-check4x4border(short xMap, short yMap)
+check4x4border(int xMap, int yMap)
 {
   Ptr tilePtr;
-  short xPos, yPos;
-  short cnt;
+  int xPos, yPos;
+  int cnt;
 
   xPos = xMap; yPos = yMap - 1;
   for (cnt = 0; cnt < 4; cnt++) {
@@ -472,17 +472,17 @@ check4x4border(short xMap, short yMap)
 }
 
 
-short
-check4x4(SimView *view, short mapH, short mapV,
-	 short base, short aniFlag, short tool)
+int
+check4x4(SimView *view, int mapH, int mapV,
+	 int base, int aniFlag, int tool)
 {
-  register short rowNum, columnNum;
-  short h, v;
-  short holdMapH;
-  short xMap, yMap;
-  short tileValue;
-  short flag;
-  short cost = 0;
+  register int rowNum, columnNum;
+  int h, v;
+  int holdMapH;
+  int xMap, yMap;
+  int tileValue;
+  int flag;
+  int cost = 0;
 
   mapH--; mapV--;
   if ((mapH < 0) || (mapH > (WORLD_X - 4)) ||
@@ -567,10 +567,10 @@ check4x4(SimView *view, short mapH, short mapV,
 
 
 void
-check6x6border(short xMap, short yMap)
+check6x6border(int xMap, int yMap)
 {
-  short xPos, yPos;
-  short cnt;
+  int xPos, yPos;
+  int cnt;
 
   xPos = xMap; yPos = yMap - 1;
   for (cnt = 0; cnt < 6; cnt++) {
@@ -602,16 +602,16 @@ check6x6border(short xMap, short yMap)
 }
 
 
-short
-check6x6(SimView *view, short mapH, short mapV, short base, short tool)
+int
+check6x6(SimView *view, int mapH, int mapV, int base, int tool)
 {
-  register short rowNum, columnNum;
-  short h, v;
-  short holdMapH;
-  short xMap, yMap;
-  short flag;
-  short tileValue;
-  short cost = 0;
+  register int rowNum, columnNum;
+  int h, v;
+  int holdMapH;
+  int xMap, yMap;
+  int flag;
+  int tileValue;
+  int cost = 0;
 
   mapH--; mapV--;
   if ((mapH < 0) || (mapH > (WORLD_X - 6)) ||
@@ -693,7 +693,7 @@ check6x6(SimView *view, short mapH, short mapV, short base, short tool)
 
 
 /* search table for zone status string match */
-static short idArray[28] = {
+static int idArray[28] = {
   DIRT, RIVER, TREEBASE, RUBBLE,
   FLOOD, RADTILE, FIRE, ROADBASE,
   POWERBASE, RAILBASE, RESBASE, COMBASE,
@@ -722,7 +722,7 @@ static short idArray[28] = {
 */
 
 
-int getDensityStr(short catNo, short mapH, short mapV)
+int getDensityStr(int catNo, int mapH, int mapV)
 {
   int z;
 
@@ -759,14 +759,14 @@ int getDensityStr(short catNo, short mapH, short mapV)
 }
 
 
-doZoneStatus(short mapH, short mapV)
+doZoneStatus(int mapH, int mapV)
 {
   char localStr[256];
   char statusStr[5][256];
-  short id;
-  short x;
-  short tileNum;
-  short found;
+  int id;
+  int x;
+  int tileNum;
+  int found;
 
   tileNum = Map[mapH][mapV] & LOMASK;
 
@@ -811,7 +811,7 @@ DoShowZoneStatus(char *str, char *s0, char *s1, char *s2, char *s3, char *s4,
 
 
 /* comefrom: processWand */
-put3x3Rubble(short x, short y)
+put3x3Rubble(int x, int y)
 {
   register xx, yy, zz;
 	
@@ -833,7 +833,7 @@ put3x3Rubble(short x, short y)
 
 
 /* comefrom: processWand */
-put4x4Rubble(short x, short y)
+put4x4Rubble(int x, int y)
 {
   register xx, yy, zz;
 	
@@ -855,7 +855,7 @@ put4x4Rubble(short x, short y)
 
 
 /* comefrom: processWand */
-put6x6Rubble(short x, short y)
+put6x6Rubble(int x, int y)
 {
   register xx, yy, zz;
 
@@ -876,7 +876,7 @@ put6x6Rubble(short x, short y)
 }	
 
 
-DidTool(SimView *view, char *name, short x, short y)
+DidTool(SimView *view, char *name, int x, int y)
 {
   char buf[256];
 
@@ -888,7 +888,7 @@ DidTool(SimView *view, char *name, short x, short y)
 }
 
 
-DoSetWandState(SimView *view, short state)
+DoSetWandState(SimView *view, int state)
 {
   char buf[256];
 
@@ -902,7 +902,7 @@ DoSetWandState(SimView *view, short state)
 
 
 int
-query_tool(SimView *view, short x, short y)
+query_tool(SimView *view, int x, int y)
 {
   if ((x < 0) || (x > (WORLD_X - 1)) ||
       (y < 0) || (y > (WORLD_Y - 1))) {
@@ -916,10 +916,10 @@ query_tool(SimView *view, short x, short y)
 
 
 int
-bulldozer_tool(SimView *view, short x, short y)
+bulldozer_tool(SimView *view, int x, int y)
 {
-  unsigned short currTile, temp;
-  short zoneSize, deltaH, deltaV;
+  unsigned int currTile, temp;
+  int zoneSize, deltaH, deltaV;
   int result = 1;
 
   if ((x < 0) || (x > (WORLD_X - 1)) ||
@@ -997,7 +997,7 @@ bulldozer_tool(SimView *view, short x, short y)
 
 
 int
-road_tool(SimView *view, short x, short y)
+road_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1016,7 +1016,7 @@ road_tool(SimView *view, short x, short y)
 
 
 int
-rail_tool(SimView *view, short x, short y)
+rail_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1035,7 +1035,7 @@ rail_tool(SimView *view, short x, short y)
 
 
 int
-wire_tool(SimView *view, short x, short y)
+wire_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1054,7 +1054,7 @@ wire_tool(SimView *view, short x, short y)
 
 
 int
-park_tool(SimView *view, short x, short y)
+park_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1071,7 +1071,7 @@ park_tool(SimView *view, short x, short y)
 
 
 int
-residential_tool(SimView *view, short x, short y)
+residential_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1089,7 +1089,7 @@ residential_tool(SimView *view, short x, short y)
 
 
 int
-commercial_tool(SimView *view, short x, short y)
+commercial_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1107,7 +1107,7 @@ commercial_tool(SimView *view, short x, short y)
 
 
 int
-industrial_tool(SimView *view, short x, short y)
+industrial_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1125,7 +1125,7 @@ industrial_tool(SimView *view, short x, short y)
 
 
 int
-police_dept_tool(SimView *view, short x, short y)
+police_dept_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1143,7 +1143,7 @@ police_dept_tool(SimView *view, short x, short y)
 
 
 int
-fire_dept_tool(SimView *view, short x, short y)
+fire_dept_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1161,7 +1161,7 @@ fire_dept_tool(SimView *view, short x, short y)
 
 
 int
-stadium_tool(SimView *view, short x, short y)
+stadium_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1179,7 +1179,7 @@ stadium_tool(SimView *view, short x, short y)
 
 
 int
-coal_power_plant_tool(SimView *view, short x, short y)
+coal_power_plant_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1197,7 +1197,7 @@ coal_power_plant_tool(SimView *view, short x, short y)
 
 
 int
-nuclear_power_plant_tool(SimView *view, short x, short y)
+nuclear_power_plant_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1215,7 +1215,7 @@ nuclear_power_plant_tool(SimView *view, short x, short y)
 
 
 int
-seaport_tool(SimView *view, short x, short y)
+seaport_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1233,7 +1233,7 @@ seaport_tool(SimView *view, short x, short y)
 
 
 int
-airport_tool(SimView *view, short x, short y)
+airport_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1251,7 +1251,7 @@ airport_tool(SimView *view, short x, short y)
 
 
 int
-network_tool(SimView *view, short x, short y)
+network_tool(SimView *view, int x, int y)
 {
   int result;
 
@@ -1269,7 +1269,7 @@ network_tool(SimView *view, short x, short y)
 
 
 int
-ChalkTool(SimView *view, short x, short y, short color, short first)
+ChalkTool(SimView *view, int x, int y, int color, int first)
 {
   if (first) {
     ChalkStart(view, x, y, color);
@@ -1343,7 +1343,7 @@ ChalkTo(SimView *view, int x, int y)
 
 
 int
-EraserTool(SimView *view, short x, short y, short first)
+EraserTool(SimView *view, int x, int y, int first)
 {
   if (first) {
     EraserStart(view, x, y);
@@ -1427,7 +1427,7 @@ EraserTo(SimView *view, int x, int y)
 
 
 int
-do_tool(SimView *view, short state, short x, short y, short first)
+do_tool(SimView *view, int state, int x, int y, int first)
 {
   int result = 0;
 
@@ -1500,13 +1500,13 @@ do_tool(SimView *view, short state, short x, short y, short first)
 
 
 int
-current_tool(SimView *view, short x, short y, short first)
+current_tool(SimView *view, int x, int y, int first)
 {
   return do_tool(view, view->tool_state, x, y, first);
 }
 
 
-DoTool(SimView *view, short tool, short x, short y)
+DoTool(SimView *view, int tool, int x, int y)
 {
   int result;
 

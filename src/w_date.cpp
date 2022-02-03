@@ -62,7 +62,7 @@
 #include "main.h"
 
 
-short NewDate = 0;
+int NewDate = 0;
 Tcl_HashTable DateCmds;
 int DateUpdateTime = 200;
 

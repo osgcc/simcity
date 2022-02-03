@@ -71,7 +71,7 @@ long MaxPower, NumPower;
 
 
 /* comefrom: TestForCond DoPowerScan TryGo */
-MoveMapSim (short MDir)
+MoveMapSim (int MDir)
 {
   switch (MDir) {
   case 0:
@@ -146,7 +146,7 @@ int TestPowerBit(void)
 
 
 /* comefrom: DoPowerScan */
-short TestForCond(short TFDir)
+int TestForCond(int TFDir)
 { 	
   register int xsave, ysave, PowerWrd;
 
@@ -185,7 +185,7 @@ short TestForCond(short TFDir)
 /* comefrom: Simulate SpecialInit InitSimMemory */
 DoPowerScan()
 {	
-  short ADir;
+  int ADir;
   register int ConNum, Dir, x;
 
   for (x = 0; x < PWRMAPSIZE; x++)

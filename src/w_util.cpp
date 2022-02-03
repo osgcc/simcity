@@ -66,13 +66,13 @@
 	     drawActualBox UpdateFunds updateCurrentCost */
 makeDollarDecimalStr(char *numStr, char *dollarStr)
 {
-  register short leftMostSet;
-  short numOfDigits;
-  short numOfChars;
-  register short numOfCommas;
-  register short dollarIndex = 0;
-  register short numIndex = 0;
-  register short x;
+  register int leftMostSet;
+  int numOfDigits;
+  int numOfChars;
+  register int numOfCommas;
+  register int dollarIndex = 0;
+  register int numIndex = 0;
+  register int x;
 
   numOfDigits = strlen(numStr);
 
@@ -140,7 +140,7 @@ Resume()
 }
 
 
-setSpeed(short speed)
+setSpeed(int speed)
 {
   if (speed < 0) speed = 0;
   else if (speed > 3) speed = 3;
@@ -174,7 +174,7 @@ setSkips(int skips)
 }
 
 
-SetGameLevelFunds(short level)
+SetGameLevelFunds(int level)
 {
   switch (level) {
   default:
@@ -194,7 +194,7 @@ SetGameLevelFunds(short level)
 }
 
 
-SetGameLevel(short level)
+SetGameLevel(int level)
 {
   GameLevel = level;
   UpdateGameLevel();
@@ -253,7 +253,7 @@ CurrentYear()
 }
 
 
-DoSetMapState(SimView *view, short state)
+DoSetMapState(SimView *view, int state)
 {
   char buf[256];
 

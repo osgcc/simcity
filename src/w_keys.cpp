@@ -91,7 +91,7 @@ ResetLastKeys()
 
 
 /* comefrom: processEvent */
-doKeyDown(SimView *view, short charCode)
+doKeyDown(SimView *view, int charCode)
 {
   LastKeys[0] = LastKeys[1];
   LastKeys[1] = LastKeys[2];
@@ -121,7 +121,7 @@ doKeyDown(SimView *view, short charCode)
     MakeSound("city", "Explosion-Low");
     for (i = 0; i < WORLD_X; i++) {
       for (j = 0; j < WORLD_Y; j++) {
-	short tile = Map[i][j] & LOMASK;
+	int tile = Map[i][j] & LOMASK;
 	if ((tile >= RUBBLE) &&
 	    ((tile < CHURCH - 4) ||
 	     (tile > CHURCH + 4))) {
@@ -155,7 +155,7 @@ doKeyDown(SimView *view, short charCode)
       int y1 = Rand(WORLD_Y - 1);
       int x2 = Rand(WORLD_X - 1);
       int y2 = Rand(WORLD_Y - 1);
-      short temp =
+      int temp =
 	Map[x1][y1];
       Map[x1][y1] =
 	Map[x2][y2];
@@ -207,7 +207,7 @@ doKeyDown(SimView *view, short charCode)
     
     case 'X':
     case 'x': {
-      short s = view->tool_state;
+      int s = view->tool_state;
       if (++s > lastState) {
 	s = firstState;
       }
@@ -217,7 +217,7 @@ doKeyDown(SimView *view, short charCode)
 
     case 'Z':
     case 'z': {
-      short s = view->tool_state;
+      int s = view->tool_state;
       if (--s < firstState) {
 	  s = lastState;
       }
@@ -279,7 +279,7 @@ doKeyDown(SimView *view, short charCode)
 
 
 /* comefrom: processEvent */
-doKeyUp(SimView *view, short charCode)
+doKeyUp(SimView *view, int charCode)
 {
   switch(charCode) {
 

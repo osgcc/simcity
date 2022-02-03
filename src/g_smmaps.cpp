@@ -72,7 +72,7 @@ void drawAll(SimView * view)
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
-    short* mp = &Map[0][0];
+    int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
     for (int col = 0; col < WORLD_X; col++)
@@ -81,7 +81,7 @@ void drawAll(SimView * view)
         for (int row = 0; row < WORLD_Y; row++)
         {
 
-            unsigned short tile = *(mp++) & LOMASK;
+            unsigned int tile = *(mp++) & LOMASK;
             if (tile >= TILE_COUNT)
             {
                 tile -= TILE_COUNT;
@@ -106,7 +106,7 @@ void drawRes(SimView* view)
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
-    short* mp = &Map[0][0];
+    int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
     for (int col = 0; col < WORLD_X; col++)
@@ -115,7 +115,7 @@ void drawRes(SimView* view)
         for (int row = 0; row < WORLD_Y; row++)
         {
 
-            unsigned short tile = *(mp++) & LOMASK;
+            unsigned int tile = *(mp++) & LOMASK;
             if (tile >= TILE_COUNT)
             {
                 tile -= TILE_COUNT;
@@ -147,7 +147,7 @@ void drawCom(SimView* view)
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
-    short* mp = &Map[0][0];
+    int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
     for (int col = 0; col < WORLD_X; col++)
@@ -156,7 +156,7 @@ void drawCom(SimView* view)
         for (int row = 0; row < WORLD_Y; row++)
         {
 
-            unsigned short tile = *(mp++) & LOMASK;
+            unsigned int tile = *(mp++) & LOMASK;
             if (tile >= TILE_COUNT)
             {
                 tile -= TILE_COUNT;
@@ -188,7 +188,7 @@ void drawInd(SimView* view)
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
-    short* mp = &Map[0][0];
+    int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
     for (int col = 0; col < WORLD_X; col++)
@@ -197,7 +197,7 @@ void drawInd(SimView* view)
         for (int row = 0; row < WORLD_Y; row++)
         {
 
-            unsigned short tile = *(mp++) & LOMASK;
+            unsigned int tile = *(mp++) & LOMASK;
             if (tile >= TILE_COUNT)
             {
                 tile -= TILE_COUNT;
@@ -232,7 +232,7 @@ void drawLilTransMap(SimView* view)
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
-    short* mp = &Map[0][0];
+    int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
     for (int col = 0; col < WORLD_X; col++)
@@ -241,7 +241,7 @@ void drawLilTransMap(SimView* view)
         for (int row = 0; row < WORLD_Y; row++)
         {
 
-            unsigned short tile = *(mp++) & LOMASK;
+            unsigned int tile = *(mp++) & LOMASK;
             if (tile >= TILE_COUNT)
             {
                 tile -= TILE_COUNT;
@@ -287,7 +287,7 @@ void drawPower(SimView* view)
     int unpowered = view->pixels[UNPOWERED];
     int conductive = view->pixels[CONDUCTIVE];
 
-    short* mp = &Map[0][0];
+    int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
     for (int col = 0; col < WORLD_X; col++)
@@ -295,14 +295,14 @@ void drawPower(SimView* view)
         unsigned char* image = imageBase + (3 * pixelBytes * col);
         for (int row = 0; row < WORLD_Y; row++)
         {
-            unsigned short tile = *(mp++);
+            unsigned int tile = *(mp++);
 
             if ((tile & LOMASK) >= TILE_COUNT)
             {
                 tile -= TILE_COUNT;
             }
 
-            if ((unsigned short)(tile & LOMASK) <= (unsigned short)63)
+            if ((unsigned int)(tile & LOMASK) <= (unsigned int)63)
             {
                 tile &= LOMASK;
                 pix = -1;
@@ -404,7 +404,7 @@ void drawDynamic(SimView* view)
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
-    short* mp = &Map[0][0];
+    int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
     for (int col = 0; col < WORLD_X; col++)
@@ -413,7 +413,7 @@ void drawDynamic(SimView* view)
         for (int row = 0; row < WORLD_Y; row++)
         {
 
-            unsigned short tile = *(mp++) & LOMASK;
+            unsigned int tile = *(mp++) & LOMASK;
             if (tile >= TILE_COUNT)
             {
                 tile -= TILE_COUNT;

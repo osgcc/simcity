@@ -1,6 +1,6 @@
 #pragma once
 
-extern short* Map[]; // Main Map 120 x 100
+extern int* Map[]; // Main Map 120 x 100
 
 extern Byte* PopDensity[]; // 2X2 Maps  60 x 50
 extern Byte* TrfDensity[];

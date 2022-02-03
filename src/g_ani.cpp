@@ -67,12 +67,12 @@
 /* comefrom: moveWorld doEditWindow scoreDoer doMapInFront graphDoer */
 void animateTiles()
 {
-    unsigned short tilevalue, tileflags;
-    unsigned short* tMapPtr;
+    unsigned int tilevalue, tileflags;
+    unsigned int* tMapPtr;
     int i;
 
     /* Animate whole world */
-    tMapPtr = (unsigned short*)&(Map[0][0]);
+    tMapPtr = (unsigned int*)&(Map[0][0]);
 
     for (i = WORLD_X * WORLD_Y; i > 0; i--)
     {

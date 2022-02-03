@@ -475,7 +475,7 @@ int max_pix = MAX_PIX;
 
 struct Pix {
   long color;
-  short x, y;
+  int x, y;
 };
 
 struct Pix pix[MAX_PIX];

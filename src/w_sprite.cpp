@@ -67,9 +67,9 @@
 
 
 Tcl_HashTable SpriteCmds;
-short CrashX, CrashY;
+int CrashX, CrashY;
 int absDist;
-short Cycle;
+int Cycle;
 
 SimSprite *GlobalSprites[OBJN];
 
@@ -511,7 +511,7 @@ DrawSprite(SimView *view, SimSprite *sprite)
 }
 
 
-short GetChar(int x, int y)
+int GetChar(int x, int y)
 {
   x >>= 4;
   y >>= 4;
@@ -522,7 +522,7 @@ short GetChar(int x, int y)
 }
 
 
-short TurnTo(int p, int d)
+int TurnTo(int p, int d)
 {
   if (p == d) return(p);
   if (p < d)
@@ -539,7 +539,7 @@ short TurnTo(int p, int d)
 
 TryOther(int Tpoo, int Told, int Tnew)
 {
-  register short z;
+  register int z;
 
   z = Told + 4;
   if (z > 8) z -= 8;
@@ -551,7 +551,7 @@ TryOther(int Tpoo, int Told, int Tnew)
 }
 
 
-short SpriteNotInBounds(SimSprite *sprite)
+int SpriteNotInBounds(SimSprite *sprite)
 {
   int x = sprite->x + sprite->x_hot;
   int y = sprite->y + sprite->y_hot;
@@ -565,9 +565,9 @@ short SpriteNotInBounds(SimSprite *sprite)
 }
 
 
-short GetDir(int orgX, int orgY, int desX, int desY)
+int GetDir(int orgX, int orgY, int desX, int desY)
 {
-  static short Gdtab[13] = { 0, 3, 2, 1, 3, 4, 5, 7, 6, 5, 7, 8, 1 };
+  static int Gdtab[13] = { 0, 3, 2, 1, 3, 4, 5, 7, 6, 5, 7, 8, 1 };
   int dispX, dispY, z;
 
   dispX = desX - orgX;
@@ -594,7 +594,7 @@ short GetDir(int orgX, int orgY, int desX, int desY)
 
 GetDis(int x1, int y1, int x2, int y2)
 {
-  register short dispX, dispY;
+  register int dispX, dispY;
 	
   if (x1 > x2) dispX = x1 - x2;
   else dispX = x2 - x1;
@@ -676,13 +676,13 @@ void MoveObjects()
 
 void DoTrainSprite(SimSprite *sprite)
 {
-  static short Cx[4] = {   0,  16,   0, -16 };
-  static short Cy[4] = { -16,   0,  16,   0 };
-  static short Dx[5] = {   0,   4,   0,  -4,   0 };
-  static short Dy[5] = {  -4,   0,   4,   0,   0 };
-  static short TrainPic2[5] = { 1, 2, 1, 2, 5 };
-  register short z, dir, dir2;
-  short c;
+  static int Cx[4] = {   0,  16,   0, -16 };
+  static int Cy[4] = { -16,   0,  16,   0 };
+  static int Dx[5] = {   0,   4,   0,  -4,   0 };
+  static int Dy[5] = {  -4,   0,   4,   0,   0 };
+  static int TrainPic2[5] = { 1, 2, 1, 2, 5 };
+  register int z, dir, dir2;
+  int c;
 
   if ((sprite->frame == 3) || (sprite->frame == 4))
     sprite->frame = TrainPic2[sprite->dir];
@@ -726,9 +726,9 @@ void DoTrainSprite(SimSprite *sprite)
 
 DoCopterSprite(SimSprite *sprite)
 {
-  static short CDx[9] = { 0,  0,  3,  5,  3,  0, -3, -5, -3 };
-  static short CDy[9] = { 0, -5, -3,  0,  3,  5,  3,  0, -3 };
-  register short z, d, x, y;
+  static int CDx[9] = { 0,  0,  3,  5,  3,  0, -3, -5, -3 };
+  static int CDy[9] = { 0, -5, -3,  0,  3,  5,  3,  0, -3 };
+  register int z, d, x, y;
 
   if (sprite->sound_count > 0) sprite->sound_count--;
 
@@ -798,10 +798,10 @@ DoCopterSprite(SimSprite *sprite)
 
 DoAirplaneSprite(SimSprite *sprite)
 {
-  static short CDx[12] = { 0,  0,  6,  8,  6,  0, -6, -8, -6,  8,  8,  8 };
-  static short CDy[12] = { 0, -8, -6,  0,  6,  8,  6,  0, -6,  0,  0,  0 };
+  static int CDx[12] = { 0,  0,  6,  8,  6,  0, -6, -8, -6,  8,  8,  8 };
+  static int CDy[12] = { 0, -8, -6,  0,  6,  8,  6,  0, -6,  0,  0,  0 };
 
-  register short z, d;
+  register int z, d;
 
   z = sprite->frame;
 	
@@ -849,14 +849,14 @@ DoAirplaneSprite(SimSprite *sprite)
 
 DoShipSprite(SimSprite *sprite)
 {
-  static short BDx[9] = { 0,  0,  1,  1,  1,  0, -1, -1, -1 };
-  static short BDy[9] = { 0, -1, -1,  0,  1,  1,  1,  0, -1 };
-  static short BPx[9] = { 0,  0,  2,  2,  2,  0, -2, -2, -2 };
-  static short BPy[9] = { 0, -2, -2,  0,  2,  2,  2,  0, -2 };
-  static short BtClrTab[8] = { RIVER, CHANNEL, POWERBASE, POWERBASE + 1,
+  static int BDx[9] = { 0,  0,  1,  1,  1,  0, -1, -1, -1 };
+  static int BDy[9] = { 0, -1, -1,  0,  1,  1,  1,  0, -1 };
+  static int BPx[9] = { 0,  0,  2,  2,  2,  0, -2, -2, -2 };
+  static int BPy[9] = { 0, -2, -2,  0,  2,  2,  2,  0, -2 };
+  static int BtClrTab[8] = { RIVER, CHANNEL, POWERBASE, POWERBASE + 1,
 			       RAILBASE, RAILBASE + 1, BRWH, BRWV };
-  register short x, y, z, t = RIVER;
-  short tem, pem;
+  register int x, y, z, t = RIVER;
+  int tem, pem;
 
   if (sprite->sound_count > 0) sprite->sound_count--;
   if (!sprite->sound_count) {
@@ -924,13 +924,13 @@ DoShipSprite(SimSprite *sprite)
 
 DoMonsterSprite(SimSprite *sprite)
 {
-  static short Gx[5] = {  2,  2, -2, -2,  0 };
-  static short Gy[5] = { -2,  2,  2, -2,  0 };
-  static short ND1[4] = {  0,  1,  2,  3 };
-  static short ND2[4] = {  1,  2,  3,  0 };
-  static short nn1[4] = {  2,  5,  8, 11 };
-  static short nn2[4] = { 11,  2,  5,  8 };
-  register short d, z, c;
+  static int Gx[5] = {  2,  2, -2, -2,  0 };
+  static int Gy[5] = { -2,  2,  2, -2,  0 };
+  static int ND1[4] = {  0,  1,  2,  3 };
+  static int ND2[4] = {  1,  2,  3,  0 };
+  static int nn1[4] = {  2,  5,  8, 11 };
+  static int nn2[4] = { 11,  2,  5,  8 };
+  register int d, z, c;
 
   if (sprite->sound_count > 0) sprite->sound_count--;
 
@@ -1060,9 +1060,9 @@ DoMonsterSprite(SimSprite *sprite)
 
 DoTornadoSprite(SimSprite *sprite)
 {
-  static short CDx[9] = {  2,  3,  2,  0, -2, -3 };
-  static short CDy[9] = { -2,  0,  2,  3,  2,  0 };
-  register short z;
+  static int CDx[9] = {  2,  3,  2,  0, -2, -3 };
+  static int CDy[9] = { -2,  0,  2,  3,  2,  0 };
+  register int z;
 
   z = sprite->frame;
 
@@ -1111,7 +1111,7 @@ DoTornadoSprite(SimSprite *sprite)
 
 DoExplosionSprite(SimSprite *sprite)
 {
-  short x, y;
+  int x, y;
 
   if (!(Cycle & 1)) {
     if (sprite->frame == 1) {
@@ -1138,9 +1138,9 @@ DoExplosionSprite(SimSprite *sprite)
 
 DoBusSprite(SimSprite *sprite)
 {
-  static short Dx[5] = {   0,   1,   0,  -1,   0 };
-  static short Dy[5] = {  -1,   0,   1,   0,   0 };
-  static short Dir2Frame[4] = { 1, 2, 1, 2 };
+  static int Dx[5] = {   0,   1,   0,  -1,   0 };
+  static int Dy[5] = {  -1,   0,   1,   0,   0 };
+  static int Dir2Frame[4] = { 1, 2, 1, 2 };
   register int dir, dir2;
   int c, dx, dy, crossed, tx, ty, otx, oty;
   int turned = 0;
@@ -1420,7 +1420,7 @@ int checkWet(int x)
 
 Destroy(int ox, int oy)
 {
-  short t, z, x, y;
+  int t, z, x, y;
 	
   x = ox >>4;
   y = oy >>4;
@@ -1453,8 +1453,8 @@ Destroy(int ox, int oy)
 
 OFireZone(int Xloc, int Yloc, int ch)
 {
-  register short Xtem, Ytem;
-  short x, y, XYmax;
+  register int Xtem, Ytem;
+  int x, y, XYmax;
 
   RateOGMem[Xloc >>3][Yloc >>3] -= 20;
 
@@ -1514,7 +1514,7 @@ GenerateBus(int x, int y)
 
 GenerateShip(void)
 {
-  register short x, y;
+  register int x, y;
 
   if (!(Rand16() & 3))
     for (x = 4; x < WORLD_X - 2; x++)
@@ -1578,7 +1578,7 @@ MakeMonster(void)
 
 MonsterHere(int x, int y)
 {
-  short z;
+  int z;
 
   MakeSprite(GOD, (x <<4) + 48, (y <<4));
   ClearMes();
@@ -1604,7 +1604,7 @@ GeneratePlane(int x, int y)
 
 MakeTornado(void)
 {
-  short x, y;
+  int x, y;
   SimSprite *sprite;
 
   if ((sprite = GetSprite(TOR)) != NULL) {

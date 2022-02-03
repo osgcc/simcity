@@ -65,17 +65,17 @@
 /* City Evaluation */
 
 
-short EvalValid;
-short CityYes, CityNo;
-short ProblemTable[PROBNUM];
-short ProblemTaken[PROBNUM];
-short ProblemVotes[PROBNUM];		/* these are the votes for each  */
-short ProblemOrder[4];			/* sorted index to above  */
+int EvalValid;
+int CityYes, CityNo;
+int ProblemTable[PROBNUM];
+int ProblemTaken[PROBNUM];
+int ProblemVotes[PROBNUM];		/* these are the votes for each  */
+int ProblemOrder[4];			/* sorted index to above  */
 long CityPop, deltaCityPop;
 long CityAssValue;
-short CityClass;			/*  0..5  */
-short CityScore, deltaCityScore, AverageCityScore;
-short TrafficAverage;
+int CityClass;			/*  0..5  */
+int CityScore, deltaCityScore, AverageCityScore;
+int TrafficAverage;
 
 
 /* comefrom: SpecialInit Simulate */
@@ -100,7 +100,7 @@ CityEvaluation(void)
 /* comefrom: CityEvaluation SetCommonInits */
 EvalInit(void)
 {
-  register short x, z;
+  register int x, z;
 
   z = 0;
   CityYes = z;
@@ -162,8 +162,8 @@ DoPopNum(void)
 /* comefrom: CityEvaluation */
 DoProblems(void)
 {
-  register short x, z;
-  short ThisProb, Max;
+  register int x, z;
+  int ThisProb, Max;
 
   for (z = 0; z < PROBNUM; z++)
     ProblemTable[z] = 0;
@@ -224,7 +224,7 @@ VoteProblems(void)
 AverageTrf(void)
 {
   long TrfTotal;
-  register short x, y, count;
+  register int x, y, count;
 
   TrfTotal = 0;
   count = 1;
@@ -244,7 +244,7 @@ AverageTrf(void)
 GetUnemployment(void)
 {
   float r;
-  short b;
+  int b;
 
   b = (ComPop + IndPop) << 3;
   if (b)
@@ -262,7 +262,7 @@ GetUnemployment(void)
 /* comefrom: DoProblems GetScore */
 GetFire(void)
 {
-  short z;
+  int z;
 
   z = FirePop * 5;
   if (z > 255)
@@ -276,7 +276,7 @@ GetFire(void)
 GetScore(void)
 {
   register x, z;
-  short OldCityScore;
+  int OldCityScore;
   float SM, TM;
 
   OldCityScore = CityScore;

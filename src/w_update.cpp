@@ -62,8 +62,8 @@
 #include "main.h"
 
 
-short MustUpdateFunds;
-short MustUpdateOptions;
+int MustUpdateFunds;
+int MustUpdateOptions;
 long LastCityTime;
 long LastCityYear;
 long LastCityMonth;

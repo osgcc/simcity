@@ -63,19 +63,19 @@
 
 
 long LastCityPop;
-short LastCategory;
-short LastPicNum;
-short autoGo;
-short HaveLastMessage = 0;
+int LastCategory;
+int LastPicNum;
+int autoGo;
+int HaveLastMessage = 0;
 char LastMessage[256];
-int DoAutoGoto(short x, short y, char *msg);
-int DoShowPicture(short id);
+int DoAutoGoto(int x, int y, char *msg);
+int DoShowPicture(int id);
 
 /* comefrom: Simulate */
 SendMessages(void)
 {
   register z;
-  short PowerPop;
+  int PowerPop;
   float TM;
 
   if ((ScenarioID) && (ScoreType) && (ScoreWait)) {
@@ -189,7 +189,7 @@ SendMessages(void)
 CheckGrowth(void)
 {
   long ThisCityPop;
-  short z;
+  int z;
 
   if (!(CityTime & 3)) {
     z = 0;
@@ -214,7 +214,7 @@ CheckGrowth(void)
 /* comefrom: SendMessages */
 DoScenarioScore(int type)
 {
-  short z;
+  int z;
 
   z = -200;	/* you lose */
   switch(type) {
@@ -285,7 +285,7 @@ SendMes(int Mnum)
 
 
 /* comefrom: DoExplosion DoCopter ExplodeObject */
-void SendMesAt(short Mnum, short x, short y)
+void SendMesAt(int Mnum, int x, int y)
 {
   if (SendMes(Mnum)) {
     MesX = x;
@@ -297,8 +297,8 @@ void SendMesAt(short Mnum, short x, short y)
 doMessage(void) 
 {
   char messageStr[256];
-  short pictId;
-  short firstTime;
+  int pictId;
+  int firstTime;
 
   messageStr[0] = 0;
 
@@ -401,7 +401,7 @@ doMessage(void)
 }
 
 
-DoAutoGoto(short x, short y, char *msg)
+DoAutoGoto(int x, int y, char *msg)
 {
   char buf[256];
 
@@ -425,7 +425,7 @@ SetMessageField(char *str)
 }
 
 
-DoShowPicture(short id)
+DoShowPicture(int id)
 {
   char buf[256];
 

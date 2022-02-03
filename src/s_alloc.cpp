@@ -66,38 +66,38 @@
 /* Allocate Stuff */
 
 
-short SMapX, SMapY;
-short CChr, CChr9;
+int SMapX, SMapY;
+int CChr, CChr9;
 
-short RoadTotal, RailTotal, FirePop;
+int RoadTotal, RailTotal, FirePop;
 
-short ResPop, ComPop, IndPop, TotalPop, LastTotalPop;
-short ResZPop, ComZPop, IndZPop, TotalZPop;
-short HospPop, ChurchPop, StadiumPop;
-short PolicePop, FireStPop;
-short CoalPop, NuclearPop, PortPop, APortPop;
+int ResPop, ComPop, IndPop, TotalPop, LastTotalPop;
+int ResZPop, ComZPop, IndZPop, TotalZPop;
+int HospPop, ChurchPop, StadiumPop;
+int PolicePop, FireStPop;
+int CoalPop, NuclearPop, PortPop, APortPop;
 
-short NeedHosp, NeedChurch;
-short CrimeAverage, PolluteAverage, LVAverage;
+int NeedHosp, NeedChurch;
+int CrimeAverage, PolluteAverage, LVAverage;
 
 long CityTime;
-short StartingYear;
+int StartingYear;
 
-short* Map[WORLD_X];
+int* Map[WORLD_X];
 
-short ResHisMax, Res2HisMax;
-short ComHisMax, Com2HisMax;
-short IndHisMax, Ind2HisMax;
-short CensusChanged;
+int ResHisMax, Res2HisMax;
+int ComHisMax, Com2HisMax;
+int IndHisMax, Ind2HisMax;
+int CensusChanged;
 
-short MessagePort;
-short MesX, MesY;
+int MessagePort;
+int MesX, MesY;
 
 long RoadSpend, PoliceSpend, FireSpend;
 long RoadFund, PoliceFund, FireFund;
-short RoadEffect, PoliceEffect, FireEffect;
+int RoadEffect, PoliceEffect, FireEffect;
 long TaxFund; 
-short CityTax, TaxFlag;
+int CityTax, TaxFlag;
 unsigned char tileSynch = 0x01;
 
 Byte* PopDensity[HWLDX];
@@ -110,14 +110,14 @@ Byte* tem2[HWLDX];
 Byte* TerrainMem[QWX];
 Byte* Qtem[QWX];
 
-short RateOGMem[SmX][SmY];
-short FireStMap[SmX][SmY];
-short PoliceMap[SmX][SmY];
-short PoliceMapEffect[SmX][SmY];
+int RateOGMem[SmX][SmY];
+int FireStMap[SmX][SmY];
+int PoliceMap[SmX][SmY];
+int PoliceMapEffect[SmX][SmY];
 
-short FireRate[SmX][SmY];
-short ComRate[SmX][SmY];
-short STem[SmX][SmY];
+int FireRate[SmX][SmY];
+int ComRate[SmX][SmY];
+int STem[SmX][SmY];
 
 Ptr terrainBase;
 Ptr qTemBase;
@@ -137,22 +137,22 @@ Ptr auxLandPtr;
 Ptr auxCrimePtr;
 Ptr brettPtr;
 
-unsigned short *mapPtr;
-short *ResHis;
-short *ComHis;
-short *IndHis;
-short *MoneyHis;
-short *PollutionHis;
-short *CrimeHis;
-short *MiscHis;
-short *PowerMap;
+unsigned int *mapPtr;
+int *ResHis;
+int *ComHis;
+int *IndHis;
+int *MoneyHis;
+int *PollutionHis;
+int *CrimeHis;
+int *MiscHis;
+int *PowerMap;
 
 
 void initMapArrays()
 {
     if (!mapPtr)
     {
-        mapPtr = (unsigned short*)NewPtr(sizeof(unsigned short) * WORLD_X * WORLD_Y);
+        mapPtr = (unsigned int*)NewPtr(sizeof(unsigned int) * WORLD_X * WORLD_Y);
     }
 
    auto auxPtr = mapPtr;
@@ -160,7 +160,7 @@ void initMapArrays()
     for (int i = 0; i < WORLD_X; i++)
     {
         auto temp1 = auxPtr + i * WORLD_Y;
-        Map[i] = (short*)temp1;
+        Map[i] = (int*)temp1;
     }
 
     popPtr = NewPtr(HWLDX * HWLDY);
@@ -201,12 +201,12 @@ void initMapArrays()
         Qtem[i] = (Byte*)qTemBase + (i * QWY);
     }
 
-    ResHis = (short*)NewPtr(HISTLEN);
-    ComHis = (short*)NewPtr(HISTLEN);
-    IndHis = (short*)NewPtr(HISTLEN);
-    MoneyHis = (short*)NewPtr(HISTLEN);
-    PollutionHis = (short*)NewPtr(HISTLEN);
-    CrimeHis = (short*)NewPtr(HISTLEN);
-    MiscHis = (short*)NewPtr(MISCHISTLEN);
-    PowerMap = (short*)NewPtr(POWERMAPLEN);		/* power alloc */
+    ResHis = (int*)NewPtr(HISTLEN);
+    ComHis = (int*)NewPtr(HISTLEN);
+    IndHis = (int*)NewPtr(HISTLEN);
+    MoneyHis = (int*)NewPtr(HISTLEN);
+    PollutionHis = (int*)NewPtr(HISTLEN);
+    CrimeHis = (int*)NewPtr(HISTLEN);
+    MiscHis = (int*)NewPtr(MISCHISTLEN);
+    PowerMap = (int*)NewPtr(POWERMAPLEN);		/* power alloc */
 }

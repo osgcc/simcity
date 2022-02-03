@@ -65,11 +65,11 @@
 /* Map Updates */
 
 
-short NewMap;
-short NewMapFlags[NMAPS];
-short CCx, CCy, CCx2, CCy2;
-short PolMaxX, PolMaxY;
-short CrimeMaxX, CrimeMaxY;
+int NewMap;
+int NewMapFlags[NMAPS];
+int CCx, CCy, CCx2, CCy2;
+int PolMaxX, PolMaxY;
+int CrimeMaxX, CrimeMaxY;
 long DonDither = 0;
 
 
@@ -93,7 +93,7 @@ FireAnalysis(void)		/* Make firerate map from firestation map  */
 PopDenScan(void)		/*  sets: PopDensity, , , ComRate  */
 {
   long Xtot, Ytot, Ztot;
-  register short x, y, z;
+  register int x, y, z;
 
   ClrTemArray();
   Xtot = 0;
@@ -276,7 +276,7 @@ GetPValue(int loc)
 /* comefrom: PTLScan DistIntMarket */
 GetDisCC(int x, int y)
 {
-  short xdis, ydis, z;
+  int xdis, ydis, z;
 
   if (x > CCx2)
     xdis = x - CCx2;
@@ -299,10 +299,10 @@ GetDisCC(int x, int y)
 /* comefrom: Simulate SpecialInit */
 CrimeScan(void)
 {
-  short numz;
+  int numz;
   long totz;
-  register short x, y, z;
-  short cmax;
+  register int x, y, z;
+  int cmax;
 
   SmoothPSMap();
   SmoothPSMap();
@@ -363,7 +363,7 @@ SmoothTerrain(void)
       y += dir;
     }
   } else {
-    register short x,y,z;
+    register int x,y,z;
 
     for (x = 0; x < QWX; x++)
       for (y = 0; y < QWY; y++) {
@@ -406,7 +406,7 @@ DoSmooth (void)        /* smooths data in tem[x][y] into tem2[x][y]  */
       y += dir;
     }
   } else {
-    register short x,y,z;
+    register int x,y,z;
 
     for (x = 0; x < HWLDX; x++) {
       for (y = 0; y < HWLDY; y++) {
@@ -453,7 +453,7 @@ DoSmooth2 (void)        /* smooths data in tem2[x][y] into tem[x][y]  */
       y += dir;
     }
   } else {
-    register short x,y,z;
+    register int x,y,z;
 
     for (x = 0; x < HWLDX; x++) {
       for (y = 0; y < HWLDY; y++) {
@@ -474,7 +474,7 @@ DoSmooth2 (void)        /* smooths data in tem2[x][y] into tem[x][y]  */
 /* comefrom: PopDenScan */
 ClrTemArray(void)
 {
-  register short x, y, z;
+  register int x, y, z;
 
   z = 0;
   for (x = 0; x < HWLDX; x++)
@@ -486,7 +486,7 @@ ClrTemArray(void)
 /* comefrom: FireAnalysis */
 SmoothFSMap(void)
 {
-  register short x, y, edge;
+  register int x, y, edge;
 
   for (x = 0; x < SmX; x++)
     for (y = 0; y < SmY; y++) {
@@ -528,7 +528,7 @@ SmoothPSMap(void)
 /* comefrom: PopDenScan */
 DistIntMarket(void)
 {
-  register short x, y, z;
+  register int x, y, z;
 
   for (x = 0; x < SmX; x++)
     for (y = 0; y < SmY; y++) {

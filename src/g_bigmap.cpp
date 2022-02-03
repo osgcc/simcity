@@ -72,10 +72,10 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 	int lineBytes = view->line_bytes;
 	int pixelBytes = view->pixel_bytes;
 	long ii, mm;
-	unsigned short* map;
-	unsigned short tile;
+	unsigned int* map;
+	unsigned int tile;
 	unsigned char blink = (flagBlink <= 0), * bt = view->bigtiles;
-	short** have, * ha;
+	int** have, * ha;
 
 	if (x < view->tile_x)
 	{
@@ -114,7 +114,7 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 
 	image = (unsigned long*)view->data;
 	ii = ((lineBytes * h * 16) - 16) / sizeof(unsigned long);
-	map = (unsigned short*)&Map[x][y];
+	map = (unsigned int*)&Map[x][y];
 	mm = WORLD_Y - h;
 	have = view->tiles;
 
@@ -122,11 +122,11 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 	 * Huge Berserk Rebel Warthog  <-- ?
 	 */
 
-	for (short col = 0; col < w; col++)
+	for (int col = 0; col < w; col++)
 	{
 		ha = &have[col][0];
 		image = (unsigned long*)(view->data + (col * 16 * pixelBytes));
-		for (short row = 0; row < h; row++, ha++)
+		for (int row = 0; row < h; row++, ha++)
 		{
 			tile = *(map++);
 			if ((tile & LOMASK) >= TILE_COUNT)
@@ -182,19 +182,19 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 	/*}
 	else
 	{
-		unsigned short* image, * mem;
+		unsigned int* image, * mem;
 
-		image = (unsigned short*)view->data;
-		ii = ((lineBytes * h * 16) - 2) / sizeof(unsigned short);
-		map = (unsigned short*)&Map[x][y];
+		image = (unsigned int*)view->data;
+		ii = ((lineBytes * h * 16) - 2) / sizeof(unsigned int);
+		map = (unsigned int*)&Map[x][y];
 		mm = WORLD_Y - h;
 		have = view->tiles;
 
-		for (short col = 0; col < w; col++)
+		for (int col = 0; col < w; col++)
 		{
 			ha = &have[col][0];
-			image = (unsigned short*)(view->data + (col * 2));
-			for (short row = 0; row < h; row++, ha++)
+			image = (unsigned int*)(view->data + (col * 2));
+			for (int row = 0; row < h; row++, ha++)
 			{
 				tile = *(map++);
 				if ((tile & LOMASK) >= TILE_COUNT) tile -= TILE_COUNT;
@@ -211,17 +211,17 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 
 				if (tile == *ha)
 				{
-					image = (unsigned short*)(((unsigned char*)image) + (lineBytes * 16));
+					image = (unsigned int*)(((unsigned char*)image) + (lineBytes * 16));
 				}
 				else
 				{
 					*ha = tile;
-					mem = (unsigned short*)&(bt[tile * 32]);
+					mem = (unsigned int*)&(bt[tile * 32]);
 
 					for (char i = 16; i > 0; i--)
 					{
 						*image = *mem;
-						image = (unsigned short*)(((unsigned char*)image) + lineBytes);
+						image = (unsigned int*)(((unsigned char*)image) + lineBytes);
 						mem++;
 					}
 
@@ -235,13 +235,13 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 }
 
 
-void WireDrawBeegMapRect(SimView* view, short x, short y, short w, short h)
+void WireDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 {
-	unsigned short* map;
-	unsigned short tile;
+	unsigned int* map;
+	unsigned int tile;
 	unsigned char blink = (flagBlink <= 0);
 	long mm;
-	short** have, * ha;
+	int** have, * ha;
 
 	if (x < view->tile_x)
 	{
@@ -274,14 +274,14 @@ void WireDrawBeegMapRect(SimView* view, short x, short y, short w, short h)
 		}
 	}
 
-	map = (unsigned short*)&Map[x][y];
+	map = (unsigned int*)&Map[x][y];
 	mm = WORLD_Y - h;
 	have = view->tiles;
 
-	for (short col = 0; col < w; col++)
+	for (int col = 0; col < w; col++)
 	{
 		ha = &have[col][0];
-		for (short row = 0; row < h; row++, ha++)
+		for (int row = 0; row < h; row++, ha++)
 		{
 			tile = *(map++);
 			if ((tile & LOMASK) >= TILE_COUNT) tile -= TILE_COUNT;

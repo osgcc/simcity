@@ -67,16 +67,16 @@
 
 #define MAXDIS 30
 
-short PosStackN, SMapXStack[MAXDIS+1], SMapYStack[MAXDIS+1];
-short LDir;
-short Zsource;
-short TrafMaxX, TrafMaxY;
+int PosStackN, SMapXStack[MAXDIS+1], SMapYStack[MAXDIS+1];
+int LDir;
+int Zsource;
+int TrafMaxX, TrafMaxY;
 
 
 /* comefrom: DoIndustrial DoCommercial DoResidential */
 MakeTraf(int Zt)
 {
-  short xtem, ytem;
+  int xtem, ytem;
 
   xtem = SMapX;
   ytem = SMapY;
@@ -101,7 +101,7 @@ MakeTraf(int Zt)
 /* comefrom: MakeTraf */
 SetTrafMem(void)
 {
-  register short x, z;
+  register int x, z;
 
   for (x = PosStackN; x > 0; x--) {
     PullPos();
@@ -152,9 +152,9 @@ PullPos(void)
 /* comefrom: DoSPZone MakeTraf */
 FindPRoad(void)		/* look for road on edges of zone   */
 {
-  static short PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
-  static short PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};
-  register short tx, ty, z;
+  static int PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
+  static int PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};
+  register int tx, ty, z;
 
   for (z = 0; z < 12; z++) {
 	  tx = SMapX + PerimX[z];
@@ -173,9 +173,9 @@ FindPRoad(void)		/* look for road on edges of zone   */
 
 FindPTele(void)		/* look for telecommunication on edges of zone */
 {
-  static short PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
-  static short PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};
-  register short tx, ty, z, tile;
+  static int PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
+  static int PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};
+  register int tx, ty, z, tile;
 
   for (z = 0; z < 12; z++) {
 	  tx = SMapX + PerimX[z];
@@ -194,7 +194,7 @@ FindPTele(void)		/* look for telecommunication on edges of zone */
 /* comefrom: MakeTraf */
 TryDrive(void)
 {
-  short z;
+  int z;
 
   LDir = 5;
   for (z = 0; z < MAXDIS; z++) {	/* Maximum distance to try */
@@ -216,7 +216,7 @@ TryDrive(void)
 /* comefrom: TryDrive */
 TryGo(int z)
 {
-  short x, rdir, realdir;
+  int x, rdir, realdir;
 
   rdir = Rand16() & 3;
 
@@ -264,13 +264,13 @@ GetFromMap(int x)
 /* comefrom: TryDrive */
 bool DriveDone()
 {
-    static short TARGL[3] = { COMBASE, LHTHR, LHTHR };
-    static short TARGH[3] = { NUCLEAR, PORT, COMBASE };	/* for destinations */
-    //register short l, h;
+    static int TARGL[3] = { COMBASE, LHTHR, LHTHR };
+    static int TARGH[3] = { NUCLEAR, PORT, COMBASE };	/* for destinations */
+    //register int l, h;
 
-    for (short x = 0; x < 4; x++) /* R>C C>I I>R  */
+    for (int x = 0; x < 4; x++) /* R>C C>I I>R  */
     {
-        short z = GetFromMap(x);
+        int z = GetFromMap(x);
         if ((z >= TARGL[Zsource]) && (z <= TARGH[Zsource]))
         {
             return true;

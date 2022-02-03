@@ -73,7 +73,7 @@ long policeMaxValue;
 long fireMaxValue;
 int MustDrawCurrPercents = 0;
 int MustDrawBudgetWindow = 0;
-int SetBudget(char *flowStr, char *previousStr, char *currentStr, char *collectedStr, short tax);
+int SetBudget(char *flowStr, char *previousStr, char *currentStr, char *collectedStr, int tax);
 
 
 
@@ -226,7 +226,7 @@ drawBudgetWindow(void)
 
 ReallyDrawBudgetWindow(void)
 {
-  short cashFlow, cashFlow2;
+  int cashFlow, cashFlow2;
   char numStr[256], dollarStr[256], collectedStr[256],
        flowStr[256], previousStr[256], currentStr[256];
 
@@ -324,7 +324,7 @@ void ShowBudgetWindowAndStartWaiting()
 
 
 SetBudget(char *flowStr, char *previousStr,
-	  char *currentStr, char *collectedStr, short tax)
+	  char *currentStr, char *collectedStr, int tax)
 {
   char buf[256];
 

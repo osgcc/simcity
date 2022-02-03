@@ -69,30 +69,30 @@
 /* Simulation */
 
 
-short ValveFlag;
-short CrimeRamp, PolluteRamp ;
-short RValve, CValve, IValve;
-short ResCap, ComCap, IndCap;
-short CashFlow;
+int ValveFlag;
+int CrimeRamp, PolluteRamp ;
+int RValve, CValve, IValve;
+int ResCap, ComCap, IndCap;
+int CashFlow;
 float EMarket = 4.0;
-short DisasterEvent;
-short DisasterWait;
-short ScoreType;
-short ScoreWait;
-short PwrdZCnt;
-short unPwrdZCnt;
-short NewPower; /* post */
-short AvCityTax;
-short Scycle = 0;
-short Fcycle = 0;
-short Spdcycle = 0;
-short DoInitialEval = 0;
-short MeltX, MeltY;
+int DisasterEvent;
+int DisasterWait;
+int ScoreType;
+int ScoreWait;
+int PwrdZCnt;
+int unPwrdZCnt;
+int NewPower; /* post */
+int AvCityTax;
+int Scycle = 0;
+int Fcycle = 0;
+int Spdcycle = 0;
+int DoInitialEval = 0;
+int MeltX, MeltY;
 
 
 void SimFrame()
 {
-    short i;
+    int i;
 
     if (SimSpeed == 0)
         return;
@@ -113,12 +113,12 @@ void SimFrame()
 
 void Simulate(int mod16)
 {
-    static short SpdPwr[4] = { 1,  2,  4,  5 };
-    static short SpdPtl[4] = { 1,  2,  7, 17 };
-    static short SpdCri[4] = { 1,  1,  8, 18 };
-    static short SpdPop[4] = { 1,  1,  9, 19 };
-    static short SpdFir[4] = { 1,  1, 10, 20 };
-    short x;
+    static int SpdPwr[4] = { 1,  2,  4,  5 };
+    static int SpdPtl[4] = { 1,  2,  7, 17 };
+    static int SpdCri[4] = { 1,  1,  8, 18 };
+    static int SpdPop[4] = { 1,  1,  9, 19 };
+    static int SpdFir[4] = { 1,  1, 10, 20 };
+    int x;
 
     x = SimSpeed;
     if (x > 3) x = 3;
@@ -243,7 +243,7 @@ void DoSimInit()
 /* comefrom: SimLoadInit */
 DoNilPower(void)
 {
-  register short x, y, z;
+  register int x, y, z;
 
   for (x = 0; x < WORLD_X; x++)
     for (y = 0; y < WORLD_Y; y++) {
@@ -261,7 +261,7 @@ DoNilPower(void)
 /* comefrom: Simulate */
 DecTrafficMem(void)		/* tends to empty TrfDensity   */
 {
-  register short x, y, z;
+  register int x, y, z;
 
   for (x = 0; x < HWLDX; x++)
     for (y = 0; y < HWLDY; y++)
@@ -278,7 +278,7 @@ DecTrafficMem(void)		/* tends to empty TrfDensity   */
 /* comefrom: Simulate */
 DecROGMem(void)			/* tends to empty RateOGMem   */
 {
-  register short x, y, z;
+  register int x, y, z;
 
   for (x = 0; x < SmX; x++)
     for (y = 0; y < SmY; y++)	{
@@ -300,7 +300,7 @@ DecROGMem(void)			/* tends to empty RateOGMem   */
 /* comefrom: DoSimInit */
 InitSimMemory(void)
 {	
-  register short x, z;
+  register int x, z;
 
   z = 0;
   SetCommonInits();
@@ -338,8 +338,8 @@ InitSimMemory(void)
 /* comefrom: DoSimInit */
 SimLoadInit(void)
 {
-  static short DisTab[9] = { 0, 2, 10, 5, 20, 3, 5, 5, 2 * 48};
-  static short ScoreWaitTab[9] = { 0, 30 * 48, 5 * 48, 5 * 48, 10 * 48,
+  static int DisTab[9] = { 0, 2, 10, 5, 20, 3, 5, 5, 2 * 48};
+  static int ScoreWaitTab[9] = { 0, 30 * 48, 5 * 48, 5 * 48, 10 * 48,
 				   5 * 48, 10 * 48, 5 * 48, 10 * 48 };
   register int z;
 
@@ -419,15 +419,15 @@ SetCommonInits(void)
 /* comefrom: Simulate DoSimInit */
 SetValves(void)
 {
-  static short TaxTable[21] = {
+  static int TaxTable[21] = {
     200, 150, 120, 100, 80, 50, 30, 0, -10, -40, -100,
     -150, -200, -250, -300, -350, -400, -450, -500, -550, -600 };
   float Employment, Migration, Births, LaborBase, IntMarket;
   float Rratio, Cratio, Iratio, temp;
   float NormResPop, PjResPop, PjComPop, PjIndPop;
-  register short z;
+  register int z;
 
-  MiscHis[1] = (short)EMarket;
+  MiscHis[1] = (int)EMarket;
   MiscHis[2] = ResPop;
   MiscHis[3] = ComPop;
   MiscHis[4] = IndPop;
@@ -529,7 +529,7 @@ SetValves(void)
 /* comefrom: Simulate DoSimInit */
 ClearCensus(void)
 {
-  register short x, y, z;
+  register int x, y, z;
 
   z = 0;
   PwrdZCnt = z;
@@ -564,7 +564,7 @@ ClearCensus(void)
 /* comefrom: Simulate */
 TakeCensus(void)
 {
-  short x;
+  int x;
 
   /* put census#s in Historical Graphs and scroll data  */
   ResHisMax = 0;
@@ -616,7 +616,7 @@ TakeCensus(void)
 /* comefrom: Simulate */
 Take2Census(void)    /* Long Term Graphs */
 {
-  short x;
+  int x;
 
   Res2HisMax = 0;
   Com2HisMax = 0;
@@ -648,7 +648,7 @@ CollectTax(void)
 {	
   static float RLevels[3] = { 0.7, 0.9, 1.2 };
   static float FLevels[3] = { 1.4, 1.2, 0.8 };
-  short z;
+  int z;
 
   CashFlow = 0;
   if (!TaxFlag) { /* if the Tax Port is clear  */
@@ -676,19 +676,19 @@ CollectTax(void)
 UpdateFundEffects(void)
 {
   if (RoadFund)
-    RoadEffect = (short)(((float)RoadSpend /
+    RoadEffect = (int)(((float)RoadSpend /
 			  (float)RoadFund) * 32.0);
   else
     RoadEffect = 32;
 
   if (PoliceFund)
-    PoliceEffect = (short)(((float)PoliceSpend /
+    PoliceEffect = (int)(((float)PoliceSpend /
 			    (float)PoliceFund) * 1000.0);
   else
     PoliceEffect = 1000;
 
   if (FireFund)
-    FireEffect = (short)(((float)FireSpend /
+    FireEffect = (int)(((float)FireSpend /
 			  (float)FireFund) * 1000.0);
   else
     FireEffect = 1000;
@@ -700,7 +700,7 @@ UpdateFundEffects(void)
 /* comefrom: Simulate DoSimInit */
 MapScan(int x1, int x2)
 {
-  register short x, y;
+  register int x, y;
 
   for (x = x1; x < x2; x++)  {
     for (y = 0; y < WORLD_Y; y++) {
@@ -777,8 +777,8 @@ DoRadTile(void)
 /* comefrom: MapScan */
 DoRoad(void)
 {
-  register short Density, tden, z;
-  static short DenTab[3] = { ROADBASE, LTRFBASE, HTRFBASE };
+  register int Density, tden, z;
+  static int DenTab[3] = { ROADBASE, LTRFBASE, HTRFBASE };
 
   RoadTotal++;
 /*  GenerateBus(SMapX, SMapY); */
@@ -818,20 +818,20 @@ DoRoad(void)
 /* comefrom: MapScan */
 DoBridge(void)
 {
-  static short HDx[7] = { -2,  2, -2, -1,  0,  1,  2 };
-  static short HDy[7] = { -1, -1,  0,  0,  0,  0,  0 };
-  static short HBRTAB[7] = {
+  static int HDx[7] = { -2,  2, -2, -1,  0,  1,  2 };
+  static int HDy[7] = { -1, -1,  0,  0,  0,  0,  0 };
+  static int HBRTAB[7] = {
     HBRDG1 | BULLBIT, HBRDG3 | BULLBIT, HBRDG0 | BULLBIT,
     RIVER, BRWH | BULLBIT, RIVER, HBRDG2 | BULLBIT };
-  static short HBRTAB2[7] = {
+  static int HBRTAB2[7] = {
     RIVER, RIVER, HBRIDGE | BULLBIT, HBRIDGE | BULLBIT, HBRIDGE | BULLBIT,
     HBRIDGE | BULLBIT, HBRIDGE | BULLBIT };
-  static short VDx[7] = {  0,  1,  0,  0,  0,  0,  1 };
-  static short VDy[7] = { -2, -2, -1,  0,  1,  2,  2 };
-  static short VBRTAB[7] = {
+  static int VDx[7] = {  0,  1,  0,  0,  0,  0,  1 };
+  static int VDy[7] = { -2, -2, -1,  0,  1,  2,  2 };
+  static int VBRTAB[7] = {
     VBRDG0 | BULLBIT, VBRDG1 | BULLBIT, RIVER, BRWV | BULLBIT,
     RIVER, VBRDG2 | BULLBIT, VBRDG3 | BULLBIT };
-  static short VBRTAB2[7] = {
+  static int VBRTAB2[7] = {
     VBRIDGE | BULLBIT, RIVER, VBRIDGE | BULLBIT, VBRIDGE | BULLBIT,
     VBRIDGE | BULLBIT, VBRIDGE | BULLBIT, RIVER };
   register z, x, y, MPtem;
@@ -926,9 +926,9 @@ GetBoatDis(void)
 /* comefrom: MapScan */
 DoFire(void)
 {
-  static short DX[4] = { -1,  0,  1,  0 };
-  static short DY[4] = {  0, -1,  0,  1 };
-  register short z, Xtem, Ytem, Rate, c;
+  static int DX[4] = { -1,  0,  1,  0 };
+  static int DY[4] = {  0, -1,  0,  1 };
+  register int z, Xtem, Ytem, Rate, c;
 
   for (z = 0; z < 4; z++) {
     if (!(Rand16() & 7)) {
@@ -963,8 +963,8 @@ DoFire(void)
 /* comefrom: DoFire MakeFlood */
 void FireZone(int Xloc, int Yloc, int ch)
 {
-  register short Xtem, Ytem;
-  short x, y, XYmax;
+  register int Xtem, Ytem;
+  int x, y, XYmax;
 
   RateOGMem[Xloc >>3][Yloc >>3] -= 20;
 
@@ -984,17 +984,17 @@ void FireZone(int Xloc, int Yloc, int ch)
       if ((Xtem < 0) || (Xtem > (WORLD_X - 1)) ||
 	  (Ytem < 0) || (Ytem > (WORLD_Y - 1)))
 	continue;
-      if ((short)(Map[Xtem][Ytem] & LOMASK) >= ROADBASE) /* post release */
+      if ((int)(Map[Xtem][Ytem] & LOMASK) >= ROADBASE) /* post release */
 	Map[Xtem][Ytem] |= BULLBIT;
     }
 }
 
 
 /* comefrom: DoSPZone DoHospChur */
-RepairZone(short ZCent, short zsize)
+RepairZone(int ZCent, int zsize)
 {
-  short cnt;
-  register short x, y, ThCh;
+  int cnt;
+  register int x, y, ThCh;
 
   zsize--;
   cnt = 0;
@@ -1017,9 +1017,9 @@ RepairZone(short ZCent, short zsize)
 
 
 /* comefrom: DoZone */
-DoSPZone(short PwrOn)
+DoSPZone(int PwrOn)
 {
-  static short MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
+  static int MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
   register z;
 
   switch (CChr9) {
@@ -1150,10 +1150,10 @@ DoAirport(void)
 /* comefrom: DoSPZone */
 CoalSmoke(int mx, int my)
 {
-  static short SmTb[4] = { COALSMOKE1, COALSMOKE2, COALSMOKE3, COALSMOKE4 };
-  static short dx[4] = {  1,  2,  1,  2 };
-  static short dy[4] = { -1, -1,  0,  0 };
-  register short x;
+  static int SmTb[4] = { COALSMOKE1, COALSMOKE2, COALSMOKE3, COALSMOKE4 };
+  static int dx[4] = {  1,  2,  1,  2 };
+  static int dy[4] = { -1, -1,  0,  0 };
+  register int x;
 
   for (x = 0; x < 4; x++)
     Map[mx + dx[x]][my + dy[x]] =
@@ -1197,8 +1197,8 @@ DoMeltdown(int SX, int SY)
 
 #define RANDOM_RANGE 0xffff
 
-short
-Rand(short range)
+int
+Rand(int range)
 {
   int maxMultiple, rnum;
 

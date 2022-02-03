@@ -146,7 +146,7 @@ ResourceSize(Handle h)
 }
 
 
-GetIndString(char *str, int id, short num)
+GetIndString(char *str, int id, int num)
 {
   struct StringTable **tp, *st = NULL;
   Handle h;

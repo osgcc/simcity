@@ -67,7 +67,7 @@
 
 DoZone(void)
 {
-  short ZonePwrFlg;
+  int ZonePwrFlg;
 
   ZonePwrFlg = SetZPower();	/* Set Power Bit in Map from PowerMap */
   if (ZonePwrFlg) PwrdZCnt++;
@@ -120,16 +120,16 @@ DoHospChur(void)
 
 SetSmoke(int ZonePower)
 {
-  static short AniThis[8] = {    T,    F,    T,    T,    F,    F,    T,    T };
-  static short DX1[8]	  = {   -1,    0,    1,    0,    0,    0,    0,    1 };
-  static short DY1[8]	  = {   -1,    0,   -1,   -1,    0,    0,   -1,   -1 };
-  static short DX2[8]	  = {   -1,    0,    1,    1,    0,    0,    1,    1 };
-  static short DY2[8]	  = {   -1,    0,    0,   -1,    0,    0,   -1,    0 };
-  static short AniTabA[8] = {    0,    0,   32,   40,    0,    0,   48,   56 };
-  static short AniTabB[8] = {    0,    0,   36,   44,    0,    0,   52,   60 };
-  static short AniTabC[8] = { IND1,    0, IND2, IND4,    0,    0, IND6, IND8 };
-  static short AniTabD[8] = { IND1,    0, IND3, IND5,    0,    0, IND7, IND9 };
-  register short z;
+  static int AniThis[8] = {    T,    F,    T,    T,    F,    F,    T,    T };
+  static int DX1[8]	  = {   -1,    0,    1,    0,    0,    0,    0,    1 };
+  static int DY1[8]	  = {   -1,    0,   -1,   -1,    0,    0,   -1,   -1 };
+  static int DX2[8]	  = {   -1,    0,    1,    1,    0,    0,    1,    1 };
+  static int DY2[8]	  = {   -1,    0,    0,   -1,    0,    0,   -1,    0 };
+  static int AniTabA[8] = {    0,    0,   32,   40,    0,    0,   48,   56 };
+  static int AniTabB[8] = {    0,    0,   36,   44,    0,    0,   52,   60 };
+  static int AniTabC[8] = { IND1,    0, IND2, IND4,    0,    0, IND6, IND8 };
+  static int AniTabD[8] = { IND1,    0, IND3, IND5,    0,    0, IND7, IND9 };
+  register int z;
 
   if (CChr9 < IZB) return;
   z = (CChr9 - IZB) >>3;
@@ -160,7 +160,7 @@ SetSmoke(int ZonePower)
 
 DoIndustrial(int ZonePwrFlg)
 {
-  short tpop, zscore, TrfGood;
+  int tpop, zscore, TrfGood;
 
   IndZPop++;
   SetSmoke(ZonePwrFlg);
@@ -178,12 +178,12 @@ DoIndustrial(int ZonePwrFlg)
     zscore = IValve + EvalInd(TrfGood);
     if (!ZonePwrFlg) zscore = -500;
     if ((zscore > -350) &&
-	(((short)(zscore - 26380)) > ((short)Rand16Signed()))) {
+	(((int)(zscore - 26380)) > ((int)Rand16Signed()))) {
       DoIndIn(tpop, Rand16() & 1);
       return;
     }
     if ((zscore < 350) &&
-	(((short)(zscore + 26380)) < ((short)Rand16Signed())))
+	(((int)(zscore + 26380)) < ((int)Rand16Signed())))
       DoIndOut(tpop, Rand16() & 1);
   }
 }
@@ -191,8 +191,8 @@ DoIndustrial(int ZonePwrFlg)
 
 DoCommercial(int ZonePwrFlg)
 {
-  register short tpop, TrfGood;
-  short zscore, locvalve,value;
+  register int tpop, TrfGood;
+  int zscore, locvalve,value;
 
   ComZPop++;
   tpop = CZPop(CChr9);
@@ -213,13 +213,13 @@ DoCommercial(int ZonePwrFlg)
 
     if (TrfGood &&
 	(zscore > -350) &&
-	(((short)(zscore - 26380)) > ((short)Rand16Signed()))) {
+	(((int)(zscore - 26380)) > ((int)Rand16Signed()))) {
       value = GetCRVal();
       DoComIn(tpop, value);
       return;
     }
     if ((zscore < 350) &&
-	(((short)(zscore + 26380)) < ((short)Rand16Signed()))) {
+	(((int)(zscore + 26380)) < ((int)Rand16Signed()))) {
       value = GetCRVal();
       DoComOut(tpop, value);
     }
@@ -229,7 +229,7 @@ DoCommercial(int ZonePwrFlg)
 
 DoResidential(int ZonePwrFlg)
 {
-  short tpop, zscore, locvalve, value, TrfGood;
+  int tpop, zscore, locvalve, value, TrfGood;
 
   ResZPop++;
   if (CChr9 == FREEZ) tpop = DoFreePop();
@@ -251,7 +251,7 @@ DoResidential(int ZonePwrFlg)
     if (!ZonePwrFlg) zscore = -500;
 
     if ((zscore > -350) &&
-	(((short)(zscore - 26380)) > ((short)Rand16Signed()))) {
+	(((int)(zscore - 26380)) > ((int)Rand16Signed()))) {
       if ((!tpop) && (!(Rand16() & 3))) {
 	MakeHosp();
 	return;
@@ -261,7 +261,7 @@ DoResidential(int ZonePwrFlg)
       return;
     }
     if ((zscore < 350) &&
-	(((short)(zscore + 26380)) < ((short)Rand16Signed()))) {
+	(((int)(zscore + 26380)) < ((int)Rand16Signed()))) {
 	    value = GetCRVal();
 	    DoResOut(tpop, value);
     }
@@ -286,7 +286,7 @@ MakeHosp(void)
 
 GetCRVal(void)
 {
-  register short LVal;
+  register int LVal;
 
   LVal = LandValueMem[SMapX >>1][SMapY >>1];
   LVal -= PollutionMem[SMapX >>1][SMapY >>1];
@@ -299,7 +299,7 @@ GetCRVal(void)
 
 DoResIn(int pop, int value)
 {
-  short z;
+  int z;
 
   z = PollutionMem[SMapX >>1][SMapY >>1];
   if (z > 128) return;
@@ -326,7 +326,7 @@ DoResIn(int pop, int value)
 
 DoComIn(int pop, int value)
 {
-  register short z;
+  register int z;
 
   z = LandValueMem[SMapX >>1][SMapY >>1];
   z = z >>5;
@@ -356,8 +356,8 @@ IncROG(int amount)
 
 DoResOut(int pop, int value)
 {
-  static short Brdr[9] = {0,3,6,1,4,7,2,5,8};
-  register short x, y, loc, z;
+  static int Brdr[9] = {0,3,6,1,4,7,2,5,8};
+  register int x, y, loc, z;
 
   if (!pop) return;
   if (pop > 16) {
@@ -427,7 +427,7 @@ DoIndOut(int pop, int value)
 
 RZPop(int Ch9)
 {
-  short CzDen;
+  int CzDen;
 
   CzDen = (((Ch9 - RZB) / 9) % 4);
   return ((CzDen * 8) + 16);
@@ -436,7 +436,7 @@ RZPop(int Ch9)
 
 CZPop(int Ch9)
 {
-  short CzDen;
+  int CzDen;
 
   if (Ch9 == COMCLR) return (0);
   CzDen = (((Ch9 - CZB) / 9) % 5) + 1;
@@ -446,7 +446,7 @@ CZPop(int Ch9)
 
 IZPop(int Ch9)
 {
-  short CzDen;
+  int CzDen;
 
   if (Ch9 == INDCLR) return (0);
   CzDen = (((Ch9 - IZB) / 9) % 4) + 1;
@@ -456,9 +456,9 @@ IZPop(int Ch9)
 
 BuildHouse(int value)
 {
-  short z, score, hscore, BestLoc;
-  static short ZeX[9] = { 0,-1, 0, 1,-1, 1,-1, 0, 1};
-  static short ZeY[9] = { 0,-1,-1,-1, 0, 0, 1, 1, 1};
+  int z, score, hscore, BestLoc;
+  static int ZeX[9] = { 0,-1, 0, 1,-1, 1,-1, 0, 1};
+  static int ZeY[9] = { 0,-1,-1,-1, 0, 0, 1, 1, 1};
 
   BestLoc = 0;
   hscore = 0;
@@ -489,7 +489,7 @@ BuildHouse(int value)
 
 ResPlop (int Den, int Value)
 {
-  short base;
+  int base;
 
   base = (((Value * 4) + Den) * 9) + RZB - 4;
   ZonePlop(base);
@@ -498,7 +498,7 @@ ResPlop (int Den, int Value)
 
 ComPlop (int Den, int Value)
 {
-  short base;
+  int base;
 	
   base = (((Value * 5) + Den) * 9) + CZB - 4;
   ZonePlop(base);
@@ -507,7 +507,7 @@ ComPlop (int Den, int Value)
 
 IndPlop (int Den, int Value)
 {
-  short base;
+  int base;
 	
   base = (((Value * 4) + Den) * 9) + (IZB - 4);
   ZonePlop (base);
@@ -516,9 +516,9 @@ IndPlop (int Den, int Value)
 
 EvalLot (int x, int y)
 {
-  short z, score;
-  static short DX[4] = { 0, 1, 0,-1};
-  static short DY[4] = {-1, 0, 1, 0};
+  int z, score;
+  static int DX[4] = { 0, 1, 0,-1};
+  static int DY[4] = {-1, 0, 1, 0};
 
   /* test for clear lot */
   z = Map[x][y] & LOMASK;
@@ -540,9 +540,9 @@ EvalLot (int x, int y)
 
 ZonePlop (int base)
 {
-  short z, x;
-  static short Zx[9] = {-1, 0, 1,-1, 0, 1,-1, 0, 1};
-  static short Zy[9] = {-1,-1,-1, 0, 0, 0, 1, 1, 1};
+  int z, x;
+  static int Zx[9] = {-1, 0, 1,-1, 0, 1,-1, 0, 1};
+  static int Zy[9] = {-1,-1,-1, 0, 0, 0, 1, 1, 1};
 
   for (z = 0; z < 9; z++) {		/* check for fire  */
     int xx = SMapX + Zx[z];
@@ -568,7 +568,7 @@ ZonePlop (int base)
 
 EvalRes (int traf)
 {
-  register short Value;
+  register int Value;
 
   if (traf < 0) return (-3000);
 
@@ -587,7 +587,7 @@ EvalRes (int traf)
 
 EvalCom (int traf)
 {
-  short Value;
+  int Value;
 
   if (traf < 0) return (-3000);
   Value = ComRate[SMapX >>3][SMapY >>3];
@@ -604,8 +604,8 @@ EvalInd (int traf)
 
 DoFreePop (void)
 {
-  short count;
-  register short loc, x, y;
+  int count;
+  register int loc, x, y;
 
   count = 0;
   for (x = SMapX - 1; x <= SMapX + 1; x++)
@@ -623,7 +623,7 @@ DoFreePop (void)
 
 SetZPower(void)		/* set bit in MapWord depending on powermap  */
 {
-  short z;
+  int z;
   long PowerWrd;
 
 /* TestPowerBit was taking alot of time so I inlined it. -Don */

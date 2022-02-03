@@ -218,8 +218,8 @@ void sim_update_evaluations()
 }
 
 
-short *CellSrc = nullptr;
-short *CellDst = nullptr;
+int *CellSrc = nullptr;
+int *CellDst = nullptr;
 
 #define SRCCOL (WORLD_Y + 2)
 #define DSTCOL WORLD_Y
@@ -227,7 +227,7 @@ short *CellDst = nullptr;
 #define CLIPPER_LOOP_BODY(CODE) \
     src = CellSrc; dst = CellDst; \
     for (int x = 0; x < WORLD_X;) { \
-      short nw, n, ne, w, c, e, sw, s, se; \
+      int nw, n, ne, w, c, e, sw, s, se; \
       \
       src = CellSrc + (x * SRCCOL); dst = CellDst + (x * DSTCOL); \
       w = src[0]; c = src[SRCCOL]; e = src[2 * SRCCOL]; \
@@ -261,12 +261,12 @@ constexpr auto ECOMASK = 0x3fc;
 void sim_heat()
 {
     static int a = 0;
-    short* src, * dst;
+    int* src, * dst;
     int fl = heat_flow;
 
     if (CellSrc == nullptr)
     {
-        CellSrc = (short*)malloc((WORLD_X + 2) * (WORLD_Y + 2) * sizeof(short));
+        CellSrc = (int*)malloc((WORLD_X + 2) * (WORLD_Y + 2) * sizeof(int));
         CellDst = &Map[0][0];
     }
 
@@ -301,7 +301,7 @@ void sim_heat()
     case 1:
         for (int x = 0; x < WORLD_X; x++)
         {
-            memcpy(src, dst, WORLD_Y * sizeof(short));
+            memcpy(src, dst, WORLD_Y * sizeof(int));
             src += SRCCOL;
             dst += DSTCOL;
         }
@@ -314,20 +314,20 @@ void sim_heat()
             src += SRCCOL;
             dst += DSTCOL;
         }
-        memcpy(CellSrc, CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(short));
-        memcpy(CellSrc + SRCCOL * (WORLD_X + 1), CellSrc + SRCCOL, SRCCOL * sizeof(short));
+        memcpy(CellSrc, CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(int));
+        memcpy(CellSrc + SRCCOL * (WORLD_X + 1), CellSrc + SRCCOL, SRCCOL * sizeof(int));
         break;
     case 3:
         for (int x = 0; x < WORLD_X; x++)
         {
-            memcpy(src, dst, WORLD_Y * sizeof(short));
+            memcpy(src, dst, WORLD_Y * sizeof(int));
             src[-1] = src[WORLD_Y - 1];
             src[WORLD_Y] = src[0];
             src += SRCCOL;
             dst += DSTCOL;
         }
-        memcpy(CellSrc, CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(short));
-        memcpy(CellSrc + SRCCOL * (WORLD_X + 1), CellSrc + SRCCOL, SRCCOL * sizeof(short));
+        memcpy(CellSrc, CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(int));
+        memcpy(CellSrc + SRCCOL * (WORLD_X + 1), CellSrc + SRCCOL, SRCCOL * sizeof(int));
         break;
     case 4:
         src[0] = dst[0];
@@ -336,14 +336,14 @@ void sim_heat()
         src[((2 + WORLD_X) * SRCCOL) - 1] = dst[(WORLD_X * WORLD_Y) - 1];
         for (int x = 0; x < WORLD_X; x++)
         {
-            memcpy(src, dst, WORLD_Y * sizeof(short));
+            memcpy(src, dst, WORLD_Y * sizeof(int));
             src[-1] = src[0];
             src[WORLD_Y] = src[WORLD_Y - 1];
             src += SRCCOL;
             dst += DSTCOL;
         }
-        memcpy(CellSrc + (SRCCOL * (WORLD_X + 1)), CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(short));
-        memcpy(CellSrc, CellSrc + SRCCOL, SRCCOL * sizeof(short));
+        memcpy(CellSrc + (SRCCOL * (WORLD_X + 1)), CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(int));
+        memcpy(CellSrc, CellSrc + SRCCOL, SRCCOL * sizeof(int));
         break;
     }
 
@@ -453,7 +453,7 @@ void sim_loop(int doSim)
 }
 
 
-void sim_timeout_loop(short doSim)
+void sim_timeout_loop(int doSim)
 {
     if (SimSpeed)
     {

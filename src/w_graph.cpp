@@ -62,12 +62,12 @@
 #include "main.h"
 
 
-short NewGraph = 0;
-short AllMax;
+int NewGraph = 0;
+int AllMax;
 unsigned char *History10[HISTORIES];
 unsigned char *History120[HISTORIES];
 int HistoryInitialized = 0;
-short Graph10Max, Graph120Max;
+int Graph10Max, Graph120Max;
 Tcl_HashTable GraphCmds;
 int GraphUpdateTime = 100;
 
@@ -456,10 +456,10 @@ graph_command_init()
 
 
 void
-drawMonth(short *hist, unsigned char *s, float scale)
+drawMonth(int *hist, unsigned char *s, float scale)
 {
-  register short val;
-  register short x;
+  register int val;
+  register int x;
 
   for (x = 0; x < 120; x++) {
     val = hist[x] * scale;
@@ -519,7 +519,7 @@ doAllGraphs(void)
 }
 
 
-extern short CensusChanged;
+extern int CensusChanged;
 
 void ChangeCensus()
 {

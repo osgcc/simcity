@@ -70,9 +70,9 @@
 /* Disasters */
 
 
-short ShakeNow;
-short FloodCnt;
-short FloodX, FloodY;
+int ShakeNow;
+int FloodCnt;
+int FloodX, FloodY;
 
 // fordward declare from w_stubs
 void DropFireBombs();
@@ -87,7 +87,7 @@ void MakeExplosion(int, int);
 
 // forward declare from s_msg
 void ClearMes();
-void SendMesAt(short, short, short);
+void SendMesAt(int, int, int);
 
 // forward declare from w_tk
 void DoEarthQuake();
@@ -209,8 +209,8 @@ void MakeFire()
 /* comefrom: DoDisasters ScenarioDisaster */
 void MakeFlood()
 {
-    static short Dx[4] = { 0, 1, 0,-1 };
-    static short Dy[4] = { -1, 0, 1, 0 };
+    static int Dx[4] = { 0, 1, 0,-1 };
+    static int Dy[4] = { -1, 0, 1, 0 };
 
     for (int z = 0; z < 300; z++)
     {
@@ -248,8 +248,8 @@ void MakeFlood()
 /* comefrom: MapScan */
 void DoFlood()
 {
-    static short Dx[4] = { 0, 1, 0,-1 };
-    static short Dy[4] = { -1, 0, 1, 0 };
+    static int Dx[4] = { 0, 1, 0,-1 };
+    static int Dy[4] = { -1, 0, 1, 0 };
 
     if (FloodCnt)
     {
@@ -342,7 +342,7 @@ void ScenarioDisaster()
 void DoDisasters()
 {
     /* Chance of disasters at lev 0 1 2 */
-    static short DisChance[3] = { 10 * 48, 5 * 48, 60 };
+    static int DisChance[3] = { 10 * 48, 5 * 48, 60 };
 
     if (FloodCnt)
     {

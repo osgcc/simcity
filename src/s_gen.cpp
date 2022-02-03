@@ -71,8 +71,8 @@
 #define WOODS_HIGH	UNUSED_TRASH2 /* 39 */
 
 
-short XStart, YStart, MapX, MapY;
-short Dir, LastDir;
+int XStart, YStart, MapX, MapY;
+int Dir, LastDir;
 int TreeLevel = -1;		/* level for tree creation */
 int LakeLevel = -1;		/* level for lake creation */
 int CurveLevel = -1;		/* level for river curviness */
@@ -110,9 +110,9 @@ GenerateSomeCity(int r)
 }
 
 
-ERand(short limit)
+ERand(int limit)
 {
-  short x, z;
+  int x, z;
 
   z = Rand(limit);
   x = Rand(limit);
@@ -154,9 +154,9 @@ GenerateMap(int r)
 
 void ClearMap()
 {
-    for (short x = 0; x < WORLD_X; x++)
+    for (int x = 0; x < WORLD_X; x++)
     {
-        for (short y = 0; y < WORLD_Y; y++)
+        for (int y = 0; y < WORLD_Y; y++)
         {
             Map[x][y] = DIRT;
         }
@@ -166,7 +166,7 @@ void ClearMap()
 
 ClearUnnatural(void)
 {
-  register short x, y;
+  register int x, y;
 
   for (x = 0; x < WORLD_X; x++) {
     for (y = 0; y < WORLD_Y; y++) {
@@ -225,8 +225,8 @@ MakeIsland(void)
 
 MakeLakes(void)
 {
-  short Lim1, Lim2, t, z;
-  register short x, y;
+  int Lim1, Lim2, t, z;
+  register int x, y;
 
   if (LakeLevel < 0) {
     Lim1 = Rand(10);
@@ -258,9 +258,9 @@ GetRandStart(void)
 }
 
 
-MoveMap(short dir)
+MoveMap(int dir)
 {
-  static short DirTab[2][8] = { { 0, 1, 1, 1, 0, -1, -1, -1},
+  static int DirTab[2][8] = { { 0, 1, 1, 1, 0, -1, -1, -1},
 				{-1,-1, 0, 1, 1,  1,  0, -1} };
   dir = dir & 7;
   MapX += DirTab[0][dir];
@@ -268,10 +268,10 @@ MoveMap(short dir)
 }
 
 
-TreeSplash(short xloc, short yloc)
+TreeSplash(int xloc, int yloc)
 {
-  short dis, dir;
-  register short xoff, yoff, z;
+  int dis, dir;
+  register int xoff, yoff, z;
 
   if (TreeLevel < 0) {
     dis = Rand(150) + 50;
@@ -293,7 +293,7 @@ TreeSplash(short xloc, short yloc)
 
 DoTrees(void)
 {
-  short Amount, x, xloc, yloc;
+  int Amount, x, xloc, yloc;
 
   if (TreeLevel < 0) {
     Amount = Rand(100) + 50;
@@ -312,15 +312,15 @@ DoTrees(void)
 
 SmoothRiver(void)
 {
-  static short DX[4] = {-1, 0, 1, 0};
-  static short DY[4] = { 0, 1, 0,-1};
-  static short REdTab[16] = {
+  static int DX[4] = {-1, 0, 1, 0};
+  static int DY[4] = { 0, 1, 0,-1};
+  static int REdTab[16] = {
     13+BULLBIT,	13+BULLBIT,	17+BULLBIT,	15+BULLBIT,
     5+BULLBIT,	2,		19+BULLBIT,	17+BULLBIT,
     9+BULLBIT,	11+BULLBIT,	2,		13+BULLBIT,
     7+BULLBIT,	9+BULLBIT,	5+BULLBIT,	2 };
-  short bitindex, z, Xtem, Ytem;
-  register short temp, MapX, MapY;
+  int bitindex, z, Xtem, Ytem;
+  register int temp, MapX, MapY;
 
   for (MapX = 0; MapX < WORLD_X; MapX++) {
     for (MapY = 0; MapY < WORLD_Y; MapY++) {
@@ -357,14 +357,14 @@ IsTree(int cell)
 
 SmoothTrees(void)
 {
-  static short DX[4] = {-1, 0, 1, 0};
-  static short DY[4] = { 0, 1, 0,-1};
-  static short TEdTab[16] = { 0, 0, 0, 34,
+  static int DX[4] = {-1, 0, 1, 0};
+  static int DY[4] = { 0, 1, 0,-1};
+  static int TEdTab[16] = { 0, 0, 0, 34,
 			      0, 0, 36, 35,
 			      0, 32, 0, 33,
 			      30, 31, 29, 37 };
-  short   bitindex, z, Xtem, Ytem;
-  register short temp, MapX, MapY;
+  int   bitindex, z, Xtem, Ytem;
+  register int temp, MapX, MapY;
 
   for (MapX = 0; MapX < WORLD_X; MapX++) {
     for (MapY = 0; MapY < WORLD_Y; MapY++) {
@@ -461,9 +461,9 @@ DoSRiv(void)
 }
 
 
-PutOnMap(short Mchar, short Xoff, short Yoff)
+PutOnMap(int Mchar, int Xoff, int Yoff)
 {
-  register short Xloc, Yloc, temp;
+  register int Xloc, Yloc, temp;
 
   if (Mchar == 0)
     return;
@@ -485,7 +485,7 @@ PutOnMap(short Mchar, short Xoff, short Yoff)
 
 BRivPlop(void)
 {
-  static short BRMatrix[9][9] = {
+  static int BRMatrix[9][9] = {
     { 0, 0, 0, 3, 3, 3, 0, 0, 0 },
     { 0, 0, 3, 2, 2, 2, 3, 0, 0 },
     { 0, 3, 2, 2, 2, 2, 2, 3, 0 },
@@ -495,7 +495,7 @@ BRivPlop(void)
     { 0, 3, 2, 2, 2, 2, 2, 3, 0 },
     { 0, 0, 3, 2, 2, 2, 3, 0, 0 },
     { 0, 0, 0, 3, 3, 3, 0, 0, 0 } };
-  short x, y;
+  int x, y;
 
   for (x = 0; x < 9; x++)
     for (y = 0; y < 9; y++)
@@ -505,14 +505,14 @@ BRivPlop(void)
 
 SRivPlop(void)
 {
-  static short SRMatrix[6][6] = {
+  static int SRMatrix[6][6] = {
     { 0, 0, 3, 3, 0, 0 },
     { 0, 3, 2, 2, 3, 0 },
     { 3, 2, 2, 2, 2, 3 },
     { 3, 2, 2, 2, 2, 3 },
     { 0, 3, 2, 2, 3, 0 },
     { 0, 0, 3, 3, 0, 0 } };
-  short x, y;
+  int x, y;
 
   for (x = 0; x < 6; x++)
     for (y = 0; y < 6; y++)

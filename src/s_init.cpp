@@ -94,9 +94,9 @@ void InitWillStuff()
     DisasterEvent = 0;
     TaxFlag = 0;
 
-    for (short x = 0; x < HWLDX; x++)
+    for (int x = 0; x < HWLDX; x++)
     {
-        for (short y = 0; y < HWLDY; y++)
+        for (int y = 0; y < HWLDY; y++)
         {
             PopDensity[x][y] = 0;
             TrfDensity[x][y] = 0;
@@ -106,17 +106,17 @@ void InitWillStuff()
         }
     }
 
-    for (short x = 0; x < QWX; x++)
+    for (int x = 0; x < QWX; x++)
     {
-        for (short y = 0; y < QWY; y++)
+        for (int y = 0; y < QWY; y++)
         {
             TerrainMem[x][y] = 0;
         }
     }
 
-    for (short x = 0; x < SmX; x++)
+    for (int x = 0; x < SmX; x++)
     {
-        for (short y = 0; y < SmY; y++)
+        for (int y = 0; y < SmY; y++)
         {
             RateOGMem[x][y] = 0;
             FireRate[x][y] = 0;

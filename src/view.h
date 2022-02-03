@@ -80,8 +80,8 @@ struct Graph;
 
 struct XPoint
 {
-	short x{ 0 };
-	short y{ 0 };
+	int x{ 0 };
+	int y{ 0 };
 };
 
 
@@ -155,21 +155,21 @@ struct SimView
 
 	/* map stuff */
 	unsigned char* smalltiles;
-	short map_state;
+	int map_state;
 	int show_editors;
 
 	/* editor stuff */
 	unsigned char* bigtiles;
-	short power_type;
-	short tool_showing;
-	short tool_mode;
-	short tool_x, tool_y;
-	short tool_x_const, tool_y_const;
-	short tool_state;
-	short tool_state_save;
-	short super_user;
-	short show_me;
-	short dynamic_filter;
+	int power_type;
+	int tool_showing;
+	int tool_mode;
+	int tool_x, tool_y;
+	int tool_x_const, tool_y_const;
+	int tool_state;
+	int tool_state_save;
+	int super_user;
+	int show_me;
+	int dynamic_filter;
 
 	/*
 	Tk_TimerToken auto_scroll_token;
@@ -200,8 +200,8 @@ struct SimView
 
 	//XDisplay* x;
 	//XShmSegmentInfo* shminfo;
-	short** tiles;
-	short** other_tiles;
+	int** tiles;
+	int** other_tiles;
 
 	//XImage* image;
 	//XImage* other_image;

@@ -69,11 +69,11 @@
 #define HALF_SWAP_LONGS(a,b)	_half_swap_longs(a,b)
 
 static void
-_swap_shorts(short *buf, int len)
+_swap_shorts(int *buf, int len)
 {
   int i;
 
-  /* Flip bytes in each short! */
+  /* Flip bytes in each int! */
   for (i = 0; i < len; i++) {	
     *buf = ((*buf & 0xFF) <<8) | ((*buf &0xFF00) >>8);
     buf++;
@@ -122,9 +122,9 @@ _half_swap_longs(long *buf, int len)
 
 
 static int
-_load_short(short *buf, int len, FILE *f)
+_load_short(int *buf, int len, FILE *f)
 {
-  if (fread(buf, sizeof(short), len, f) != len)
+  if (fread(buf, sizeof(int), len, f) != len)
      return 0;
 
   SWAP_SHORTS(buf, len);	/* to intel */
@@ -146,12 +146,12 @@ _load_long(long *buf, int len, FILE *f)
 
 
 static int
-_save_short(short *buf, int len, FILE *f)
+_save_short(int *buf, int len, FILE *f)
 {
 
   SWAP_SHORTS(buf, len);	/* to MAC */
 
-  if (fwrite(buf, sizeof(short), len, f) != len)
+  if (fwrite(buf, sizeof(int), len, f) != len)
      return 0;
 
   SWAP_SHORTS(buf, len);	/* back to intel */
@@ -376,7 +376,7 @@ int saveFile(char *filename)
 }
 
 
-LoadScenario(short s)
+LoadScenario(int s)
 {
   char *name, *fname;
 

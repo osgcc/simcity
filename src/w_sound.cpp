@@ -70,7 +70,7 @@
 
 
 int SoundInitialized = 0;
-short Dozing = 0;
+int Dozing = 0;
 
 
 void InitializeSound()
