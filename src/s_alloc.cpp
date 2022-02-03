@@ -150,61 +150,66 @@ short *PowerMap;
 
 void initMapArrays()
 {
-  short i;
-  unsigned short *auxPtr, *temp1;
+    short i;
+    unsigned short* auxPtr, * temp1;
 
-  if (!mapPtr)
-    mapPtr = (unsigned short *)NewPtr(sizeof(unsigned short) *
-				      WORLD_X * WORLD_Y);
-  auxPtr = mapPtr;
+    if (!mapPtr)
+    {
+        mapPtr = (unsigned short*)NewPtr(sizeof(unsigned short) * WORLD_X * WORLD_Y);
+    }
 
-  for (i = 0; i < WORLD_X; i++) {
-    temp1 = auxPtr + i * WORLD_Y;
-    Map[i] = (short *)temp1;
-  }
+    auxPtr = mapPtr;
 
-  popPtr = NewPtr(HWLDX * HWLDY);
-  trfPtr = NewPtr(HWLDX * HWLDY);
-  polPtr = NewPtr(HWLDX * HWLDY);
-  landPtr = NewPtr(HWLDX * HWLDY);
-  crimePtr = NewPtr(HWLDX * HWLDY);
+    for (i = 0; i < WORLD_X; i++)
+    {
+        temp1 = auxPtr + i * WORLD_Y;
+        Map[i] = (short*)temp1;
+    }
 
-  tem1Base = NewPtr(HWLDX * HWLDY);
-  tem2Base = NewPtr(HWLDX * HWLDY);
+    popPtr = NewPtr(HWLDX * HWLDY);
+    trfPtr = NewPtr(HWLDX * HWLDY);
+    polPtr = NewPtr(HWLDX * HWLDY);
+    landPtr = NewPtr(HWLDX * HWLDY);
+    crimePtr = NewPtr(HWLDX * HWLDY);
 
-  auxPopPtr = popPtr;
-  auxTrfPtr = trfPtr;
-  auxPolPtr = polPtr;
-  auxLandPtr = landPtr;
-  auxCrimePtr = crimePtr;
+    tem1Base = NewPtr(HWLDX * HWLDY);
+    tem2Base = NewPtr(HWLDX * HWLDY);
 
-  for (i = 0; i < HWLDX; i++) {
-    PopDensity[i] = (Byte *) auxPopPtr + (i * HWLDY);
-    TrfDensity[i] = (Byte *) auxTrfPtr + (i * HWLDY);
-    PollutionMem[i] = (Byte *) auxPolPtr + (i * HWLDY);
-    LandValueMem[i] = (Byte *) auxLandPtr + (i * HWLDY);
-    CrimeMem[i] = (Byte *) auxCrimePtr + (i * HWLDY);
+    auxPopPtr = popPtr;
+    auxTrfPtr = trfPtr;
+    auxPolPtr = polPtr;
+    auxLandPtr = landPtr;
+    auxCrimePtr = crimePtr;
 
-    tem[i] = (Byte *)tem1Base + (i * HWLDY);
-    tem2[i] = (Byte *) tem2Base + (i * HWLDY);
-  }
+    for (i = 0; i < HWLDX; i++)
+    {
+        PopDensity[i] = (Byte*)auxPopPtr + (i * HWLDY);
+        TrfDensity[i] = (Byte*)auxTrfPtr + (i * HWLDY);
+        PollutionMem[i] = (Byte*)auxPolPtr + (i * HWLDY);
+        LandValueMem[i] = (Byte*)auxLandPtr + (i * HWLDY);
+        CrimeMem[i] = (Byte*)auxCrimePtr + (i * HWLDY);
 
-  brettPtr = (Ptr) &PopDensity[0][0];
+        tem[i] = (Byte*)tem1Base + (i * HWLDY);
+        tem2[i] = (Byte*)tem2Base + (i * HWLDY);
+    }
 
-  terrainBase = NewPtr(QWX * QWY);
-  qTemBase = NewPtr(QWX * QWY);
+    brettPtr = (Ptr)&PopDensity[0][0];
 
-  for (i = 0; i < QWX; i++) {
-    TerrainMem[i] = (Byte *)terrainBase + (i * QWY);
-    Qtem[i] = (Byte *)qTemBase + (i * QWY);
-  }
+    terrainBase = NewPtr(QWX * QWY);
+    qTemBase = NewPtr(QWX * QWY);
 
-  ResHis = (short *)NewPtr(HISTLEN);
-  ComHis = (short *)NewPtr(HISTLEN);
-  IndHis = (short *)NewPtr(HISTLEN);
-  MoneyHis = (short *)NewPtr(HISTLEN);
-  PollutionHis = (short *)NewPtr(HISTLEN);
-  CrimeHis = (short *)NewPtr(HISTLEN);
-  MiscHis = (short *)NewPtr(MISCHISTLEN);
-  PowerMap = (short *)NewPtr(POWERMAPLEN);		/* power alloc */
+    for (i = 0; i < QWX; i++)
+    {
+        TerrainMem[i] = (Byte*)terrainBase + (i * QWY);
+        Qtem[i] = (Byte*)qTemBase + (i * QWY);
+    }
+
+    ResHis = (short*)NewPtr(HISTLEN);
+    ComHis = (short*)NewPtr(HISTLEN);
+    IndHis = (short*)NewPtr(HISTLEN);
+    MoneyHis = (short*)NewPtr(HISTLEN);
+    PollutionHis = (short*)NewPtr(HISTLEN);
+    CrimeHis = (short*)NewPtr(HISTLEN);
+    MiscHis = (short*)NewPtr(MISCHISTLEN);
+    PowerMap = (short*)NewPtr(POWERMAPLEN);		/* power alloc */
 }
