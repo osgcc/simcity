@@ -70,8 +70,11 @@ short FloodCnt;
 short FloodX, FloodY;
 
 
+void MakeMonster();
+
+
 /* comefrom: Simulate */
-DoDisasters(void)
+void DoDisasters()
 { 
   /* Chance of disasters at lev 0 1 2 */
   static short DisChance[3] = { 10*48, 5*48, 60}; 
@@ -114,7 +117,7 @@ DoDisasters(void)
 
 
 /* comefrom: DoDisasters */
-ScenarioDisaster(void)
+void ScenarioDisaster()
 {
   int x, y;
 
@@ -147,7 +150,7 @@ ScenarioDisaster(void)
 
 
 /* comefrom: ScenarioDisaster */
-MakeMeltdown(void)
+void MakeMeltdown()
 {
   short x, y;
 
@@ -163,7 +166,7 @@ MakeMeltdown(void)
 }
 
 
-FireBomb()
+void FireBomb()
 {
   CrashX = Rand(WORLD_X - 1);
   CrashY = Rand(WORLD_Y - 1);
@@ -174,7 +177,7 @@ FireBomb()
 
 
 /* comefrom: DoDisasters ScenarioDisaster */
-MakeEarthquake(void)
+void MakeEarthquake()
 {
   register short x, y, z;
   short time;
@@ -201,7 +204,7 @@ MakeEarthquake(void)
 
 
 /* comefrom: DoDisasters */
-SetFire(void)
+void SetFire()
 {
   register short x, y, z;
 
@@ -221,7 +224,7 @@ SetFire(void)
 
 
 /* comefrom: DoDisasters */
-MakeFire(void)
+void MakeFire()
 {
   short t, x, y, z;
   for (t = 0; t < 40; t++)  {
@@ -242,7 +245,7 @@ MakeFire(void)
 
 
 /* comefrom: MakeEarthquake */
-Vunerable(int tem)
+int Vunerable(int tem)
 {
   register int tem2;
 
@@ -256,7 +259,7 @@ Vunerable(int tem)
 
 
 /* comefrom: DoDisasters ScenarioDisaster */
-MakeFlood(void)
+void MakeFlood()
 {
   static short Dx[4] = { 0, 1, 0,-1};
   static short Dy[4] = {-1, 0, 1, 0};
@@ -289,7 +292,7 @@ MakeFlood(void)
 
 
 /* comefrom: MapScan */
-DoFlood(void)
+void DoFlood()
 {
   static short Dx[4] = { 0, 1, 0,-1};
   static short Dy[4] = {-1, 0, 1, 0};
