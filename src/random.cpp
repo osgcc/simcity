@@ -191,9 +191,7 @@ static long *end_ptr = &randtbl[DEG_3 + 1];
  * introduced by the L.C.R.N.G.  Note that the initialization of randtbl[]
  * for default usage relies on values produced by this routine.
  */
-void
-sim_srandom(x)
-	unsigned int x;
+void sim_srandom(unsigned int x)
 {
 	register int i, j;
 
@@ -210,6 +208,7 @@ sim_srandom(x)
 			(void)sim_random();
 	}
 }
+
 
 /*
  * initstate:
@@ -230,11 +229,7 @@ sim_srandom(x)
  *
  * Returns a pointer to the old state.
  */
-char *
-sim_initstate(seed, arg_state, n)
-	unsigned int seed;		/* seed for R.N.G. */
-	char *arg_state;		/* pointer to state array */
-	int n;				/* # bytes of state info */
+char * sim_initstate(unsigned int seed, char *arg_state, int n)
 {
 	register char *ostate = (char *)(&state[-1]);
 
@@ -293,9 +288,7 @@ sim_initstate(seed, arg_state, n)
  *
  * Returns a pointer to the old state information.
  */
-char *
-sim_setstate(arg_state)
-	char *arg_state;
+char *sim_setstate(char *arg_state)
 {
 	register long *new_state = (long *)arg_state;
 	register int type = new_state[0] % MAX_TYPES;
