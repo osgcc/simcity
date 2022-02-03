@@ -179,38 +179,57 @@ void drawAll(SimView * view)
             }
 
             mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
-            switch (view->x->depth)
+            for (int i = 0; i < 3; ++i)
             {
-            case 1:
-            case 8:
-            case 15:
-            case 16:
-            case 24:
-            case 32:
-                for (int i = 0; i < 3; ++i)
-                {
-                    l = mem[1];
-                    image[0] = l >> 24;
-                    image[1] = l >> 16;
-                    image[2] = l >> 8;
-                    image += lineBytes;
-                }
-                break;
-            default:
-                assert(0); /* Undefined depth */
-                break;
+                l = mem[1];
+                image[0] = l >> 24;
+                image[1] = l >> 16;
+                image[2] = l >> 8;
+                image += lineBytes;
             }
         }
     }
 }
 
 
-void drawRes(SimView *view)
+void drawRes(SimView* view)
 {
-  DRAW_BEGIN
-    if (tile > 422)
-      tile = 0;
-  DRAW_END
+    int lineBytes = view->line_bytes;
+    int pixelBytes = view->pixel_bytes;
+
+    short* mp = &Map[0][0];
+    unsigned char* imageBase = view->data;
+
+    for (int col = 0; col < WORLD_X; col++)
+    {
+        unsigned char* image = imageBase + (3 * pixelBytes * col);
+        for (int row = 0; row < WORLD_Y; row++)
+        {
+
+            unsigned short tile = *(mp++) & LOMASK;
+            if (tile >= TILE_COUNT)
+            {
+                tile -= TILE_COUNT;
+            }
+
+            ////////
+            if (tile > 422)
+            {
+                tile = 0;
+            }
+            ////////
+
+            unsigned long* mem = (unsigned long*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
+            for (int i = 0; i < 3; ++i)
+            {
+                unsigned long l = mem[1];
+                image[0] = l >> 24;
+                image[1] = l >> 16;
+                image[2] = l >> 8;
+                image += lineBytes;
+            }
+        }
+    }
 }
 
 
