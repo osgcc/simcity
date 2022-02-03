@@ -14,3 +14,4 @@ struct Resource
 typedef char** Handle;
 
 Handle GetResource(char* name, int id);
+void GetIndString(char* str, int id, int num);
