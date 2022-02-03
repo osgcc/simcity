@@ -468,7 +468,7 @@ void DoRivers()
 
 void MakeNakedIsland()
 {
-    register int x, y;
+    int x, y;
 
     for (x = 0; x < WORLD_X; x++)
     {
