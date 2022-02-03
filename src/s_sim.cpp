@@ -63,6 +63,7 @@
 #include "s_sim.h"
 
 #include "main.h"
+#include "rand.h"
 
 
 /* Simulation */
@@ -960,7 +961,7 @@ DoFire(void)
 
 
 /* comefrom: DoFire MakeFlood */
-FireZone(int Xloc, int Yloc, int ch)
+void FireZone(int Xloc, int Yloc, int ch)
 {
   register short Xtem, Ytem;
   short x, y, XYmax;
@@ -1210,10 +1211,9 @@ Rand(short range)
 }
 
 
-int
-Rand16(void)
+int Rand16()
 {
-  return (sim_rand());
+    return sim_rand();
 }
 
 
