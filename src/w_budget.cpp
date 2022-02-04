@@ -90,9 +90,9 @@ void InitFundingLevel()
 }
 
 
-DoBudget()
+void DoBudget()
 {
-  DoBudgetNow(0);
+    DoBudgetNow(0);
 }
 
 
@@ -257,9 +257,9 @@ ReallyDrawBudgetWindow(void)
 }
 
 
-drawCurrPercents(void)
+void drawCurrPercents()
 {
-  MustDrawCurrPercents = 1;
+    MustDrawCurrPercents = 1;
 }
 
 

@@ -65,7 +65,7 @@
 /* Zone Stuff */
 
 
-DoZone(void)
+void DoZone()
 {
   int ZonePwrFlg;
 
@@ -621,7 +621,7 @@ int DoFreePop ()
 }
 
 
-SetZPower(void)		/* set bit in MapWord depending on powermap  */
+int SetZPower()		/* set bit in MapWord depending on powermap  */
 {
   int z;
   int PowerWrd;

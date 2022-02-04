@@ -582,7 +582,6 @@ extern int RandInt(void);
 
 extern Sim* MakeNewSim();
 extern SimView* MakeNewView();
-extern SimSprite* GetSprite();
 extern SimSprite* MakeSprite();
 extern SimSprite* MakeNewSprite();
 

@@ -150,7 +150,7 @@ PullPos(void)
 
 
 /* comefrom: DoSPZone MakeTraf */
-FindPRoad(void)		/* look for road on edges of zone   */
+bool FindPRoad()		/* look for road on edges of zone   */
 {
   static int PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
   static int PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};

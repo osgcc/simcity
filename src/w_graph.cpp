@@ -470,8 +470,7 @@ drawMonth(int *hist, unsigned char *s, float scale)
 }
 
 
-void
-doAllGraphs(void)
+void doAllGraphs()
 {
   float scaleValue;
 

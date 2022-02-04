@@ -64,10 +64,15 @@
   <ItemGroup>
     <ClInclude Include="Graph.h" />
     <ClInclude Include="src\rand.h" />
+    <ClInclude Include="src\s_disast.h" />
+    <ClInclude Include="src\s_eval.h" />
     <ClInclude Include="src\s_gen.h" />
     <ClInclude Include="src\s_init.h" />
     <ClInclude Include="src\s_msg.h" />
+    <ClInclude Include="src\s_power.h" />
+    <ClInclude Include="src\s_scan.h" />
     <ClInclude Include="src\s_sim.h" />
+    <ClInclude Include="src\s_traf.h" />
     <ClInclude Include="src\s_zone.h" />
     <ClInclude Include="src\w_budget.h" />
     <ClInclude Include="src\w_graph.h" />

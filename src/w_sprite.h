@@ -21,7 +21,16 @@ struct SimSprite
 	int speed{ 0 };
 };
 
+SimSprite* GetSprite(int type);
 
 void MoveObjects();
 void DoTrainSprite(SimSprite* sprite);
 void DestroyAllSprites();
+
+void GenerateCopter(int x, int y);
+void GeneratePlane(int x, int y);
+void GenerateShip();
+void GenerateTrain(int x, int y);
+
+void MakeExplosionAt(int x, int y);
+void MakeExplosion(int x, int y);

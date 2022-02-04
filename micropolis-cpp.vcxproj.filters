@@ -221,5 +221,20 @@
     <ClInclude Include="src\s_zone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\s_eval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\s_scan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\s_disast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\s_power.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\s_traf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -426,16 +426,18 @@ DestroySprite(SimSprite *sprite)
 }
 
 
-SimSprite *
-GetSprite(int type)
+SimSprite* GetSprite(int type)
 {
-  SimSprite *sprite;
+    SimSprite* sprite;
 
-  if (((sprite = GlobalSprites[type]) == NULL) ||
-      (sprite->frame == 0))
-    return (SimSprite *)NULL;
-  else
-    return sprite;
+    if (((sprite = GlobalSprites[type]) == NULL) || (sprite->frame == 0))
+    {
+        return nullptr;
+    }
+    else
+    {
+        return sprite;
+    }
 }
 
 
@@ -1494,13 +1496,12 @@ StartFire(int x, int y)
 }
 
 
-GenerateTrain(int x, int y)
+void GenerateTrain(int x, int y)
 {
-  if ((TotalPop > 20) &&
-      (GetSprite(TRA) == NULL) &&
-      (!Rand(25))) {
-    MakeSprite(TRA, (x <<4) + TRA_GROOVE_X, (y <<4) + TRA_GROOVE_Y);
-  }
+    if ((TotalPop > 20) && (GetSprite(TRA) == NULL) && (!Rand(25)))
+    {
+        MakeSprite(TRA, (x << 4) + TRA_GROOVE_X, (y << 4) + TRA_GROOVE_Y);
+    }
 }
 
 
@@ -1513,7 +1514,7 @@ GenerateBus(int x, int y)
 }
 
 
-GenerateShip(void)
+void GenerateShip()
 {
   register int x, y;
 
@@ -1587,19 +1588,25 @@ MonsterHere(int x, int y)
 }
 
 
-GenerateCopter(int x, int y)
+void GenerateCopter(int x, int y)
 {
-  if (GetSprite(COP) != NULL) return;
+    if (GetSprite(COP) != nullptr)
+    {
+        return;
+    }
 
-  MakeSprite(COP, (x <<4), (y <<4) + 30);
+    MakeSprite(COP, (x << 4), (y << 4) + 30);
 }
 
 
-GeneratePlane(int x, int y)
+void GeneratePlane(int x, int y)
 {
-  if (GetSprite(AIR) != NULL) return;
+    if (GetSprite(AIR) != nullptr)
+    {
+        return;
+    }
 
-  MakeSprite(AIR, (x <<4) + 48, (y <<4) + 12);
+    MakeSprite(AIR, (x << 4) + 48, (y << 4) + 12);
 }
 
 
@@ -1621,17 +1628,16 @@ MakeTornado(void)
 }
 
 
-MakeExplosion(int x, int y)
+void MakeExplosionAt(int x, int y)
 {
-  if ((x >= 0) && (x < WORLD_X) &&
-      (y >= 0) && (y < WORLD_Y)) {
-    MakeExplosionAt((x << 4) + 8, (y << 4) + 8);
-  }
+    MakeNewSprite(EXP, x - 40, y - 16);
 }
 
 
-MakeExplosionAt(int x, int y)
+void MakeExplosion(int x, int y)
 {
-  MakeNewSprite(EXP, x - 40, y - 16);
+    if ((x >= 0) && (x < WORLD_X) && (y >= 0) && (y < WORLD_Y))
+    {
+        MakeExplosionAt((x << 4) + 8, (y << 4) + 8);
+    }
 }
-

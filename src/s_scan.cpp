@@ -98,7 +98,7 @@ void SmoothFSMap()
 
 
 /* comefrom: Simulate SpecialInit */
-void FireAnalysis(void)		/* Make firerate map from firestation map  */
+void FireAnalysis()		/* Make firerate map from firestation map  */
 {
   register int x,y;
 
@@ -303,7 +303,7 @@ void DistIntMarket()
 
 
 /* comefrom: Simulate SpecialInit */
-void PopDenScan(void)		/*  sets: PopDensity, , , ComRate  */
+void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
 {
   int Xtot, Ytot, Ztot;
   register int x, y, z;
