@@ -83,6 +83,18 @@ int MustDrawCurrPercents = 0;
 int MustDrawBudgetWindow = 0;
 
 
+void drawBudgetWindow()
+{
+  MustDrawBudgetWindow = 1;
+}
+
+
+void drawCurrPercents()
+{
+    MustDrawCurrPercents = 1;
+}
+
+
 void InitFundingLevel()
 {
   firePercent = 1.0;
@@ -96,15 +108,10 @@ void InitFundingLevel()
 }
 
 
-void DoBudget()
+void ShowBudgetWindowAndStartWaiting()
 {
-    DoBudgetNow(0);
-}
-
-
-void DoBudgetFromMenu()
-{
-  DoBudgetNow(1);
+    Eval("UIShowBudgetAndWait");
+    Pause();
 }
 
 
@@ -224,9 +231,25 @@ void DoBudgetNow(int fromMenu)
 }
 
 
-void drawBudgetWindow()
+void DoBudget()
 {
-  MustDrawBudgetWindow = 1;
+    DoBudgetNow(0);
+}
+
+
+void DoBudgetFromMenu()
+{
+  DoBudgetNow(1);
+}
+
+
+void SetBudget(char *flowStr, char *previousStr, char *currentStr, char *collectedStr, int tax)
+{
+  char buf[256];
+
+  sprintf(buf, "UISetBudget {%s} {%s} {%s} {%s} {%d}",
+	  flowStr, previousStr, currentStr, collectedStr, tax);
+  Eval(buf);
 }
 
 
@@ -260,12 +283,6 @@ void ReallyDrawBudgetWindow()
   makeDollarDecimalStr(numStr, collectedStr);
 
   SetBudget(flowStr, previousStr, currentStr, collectedStr, CityTax);
-}
-
-
-void drawCurrPercents()
-{
-    MustDrawCurrPercents = 1;
 }
 
 
@@ -319,23 +336,6 @@ void UpdateBudget()
     drawCurrPercents();
     drawBudgetWindow();
     Eval("UIUpdateBudget");
-}
-
-
-void ShowBudgetWindowAndStartWaiting()
-{
-    Eval("UIShowBudgetAndWait");
-    Pause();
-}
-
-
-void SetBudget(char *flowStr, char *previousStr, char *currentStr, char *collectedStr, int tax)
-{
-  char buf[256];
-
-  sprintf(buf, "UISetBudget {%s} {%s} {%s} {%s} {%d}",
-	  flowStr, previousStr, currentStr, collectedStr, tax);
-  Eval(buf);
 }
 
 
