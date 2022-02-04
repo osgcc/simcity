@@ -184,6 +184,30 @@ int TestForCond(int TFDir)
 }
 
 
+/* comefrom: DoPowerScan DoSPZone */
+void PushPowerStack()
+{
+    if (PowerStackNum < (PWRSTKSIZE - 2))
+    {
+        PowerStackNum++;
+        PowerStackX[PowerStackNum] = SMapX;
+        PowerStackY[PowerStackNum] = SMapY;
+    }
+}
+
+
+/* comefrom: DoPowerScan */
+void PullPowerStack()
+{
+    if (PowerStackNum > 0)
+    {
+        SMapX = PowerStackX[PowerStackNum];
+        SMapY = PowerStackY[PowerStackNum];
+        PowerStackNum--;
+    }
+}
+
+
 /* comefrom: Simulate SpecialInit InitSimMemory */
 void DoPowerScan()
 {
@@ -230,29 +254,5 @@ void DoPowerScan()
                 PushPowerStack();
             }
         } while (ConNum);
-    }
-}
-
-
-/* comefrom: DoPowerScan DoSPZone */
-void PushPowerStack()
-{
-    if (PowerStackNum < (PWRSTKSIZE - 2))
-    {
-        PowerStackNum++;
-        PowerStackX[PowerStackNum] = SMapX;
-        PowerStackY[PowerStackNum] = SMapY;
-    }
-}
-
-
-/* comefrom: DoPowerScan */
-void PullPowerStack()
-{
-    if (PowerStackNum > 0)
-    {
-        SMapX = PowerStackX[PowerStackNum];
-        SMapY = PowerStackY[PowerStackNum];
-        PowerStackNum--;
     }
 }
