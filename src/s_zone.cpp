@@ -61,6 +61,10 @@
  */
 #include "main.h"
 
+#include "s_alloc.h"
+#include "s_sim.h"
+#include "s_traf.h"
+
 
 /* Zone Stuff */
 
@@ -94,7 +98,7 @@ void DoZone()
 }
 
 
-DoHospChur(void)
+void DoHospChur()
 {
   if (CChr9 == HOSPITAL) {
     HospPop++;
@@ -118,7 +122,7 @@ DoHospChur(void)
 #define ASCBIT (ANIMBIT | CONDBIT | BURNBIT)
 #define REGBIT (CONDBIT | BURNBIT)
 
-SetSmoke(int ZonePower)
+void SetSmoke(int ZonePower)
 {
   static int AniThis[8] = {    T,    F,    T,    T,    F,    F,    T,    T };
   static int DX1[8]	  = {   -1,    0,    1,    0,    0,    0,    0,    1 };
@@ -158,7 +162,7 @@ SetSmoke(int ZonePower)
 }
 
 
-DoIndustrial(int ZonePwrFlg)
+void DoIndustrial(int ZonePwrFlg)
 {
   int tpop, zscore, TrfGood;
 
@@ -189,7 +193,7 @@ DoIndustrial(int ZonePwrFlg)
 }
 
 
-DoCommercial(int ZonePwrFlg)
+void DoCommercial(int ZonePwrFlg)
 {
   register int tpop, TrfGood;
   int zscore, locvalve,value;
@@ -227,12 +231,12 @@ DoCommercial(int ZonePwrFlg)
 }
 
 
-DoResidential(int ZonePwrFlg)
+void DoResidential(int ZonePwrFlg)
 {
   int tpop, zscore, locvalve, value, TrfGood;
 
   ResZPop++;
-  if (CChr9 == FREEZ) tpop = eeDoFreePop();
+  if (CChr9 == FREEZ) tpop = DoFreePop();
   else tpop = RZPop(CChr9);
 
   ResPop += tpop;
@@ -269,7 +273,7 @@ DoResidential(int ZonePwrFlg)
 }
 
 
-MakeHosp(void)
+void MakeHosp()
 {
   if (NeedHosp > 0) {
     ZonePlop(HOSPITAL - 4);
@@ -284,7 +288,7 @@ MakeHosp(void)
 }
 
 
-GetCRVal(void)
+int GetCRVal()
 {
   register int LVal;
 
@@ -297,7 +301,7 @@ GetCRVal(void)
 }
 
 
-DoResIn(int pop, int value)
+void DoResIn(int pop, int value)
 {
   int z;
 
@@ -324,7 +328,7 @@ DoResIn(int pop, int value)
 }
 
 
-DoComIn(int pop, int value)
+void DoComIn(int pop, int value)
 {
   register int z;
 
@@ -339,7 +343,7 @@ DoComIn(int pop, int value)
 }
 
 
-DoIndIn(int pop, int value)
+void DoIndIn(int pop, int value)
 {
   if (pop < 4) {
     IndPlop(pop, value);
@@ -348,13 +352,13 @@ DoIndIn(int pop, int value)
 }
 
 
-IncROG(int amount)
+void IncROG(int amount)
 {
   RateOGMem[SMapX>>3][SMapY>>3] += amount<<2;
 }
 
 
-DoResOut(int pop, int value)
+void DoResOut(int pop, int value)
 {
   static int Brdr[9] = {0,3,6,1,4,7,2,5,8};
   register int x, y, loc, z;
@@ -397,7 +401,7 @@ DoResOut(int pop, int value)
 }
 
 
-DoComOut(int pop, int value)
+void DoComOut(int pop, int value)
 {
   if (pop > 1) {
     ComPlop(pop - 2, value);
@@ -411,7 +415,7 @@ DoComOut(int pop, int value)
 }
 
 
-DoIndOut(int pop, int value)
+void DoIndOut(int pop, int value)
 {
   if (pop > 1) {
     IndPlop(pop - 2, value);
@@ -454,7 +458,7 @@ int IZPop(int Ch9)
 }
 
 
-BuildHouse(int value)
+void BuildHouse(int value)
 {
   int z, score, hscore, BestLoc;
   static int ZeX[9] = { 0,-1, 0, 1,-1, 1,-1, 0, 1};
@@ -487,7 +491,7 @@ BuildHouse(int value)
 }
 
 
-ResPlop (int Den, int Value)
+void ResPlop (int Den, int Value)
 {
   int base;
 
@@ -496,7 +500,7 @@ ResPlop (int Den, int Value)
 }
 
 
-ComPlop (int Den, int Value)
+void ComPlop (int Den, int Value)
 {
   int base;
 	
@@ -505,7 +509,7 @@ ComPlop (int Den, int Value)
 }
 
 
-IndPlop (int Den, int Value)
+void IndPlop (int Den, int Value)
 {
   int base;
 	
@@ -514,7 +518,7 @@ IndPlop (int Den, int Value)
 }
 
 
-EvalLot (int x, int y)
+int EvalLot (int x, int y)
 {
   int z, score;
   static int DX[4] = { 0, 1, 0,-1};
@@ -538,7 +542,7 @@ EvalLot (int x, int y)
 }
 
 
-ZonePlop (int base)
+void ZonePlop (int base)
 {
   int z, x;
   static int Zx[9] = {-1, 0, 1,-1, 0, 1,-1, 0, 1};
@@ -549,7 +553,7 @@ ZonePlop (int base)
     int yy = SMapY + Zy[z];
     if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
       x = Map[xx][yy] & LOMASK;
-      if ((x >= FLOOD) && (x < ROADBASE)) return (FALSE);
+      if ((x >= FLOOD) && (x < ROADBASE)) return;
     }
   }
   for (z = 0; z < 9; z++) {
@@ -566,7 +570,7 @@ ZonePlop (int base)
 }
 
 
-EvalRes (int traf)
+int EvalRes (int traf)
 {
   register int Value;
 
@@ -585,7 +589,7 @@ EvalRes (int traf)
 }
 
 
-EvalCom (int traf)
+int EvalCom (int traf)
 {
   int Value;
 
@@ -595,7 +599,7 @@ EvalCom (int traf)
 }
 
 
-EvalInd (int traf)
+int EvalInd (int traf)
 {
   if (traf < 0) return (-1000);
   return (0);
