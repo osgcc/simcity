@@ -140,7 +140,7 @@ void SetPowerBit()
 }
 
 
-int TestPowerBit()
+bool TestPowerBit()
 {
     if ((CChr9 == NUCLEAR) || (CChr9 == POWERPLANT))
     {
