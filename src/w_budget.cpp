@@ -252,15 +252,22 @@ void SetBudget(const std::string& flowStr, const std::string& previousStr, const
 }
 
 
-void SetBudgetValues(char *roadGot, char *roadWant, char *policeGot, char *policeWant, char *fireGot, char *fireWant)
+void SetBudgetValues(char* roadGot, char* roadWant, char* policeGot, char* policeWant, char* fireGot, char* fireWant)
 {
-  char buf[256];
+    const std::string msg = "UISetBudgetValues {" +
+        std::string(roadGot) + "} {" +
+        std::string(roadWant) + "} {" +
+        std::to_string(static_cast<int>(roadPercent * 100)) + "} {" +
 
-  sprintf(buf, "UISetBudgetValues {%s} {%s} %d {%s} {%s} %d {%s} {%s} %d",
-	  roadGot, roadWant, (int)(roadPercent * 100),
-	  policeGot, policeWant, (int)(policePercent * 100),
-	  fireGot, fireWant, (int)(firePercent * 100));
-  Eval(buf);
+        std::string(policeGot) + "} {" +
+        std::string(policeWant) + "} {" +
+        std::to_string(static_cast<int>(policePercent * 100)) + "} {" +
+
+        std::string(fireGot) + "} {" +
+        std::string(fireWant) + "} {" +
+        std::to_string(static_cast<int>(firePercent * 100)) + "}";
+
+    Eval(msg);
 }
 
 void ReallyDrawBudgetWindow()
