@@ -232,7 +232,7 @@ DoResidential(int ZonePwrFlg)
   int tpop, zscore, locvalve, value, TrfGood;
 
   ResZPop++;
-  if (CChr9 == FREEZ) tpop = DoFreePop();
+  if (CChr9 == FREEZ) tpop = eeDoFreePop();
   else tpop = RZPop(CChr9);
 
   ResPop += tpop;
@@ -425,7 +425,7 @@ DoIndOut(int pop, int value)
 }
 
 
-RZPop(int Ch9)
+int RZPop(int Ch9)
 {
   int CzDen;
 
@@ -434,7 +434,7 @@ RZPop(int Ch9)
 }
 
 
-CZPop(int Ch9)
+int CZPop(int Ch9)
 {
   int CzDen;
 
@@ -444,7 +444,7 @@ CZPop(int Ch9)
 }
 
 
-IZPop(int Ch9)
+int IZPop(int Ch9)
 {
   int CzDen;
 
@@ -602,7 +602,7 @@ EvalInd (int traf)
 }
 
 
-DoFreePop (void)
+int DoFreePop ()
 {
   int count;
   register int loc, x, y;

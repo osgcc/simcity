@@ -68,6 +68,7 @@
     <ClInclude Include="src\s_init.h" />
     <ClInclude Include="src\s_msg.h" />
     <ClInclude Include="src\s_sim.h" />
+    <ClInclude Include="src\s_zone.h" />
     <ClInclude Include="src\w_budget.h" />
     <ClInclude Include="src\w_graph.h" />
     <ClInclude Include="src\animtab.h" />

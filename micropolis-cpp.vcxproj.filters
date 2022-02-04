@@ -218,5 +218,8 @@
     <ClInclude Include="src\s_msg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\s_zone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
