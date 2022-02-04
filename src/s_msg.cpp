@@ -67,13 +67,14 @@
 #include "w_tk.h"
 
 
+#include <algorithm>
 #include <string>
 
 
 int LastCityPop;
 int LastCategory;
 int LastPicNum;
-int autoGo;
+bool AutoGo = false;
 bool HaveLastMessage = false;
 std::string LastMessage;
 
@@ -440,7 +441,6 @@ void SendMessages()
 
 void doMessage()
 {
-    char messageStr[256]{};
     bool firstTime;
 
     if (MessagePort)
@@ -530,21 +530,20 @@ void doMessage()
             return;
         }
 
-        GetIndString(messageStr, 301, MesNum);
         if (MesX || MesY)
         {
-            /* TODO: draw goto button */
+            // TODO: draw goto button
         }
 
-        if (autoGo && (MesX || MesY))
+        if (AutoGo && (MesX || MesY))
         {
-            DoAutoGoto(MesX, MesY, messageStr);
+            DoAutoGoto(MesX, MesY, GetIndString(301, MesNum));
             MesX = 0;
             MesY = 0;
         }
         else
         {
-            SetMessageField(messageStr);
+            SetMessageField(GetIndString(301, MesNum));
         }
     }
     else
@@ -552,22 +551,13 @@ void doMessage()
         // picture message
         int pictId = -(MesNum);
 
-        if (pictId < 43)
-        {
-            GetIndString(messageStr, 301, pictId);
-        }
-        else
-        {
-            messageStr[0] = '\0';
-        }
-
         DoShowPicture(pictId);
 
-        MessagePort = pictId; /* resend text message */
+        MessagePort = pictId; // resend text message
 
-        if (autoGo && (MesX || MesY))
+        if (AutoGo && (MesX || MesY))
         {
-            DoAutoGoto(MesX, MesY, messageStr);
+            DoAutoGoto(MesX, MesY, GetIndString(301, pictId));
             MesX = 0;
             MesY = 0;
         }

@@ -462,7 +462,7 @@ extern int SimMetaSpeed;
 extern int NoDisasters;
 extern int autoBulldoze;
 extern int autoBudget;
-extern int autoGo;
+extern bool AutoGo;
 extern int UserSoundOn;
 
 extern int DisasterEvent;

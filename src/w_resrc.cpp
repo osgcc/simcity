@@ -140,7 +140,7 @@ std::array<std::string, 64> StringTable =
 }};
 
 
-const std::string& GetIndString(const std::string& str, int id, int /*num*/)
+const std::string& GetIndString(int /*id*/, int num)
 {
-    return StringTable[id];
+    return StringTable[num];
 }
