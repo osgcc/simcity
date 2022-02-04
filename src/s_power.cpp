@@ -73,183 +73,186 @@ int MaxPower, NumPower;
 
 
 /* comefrom: TestForCond DoPowerScan TryGo */
-bool MoveMapSim (int MDir)
+bool MoveMapSim(int MDir)
 {
-  switch (MDir) {
-  case 0:
-    if (SMapY > 0) {
-      SMapY--;
-      return true;
+    switch (MDir)
+    {
+    case 0:
+        if (SMapY > 0)
+        {
+            SMapY--;
+            return true;
+        }
+        if (SMapY < 0)
+        {
+            SMapY = 0;
+        }
+        return false;
+
+    case 1:
+        if (SMapX < (WORLD_X - 1))
+        {
+            SMapX++;
+            return true;
+        }
+        if (SMapX > (WORLD_X - 1))
+        {
+            SMapX = WORLD_X - 1;
+        }
+        return false;
+
+    case 2:
+        if (SMapY < (WORLD_Y - 1))
+        {
+            SMapY++;
+            return true;
+        }
+        if (SMapY > (WORLD_Y - 1))
+        {
+            SMapY = WORLD_Y - 1;
+        }
+        return false;
+
+    case 3:
+        if (SMapX > 0)
+        {
+            SMapX--;
+            return true;
+        }
+        if (SMapX < 0)
+        {
+            SMapX = 0;
+        }
+        return false;
+
+    case 4:
+        return true;
     }
-    if (SMapY < 0)
-      SMapY = 0;
+
     return false;
-  case 1:
-    if (SMapX < (WORLD_X - 1)) {
-      SMapX++;
-      return true;
-    }
-    if (SMapX > (WORLD_X - 1))
-      SMapX = WORLD_X - 1;
-    return false;
-  case 2:
-    if (SMapY < (WORLD_Y - 1)) {
-      SMapY++;
-      return true;
-    }
-    if (SMapY > (WORLD_Y - 1))
-      SMapY = WORLD_Y - 1;
-    return false;
-  case 3:
-    if (SMapX > 0) {
-      SMapX--;
-      return true;
-    }
-    if (SMapX < 0)
-      SMapX = 0;
-    return false;
-  case 4:
-    return true;
-  }
-  return false;				
 }
 
 
-/* inlined -Don */
-#if 0
-/* comefrom: DoPowerScan */
-SetPowerBit(void) 
+void SetPowerBit()
 {
-  register int PowerWrd;
-
-  /* XXX: assumes 120x100 */
-  PowerWrd = (SMapX >>4) + (SMapY <<3);
-  PowerMap[PowerWrd] |= 1 << (SMapX & 15);
+    /* XXX: assumes 120x100 */
+    int PowerWrd = (SMapX >> 4) + (SMapY << 3);
+    PowerMap[PowerWrd] |= 1 << (SMapX & 15);
 }
-#endif
 
 
-/* inlined */
-#if 0
-/* comefrom: TestForCond */
-int TestPowerBit(void)
+int TestPowerBit()
 {
-  register int PowerWrd;
+    if ((CChr9 == NUCLEAR) || (CChr9 == POWERPLANT))
+    {
+        return true;
+    }
 
-  if ((CChr9 == NUCLEAR) || (CChr9 == POWERPLANT))
-    return(1);
-  /* XXX: assumes 120x100 */
-  PowerWrd = (SMapX >>4) + (SMapY <<3);
-  if (PowerWrd >= PWRMAPSIZE)
-    return(0);
-  return ((PowerMap[PowerWrd] & (1 << (SMapX & 15))) ? 1 : 0);
+    /* XXX: assumes 120x100 */
+    int PowerWrd = (SMapX >> 4) + (SMapY << 3);
+
+    if (PowerWrd >= PWRMAPSIZE)
+    {
+        return false;
+    }
+
+    return ((PowerMap[PowerWrd] & (1 << (SMapX & 15))) ? 1 : 0);
 }
-#endif
 
 
 /* comefrom: DoPowerScan */
 int TestForCond(int TFDir)
-{ 	
-  register int xsave, ysave, PowerWrd;
+{
+    int xsave = SMapX;
+    int ysave = SMapY;
 
-  xsave = SMapX;
-  ysave = SMapY;
-  if (MoveMapSim(TFDir)) {
-    /* TestPowerBit was taking a lot of time so I swapped the & order -Don */
-#if 0
-    if ((Map[SMapX][SMapY] & CONDBIT) &&
-	(!TestPowerBit()))
-#else
-    if ((Map[SMapX][SMapY] & CONDBIT) &&
-	(CChr9 != NUCLEAR) &&
-	(CChr9 != POWERPLANT) &&
-	(
-#if 0
-	 (PowerWrd = (SMapX >>4) + (SMapY <<3)),
-#else
-	 (PowerWrd = POWERWORD(SMapX, SMapY)),
-#endif
-	 ((PowerWrd > PWRMAPSIZE) ||
-	  ((PowerMap[PowerWrd] & (1 << (SMapX & 15))) == 0))))
-#endif
+    if (MoveMapSim(TFDir))
     {
-      SMapX = xsave;
-      SMapY = ysave;
-      return true;
+        if ((Map[SMapX][SMapY] & CONDBIT) && (!TestPowerBit()))
+        {
+            SMapX = xsave;
+            SMapY = ysave;
+
+            return true;
+        }
     }
-  }
-  SMapX = xsave;
-  SMapY = ysave;
-  return false;
+
+    SMapX = xsave;
+    SMapY = ysave;
+
+    return false;
 }
 
 
 /* comefrom: Simulate SpecialInit InitSimMemory */
 void DoPowerScan()
-{	
-  int ADir;
-  register int ConNum, Dir, x;
+{
+    for (int x = 0; x < PWRMAPSIZE; x++) /* ClearPowerMem */
+    {
+        PowerMap[x] = 0;
+    }
 
-  for (x = 0; x < PWRMAPSIZE; x++)
-    PowerMap[x] = 0;	/* ClearPowerMem */
+    MaxPower = (CoalPop * 700L) + (NuclearPop * 2000L); /* post release */
+    NumPower = 0;
 
-  MaxPower = (CoalPop * 700L) + (NuclearPop * 2000L); /* post release */
-  NumPower = 0;
+    int ConNum{};
+    while (PowerStackNum)
+    {
+        PullPowerStack();
+        
+        int ADir = 4;
+        do
+        {
+            if (++NumPower > MaxPower)
+            {
+                SendMes(40);
+                return;
+            }
+            
+            MoveMapSim(ADir);
+            SetPowerBit();
 
-  while (PowerStackNum)	{
-    PullPowerStack();
-    ADir = 4;
-    do {
-      if (++NumPower > MaxPower) {
-	SendMes(40);
-	return;
-      }
-      MoveMapSim(ADir);
-/* inlined -Don */
-#if 0
-      SetPowerBit();
-#else
-#if 1
-      SETPOWERBIT(SMapX, SMapY);
-#else
-      PowerMap[(SMapX >>4) + (SMapY <<3)] |= 1 << (SMapX & 15);
-#endif
-#endif
-      ConNum = 0;
-      Dir = 0;
-      while ((Dir < 4) && (ConNum < 2))	{
-	if (TestForCond(Dir)) {
-	  ConNum++;
-	  ADir = Dir;
-	}
-	Dir++;
-      }
-      if (ConNum > 1)
-	PushPowerStack();
-    } while (ConNum);
-  }
+            PowerMap[(SMapX >> 4) + (SMapY << 3)] |= 1 << (SMapX & 15);
+
+            ConNum = 0;
+            int Dir = 0;
+            while ((Dir < 4) && (ConNum < 2))
+            {
+                if (TestForCond(Dir))
+                {
+                    ConNum++;
+                    ADir = Dir;
+                }
+                Dir++;
+            }
+            if (ConNum > 1)
+            {
+                PushPowerStack();
+            }
+        } while (ConNum);
+    }
 }
 
 
 /* comefrom: DoPowerScan DoSPZone */
-void PushPowerStack() 
-{ 	
-  if (PowerStackNum < (PWRSTKSIZE - 2)) {
-    PowerStackNum++;
-    PowerStackX[PowerStackNum] = SMapX;
-    PowerStackY[PowerStackNum] = SMapY;
-   }
+void PushPowerStack()
+{
+    if (PowerStackNum < (PWRSTKSIZE - 2))
+    {
+        PowerStackNum++;
+        PowerStackX[PowerStackNum] = SMapX;
+        PowerStackY[PowerStackNum] = SMapY;
+    }
 }
 
 
 /* comefrom: DoPowerScan */
 void PullPowerStack()
-{ 	
-  if (PowerStackNum > 0)  {
-    SMapX = PowerStackX[PowerStackNum];
-    SMapY = PowerStackY[PowerStackNum];
-    PowerStackNum--;
-  }
+{
+    if (PowerStackNum > 0)
+    {
+        SMapX = PowerStackX[PowerStackNum];
+        SMapY = PowerStackY[PowerStackNum];
+        PowerStackNum--;
+    }
 }
-
-
