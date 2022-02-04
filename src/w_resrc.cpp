@@ -63,19 +63,28 @@
 
 #include "w_resrc.h"
 
+#include <filesystem>
+#include <fstream>
 #include <iostream>
+#include <map>
+#include <memory>
+#include <vector>
 
-#ifdef MSDOS
-#define PATHSTR	"%s\\%c%c%c%c.%d"
-#define PERMSTR	"rb"
-#else
-#define PATHSTR	"%s/%c%c%c%c.%d"
-#define PERMSTR	"r"
-#endif
 
 char *HomeDir, *ResourceDir, *KeyDir, *HostName;
 
-struct Resource* Resources = NULL;
+
+struct Resource
+{
+    std::string buffer;
+    uintmax_t size{ 0 };
+    std::string name{};
+    int id{ 0 };
+};
+
+
+std::map<int, Resource> Resources;
+
 
 struct StringTable
 {
@@ -86,62 +95,43 @@ struct StringTable
 } *StringTables;
 
 
-Handle GetResource(const std::string& name, int id)
+std::string& GetResource(const std::string& name, int id)
 {
-    char fname[256]{};
-    struct stat st;
-    FILE* fp = NULL;
+    auto& resource = Resources[id];
 
-    Resource* resources = Resources;
-    while (resources != NULL)
+    if (resource.size == 0)
     {
-        if ((resources->id == id) && name == resources->name)
+        std::filesystem::path filePath(std::string(ResourceDir) + "/" + name);
+
+        if (!std::filesystem::exists(filePath))
         {
-            return ((Handle)&resources->buf);
-        }
-        resources = resources->next;
-    }
-
-    resources = (struct Resource*)malloc(sizeof(struct Resource));
-
-    resources->name[0] = name[0];
-    resources->name[1] = name[1];
-    resources->name[2] = name[2];
-    resources->name[3] = name[3];
-    resources->id = id;
-
-    sprintf(fname, PATHSTR, ResourceDir, resources->name[0], resources->name[1], resources->name[2], resources->name[3], resources->id);
-
-    if ((stat(fname, &st) < 0) ||
-        ((resources->size = st.st_size) == 0) ||
-        ((resources->buf = (char*)malloc(resources->size)) == NULL) ||
-        ((fp = fopen(fname, PERMSTR)) == NULL) ||
-        (fread(resources->buf, sizeof(char), resources->size, fp) != resources->size))
-    {
-        if (fp)
-        {
-            fclose(fp);
+            throw std::runtime_error("File '" + filePath.string() + "' doesn't exist.");
         }
 
-        resources->buf = nullptr;
-        resources->size = 0;
-        fprintf(stderr, "Can't find resource file \"%s\"!\n", fname);
-        perror("GetResource");
-        return(NULL);
-    }
+        resource.size = std::filesystem::file_size(filePath);
+        if (resource.size == 0)
+        {
+            throw std::runtime_error("File '" + filePath.string() + "' is empty.");
+        }
 
-    fclose(fp);
-    
-    resources->next = Resources;
-    Resources = resources;
-    
-    return ((Handle)&resources->buf);
+        std::ifstream file(filePath, std::ios::in | std::ios::binary);
+
+        if (!file.is_open())
+        {
+            throw std::runtime_error("Error opening file '" + filePath.string() + "'.");
+        }
+
+        resource.buffer.reserve(resource.size);
+        file.read(resource.buffer.data(), resource.size);
+        file.close();
+    }
+ 
+    return resource.buffer;
 }
 
 
 void ReleaseResource(Handle r)
-{
-}
+{}
 
 
 int ResourceSize(Handle h)
@@ -154,6 +144,9 @@ int ResourceSize(Handle h)
 
 const std::string GetIndString(const std::string& str, int id, int num)
 {
+    return "";
+
+    /*
     struct StringTable** tp, * st = NULL;
     Handle h;
 
@@ -208,4 +201,5 @@ const std::string GetIndString(const std::string& str, int id, int num)
     }
 
     return st->strings[num - 1];
+    */
 }
