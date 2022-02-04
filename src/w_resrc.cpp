@@ -63,6 +63,8 @@
 
 #include "w_resrc.h"
 
+#include <iostream>
+
 #ifdef MSDOS
 #define PATHSTR	"%s\\%c%c%c%c.%d"
 #define PERMSTR	"rb"
@@ -73,7 +75,7 @@
 
 char *HomeDir, *ResourceDir, *KeyDir, *HostName;
 
-struct Resource *Resources = NULL;
+struct Resource* Resources = NULL;
 
 struct StringTable
 {
@@ -84,53 +86,56 @@ struct StringTable
 } *StringTables;
 
 
-Handle GetResource(char* name, int id)
+Handle GetResource(const std::string& name, int id)
 {
-    struct Resource* r = Resources;
-    char fname[256];
+    char fname[256]{};
     struct stat st;
     FILE* fp = NULL;
 
-    while (r != NULL)
+    Resource* resources = Resources;
+    while (resources != NULL)
     {
-        if ((r->id == id) && (strncmp(r->name, name, 4) == 0))
+        if ((resources->id == id) && name == resources->name)
         {
-            return ((Handle)&r->buf);
+            return ((Handle)&resources->buf);
         }
-        r = r->next;
+        resources = resources->next;
     }
 
-    r = (struct Resource*)malloc(sizeof(struct Resource));
+    resources = (struct Resource*)malloc(sizeof(struct Resource));
 
-    r->name[0] = name[0];
-    r->name[1] = name[1];
-    r->name[2] = name[2];
-    r->name[3] = name[3];
-    r->id = id;
+    resources->name[0] = name[0];
+    resources->name[1] = name[1];
+    resources->name[2] = name[2];
+    resources->name[3] = name[3];
+    resources->id = id;
 
-    sprintf(fname, PATHSTR, ResourceDir, r->name[0], r->name[1], r->name[2], r->name[3], r->id);
+    sprintf(fname, PATHSTR, ResourceDir, resources->name[0], resources->name[1], resources->name[2], resources->name[3], resources->id);
 
     if ((stat(fname, &st) < 0) ||
-        ((r->size = st.st_size) == 0) ||
-        ((r->buf = (char*)malloc(r->size)) == NULL) ||
+        ((resources->size = st.st_size) == 0) ||
+        ((resources->buf = (char*)malloc(resources->size)) == NULL) ||
         ((fp = fopen(fname, PERMSTR)) == NULL) ||
-        (fread(r->buf, sizeof(char), r->size, fp) != r->size))
+        (fread(resources->buf, sizeof(char), resources->size, fp) != resources->size))
     {
         if (fp)
         {
             fclose(fp);
         }
 
-        r->buf = NULL;
-        r->size = 0;
+        resources->buf = nullptr;
+        resources->size = 0;
         fprintf(stderr, "Can't find resource file \"%s\"!\n", fname);
         perror("GetResource");
         return(NULL);
     }
 
     fclose(fp);
-    r->next = Resources; Resources = r;
-    return ((Handle)&r->buf);
+    
+    resources->next = Resources;
+    Resources = resources;
+    
+    return ((Handle)&resources->buf);
 }
 
 
@@ -147,7 +152,7 @@ int ResourceSize(Handle h)
 }
 
 
-void GetIndString(const std::string str, int id, int num)
+const std::string GetIndString(const std::string& str, int id, int num)
 {
     struct StringTable** tp, * st = NULL;
     Handle h;
@@ -199,9 +204,8 @@ void GetIndString(const std::string str, int id, int num)
     if ((num < 1) || (num > st->lines))
     {
         fprintf(stderr, "Out of range string index: %d\n", num);
-        strcpy(str, "Well I'll be a monkey's uncle!");
+        return "Well I'll be a monkey's uncle!";
     }
-    {
-        strcpy(str, st->strings[num - 1]);
-    }
+
+    return st->strings[num - 1];
 }

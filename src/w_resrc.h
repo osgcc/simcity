@@ -14,5 +14,5 @@ struct Resource
 
 typedef char** Handle;
 
-Handle GetResource(char* name, int id);
-void GetIndString(const std::string&, int id, int num);
+Handle GetResource(const std::string& name, int id);
+const std::string GetIndString(const std::string&, int id, int num);
