@@ -77,7 +77,7 @@ char *dateStr[12] =
 };
 
 
-void void DoUpdateHeads()
+void DoUpdateHeads()
 {
     showValves();
     doTimeStuff();

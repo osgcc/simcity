@@ -64,7 +64,7 @@
 
 /* comefrom: drawTaxesCollected incBoxValue decBoxValue drawCurrentFunds 
 	     drawActualBox UpdateFunds updateCurrentCost */
-makeDollarDecimalStr(char *numStr, char *dollarStr)
+void makeDollarDecimalStr(char *numStr, char *dollarStr)
 {
   register int leftMostSet;
   int numOfDigits;
@@ -121,7 +121,7 @@ makeDollarDecimalStr(char *numStr, char *dollarStr)
 }
 
 
-Pause()
+void Pause()
 {
   if (!sim_paused) {
     sim_paused_speed = SimMetaSpeed;
@@ -131,7 +131,7 @@ Pause()
 }
 
 
-Resume()
+void Resume()
 {
   if (sim_paused) {
     sim_paused = 0;
