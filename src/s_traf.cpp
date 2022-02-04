@@ -61,6 +61,9 @@
  */
 #include "main.h"
 
+#include "s_alloc.h"
+#include "s_power.h"
+#include "s_sim.h"
 
 /* Traffic Generation */
 
@@ -74,7 +77,7 @@ int TrafMaxX, TrafMaxY;
 
 
 /* comefrom: DoIndustrial DoCommercial DoResidential */
-MakeTraf(int Zt)
+bool MakeTraf(int Zt)
 {
   int xtem, ytem;
 
@@ -99,7 +102,7 @@ MakeTraf(int Zt)
 
 
 /* comefrom: MakeTraf */
-SetTrafMem(void)
+void SetTrafMem()
 {
   register int x, z;
 
@@ -132,7 +135,7 @@ SetTrafMem(void)
 
 
 /* comefrom: TryGo */
-PushPos(void)
+void PushPos()
 {
   PosStackN++;
   SMapXStack[PosStackN] = SMapX;
@@ -141,7 +144,7 @@ PushPos(void)
 
 
 /* comefrom: SetTrafMem */
-PullPos(void)
+void PullPos()
 {
   SMapX = SMapXStack[PosStackN];
   SMapY = SMapYStack[PosStackN];
@@ -171,7 +174,7 @@ bool FindPRoad()		/* look for road on edges of zone   */
 }
 
 
-FindPTele(void)		/* look for telecommunication on edges of zone */
+bool FindPTele()		/* look for telecommunication on edges of zone */
 {
   static int PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
   static int PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};
@@ -192,7 +195,7 @@ FindPTele(void)		/* look for telecommunication on edges of zone */
 
 
 /* comefrom: MakeTraf */
-TryDrive(void)
+bool TryDrive()
 {
   int z;
 
@@ -214,7 +217,7 @@ TryDrive(void)
 
 
 /* comefrom: TryDrive */
-TryGo(int z)
+bool TryGo(int z)
 {
   int x, rdir, realdir;
 
@@ -236,7 +239,7 @@ TryGo(int z)
 
 
 /* comefrom: TryGo DriveDone */
-GetFromMap(int x)
+bool GetFromMap(int x)
 {
   switch (x) {
   case 0:
@@ -282,7 +285,7 @@ bool DriveDone()
 
 
 /* comefrom: TryGo FindPRoad */
-RoadTest(int x)
+bool RoadTest(int x)
 {
   x = x & LOMASK;
   if (x < ROADBASE)
@@ -293,4 +296,3 @@ RoadTest(int x)
     return (FALSE);
   return (TRUE);
 }
-
