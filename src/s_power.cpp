@@ -72,7 +72,6 @@ char PowerStackX[PWRSTKSIZE], PowerStackY[PWRSTKSIZE];
 int MaxPower, NumPower;
 
 
-/* comefrom: TestForCond DoPowerScan TryGo */
 bool MoveMapSim(int MDir)
 {
     switch (MDir)
@@ -160,7 +159,6 @@ int TestPowerBit()
 }
 
 
-/* comefrom: DoPowerScan */
 int TestForCond(int TFDir)
 {
     int xsave = SMapX;
@@ -184,7 +182,6 @@ int TestForCond(int TFDir)
 }
 
 
-/* comefrom: DoPowerScan DoSPZone */
 void PushPowerStack()
 {
     if (PowerStackNum < (PWRSTKSIZE - 2))
@@ -196,7 +193,6 @@ void PushPowerStack()
 }
 
 
-/* comefrom: DoPowerScan */
 void PullPowerStack()
 {
     if (PowerStackNum > 0)
@@ -208,15 +204,14 @@ void PullPowerStack()
 }
 
 
-/* comefrom: Simulate SpecialInit InitSimMemory */
 void DoPowerScan()
 {
-    for (int x = 0; x < PWRMAPSIZE; x++) /* ClearPowerMem */
+    for (int x = 0; x < PWRMAPSIZE; x++) // ClearPowerMem
     {
         PowerMap[x] = 0;
     }
 
-    MaxPower = (CoalPop * 700L) + (NuclearPop * 2000L); /* post release */
+    MaxPower = (CoalPop * 700L) + (NuclearPop * 2000L); // post release
     NumPower = 0;
 
     int ConNum{};
