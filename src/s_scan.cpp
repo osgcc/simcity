@@ -61,6 +61,9 @@
  */
 #include "main.h"
 
+#include "s_alloc.h"
+#include "s_sim.h"
+#include "s_zone.h"
 
 /* Map Updates */
 
@@ -74,9 +77,9 @@ int DonDither = 0;
 
 
 /* comefrom: Simulate SpecialInit */
-FireAnalysis(void)		/* Make firerate map from firestation map  */
+void FireAnalysis(void)		/* Make firerate map from firestation map  */
 {
-  register x,y;
+  register int x,y;
 
   SmoothFSMap();
   SmoothFSMap();
@@ -90,7 +93,7 @@ FireAnalysis(void)		/* Make firerate map from firestation map  */
 
 
 /* comefrom: Simulate SpecialInit */
-PopDenScan(void)		/*  sets: PopDensity, , , ComRate  */
+void PopDenScan(void)		/*  sets: PopDensity, , , ComRate  */
 {
   int Xtot, Ytot, Ztot;
   register int x, y, z;
@@ -139,12 +142,12 @@ PopDenScan(void)		/*  sets: PopDensity, , , ComRate  */
 
 
 /* comefrom: PopDenScan */
-GetPDen(int Ch9)
+int GetPDen(int Ch9)
 {
   register int pop;
 
   if (Ch9 == FREEZ) {
-    pop = DoFreePop(Ch9);
+    pop = DoFreePop(/*Ch9*/);
     return (pop);
   }
   if (Ch9 < COMBASE) {
@@ -164,7 +167,7 @@ GetPDen(int Ch9)
 
 
 /* comefrom: Simulate SpecialInit */
-PTLScan(void)   	/* Does pollution, terrain, land value   */
+void PTLScan()   	/* Does pollution, terrain, land value   */
 {
   int ptot, LVtot;
   register int x, y, z, dis;
@@ -254,7 +257,7 @@ PTLScan(void)   	/* Does pollution, terrain, land value   */
 
 
 /* comefrom: PTLScan */
-GetPValue(int loc)
+int GetPValue(int loc)
 {
   if (loc < POWERBASE) {
     if (loc >= HTRFBASE) return (/* 25 */ 75);	/* heavy traf  */
@@ -274,7 +277,7 @@ GetPValue(int loc)
 
 
 /* comefrom: PTLScan DistIntMarket */
-GetDisCC(int x, int y)
+int GetDisCC(int x, int y)
 {
   int xdis, ydis, z;
 
@@ -297,7 +300,7 @@ GetDisCC(int x, int y)
 
 
 /* comefrom: Simulate SpecialInit */
-CrimeScan(void)
+void CrimeScan()
 {
   int numz;
   int totz;
@@ -344,7 +347,7 @@ CrimeScan(void)
 
 
 /* comefrom: PTLScan */
-SmoothTerrain(void)
+void SmoothTerrain()
 {
   if (DonDither & 1) {
     register int x, y = 0, z = 0, dir = 1;
@@ -378,7 +381,7 @@ SmoothTerrain(void)
 }
 
 /* comefrom: PopDenScan */
-DoSmooth (void)        /* smooths data in tem[x][y] into tem2[x][y]  */
+void DoSmooth ()        /* smooths data in tem[x][y] into tem2[x][y]  */
 {
   if (DonDither & 2) {
     register int x, y = 0, z = 0, dir = 1;
@@ -425,7 +428,7 @@ DoSmooth (void)        /* smooths data in tem[x][y] into tem2[x][y]  */
 
 
 /* comefrom: PopDenScan */
-DoSmooth2 (void)        /* smooths data in tem2[x][y] into tem[x][y]  */
+void DoSmooth2 ()        /* smooths data in tem2[x][y] into tem[x][y]  */
 {
   if (DonDither & 4) {
     register int x, y = 0, z = 0, dir = 1;
@@ -472,7 +475,7 @@ DoSmooth2 (void)        /* smooths data in tem2[x][y] into tem[x][y]  */
 
 
 /* comefrom: PopDenScan */
-ClrTemArray(void)
+void ClrTemArray()
 {
   register int x, y, z;
 
@@ -484,7 +487,7 @@ ClrTemArray(void)
 
 
 /* comefrom: FireAnalysis */
-SmoothFSMap(void)
+void SmoothFSMap()
 {
   register int x, y, edge;
 
@@ -505,9 +508,9 @@ SmoothFSMap(void)
 
 
 /* comefrom: CrimeScan */
-SmoothPSMap(void)
+void SmoothPSMap()
 {
-  register x, y, edge;
+  register int x, y, edge;
 
   for (x = 0; x < SmX; x++)
     for (y = 0; y < SmY; y++) {
@@ -526,7 +529,7 @@ SmoothPSMap(void)
 
 
 /* comefrom: PopDenScan */
-DistIntMarket(void)
+void DistIntMarket()
 {
   register int x, y, z;
 
