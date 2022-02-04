@@ -3,7 +3,7 @@
 struct SimView;
 
 void CancelRedrawView(SimView* view);
-int Eval(const char* buf);
+int Eval(const std::string&);
 void StopEarthquake();
 void tk_main();
 void InvalidateEditors();

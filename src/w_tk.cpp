@@ -65,6 +65,7 @@
 
 
 #include <iostream>
+#include <string>
 
 //Tcl_Interp *tk_mainInterp = NULL;
 //Tcl_CmdBuf buffer = NULL;
@@ -738,7 +739,7 @@ DoEarthQuake(void)
 }
 
 
-int Eval(const char* buf)
+int Eval(const std::string& buf)
 {
     std::cout << buf << std::endl;
     /*
