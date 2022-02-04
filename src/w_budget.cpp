@@ -70,6 +70,9 @@
 #include "w_util.h"
 
 
+#include <string>
+
+
 float roadPercent = 0.0;
 float policePercent = 0.0;
 float firePercent = 0.0;
@@ -243,13 +246,9 @@ void DoBudgetFromMenu()
 }
 
 
-void SetBudget(char *flowStr, char *previousStr, char *currentStr, char *collectedStr, int tax)
+void SetBudget(const std::string& flowStr, const std::string& previousStr, const std::string& currentStr, const std::string& collectedStr, int tax)
 {
-  char buf[256];
-
-  sprintf(buf, "UISetBudget {%s} {%s} {%s} {%s} {%d}",
-	  flowStr, previousStr, currentStr, collectedStr, tax);
-  Eval(buf);
+    Eval("UISetBudget {" + flowStr + "} {" + previousStr + "} {" + currentStr + "} {" + collectedStr + "} {" + std::to_string(tax) + "}");
 }
 
 
