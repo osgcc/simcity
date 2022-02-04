@@ -162,7 +162,7 @@ void sim_update_maps()
 
     for (SimView* view = sim->map; view != nullptr; view = view->next)
     {
-        int mustUpdateMap = NewMapFlags[view->map_state] || NewMap || ShakeNow;
+        bool mustUpdateMap = NewMapFlags[view->map_state] || NewMap || ShakeNow;
         if (mustUpdateMap)
         {
             view->invalid = 1;
@@ -469,7 +469,7 @@ void sim_init()
 
     UserSoundOn = 1;
     MustUpdateOptions = 1;
-    HaveLastMessage = 0;
+    HaveLastMessage = false;
     ScenarioID = 0;
     StartingYear = 1900;
     tileSynch = 0x01;

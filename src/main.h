@@ -489,7 +489,7 @@ extern int TrafficAverage;
 extern int PosStackN;
 extern int SMapXStack[], SMapYStack[];
 extern int Zsource;
-extern int HaveLastMessage;
+extern bool HaveLastMessage;
 extern int PdestX, PdestY;
 extern int CdestX, CdestY;
 extern int absDist;

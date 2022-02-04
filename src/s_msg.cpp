@@ -71,7 +71,7 @@ int LastCityPop;
 int LastCategory;
 int LastPicNum;
 int autoGo;
-int HaveLastMessage = 0;
+bool HaveLastMessage = false;
 char LastMessage[256];
 
 
@@ -129,7 +129,7 @@ void SetMessageField(char* str)
     if (!HaveLastMessage || strcmp(LastMessage, str))
     {
         strcpy(LastMessage, str);
-        HaveLastMessage = 1;
+        HaveLastMessage = true;
         sprintf(buf, "UISetMessage {%s}", str);
         Eval(buf);
     }
