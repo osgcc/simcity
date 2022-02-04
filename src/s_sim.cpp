@@ -1228,8 +1228,7 @@ int Rand16()
 }
 
 
-int
-Rand16Signed(void)
+int Rand16Signed()
 {
   int i = sim_rand();
 
