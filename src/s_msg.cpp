@@ -67,12 +67,15 @@
 #include "w_tk.h"
 
 
+#include <string>
+
+
 int LastCityPop;
 int LastCategory;
 int LastPicNum;
 int autoGo;
 bool HaveLastMessage = false;
-char LastMessage[256];
+std::string LastMessage;
 
 
 void ClearMes()
@@ -122,36 +125,26 @@ void SendMesAt(int Mnum, int x, int y)
 }
 
 
-void SetMessageField(char* str)
+void SetMessageField(const std::string& msg)
 {
-    char buf[256];
-
-    if (!HaveLastMessage || strcmp(LastMessage, str))
+    if(LastMessage.empty() || LastMessage != msg)
     {
-        strcpy(LastMessage, str);
-        HaveLastMessage = true;
-        sprintf(buf, "UISetMessage {%s}", str);
-        Eval(buf);
+        LastMessage = msg;
+        Eval(std::string("UISetMessage {" + msg + "}").c_str());
     }
 }
 
 
-void DoAutoGoto(int x, int y, char* msg)
+void DoAutoGoto(int x, int y, const std::string& msg)
 {
-    char buf[256];
-
     SetMessageField(msg);
-    sprintf(buf, "UIAutoGoto %d %d", x, y);
-    Eval(buf);
+    Eval(std::string("UIAutoGoto " + std::to_string(x) + " " + std::to_string(y)).c_str());
 }
 
 
 void DoShowPicture(int id)
 {
-    char buf[256];
-
-    sprintf(buf, "UIShowPicture %d", id);
-    Eval(buf);
+    Eval(std::string("UIShowPicture " + std::to_string(id)).c_str());
 }
 
 
