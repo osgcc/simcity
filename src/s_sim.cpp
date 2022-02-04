@@ -65,6 +65,18 @@
 #include "main.h"
 #include "rand.h"
 
+#include "s_alloc.h"
+#include "s_disast.h"
+#include "s_eval.h"
+#include "s_msg.h"
+#include "s_power.h"
+#include "s_scan.h"
+#include "s_traf.h"
+#include "s_zone.h"
+
+#include "w_budget.h"
+#include "w_graph.h"
+#include "w_sprite.h"
 
 /* Simulation */
 
@@ -241,7 +253,7 @@ void DoSimInit()
 
 
 /* comefrom: SimLoadInit */
-DoNilPower(void)
+void DoNilPower()
 {
   register int x, y, z;
 
@@ -259,7 +271,7 @@ DoNilPower(void)
 
 
 /* comefrom: Simulate */
-DecTrafficMem(void)		/* tends to empty TrfDensity   */
+void DecTrafficMem()		/* tends to empty TrfDensity   */
 {
   register int x, y, z;
 
@@ -276,7 +288,7 @@ DecTrafficMem(void)		/* tends to empty TrfDensity   */
 
 
 /* comefrom: Simulate */
-DecROGMem(void)			/* tends to empty RateOGMem   */
+void DecROGMem()			/* tends to empty RateOGMem   */
 {
   register int x, y, z;
 
@@ -298,7 +310,7 @@ DecROGMem(void)			/* tends to empty RateOGMem   */
 
 
 /* comefrom: DoSimInit */
-InitSimMemory(void)
+void InitSimMemory()
 {	
   register int x, z;
 
@@ -336,7 +348,7 @@ InitSimMemory(void)
 
 
 /* comefrom: DoSimInit */
-SimLoadInit(void)
+void SimLoadInit()
 {
   static int DisTab[9] = { 0, 2, 10, 5, 20, 3, 5, 5, 2 * 48};
   static int ScoreWaitTab[9] = { 0, 30 * 48, 5 * 48, 5 * 48, 10 * 48,
@@ -401,7 +413,7 @@ SimLoadInit(void)
 
 
 /* comefrom: InitSimMemory SimLoadInit */
-SetCommonInits(void)
+void SetCommonInits()
 {
   EvalInit();
   RoadEffect = 32;
@@ -417,7 +429,7 @@ SetCommonInits(void)
 
 
 /* comefrom: Simulate DoSimInit */
-SetValves(void)
+void SetValves()
 {
   static int TaxTable[21] = {
     200, 150, 120, 100, 80, 50, 30, 0, -10, -40, -100,
@@ -527,7 +539,7 @@ SetValves(void)
 
 
 /* comefrom: Simulate DoSimInit */
-ClearCensus(void)
+void ClearCensus()
 {
   register int x, y, z;
 
@@ -562,7 +574,7 @@ ClearCensus(void)
 
 
 /* comefrom: Simulate */
-TakeCensus(void)
+void TakeCensus()
 {
   int x;
 
@@ -614,7 +626,7 @@ TakeCensus(void)
 
 
 /* comefrom: Simulate */
-Take2Census(void)    /* Long Term Graphs */
+void Take2Census()    /* Long Term Graphs */
 {
   int x;
 
@@ -644,7 +656,7 @@ Take2Census(void)    /* Long Term Graphs */
 
 
 /* comefrom: Simulate */
-CollectTax(void)
+void CollectTax()
 {	
   static float RLevels[3] = { 0.7, 0.9, 1.2 };
   static float FLevels[3] = { 1.4, 1.2, 0.8 };
@@ -673,7 +685,7 @@ CollectTax(void)
 }
 
 
-UpdateFundEffects(void)
+void UpdateFundEffects()
 {
   if (RoadFund)
     RoadEffect = (int)(((float)RoadSpend /
@@ -698,7 +710,7 @@ UpdateFundEffects(void)
 
 
 /* comefrom: Simulate DoSimInit */
-MapScan(int x1, int x2)
+void MapScan(int x1, int x2)
 {
   register int x, y;
 
@@ -750,7 +762,7 @@ MapScan(int x1, int x2)
 
 
 /* comefrom: MapScan */
-DoRail(void)
+void DoRail()
 {
   RailTotal++;
   GenerateTrain(SMapX, SMapY);
@@ -768,14 +780,14 @@ DoRail(void)
 
 
 /* comefrom: MapScan */
-DoRadTile(void)
+void DoRadTile()
 {
   if (!(Rand16() & 4095)) Map[SMapX][SMapY] = 0; /* Radioactive decay */
 }
 
 
 /* comefrom: MapScan */
-DoRoad(void)
+void DoRoad()
 {
   register int Density, tden, z;
   static int DenTab[3] = { ROADBASE, LTRFBASE, HTRFBASE };
@@ -816,7 +828,7 @@ DoRoad(void)
 
 
 /* comefrom: MapScan */
-DoBridge(void)
+bool DoBridge()
 {
   static int HDx[7] = { -2,  2, -2, -1,  0,  1,  2 };
   static int HDy[7] = { -1, -1,  0,  0,  0,  0,  0 };
@@ -834,7 +846,7 @@ DoBridge(void)
   static int VBRTAB2[7] = {
     VBRIDGE | BULLBIT, RIVER, VBRIDGE | BULLBIT, VBRIDGE | BULLBIT,
     VBRIDGE | BULLBIT, VBRIDGE | BULLBIT, RIVER };
-  register z, x, y, MPtem;
+  register int z, x, y, MPtem;
 
   if (CChr9 == BRWV) { /*  Vertical bridge close */
     if ((!(Rand16() & 3)) &&
@@ -924,7 +936,7 @@ GetBoatDis(void)
 
 
 /* comefrom: MapScan */
-DoFire(void)
+void DoFire()
 {
   static int DX[4] = { -1,  0,  1,  0 };
   static int DY[4] = {  0, -1,  0,  1 };
@@ -991,7 +1003,7 @@ void FireZone(int Xloc, int Yloc, int ch)
 
 
 /* comefrom: DoSPZone DoHospChur */
-RepairZone(int ZCent, int zsize)
+void RepairZone(int ZCent, int zsize)
 {
   int cnt;
   register int x, y, ThCh;
@@ -1017,10 +1029,10 @@ RepairZone(int ZCent, int zsize)
 
 
 /* comefrom: DoZone */
-DoSPZone(int PwrOn)
+void DoSPZone(int PwrOn)
 {
   static int MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
-  register z;
+  register int z;
 
   switch (CChr9) {
 
@@ -1123,7 +1135,7 @@ DoSPZone(int PwrOn)
 
 
 /* comefrom: DoSPZone */
-DrawStadium(int z)
+void DrawStadium(int z)
 {
   register int x, y;
 
@@ -1136,7 +1148,7 @@ DrawStadium(int z)
 
 
 /* comefrom: DoSPZone */
-DoAirport(void)
+void DoAirport()
 {
   if (!(Rand(5))) {
     GeneratePlane(SMapX, SMapY);
@@ -1148,7 +1160,7 @@ DoAirport(void)
 
 
 /* comefrom: DoSPZone */
-CoalSmoke(int mx, int my)
+void CoalSmoke(int mx, int my)
 {
   static int SmTb[4] = { COALSMOKE1, COALSMOKE2, COALSMOKE3, COALSMOKE4 };
   static int dx[4] = {  1,  2,  1,  2 };
@@ -1162,9 +1174,9 @@ CoalSmoke(int mx, int my)
 
 
 /* comefrom: DoSPZone MakeMeltdown */
-DoMeltdown(int SX, int SY)
+void DoMeltdown(int SX, int SY)
 {
-  register x, y, z, t;
+  register int x, y, z, t;
 
   MeltX = SX; MeltY = SY;
 
@@ -1231,11 +1243,12 @@ Rand16Signed(void)
 
 void RandomlySeedRand()
 {
+    /*
   struct timeval time;
 
   gettimeofday(&time, NULL);
-
-  SeedRand(time.tv_usec ^ time.tv_sec ^ sim_rand());
+  */
+  SeedRand(123456789);
 }
 
 
