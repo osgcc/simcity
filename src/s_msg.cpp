@@ -87,7 +87,6 @@ void DoWinGame();
 void SetMessageField(char* str);
 
 
-/* comefrom: Simulate */
 void SendMessages()
 {
     register int z;
@@ -262,7 +261,6 @@ void SendMessages()
 }
 
 
-/* comefrom: SendMessages */
 void CheckGrowth()
 {
     int ThisCityPop;
@@ -293,7 +291,6 @@ void CheckGrowth()
 }
 
 
-/* comefrom: SendMessages */
 void DoScenarioScore(int type)
 {
     int z;
@@ -377,8 +374,6 @@ void ClearMes()
 }
 
 
-/* comefrom: MakeEarthquake MakeFire MakeFire MakeFlood SendMessages 
-	     CheckGrowth DoScenarioScore DoPowerScan */
 int SendMes(int Mnum)
 {
     if (Mnum < 0)
@@ -407,7 +402,6 @@ int SendMes(int Mnum)
 }
 
 
-/* comefrom: DoExplosion DoCopter ExplodeObject */
 void SendMesAt(int Mnum, int x, int y)
 {
     if (SendMes(Mnum))
