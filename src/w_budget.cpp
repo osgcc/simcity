@@ -252,24 +252,6 @@ void SetBudget(const std::string& flowStr, const std::string& previousStr, const
 }
 
 
-void SetBudgetValues(char* roadGot, char* roadWant, char* policeGot, char* policeWant, char* fireGot, char* fireWant)
-{
-    const std::string msg = "UISetBudgetValues {" +
-        std::string(roadGot) + "} {" +
-        std::string(roadWant) + "} {" +
-        std::to_string(static_cast<int>(roadPercent * 100)) + "} {" +
-
-        std::string(policeGot) + "} {" +
-        std::string(policeWant) + "} {" +
-        std::to_string(static_cast<int>(policePercent * 100)) + "} {" +
-
-        std::string(fireGot) + "} {" +
-        std::string(fireWant) + "} {" +
-        std::to_string(static_cast<int>(firePercent * 100)) + "}";
-
-    Eval(msg);
-}
-
 void ReallyDrawBudgetWindow()
 {
     const int cashFlow = TaxFund - fireValue - policeValue - roadValue;
@@ -285,31 +267,20 @@ void ReallyDrawBudgetWindow()
 
 void ReallyDrawCurrPercents()
 {
-  char num[256];
-  char fireWant[256], policeWant[256], roadWant[256];
-  char fireGot[256], policeGot[256], roadGot[256];
+  const std::string msg = "UISetBudgetValues {" +
+      std::to_string(static_cast<int>(roadMaxValue * roadPercent)) + "} {" +
+      std::to_string(roadMaxValue) + "} {" +
+      std::to_string(static_cast<int>(roadPercent * 100)) + "} {" +
 
-  sprintf(num, "%d", fireMaxValue);
-  makeDollarDecimalStr(num, fireWant);
+      std::to_string(static_cast<int>(policeMaxValue * policePercent)) + "} {" +
+      std::to_string(policeMaxValue) + "} {" +
+      std::to_string(static_cast<int>(policePercent * 100)) + "} {" +
 
-  sprintf(num, "%d", policeMaxValue);
-  makeDollarDecimalStr(num, policeWant);
+      std::to_string(static_cast<int>(fireMaxValue * firePercent)) + "} {" +
+      std::to_string(fireMaxValue) + "} {" +
+      std::to_string(static_cast<int>(firePercent * 100)) + "}";
 
-  sprintf(num, "%d", roadMaxValue);
-  makeDollarDecimalStr(num, roadWant);
-
-  sprintf(num, "%d", (int)(fireMaxValue * firePercent));
-  makeDollarDecimalStr(num, fireGot);
-
-  sprintf(num, "%d", (int)(policeMaxValue * policePercent));
-  makeDollarDecimalStr(num, policeGot);
-
-  sprintf(num, "%d", (int)(roadMaxValue * roadPercent));
-  makeDollarDecimalStr(num, roadGot);
-
-  SetBudgetValues(roadGot, roadWant, 
-		  policeGot, policeWant, 
-		  fireGot, fireWant);
+  Eval(msg);
 }
 
 
