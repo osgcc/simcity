@@ -440,22 +440,19 @@ void SendMessages()
 
 void doMessage()
 {
-    char messageStr[256];
-    int pictId;
-    int firstTime;
-
-    messageStr[0] = 0;
+    char messageStr[256]{};
+    bool firstTime;
 
     if (MessagePort)
     {
         MesNum = MessagePort;
         MessagePort = 0;
         LastMesTime = TickCount();
-        firstTime = 1;
+        firstTime = true;
     }
     else
     {
-        firstTime = 0;
+        firstTime = false;
         if (MesNum == 0)  return;
         if (MesNum < 0)
         {
@@ -468,6 +465,7 @@ void doMessage()
             return;
         }
     }
+
     if (firstTime)
     {
         switch ((MesNum < 0) ? -MesNum : MesNum)
@@ -486,8 +484,9 @@ void doMessage()
                 MakeSound("city", "HonkHonk-High");
             }
             break;
-        case  11:
-        case  20:
+
+        case 11:
+        case 20:
         case 22:
         case 23:
         case 24:
@@ -496,18 +495,22 @@ void doMessage()
         case 27:
             MakeSound("city", "Siren");
             break;
+
         case  21:
             MakeSound("city", "Monster -speed [MonsterSpeed]");
             break;
+
         case 30:
             MakeSound("city", "Explosion-Low");
             MakeSound("city", "Siren");
             break;
+
         case  43:
             MakeSound("city", "Explosion-High");
             MakeSound("city", "Explosion-Low");
             MakeSound("city", "Siren");
             break;
+
         case  44:
             MakeSound("city", "Siren");
             break;
@@ -543,11 +546,11 @@ void doMessage()
         {
             SetMessageField(messageStr);
         }
-
     }
     else
-    { /* picture message */
-        pictId = -(MesNum);
+    {
+        // picture message
+        int pictId = -(MesNum);
 
         if (pictId < 43)
         {
