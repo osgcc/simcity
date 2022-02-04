@@ -130,10 +130,6 @@ std::string& GetResource(const std::string& name, int id)
 }
 
 
-void ReleaseResource(Handle r)
-{}
-
-
 int ResourceSize(Handle h)
 {
   struct Resource *r = (struct Resource *)h;
