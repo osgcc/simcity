@@ -61,6 +61,8 @@
  */
 #include "main.h"
 
+#include "s_alloc.h"
+#include "s_msg.h"
 
 /* Power Scan */
 
@@ -71,45 +73,45 @@ int MaxPower, NumPower;
 
 
 /* comefrom: TestForCond DoPowerScan TryGo */
-MoveMapSim (int MDir)
+bool MoveMapSim (int MDir)
 {
   switch (MDir) {
   case 0:
     if (SMapY > 0) {
       SMapY--;
-      return (TRUE);
+      return true;
     }
     if (SMapY < 0)
       SMapY = 0;
-    return (FALSE);
+    return false;
   case 1:
     if (SMapX < (WORLD_X - 1)) {
       SMapX++;
-      return (TRUE);
+      return true;
     }
     if (SMapX > (WORLD_X - 1))
       SMapX = WORLD_X - 1;
-    return (FALSE);
+    return false;
   case 2:
     if (SMapY < (WORLD_Y - 1)) {
       SMapY++;
-      return (TRUE);
+      return true;
     }
     if (SMapY > (WORLD_Y - 1))
       SMapY = WORLD_Y - 1;
-    return (FALSE);
+    return false;
   case 3:
     if (SMapX > 0) {
       SMapX--;
-      return (TRUE);
+      return true;
     }
     if (SMapX < 0)
       SMapX = 0;
-    return (FALSE);
+    return false;
   case 4:
-    return (TRUE);
+    return true;
   }
-  return (FALSE);				
+  return false;				
 }
 
 
@@ -173,17 +175,17 @@ int TestForCond(int TFDir)
     {
       SMapX = xsave;
       SMapY = ysave;
-      return (TRUE);
+      return true;
     }
   }
   SMapX = xsave;
   SMapY = ysave;
-  return (FALSE);
+  return false;
 }
 
 
 /* comefrom: Simulate SpecialInit InitSimMemory */
-DoPowerScan()
+void DoPowerScan()
 {	
   int ADir;
   register int ConNum, Dir, x;
@@ -230,7 +232,7 @@ DoPowerScan()
 
 
 /* comefrom: DoPowerScan DoSPZone */
-PushPowerStack(void) 
+void PushPowerStack() 
 { 	
   if (PowerStackNum < (PWRSTKSIZE - 2)) {
     PowerStackNum++;
@@ -241,7 +243,7 @@ PushPowerStack(void)
 
 
 /* comefrom: DoPowerScan */
-PullPowerStack(void)
+void PullPowerStack()
 { 	
   if (PowerStackNum > 0)  {
     SMapX = PowerStackX[PowerStackNum];
