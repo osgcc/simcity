@@ -252,36 +252,27 @@ void SetBudget(const std::string& flowStr, const std::string& previousStr, const
 }
 
 
+void SetBudgetValues(char *roadGot, char *roadWant, char *policeGot, char *policeWant, char *fireGot, char *fireWant)
+{
+  char buf[256];
+
+  sprintf(buf, "UISetBudgetValues {%s} {%s} %d {%s} {%s} %d {%s} {%s} %d",
+	  roadGot, roadWant, (int)(roadPercent * 100),
+	  policeGot, policeWant, (int)(policePercent * 100),
+	  fireGot, fireWant, (int)(firePercent * 100));
+  Eval(buf);
+}
+
 void ReallyDrawBudgetWindow()
 {
-  int cashFlow, cashFlow2;
-  char numStr[256], dollarStr[256], collectedStr[256],
-       flowStr[256], previousStr[256], currentStr[256];
+    const int cashFlow = TaxFund - fireValue - policeValue - roadValue;
 
-  cashFlow = TaxFund - fireValue - policeValue - roadValue;
-	
-  cashFlow2 = cashFlow;
-  if (cashFlow < 0)   {
-    cashFlow = -cashFlow;
-    sprintf(numStr, "%d", cashFlow);
-    makeDollarDecimalStr(numStr, dollarStr);
-    sprintf(flowStr, "-%s", dollarStr);
-  } else {
-    sprintf(numStr, "%d", cashFlow);
-    makeDollarDecimalStr(numStr, dollarStr);
-    sprintf(flowStr, "+%s", dollarStr);
-  }
+    const std::string cashFlowString = ((cashFlow < 0) ? "-" : "+") + NumberToDollarDecimal(cashFlow);
+    const std::string previousFundsString = NumberToDollarDecimal(TotalFunds);
+    const std::string currentFundsString = NumberToDollarDecimal(cashFlow + TotalFunds);
+    const std::string taxesCollectedString = NumberToDollarDecimal(TaxFund);
 
-  sprintf(numStr, "%d", TotalFunds);
-  makeDollarDecimalStr(numStr, previousStr);
-
-  sprintf(numStr, "%d", cashFlow2 + TotalFunds);
-  makeDollarDecimalStr(numStr, currentStr);
-
-  sprintf(numStr, "%d", TaxFund);
-  makeDollarDecimalStr(numStr, collectedStr);
-
-  SetBudget(flowStr, previousStr, currentStr, collectedStr, CityTax);
+    SetBudget(cashFlowString, previousFundsString, currentFundsString, taxesCollectedString, CityTax);
 }
 
 
@@ -336,17 +327,3 @@ void UpdateBudget()
     drawBudgetWindow();
     Eval("UIUpdateBudget");
 }
-
-
-void SetBudgetValues(char *roadGot, char *roadWant, char *policeGot, char *policeWant, char *fireGot, char *fireWant)
-{
-  char buf[256];
-
-  sprintf(buf, "UISetBudgetValues {%s} {%s} %d {%s} {%s} %d {%s} {%s} %d",
-	  roadGot, roadWant, (int)(roadPercent * 100),
-	  policeGot, policeWant, (int)(policePercent * 100),
-	  fireGot, fireWant, (int)(firePercent * 100));
-  Eval(buf);
-}
-
-
