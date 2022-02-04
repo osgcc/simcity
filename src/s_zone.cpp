@@ -62,39 +62,107 @@
 #include "main.h"
 
 #include "s_alloc.h"
+#include "s_power.h"
 #include "s_sim.h"
 #include "s_traf.h"
 
 
 /* Zone Stuff */
 
-
-void DoZone()
+bool SetZPower()		/* set bit in MapWord depending on powermap  */
 {
-  int ZonePwrFlg;
+  bool z = TestPowerBit();
 
-  ZonePwrFlg = SetZPower();	/* Set Power Bit in Map from PowerMap */
-  if (ZonePwrFlg) PwrdZCnt++;
-  else unPwrdZCnt++;
+  if (z)
+    Map[SMapX][SMapY] = CChr | PWRBIT;
+  else
+    Map[SMapX][SMapY] = CChr & (~PWRBIT);
 
-  if (CChr9 > PORTBASE) {	/* do Special Zones  */
-    DoSPZone(ZonePwrFlg);
-    return;
+  return (z);
+}
+
+
+void ZonePlop (int base)
+{
+  int z, x;
+  static int Zx[9] = {-1, 0, 1,-1, 0, 1,-1, 0, 1};
+  static int Zy[9] = {-1,-1,-1, 0, 0, 0, 1, 1, 1};
+
+  for (z = 0; z < 9; z++) {		/* check for fire  */
+    int xx = SMapX + Zx[z];
+    int yy = SMapY + Zy[z];
+    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+      x = Map[xx][yy] & LOMASK;
+      if ((x >= FLOOD) && (x < ROADBASE)) return;
+    }
   }
-  if (CChr9 < HOSPITAL) {	
-    DoResidential(ZonePwrFlg);
-    return;
+  for (z = 0; z < 9; z++) {
+    int xx = SMapX + Zx[z];
+    int yy = SMapY + Zy[z];
+    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+      Map[xx][yy] = base + BNCNBIT;
+    }
+  base++;
   }
-  if (CChr9 < COMBASE) {
-    DoHospChur();
-    return;
-  }
-  if (CChr9 < INDBASE)  {
-    DoCommercial(ZonePwrFlg);
-    return;
-  }
-  DoIndustrial(ZonePwrFlg);
-  return;
+  CChr = Map[SMapX][SMapY];
+  SetZPower();
+  Map[SMapX][SMapY] |= ZONEBIT + BULLBIT;
+}
+
+
+void ResPlop (int Den, int Value)
+{
+  int base;
+
+  base = (((Value * 4) + Den) * 9) + RZB - 4;
+  ZonePlop(base);
+}
+
+
+void ComPlop (int Den, int Value)
+{
+  int base;
+	
+  base = (((Value * 5) + Den) * 9) + CZB - 4;
+  ZonePlop(base);
+}
+
+
+void IndPlop (int Den, int Value)
+{
+  int base;
+	
+  base = (((Value * 4) + Den) * 9) + (IZB - 4);
+  ZonePlop (base);
+}
+
+
+int RZPop(int Ch9)
+{
+  int CzDen;
+
+  CzDen = (((Ch9 - RZB) / 9) % 4);
+  return ((CzDen * 8) + 16);
+}
+
+
+int CZPop(int Ch9)
+{
+  int CzDen;
+
+  if (Ch9 == COMCLR) return (0);
+  CzDen = (((Ch9 - CZB) / 9) % 5) + 1;
+  return (CzDen);
+}
+
+
+int IZPop(int Ch9)
+{
+  int CzDen;
+
+  if (Ch9 == INDCLR) return (0);
+  CzDen = (((Ch9 - IZB) / 9) % 4) + 1;
+  return (CzDen);
 }
 
 
@@ -159,6 +227,274 @@ void SetSmoke(int ZonePower)
       }
     }
   }
+}
+
+
+void MakeHosp()
+{
+  if (NeedHosp > 0) {
+    ZonePlop(HOSPITAL - 4);
+    NeedHosp = FALSE;
+    return;
+  }
+  if (NeedChurch > 0) {
+    ZonePlop(CHURCH - 4);
+    NeedChurch = FALSE;
+    return;
+  }
+}
+
+
+int GetCRVal()
+{
+  register int LVal;
+
+  LVal = LandValueMem[SMapX >>1][SMapY >>1];
+  LVal -= PollutionMem[SMapX >>1][SMapY >>1];
+  if (LVal < 30) return (0);
+  if (LVal < 80) return (1);
+  if (LVal < 150) return (2);
+  return (3);
+}
+
+
+int EvalLot (int x, int y)
+{
+  int z, score;
+  static int DX[4] = { 0, 1, 0,-1};
+  static int DY[4] = {-1, 0, 1, 0};
+
+  /* test for clear lot */
+  z = Map[x][y] & LOMASK;
+  if (z && ((z < RESBASE) || (z > RESBASE + 8)))
+    return (-1);
+  score = 1;
+  for (z = 0; z < 4; z++) {
+    int xx = x + DX[z];
+    int yy = y + DY[z];
+    if (TestBounds(xx, yy, WORLD_X, WORLD_Y) &&
+	Map[xx][yy] &&
+	((Map[xx][yy] & LOMASK) <= LASTROAD)) {
+      score++;		/* look for road */
+    }
+  }
+  return (score);
+}
+
+
+int EvalRes (int traf)
+{
+  register int Value;
+
+  if (traf < 0) return (-3000);
+
+  Value = LandValueMem[SMapX >>1][SMapY >>1];
+  Value -= PollutionMem[SMapX >>1][SMapY >>1];
+
+  if (Value < 0) Value = 0;		/* Cap at 0 */
+  else Value = Value <<5;
+
+  if (Value > 6000) Value = 6000;	/* Cap at 6000 */
+
+  Value = Value - 3000;
+  return (Value);
+}
+
+
+int EvalCom (int traf)
+{
+  int Value;
+
+  if (traf < 0) return (-3000);
+  Value = ComRate[SMapX >>3][SMapY >>3];
+  return (Value);
+}
+
+
+int EvalInd (int traf)
+{
+  if (traf < 0) return (-1000);
+  return (0);
+}
+
+
+void BuildHouse(int value)
+{
+  int z, score, hscore, BestLoc;
+  static int ZeX[9] = { 0,-1, 0, 1,-1, 1,-1, 0, 1};
+  static int ZeY[9] = { 0,-1,-1,-1, 0, 0, 1, 1, 1};
+
+  BestLoc = 0;
+  hscore = 0;
+  for (z = 1; z < 9; z++) {
+    int xx = SMapX + ZeX[z];
+    int yy = SMapY + ZeY[z];
+    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+      score = EvalLot(xx, yy);
+      if (score != 0) {
+	if (score > hscore) {
+	  hscore = score;
+	  BestLoc = z;
+	}
+	if ((score == hscore) && !(Rand16() & 7))
+	  BestLoc = z;
+      }
+    }
+  }
+  if (BestLoc) {
+    int xx = SMapX + ZeX[BestLoc];
+    int yy = SMapY + ZeY[BestLoc];
+    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+      Map[xx][yy] = HOUSE + BLBNCNBIT + Rand(2) + (value * 3);
+    }
+  }
+}
+
+
+void IncROG(int amount)
+{
+  RateOGMem[SMapX>>3][SMapY>>3] += amount<<2;
+}
+
+
+void DoResIn(int pop, int value)
+{
+  int z;
+
+  z = PollutionMem[SMapX >>1][SMapY >>1];
+  if (z > 128) return;
+
+  if (CChr9 == FREEZ) {
+    if (pop < 8) {
+      BuildHouse(value);
+      IncROG(1);
+      return;
+    }
+    if (PopDensity[SMapX >>1][SMapY >>1] > 64) {
+      ResPlop(0, value);
+      IncROG(8);
+      return;
+    }
+    return;
+  }
+  if (pop < 40) {
+    ResPlop((pop / 8) - 1, value);
+    IncROG(8);
+  }
+}
+
+
+void DoComIn(int pop, int value)
+{
+  register int z;
+
+  z = LandValueMem[SMapX >>1][SMapY >>1];
+  z = z >>5;
+  if (pop > z) return;
+
+  if (pop < 5) {
+    ComPlop(pop, value);
+    IncROG(8);
+  }
+}
+
+
+void DoIndIn(int pop, int value)
+{
+  if (pop < 4) {
+    IndPlop(pop, value);
+    IncROG(8);
+  }
+}
+
+
+void DoResOut(int pop, int value)
+{
+  static int Brdr[9] = {0,3,6,1,4,7,2,5,8};
+  register int x, y, loc, z;
+
+  if (!pop) return;
+  if (pop > 16) {
+    ResPlop(((pop - 24) / 8), value);
+    IncROG(-8);
+    return;
+  }
+  if (pop == 16) {
+    IncROG(-8);
+    Map[SMapX][SMapY] = (FREEZ | BLBNCNBIT | ZONEBIT);
+    for (x = SMapX - 1; x <= SMapX + 1; x++)
+      for (y = SMapY - 1; y <= SMapY + 1; y++)
+	if (x >= 0 && x < WORLD_X &&
+	    y >= 0 && y < WORLD_Y) {
+	  if ((Map[x][y] & LOMASK) != FREEZ)
+	    Map[x][y] = LHTHR + value +
+	      Rand(2) + BLBNCNBIT;
+	}
+  }
+  if (pop < 16) {
+    IncROG(-1);
+    z = 0;
+    for (x = SMapX - 1; x <= SMapX + 1; x++)
+      for (y = SMapY - 1; y <= SMapY + 1; y++) {
+	if (x >= 0 && x < WORLD_X &&
+	    y >= 0 && y < WORLD_Y) {
+	  loc = Map[x][y] & LOMASK;
+	  if ((loc >= LHTHR) && (loc <= HHTHR)) {
+	    Map[x][y] = Brdr[z] +
+	      BLBNCNBIT + FREEZ - 4;
+	    return;
+	  }
+	}
+	z++;
+      }
+  }
+}
+
+
+void DoComOut(int pop, int value)
+{
+  if (pop > 1) {
+    ComPlop(pop - 2, value);
+    IncROG(-8);
+    return;
+  }
+  if (pop == 1) {
+    ZonePlop(COMBASE);
+    IncROG(-8);
+  }
+}
+
+
+void DoIndOut(int pop, int value)
+{
+  if (pop > 1) {
+    IndPlop(pop - 2, value);
+    IncROG(-8);
+    return;
+  }
+  if (pop == 1) {
+    ZonePlop(INDCLR - 4);
+    IncROG(-8);
+  }
+}
+
+
+int DoFreePop ()
+{
+  int count;
+  register int loc, x, y;
+
+  count = 0;
+  for (x = SMapX - 1; x <= SMapX + 1; x++)
+    for (y = SMapY - 1; y <= SMapY + 1; y++) {
+      if (x >= 0 && x < WORLD_X &&
+	  y >= 0 && y < WORLD_Y) {
+	loc = Map[x][y] & LOMASK;
+	if ((loc >= LHTHR) && (loc <= HHTHR))
+	  count++;
+      }
+    }
+  return (count);
 }
 
 
@@ -273,391 +609,30 @@ void DoResidential(int ZonePwrFlg)
 }
 
 
-void MakeHosp()
+void DoZone()
 {
-  if (NeedHosp > 0) {
-    ZonePlop(HOSPITAL - 4);
-    NeedHosp = FALSE;
+  int ZonePwrFlg;
+
+  ZonePwrFlg = SetZPower();	/* Set Power Bit in Map from PowerMap */
+  if (ZonePwrFlg) PwrdZCnt++;
+  else unPwrdZCnt++;
+
+  if (CChr9 > PORTBASE) {	/* do Special Zones  */
+    DoSPZone(ZonePwrFlg);
     return;
   }
-  if (NeedChurch > 0) {
-    ZonePlop(CHURCH - 4);
-    NeedChurch = FALSE;
+  if (CChr9 < HOSPITAL) {	
+    DoResidential(ZonePwrFlg);
     return;
   }
-}
-
-
-int GetCRVal()
-{
-  register int LVal;
-
-  LVal = LandValueMem[SMapX >>1][SMapY >>1];
-  LVal -= PollutionMem[SMapX >>1][SMapY >>1];
-  if (LVal < 30) return (0);
-  if (LVal < 80) return (1);
-  if (LVal < 150) return (2);
-  return (3);
-}
-
-
-void DoResIn(int pop, int value)
-{
-  int z;
-
-  z = PollutionMem[SMapX >>1][SMapY >>1];
-  if (z > 128) return;
-
-  if (CChr9 == FREEZ) {
-    if (pop < 8) {
-      BuildHouse(value);
-      IncROG(1);
-      return;
-    }
-    if (PopDensity[SMapX >>1][SMapY >>1] > 64) {
-      ResPlop(0, value);
-      IncROG(8);
-      return;
-    }
+  if (CChr9 < COMBASE) {
+    DoHospChur();
     return;
   }
-  if (pop < 40) {
-    ResPlop((pop / 8) - 1, value);
-    IncROG(8);
-  }
-}
-
-
-void DoComIn(int pop, int value)
-{
-  register int z;
-
-  z = LandValueMem[SMapX >>1][SMapY >>1];
-  z = z >>5;
-  if (pop > z) return;
-
-  if (pop < 5) {
-    ComPlop(pop, value);
-    IncROG(8);
-  }
-}
-
-
-void DoIndIn(int pop, int value)
-{
-  if (pop < 4) {
-    IndPlop(pop, value);
-    IncROG(8);
-  }
-}
-
-
-void IncROG(int amount)
-{
-  RateOGMem[SMapX>>3][SMapY>>3] += amount<<2;
-}
-
-
-void DoResOut(int pop, int value)
-{
-  static int Brdr[9] = {0,3,6,1,4,7,2,5,8};
-  register int x, y, loc, z;
-
-  if (!pop) return;
-  if (pop > 16) {
-    ResPlop(((pop - 24) / 8), value);
-    IncROG(-8);
+  if (CChr9 < INDBASE)  {
+    DoCommercial(ZonePwrFlg);
     return;
   }
-  if (pop == 16) {
-    IncROG(-8);
-    Map[SMapX][SMapY] = (FREEZ | BLBNCNBIT | ZONEBIT);
-    for (x = SMapX - 1; x <= SMapX + 1; x++)
-      for (y = SMapY - 1; y <= SMapY + 1; y++)
-	if (x >= 0 && x < WORLD_X &&
-	    y >= 0 && y < WORLD_Y) {
-	  if ((Map[x][y] & LOMASK) != FREEZ)
-	    Map[x][y] = LHTHR + value +
-	      Rand(2) + BLBNCNBIT;
-	}
-  }
-  if (pop < 16) {
-    IncROG(-1);
-    z = 0;
-    for (x = SMapX - 1; x <= SMapX + 1; x++)
-      for (y = SMapY - 1; y <= SMapY + 1; y++) {
-	if (x >= 0 && x < WORLD_X &&
-	    y >= 0 && y < WORLD_Y) {
-	  loc = Map[x][y] & LOMASK;
-	  if ((loc >= LHTHR) && (loc <= HHTHR)) {
-	    Map[x][y] = Brdr[z] +
-	      BLBNCNBIT + FREEZ - 4;
-	    return;
-	  }
-	}
-	z++;
-      }
-  }
-}
-
-
-void DoComOut(int pop, int value)
-{
-  if (pop > 1) {
-    ComPlop(pop - 2, value);
-    IncROG(-8);
-    return;
-  }
-  if (pop == 1) {
-    ZonePlop(COMBASE);
-    IncROG(-8);
-  }
-}
-
-
-void DoIndOut(int pop, int value)
-{
-  if (pop > 1) {
-    IndPlop(pop - 2, value);
-    IncROG(-8);
-    return;
-  }
-  if (pop == 1) {
-    ZonePlop(INDCLR - 4);
-    IncROG(-8);
-  }
-}
-
-
-int RZPop(int Ch9)
-{
-  int CzDen;
-
-  CzDen = (((Ch9 - RZB) / 9) % 4);
-  return ((CzDen * 8) + 16);
-}
-
-
-int CZPop(int Ch9)
-{
-  int CzDen;
-
-  if (Ch9 == COMCLR) return (0);
-  CzDen = (((Ch9 - CZB) / 9) % 5) + 1;
-  return (CzDen);
-}
-
-
-int IZPop(int Ch9)
-{
-  int CzDen;
-
-  if (Ch9 == INDCLR) return (0);
-  CzDen = (((Ch9 - IZB) / 9) % 4) + 1;
-  return (CzDen);
-}
-
-
-void BuildHouse(int value)
-{
-  int z, score, hscore, BestLoc;
-  static int ZeX[9] = { 0,-1, 0, 1,-1, 1,-1, 0, 1};
-  static int ZeY[9] = { 0,-1,-1,-1, 0, 0, 1, 1, 1};
-
-  BestLoc = 0;
-  hscore = 0;
-  for (z = 1; z < 9; z++) {
-    int xx = SMapX + ZeX[z];
-    int yy = SMapY + ZeY[z];
-    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
-      score = EvalLot(xx, yy);
-      if (score != 0) {
-	if (score > hscore) {
-	  hscore = score;
-	  BestLoc = z;
-	}
-	if ((score == hscore) && !(Rand16() & 7))
-	  BestLoc = z;
-      }
-    }
-  }
-  if (BestLoc) {
-    int xx = SMapX + ZeX[BestLoc];
-    int yy = SMapY + ZeY[BestLoc];
-    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
-      Map[xx][yy] = HOUSE + BLBNCNBIT + Rand(2) + (value * 3);
-    }
-  }
-}
-
-
-void ResPlop (int Den, int Value)
-{
-  int base;
-
-  base = (((Value * 4) + Den) * 9) + RZB - 4;
-  ZonePlop(base);
-}
-
-
-void ComPlop (int Den, int Value)
-{
-  int base;
-	
-  base = (((Value * 5) + Den) * 9) + CZB - 4;
-  ZonePlop(base);
-}
-
-
-void IndPlop (int Den, int Value)
-{
-  int base;
-	
-  base = (((Value * 4) + Den) * 9) + (IZB - 4);
-  ZonePlop (base);
-}
-
-
-int EvalLot (int x, int y)
-{
-  int z, score;
-  static int DX[4] = { 0, 1, 0,-1};
-  static int DY[4] = {-1, 0, 1, 0};
-
-  /* test for clear lot */
-  z = Map[x][y] & LOMASK;
-  if (z && ((z < RESBASE) || (z > RESBASE + 8)))
-    return (-1);
-  score = 1;
-  for (z = 0; z < 4; z++) {
-    int xx = x + DX[z];
-    int yy = y + DY[z];
-    if (TestBounds(xx, yy, WORLD_X, WORLD_Y) &&
-	Map[xx][yy] &&
-	((Map[xx][yy] & LOMASK) <= LASTROAD)) {
-      score++;		/* look for road */
-    }
-  }
-  return (score);
-}
-
-
-void ZonePlop (int base)
-{
-  int z, x;
-  static int Zx[9] = {-1, 0, 1,-1, 0, 1,-1, 0, 1};
-  static int Zy[9] = {-1,-1,-1, 0, 0, 0, 1, 1, 1};
-
-  for (z = 0; z < 9; z++) {		/* check for fire  */
-    int xx = SMapX + Zx[z];
-    int yy = SMapY + Zy[z];
-    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
-      x = Map[xx][yy] & LOMASK;
-      if ((x >= FLOOD) && (x < ROADBASE)) return;
-    }
-  }
-  for (z = 0; z < 9; z++) {
-    int xx = SMapX + Zx[z];
-    int yy = SMapY + Zy[z];
-    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
-      Map[xx][yy] = base + BNCNBIT;
-    }
-  base++;
-  }
-  CChr = Map[SMapX][SMapY];
-  SetZPower();
-  Map[SMapX][SMapY] |= ZONEBIT + BULLBIT;
-}
-
-
-int EvalRes (int traf)
-{
-  register int Value;
-
-  if (traf < 0) return (-3000);
-
-  Value = LandValueMem[SMapX >>1][SMapY >>1];
-  Value -= PollutionMem[SMapX >>1][SMapY >>1];
-
-  if (Value < 0) Value = 0;		/* Cap at 0 */
-  else Value = Value <<5;
-
-  if (Value > 6000) Value = 6000;	/* Cap at 6000 */
-
-  Value = Value - 3000;
-  return (Value);
-}
-
-
-int EvalCom (int traf)
-{
-  int Value;
-
-  if (traf < 0) return (-3000);
-  Value = ComRate[SMapX >>3][SMapY >>3];
-  return (Value);
-}
-
-
-int EvalInd (int traf)
-{
-  if (traf < 0) return (-1000);
-  return (0);
-}
-
-
-int DoFreePop ()
-{
-  int count;
-  register int loc, x, y;
-
-  count = 0;
-  for (x = SMapX - 1; x <= SMapX + 1; x++)
-    for (y = SMapY - 1; y <= SMapY + 1; y++) {
-      if (x >= 0 && x < WORLD_X &&
-	  y >= 0 && y < WORLD_Y) {
-	loc = Map[x][y] & LOMASK;
-	if ((loc >= LHTHR) && (loc <= HHTHR))
-	  count++;
-      }
-    }
-  return (count);
-}
-
-
-int SetZPower()		/* set bit in MapWord depending on powermap  */
-{
-  int z;
-  int PowerWrd;
-
-/* TestPowerBit was taking alot of time so I inlined it. -Don */
-
-#if 0
-
-  if (z = TestPowerBit())
-    Map[SMapX][SMapY] = CChr | PWRBIT;
-  else
-    Map[SMapX][SMapY] = CChr & (~PWRBIT);
-  return (z);
-
-#else
-
-  if ((CChr9 == NUCLEAR) ||
-      (CChr9 == POWERPLANT) ||
-      (
-#if 1
-       (PowerWrd = POWERWORD(SMapX, SMapY)),
-#else
-       (PowerWrd = (SMapX >>4) + (SMapY <<3)),
-#endif
-       ((PowerWrd < PWRMAPSIZE) &&
-	(PowerMap[PowerWrd] & (1 << (SMapX & 15)))))) {
-    Map[SMapX][SMapY] = CChr | PWRBIT;
-    return 1;
-  } else {
-    Map[SMapX][SMapY] = CChr & (~PWRBIT);
-    return 0;
-  }
-
-#endif
+  DoIndustrial(ZonePwrFlg);
+  return;
 }
