@@ -2,3 +2,4 @@
 
 void PushPowerStack();
 bool MoveMapSim(int MDir);
+bool TestPowerBit();
