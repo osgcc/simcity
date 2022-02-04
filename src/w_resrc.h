@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 
 struct Resource
 {
@@ -14,4 +15,4 @@ struct Resource
 typedef char** Handle;
 
 Handle GetResource(char* name, int id);
-void GetIndString(char* str, int id, int num);
+void GetIndString(const std::string&, int id, int num);

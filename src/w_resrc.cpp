@@ -71,74 +71,75 @@
 #define PERMSTR	"r"
 #endif
 
-
-
 char *HomeDir, *ResourceDir, *KeyDir, *HostName;
 
 struct Resource *Resources = NULL;
 
-struct StringTable {
-  int id;
-  int lines;
-  char **strings;
-  struct StringTable *next;
+struct StringTable
+{
+    int id;
+    int lines;
+    char** strings;
+    struct StringTable* next;
 } *StringTables;
 
 
-Handle GetResource(char *name, int id)
+Handle GetResource(char* name, int id)
 {
-  struct Resource *r = Resources;
-  char fname[256];
-  struct stat st;
-  FILE *fp = NULL;
+    struct Resource* r = Resources;
+    char fname[256];
+    struct stat st;
+    FILE* fp = NULL;
 
-  while (r != NULL) {
-    if ((r->id == id) &&
-	(strncmp(r->name, name, 4) == 0)) {
-      return ((Handle)&r->buf);
+    while (r != NULL)
+    {
+        if ((r->id == id) && (strncmp(r->name, name, 4) == 0))
+        {
+            return ((Handle)&r->buf);
+        }
+        r = r->next;
     }
-    r = r->next;
-  }
 
-  r = (struct Resource *)malloc(sizeof(struct Resource));
+    r = (struct Resource*)malloc(sizeof(struct Resource));
 
-  r->name[0] = name[0];
-  r->name[1] = name[1];
-  r->name[2] = name[2];
-  r->name[3] = name[3];
-  r->id = id;
+    r->name[0] = name[0];
+    r->name[1] = name[1];
+    r->name[2] = name[2];
+    r->name[3] = name[3];
+    r->id = id;
 
-  sprintf(fname, PATHSTR, ResourceDir,
-	  r->name[0], r->name[1], r->name[2], r->name[3],
-	  r->id);
+    sprintf(fname, PATHSTR, ResourceDir, r->name[0], r->name[1], r->name[2], r->name[3], r->id);
 
-  if ((stat(fname, &st) < 0) ||
-      ((r->size = st.st_size) == 0) ||
-      ((r->buf = (char *)malloc(r->size)) == NULL) ||
-      ((fp = fopen(fname, PERMSTR)) == NULL) ||
-      (fread(r->buf, sizeof(char), r->size, fp) != r->size)) {
-    if (fp)
-      fclose(fp);
-    r->buf = NULL;
-    r->size = 0;
-    fprintf(stderr, "Can't find resource file \"%s\"!\n", fname);
-    perror("GetResource");
-    return(NULL);
-  }
-  fclose(fp);
-  r->next = Resources; Resources = r;
-  return ((Handle)&r->buf);
+    if ((stat(fname, &st) < 0) ||
+        ((r->size = st.st_size) == 0) ||
+        ((r->buf = (char*)malloc(r->size)) == NULL) ||
+        ((fp = fopen(fname, PERMSTR)) == NULL) ||
+        (fread(r->buf, sizeof(char), r->size, fp) != r->size))
+    {
+        if (fp)
+        {
+            fclose(fp);
+        }
+
+        r->buf = NULL;
+        r->size = 0;
+        fprintf(stderr, "Can't find resource file \"%s\"!\n", fname);
+        perror("GetResource");
+        return(NULL);
+    }
+
+    fclose(fp);
+    r->next = Resources; Resources = r;
+    return ((Handle)&r->buf);
 }
 
 
-void
-ReleaseResource(Handle r)
+void ReleaseResource(Handle r)
 {
 }
 
 
-int
-ResourceSize(Handle h)
+int ResourceSize(Handle h)
 {
   struct Resource *r = (struct Resource *)h;
 
@@ -146,47 +147,61 @@ ResourceSize(Handle h)
 }
 
 
-void GetIndString(char *str, int id, int num)
+void GetIndString(const std::string str, int id, int num)
 {
-  struct StringTable **tp, *st = NULL;
-  Handle h;
+    struct StringTable** tp, * st = NULL;
+    Handle h;
 
-  tp = &StringTables;
+    tp = &StringTables;
 
-  while (*tp) {
-    if ((*tp)->id == id) {
-      st = *tp;
-      break;
+    while (*tp)
+    {
+        if ((*tp)->id == id)
+        {
+            st = *tp;
+            break;
+        }
+        tp = &((*tp)->next);
     }
-    tp = &((*tp)->next);
-  }
-  if (!st) {
-    int i, lines, size;
-    char *buf;
 
-    st = (struct StringTable *)malloc(sizeof (struct StringTable));
-    st->id = id;
-    h = GetResource("stri", id);
-    size = ResourceSize(h);
-    buf = (char *)*h;
-    for (i=0, lines=0; i<size; i++)
-      if (buf[i] == '\n') {
-	buf[i] = 0;
-	lines++;
-      }
-    st->lines = lines;
-    st->strings = (char **)malloc(size * sizeof(char *));
-    for (i=0; i<lines; i++) {
-      st->strings[i] = buf;
-      buf += strlen(buf) + 1;
+    if (!st)
+    {
+        int i, lines, size;
+        char* buf;
+
+        st = (struct StringTable*)malloc(sizeof(struct StringTable));
+        st->id = id;
+
+        h = GetResource("stri", id);
+        size = ResourceSize(h);
+        buf = (char*)*h;
+
+        for (i = 0, lines = 0; i < size; i++)
+        {
+            if (buf[i] == '\n') {
+                buf[i] = 0;
+                lines++;
+            }
+        }
+
+        st->lines = lines;
+        st->strings = (char**)malloc(size * sizeof(char*));
+
+        for (i = 0; i < lines; i++)
+        {
+            st->strings[i] = buf;
+            buf += strlen(buf) + 1;
+        }
+        st->next = StringTables;
+        StringTables = st;
     }
-    st->next = StringTables;
-    StringTables = st;
-  }
-  if ((num < 1) || (num > st->lines)) {
-    fprintf(stderr, "Out of range string index: %d\n", num);
-    strcpy(str, "Well I'll be a monkey's uncle!");
-  } {
-    strcpy(str, st->strings[num-1]);
-  }
+
+    if ((num < 1) || (num > st->lines))
+    {
+        fprintf(stderr, "Out of range string index: %d\n", num);
+        strcpy(str, "Well I'll be a monkey's uncle!");
+    }
+    {
+        strcpy(str, st->strings[num - 1]);
+    }
 }
