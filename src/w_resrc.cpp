@@ -63,9 +63,7 @@
 
 #include "w_resrc.h"
 
-#include <filesystem>
-#include <fstream>
-#include <iostream>
+#include <array>
 #include <map>
 #include <memory>
 #include <vector>
@@ -73,129 +71,76 @@
 
 char *HomeDir, *ResourceDir, *KeyDir, *HostName;
 
+std::array<std::string, 64> StringTable =
+{{
+    "More residential zones needed.",
+    "More commercial zones needed.",
+    "More industrial zones needed.",
+    "More roads required.",
+    "Inadequate rail system.",
+    "Build a Power Plant.",
+    "Residents demand a Stadium.",
+    "Industry requires a Sea Port.",
+    "Commerce requires an Airport.",
+    "Pollution very high.",
+    "Crime very high.",
+    "Frequent traffic jams reported.",
+    "Citizens demand a Fire Department.",
+    "Citizens demand a Police Department.",
+    "Blackouts reported.Check power map.",
+    "Citizens upset. The tax rate is too high.",
+    "Roads deteriorating due to lack of funds.",
+    "Fire departments need funding.",
+    "Police departments need funding.",
+    "Fire reported !",
+    "A Monster has been sighted !!",
+    "Tornado reported !!",
+    "Major earthquake reported !!!",
+    "A plane has crashed !",
+    "Shipwreck reported !",
+    "A train crashed !",
+    "A helicopter crashed !",
+    "Unemployment rate is high.",
+    "YOUR CITY HAS GONE BROKE!",
+    "Firebombing reported !",
+    "Need more parks.",
+    "Explosion detected !",
+    "Insufficient funds to build that.",
+    "Area must be bulldozed first.",
+    "Population has reached 2,000.",
+    "Population has reached 10,000.",
+    "Population has reached 50,000.",
+    "Population has reached 100,000.",
+    "Population has reached 500,000.",
+    "Brownouts, build another Power Plant.",
+    "Heavy Traffic reported.",
+    "Flooding reported !!",
+    "A Nuclear Meltdown has occurred !!!",
+    "They're rioting in the streets !!",
+    "End of Demo !!",
+    "No Sound Server!",
+    "No Multi Player License !!",
+    "Started a New City.",
+    "Restored a Saved City.",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x",
+    "x"
+}};
 
-struct Resource
+
+const std::string& GetIndString(const std::string& str, int id, int /*num*/)
 {
-    std::string buffer;
-    uintmax_t size{ 0 };
-    std::string name{};
-    int id{ 0 };
-};
-
-
-std::map<int, Resource> Resources;
-
-
-struct StringTable
-{
-    int id;
-    int lines;
-    char** strings;
-    struct StringTable* next;
-} *StringTables;
-
-
-std::string& GetResource(const std::string& name, int id)
-{
-    auto& resource = Resources[id];
-
-    if (resource.size == 0)
-    {
-        std::filesystem::path filePath(std::string(ResourceDir) + "/" + name);
-
-        if (!std::filesystem::exists(filePath))
-        {
-            throw std::runtime_error("File '" + filePath.string() + "' doesn't exist.");
-        }
-
-        resource.size = std::filesystem::file_size(filePath);
-        if (resource.size == 0)
-        {
-            throw std::runtime_error("File '" + filePath.string() + "' is empty.");
-        }
-
-        std::ifstream file(filePath, std::ios::in | std::ios::binary);
-
-        if (!file.is_open())
-        {
-            throw std::runtime_error("Error opening file '" + filePath.string() + "'.");
-        }
-
-        resource.buffer.reserve(resource.size);
-        file.read(resource.buffer.data(), resource.size);
-        file.close();
-    }
- 
-    return resource.buffer;
-}
-
-
-int ResourceSize(Handle h)
-{
-  struct Resource *r = (struct Resource *)h;
-
-  return (r->size);
-}
-
-
-const std::string GetIndString(const std::string& str, int id, int num)
-{
-    return "";
-
-    /*
-    struct StringTable** tp, * st = NULL;
-    Handle h;
-
-    tp = &StringTables;
-
-    while (*tp)
-    {
-        if ((*tp)->id == id)
-        {
-            st = *tp;
-            break;
-        }
-        tp = &((*tp)->next);
-    }
-
-    if (!st)
-    {
-        int i, lines, size;
-        char* buf;
-
-        st = (struct StringTable*)malloc(sizeof(struct StringTable));
-        st->id = id;
-
-        h = GetResource("stri", id);
-        size = ResourceSize(h);
-        buf = (char*)*h;
-
-        for (i = 0, lines = 0; i < size; i++)
-        {
-            if (buf[i] == '\n') {
-                buf[i] = 0;
-                lines++;
-            }
-        }
-
-        st->lines = lines;
-        st->strings = (char**)malloc(size * sizeof(char*));
-
-        for (i = 0; i < lines; i++)
-        {
-            st->strings[i] = buf;
-            buf += strlen(buf) + 1;
-        }
-        st->next = StringTables;
-        StringTables = st;
-    }
-
-    if ((num < 1) || (num > st->lines))
-    {
-        fprintf(stderr, "Out of range string index: %d\n", num);
-        return "Well I'll be a monkey's uncle!";
-    }
-
-    return st->strings[num - 1];
-    */
+    return StringTable[id];
 }

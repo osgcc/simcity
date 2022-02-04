@@ -4,5 +4,4 @@
 
 typedef char** Handle;
 
-std::string& GetResource(const std::string& name, int id);
-const std::string GetIndString(const std::string&, int id, int num);
+const std::string& GetIndString(const std::string&, int id, int num);
