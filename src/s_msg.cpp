@@ -74,17 +74,201 @@ int autoGo;
 int HaveLastMessage = 0;
 char LastMessage[256];
 
-void ClearMes();
-int SendMes(int Mnum);
 
-void CheckGrowth();
-void DoAutoGoto(int x, int y, char *msg);
-void DoShowPicture(int id);
-void DoScenarioScore(int type);
-void DoShowPicture(int id);
-void DoLoseGame();
-void DoWinGame();
-void SetMessageField(char* str);
+void ClearMes()
+{
+    MessagePort = 0;
+    MesX = 0;
+    MesY = 0;
+    LastPicNum = 0;
+}
+
+
+int SendMes(int Mnum)
+{
+    if (Mnum < 0)
+    {
+        if (Mnum != LastPicNum)
+        {
+            MessagePort = Mnum;
+            MesX = 0;
+            MesY = 0;
+            LastPicNum = Mnum;
+            return 1;
+        }
+    }
+    else
+    {
+        if (!(MessagePort))
+        {
+            MessagePort = Mnum;
+            MesX = 0;
+            MesY = 0;
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+
+void SendMesAt(int Mnum, int x, int y)
+{
+    if (SendMes(Mnum))
+    {
+        MesX = x;
+        MesY = y;
+    }
+}
+
+
+void SetMessageField(char* str)
+{
+    char buf[256];
+
+    if (!HaveLastMessage || strcmp(LastMessage, str))
+    {
+        strcpy(LastMessage, str);
+        HaveLastMessage = 1;
+        sprintf(buf, "UISetMessage {%s}", str);
+        Eval(buf);
+    }
+}
+
+
+void DoAutoGoto(int x, int y, char* msg)
+{
+    char buf[256];
+
+    SetMessageField(msg);
+    sprintf(buf, "UIAutoGoto %d %d", x, y);
+    Eval(buf);
+}
+
+
+void DoShowPicture(int id)
+{
+    char buf[256];
+
+    sprintf(buf, "UIShowPicture %d", id);
+    Eval(buf);
+}
+
+
+void DoLoseGame()
+{
+    Eval("UILoseGame");
+}
+
+
+void DoWinGame()
+{
+    Eval("UIWinGame");
+}
+
+
+void DoScenarioScore(int type)
+{
+    int z;
+
+    z = -200;	/* you lose */
+    switch (type)
+    {
+    case 1:	/* Dullsville */
+        if (CityClass >= 4)
+        {
+            z = -100;
+        }
+        break;
+
+    case 2:	/* San Francisco */
+        if (CityClass >= 4)
+        {
+            z = -100;
+        }
+        break;
+
+    case 3:	/* Hamburg */
+        if (CityClass >= 4)
+        {
+            z = -100;
+        }
+        break;
+
+    case 4:	/* Bern */
+        if (TrafficAverage < 80)
+        {
+            z = -100;
+        }
+        break;
+
+    case 5:	/* Tokyo */
+        if (CityScore > 500)
+        {
+            z = -100;
+        }
+        break;
+
+    case 6:	/* Detroit */
+        if (CrimeAverage < 60)
+        {
+            z = -100;
+        }
+        break;
+
+    case 7:	/* Boston */
+        if (CityScore > 500)
+        {
+            z = -100;
+        }
+        break;
+
+    case 8:	/* Rio de Janeiro */
+        if (CityScore > 500)
+        {
+            z = -100;
+        }
+        break;
+    }
+
+    ClearMes();
+    SendMes(z);
+
+    if (z == -200)
+    {
+        DoLoseGame();
+    }
+}
+
+
+void CheckGrowth()
+{
+    int ThisCityPop;
+    int z;
+
+    if (!(CityTime & 3))
+    {
+        z = 0;
+        ThisCityPop = ((ResPop)+(ComPop * 8L) + (IndPop * 8L)) * 20L;
+        if (LastCityPop)
+        {
+            if ((LastCityPop < 2000) && (ThisCityPop >= 2000))	z = 35;
+            if ((LastCityPop < 10000) && (ThisCityPop >= 10000)) 	z = 36;
+            if ((LastCityPop < 50000L) && (ThisCityPop >= 50000L)) 	z = 37;
+            if ((LastCityPop < 100000L) && (ThisCityPop >= 100000L))	z = 38;
+            if ((LastCityPop < 500000L) && (ThisCityPop >= 500000L))	z = 39;
+        }
+        if (z)
+        {
+            if (z != LastCategory)
+            {
+                SendMes(-z);
+                LastCategory = z;
+            }
+        }
+        LastCityPop = ThisCityPop;
+    }
+}
 
 
 void SendMessages()
@@ -261,157 +445,6 @@ void SendMessages()
 }
 
 
-void CheckGrowth()
-{
-    int ThisCityPop;
-    int z;
-
-    if (!(CityTime & 3))
-    {
-        z = 0;
-        ThisCityPop = ((ResPop)+(ComPop * 8L) + (IndPop * 8L)) * 20L;
-        if (LastCityPop)
-        {
-            if ((LastCityPop < 2000) && (ThisCityPop >= 2000))	z = 35;
-            if ((LastCityPop < 10000) && (ThisCityPop >= 10000)) 	z = 36;
-            if ((LastCityPop < 50000L) && (ThisCityPop >= 50000L)) 	z = 37;
-            if ((LastCityPop < 100000L) && (ThisCityPop >= 100000L))	z = 38;
-            if ((LastCityPop < 500000L) && (ThisCityPop >= 500000L))	z = 39;
-        }
-        if (z)
-        {
-            if (z != LastCategory)
-            {
-                SendMes(-z);
-                LastCategory = z;
-            }
-        }
-        LastCityPop = ThisCityPop;
-    }
-}
-
-
-void DoScenarioScore(int type)
-{
-    int z;
-
-    z = -200;	/* you lose */
-    switch (type)
-    {
-    case 1:	/* Dullsville */
-        if (CityClass >= 4)
-        {
-            z = -100;
-        }
-        break;
-
-    case 2:	/* San Francisco */
-        if (CityClass >= 4)
-        {
-            z = -100;
-        }
-        break;
-
-    case 3:	/* Hamburg */
-        if (CityClass >= 4)
-        {
-            z = -100;
-        }
-        break;
-
-    case 4:	/* Bern */
-        if (TrafficAverage < 80)
-        {
-            z = -100;
-        }
-        break;
-
-    case 5:	/* Tokyo */
-        if (CityScore > 500)
-        {
-            z = -100;
-        }
-        break;
-
-    case 6:	/* Detroit */
-        if (CrimeAverage < 60)
-        {
-            z = -100;
-        }
-        break;
-
-    case 7:	/* Boston */
-        if (CityScore > 500)
-        {
-            z = -100;
-        }
-        break;
-
-    case 8:	/* Rio de Janeiro */
-        if (CityScore > 500)
-        {
-            z = -100;
-        }
-        break;
-    }
-
-    ClearMes();
-    SendMes(z);
-
-    if (z == -200)
-    {
-        DoLoseGame();
-    }
-}
-
-
-void ClearMes()
-{
-    MessagePort = 0;
-    MesX = 0;
-    MesY = 0;
-    LastPicNum = 0;
-}
-
-
-int SendMes(int Mnum)
-{
-    if (Mnum < 0)
-    {
-        if (Mnum != LastPicNum)
-        {
-            MessagePort = Mnum;
-            MesX = 0;
-            MesY = 0;
-            LastPicNum = Mnum;
-            return 1;
-        }
-    }
-    else
-    {
-        if (!(MessagePort))
-        {
-            MessagePort = Mnum;
-            MesX = 0;
-            MesY = 0;
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-
-void SendMesAt(int Mnum, int x, int y)
-{
-    if (SendMes(Mnum))
-    {
-        MesX = x;
-        MesY = y;
-    }
-}
-
-
 void doMessage()
 {
     char messageStr[256];
@@ -543,49 +576,4 @@ void doMessage()
             MesY = 0;
         }
     }
-}
-
-
-void DoAutoGoto(int x, int y, char* msg)
-{
-    char buf[256];
-
-    SetMessageField(msg);
-    sprintf(buf, "UIAutoGoto %d %d", x, y);
-    Eval(buf);
-}
-
-
-void SetMessageField(char* str)
-{
-    char buf[256];
-
-    if (!HaveLastMessage || strcmp(LastMessage, str))
-    {
-        strcpy(LastMessage, str);
-        HaveLastMessage = 1;
-        sprintf(buf, "UISetMessage {%s}", str);
-        Eval(buf);
-    }
-}
-
-
-void DoShowPicture(int id)
-{
-    char buf[256];
-
-    sprintf(buf, "UIShowPicture %d", id);
-    Eval(buf);
-}
-
-
-void DoLoseGame()
-{
-    Eval("UILoseGame");
-}
-
-
-void DoWinGame()
-{
-    Eval("UIWinGame");
 }
