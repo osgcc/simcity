@@ -102,329 +102,470 @@ int DoInitialEval = 0;
 int MeltX, MeltY;
 
 
-void SimFrame()
+/* comefrom: MapScan */
+void DoFire()
 {
-    int i;
+  static int DX[4] = { -1,  0,  1,  0 };
+  static int DY[4] = {  0, -1,  0,  1 };
+  register int z, Xtem, Ytem, Rate, c;
 
-    if (SimSpeed == 0)
-        return;
-
-    if (++Spdcycle > 1023)
-        Spdcycle = 0;
-
-    if (SimSpeed == 1 && Spdcycle % 5)
-        return;
-
-    if (SimSpeed == 2 && Spdcycle % 3)
-        return;
-
-    if (++Fcycle > 1023) Fcycle = 0;
-    Simulate(Fcycle & 15);
-}
-
-
-void Simulate(int mod16)
-{
-    static int SpdPwr[4] = { 1,  2,  4,  5 };
-    static int SpdPtl[4] = { 1,  2,  7, 17 };
-    static int SpdCri[4] = { 1,  1,  8, 18 };
-    static int SpdPop[4] = { 1,  1,  9, 19 };
-    static int SpdFir[4] = { 1,  1, 10, 20 };
-    int x;
-
-    x = SimSpeed;
-    if (x > 3) x = 3;
-
-    switch (mod16)
-    {
-    case 0:
-        if (++Scycle > 1023) Scycle = 0;	/* this is cosmic */
-        if (DoInitialEval)
-        {
-            DoInitialEval = 0;
-            CityEvaluation();
-        }
-        CityTime++;
-        AvCityTax += CityTax;		/* post */
-        if (!(Scycle & 1)) SetValves();
-        ClearCensus();
-        break;
-    case 1:
-        MapScan(0, 1 * WORLD_X / 8);
-        break;
-    case 2:
-        MapScan(1 * WORLD_X / 8, 2 * WORLD_X / 8);
-        break;
-    case 3:
-        MapScan(2 * WORLD_X / 8, 3 * WORLD_X / 8);
-        break;
-    case 4:
-        MapScan(3 * WORLD_X / 8, 4 * WORLD_X / 8);
-        break;
-    case 5:
-        MapScan(4 * WORLD_X / 8, 5 * WORLD_X / 8);
-        break;
-    case 6:
-        MapScan(5 * WORLD_X / 8, 6 * WORLD_X / 8);
-        break;
-    case 7:
-        MapScan(6 * WORLD_X / 8, 7 * WORLD_X / 8);
-        break;
-    case 8:
-        MapScan(7 * WORLD_X / 8, WORLD_X);
-        break;
-    case 9:
-        if (!(CityTime % CENSUSRATE)) TakeCensus();
-        if (!(CityTime % (CENSUSRATE * 12))) Take2Census();
-
-        if (!(CityTime % TAXFREQ))
-        {
-            CollectTax();
-            CityEvaluation();
-        }
-        break;
-    case 10:
-        if (!(Scycle % 5)) DecROGMem();
-        DecTrafficMem();
-        NewMapFlags[TDMAP] = 1;
-        NewMapFlags[RDMAP] = 1;
-        NewMapFlags[ALMAP] = 1;
-        NewMapFlags[REMAP] = 1;
-        NewMapFlags[COMAP] = 1;
-        NewMapFlags[INMAP] = 1;
-        NewMapFlags[DYMAP] = 1;
-        SendMessages();
-        break;
-    case 11:
-        if (!(Scycle % SpdPwr[x]))
-        {
-            DoPowerScan();
-            NewMapFlags[PRMAP] = 1;
-            NewPower = 1; /* post-release change */
-        }
-        break;
-    case 12:
-        if (!(Scycle % SpdPtl[x])) PTLScan();
-        break;
-    case 13:
-        if (!(Scycle % SpdCri[x])) CrimeScan();
-        break;
-    case 14:
-        if (!(Scycle % SpdPop[x])) PopDenScan();
-        break;
-    case 15:
-        if (!(Scycle % SpdFir[x])) FireAnalysis();
-        DoDisasters();
-        break;
-    }
-}
-
-
-void DoSimInit()
-{
-    Fcycle = 0;
-    Scycle = 0;
-
-    if (InitSimLoad == 2) 			/* if new city    */
-    {
-        InitSimMemory();
-    }
-
-    if (InitSimLoad == 1)  			/* if city just loaded  */
-    {
-        SimLoadInit();
-    }
-
-    SetValves();
-    ClearCensus();
-    MapScan(0, WORLD_X); /* XXX are you sure ??? */
-    DoPowerScan();
-    NewPower = 1;		/* post rel */
-    PTLScan();
-    CrimeScan();
-    PopDenScan();
-    FireAnalysis();
-    NewMap = 1;
-    doAllGraphs();
-    NewGraph = 1;
-    TotalPop = 1;
-    DoInitialEval = 1;
-}
-
-
-/* comefrom: SimLoadInit */
-void DoNilPower()
-{
-  register int x, y, z;
-
-  for (x = 0; x < WORLD_X; x++)
-    for (y = 0; y < WORLD_Y; y++) {
-      z = Map[x][y];
-      if (z & ZONEBIT) {
-	SMapX = x;
-	SMapY = y;
-	CChr = z;
-	SetZPower();
-      }
-    }
-}
-
-
-/* comefrom: Simulate */
-void DecTrafficMem()		/* tends to empty TrfDensity   */
-{
-  register int x, y, z;
-
-  for (x = 0; x < HWLDX; x++)
-    for (y = 0; y < HWLDY; y++)
-      if (z = TrfDensity[x][y]) {
-	if (z > 24) {
-	  if (z > 200) TrfDensity[x][y] = z - 34;
-	  else TrfDensity[x][y] = z - 24;
+  for (z = 0; z < 4; z++) {
+    if (!(Rand16() & 7)) {
+      Xtem = SMapX + DX[z];
+      Ytem = SMapY + DY[z];
+      if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y)) {
+	c = Map[Xtem][Ytem];
+	if (c & BURNBIT) {
+	  if (c & ZONEBIT) {
+	    FireZone(Xtem, Ytem, c);
+	    if ((c & LOMASK) > IZB)  { /*  Explode  */
+	      MakeExplosionAt((Xtem <<4) + 8, (Ytem <<4) + 8);
+	    }
+	  }
+	  Map[Xtem][Ytem] = FIRE + (Rand16() & 3) + ANIMBIT;
 	}
-	else TrfDensity[x][y] = 0;
       }
+    }
+  }
+  z = FireRate[SMapX >>3][SMapY >>3];
+  Rate = 10;
+  if (z) {
+    Rate = 3;
+    if (z > 20) Rate = 2;
+    if (z > 100) Rate = 1;
+  }
+  if (!Rand(Rate))
+    Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
 }
 
 
-/* comefrom: Simulate */
-void DecROGMem()			/* tends to empty RateOGMem   */
+/* comefrom: DoSPZone */
+void DoAirport()
 {
-  register int x, y, z;
+  if (!(Rand(5))) {
+    GeneratePlane(SMapX, SMapY);
+    return;
+  }
+  if (!(Rand(12)))
+    GenerateCopter(SMapX, SMapY);
+}
 
-  for (x = 0; x < SmX; x++)
-    for (y = 0; y < SmY; y++)	{
-      z = RateOGMem[x][y];
-      if (z == 0) continue;
-      if (z > 0)  {
-	--RateOGMem[x][y];
-	if (z > 200) RateOGMem[x][y] = 200;    /* prevent overflow */
-	continue;
+
+/* comefrom: DoSPZone MakeMeltdown */
+void DoMeltdown(int SX, int SY)
+{
+  register int x, y, z, t;
+
+  MeltX = SX; MeltY = SY;
+
+  MakeExplosion(SX - 1, SY - 1);
+  MakeExplosion(SX - 1, SY + 2);
+  MakeExplosion(SX + 2, SY - 1);
+  MakeExplosion(SX + 2, SY + 2);
+
+  for (x = (SX - 1); x < (SX + 3); x++)
+    for (y = (SY - 1); y < (SY + 3); y++)
+      Map[x][y] = FIRE + (Rand16() & 3) + ANIMBIT;
+
+  for (z = 0; z < 200; z++)  {
+    x = SX - 20 + Rand(40);
+    y = SY - 15 + Rand(30);
+    if ((x < 0) || (x >= WORLD_X) ||
+	(y < 0) || (y >= WORLD_Y))
+      continue;
+    t = Map[x][y];
+    if (t & ZONEBIT)
+      continue;
+    if ((t & BURNBIT) || (t == 0))
+      Map[x][y] = RADTILE;
+  }
+
+  ClearMes();
+  SendMesAt(-43, SX, SY);
+}
+
+
+/* comefrom: MapScan */
+void DoRail()
+{
+  RailTotal++;
+  GenerateTrain(SMapX, SMapY);
+  if (RoadEffect < 30) /* Deteriorating  Rail  */
+    if (!(Rand16() & 511))
+      if (!(CChr & CONDBIT))
+	if (RoadEffect < (Rand16() & 31)) {
+	  if (CChr9 < (RAILBASE + 2))
+	    Map[SMapX][SMapY] = RIVER;
+	  else
+	    Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
+	  return;
+	}
+}
+
+
+/* comefrom: MapScan */
+void DoRadTile()
+{
+  if (!(Rand16() & 4095)) Map[SMapX][SMapY] = 0; /* Radioactive decay */
+}
+
+
+int GetBoatDis()
+{
+  register int dist, mx, my, dx, dy;
+  SimSprite *sprite;
+
+  dist = 99999;
+  mx = (SMapX <<4) + 8;
+  my = (SMapY <<4) + 8;
+
+  for (sprite = sim->sprite; sprite != NULL; sprite = sprite->next) {
+    if ((sprite->type == SHI) &&
+	(sprite->frame != 0)) {
+      if ((dx = sprite->x + sprite->x_hot - mx) < 0) dx = -dx;
+      if ((dy = sprite->y + sprite->y_hot - my) < 0) dy = -dy;
+      dx += dy;
+      if (dx < dist) dist = dx;
+    }
+  }
+  return (dist);
+}
+
+
+/* comefrom: MapScan */
+bool DoBridge()
+{
+  static int HDx[7] = { -2,  2, -2, -1,  0,  1,  2 };
+  static int HDy[7] = { -1, -1,  0,  0,  0,  0,  0 };
+  static int HBRTAB[7] = {
+    HBRDG1 | BULLBIT, HBRDG3 | BULLBIT, HBRDG0 | BULLBIT,
+    RIVER, BRWH | BULLBIT, RIVER, HBRDG2 | BULLBIT };
+  static int HBRTAB2[7] = {
+    RIVER, RIVER, HBRIDGE | BULLBIT, HBRIDGE | BULLBIT, HBRIDGE | BULLBIT,
+    HBRIDGE | BULLBIT, HBRIDGE | BULLBIT };
+  static int VDx[7] = {  0,  1,  0,  0,  0,  0,  1 };
+  static int VDy[7] = { -2, -2, -1,  0,  1,  2,  2 };
+  static int VBRTAB[7] = {
+    VBRDG0 | BULLBIT, VBRDG1 | BULLBIT, RIVER, BRWV | BULLBIT,
+    RIVER, VBRDG2 | BULLBIT, VBRDG3 | BULLBIT };
+  static int VBRTAB2[7] = {
+    VBRIDGE | BULLBIT, RIVER, VBRIDGE | BULLBIT, VBRIDGE | BULLBIT,
+    VBRIDGE | BULLBIT, VBRIDGE | BULLBIT, RIVER };
+  register int z, x, y, MPtem;
+
+  if (CChr9 == BRWV) { /*  Vertical bridge close */
+    if ((!(Rand16() & 3)) &&
+	(GetBoatDis() > 340))
+      for (z = 0; z < 7; z++) { /* Close  */
+	x = SMapX + VDx[z];
+	y = SMapY + VDy[z];
+	if (TestBounds(x, y, WORLD_X, WORLD_Y))
+	  if ((Map[x][y] & LOMASK) == (VBRTAB[z] & LOMASK))
+	    Map[x][y] = VBRTAB2[z];
       }
-      if (z < 0)  {
-	++RateOGMem[x][y];
-	if (z < -200) RateOGMem[x][y] = -200;
+    return (TRUE);
+  }
+  if (CChr9 == BRWH) { /*  Horizontal bridge close  */
+    if ((!(Rand16() & 3)) &&
+	(GetBoatDis() > 340))
+      for (z = 0; z < 7; z++) { /* Close  */
+	x = SMapX + HDx[z];
+	y = SMapY + HDy[z];
+	if (TestBounds(x, y, WORLD_X, WORLD_Y))
+	  if ((Map[x][y] & LOMASK) == (HBRTAB[z] & LOMASK))
+	    Map[x][y] = HBRTAB2[z];
+      }
+    return (TRUE);
+  }
+
+  if ((GetBoatDis() < 300) || (!(Rand16() & 7))) {
+    if (CChr9 & 1) {
+      if (SMapX < (WORLD_X - 1))
+	if (Map[SMapX + 1][SMapY] == CHANNEL) { /* Vertical open */
+	  for (z = 0; z < 7; z++) {
+	    x = SMapX + VDx[z];
+	    y = SMapY + VDy[z];
+	    if (TestBounds(x, y, WORLD_X, WORLD_Y))  {
+	      MPtem = Map[x][y];
+	      if ((MPtem == CHANNEL) ||
+		  ((MPtem & 15) == (VBRTAB2[z] & 15)))
+		Map[x][y] = VBRTAB[z];
+	    }
+	  }
+	  return (TRUE);
+	}
+      return (FALSE);
+    } else {
+      if (SMapY > 0)
+	if (Map[SMapX][SMapY - 1] == CHANNEL) { /* Horizontal open  */
+	  for (z = 0; z < 7; z++) {
+	    x = SMapX + HDx[z];
+	    y = SMapY + HDy[z];
+	    if (TestBounds(x, y, WORLD_X, WORLD_Y)) {
+	      MPtem = Map[x][y];
+	      if (((MPtem & 15) == (HBRTAB2[z] & 15)) ||
+		  (MPtem == CHANNEL))
+		Map[x][y] = HBRTAB[z];
+	    }
+	  }
+	  return (TRUE);
+	}
+      return (FALSE);
+    }
+  }
+  return (FALSE);
+}
+
+
+/* comefrom: MapScan */
+void DoRoad()
+{
+  register int Density, tden, z;
+  static int DenTab[3] = { ROADBASE, LTRFBASE, HTRFBASE };
+
+  RoadTotal++;
+/*  GenerateBus(SMapX, SMapY); */
+  if (RoadEffect < 30) /* Deteriorating Roads */
+    if (!(Rand16() & 511))
+      if (!(CChr & CONDBIT))
+	if (RoadEffect < (Rand16() & 31)) {
+	  if (((CChr9 & 15) < 2) || ((CChr9 & 15) == 15))
+	    Map[SMapX][SMapY] = RIVER;
+	  else
+	    Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
+	  return;
+	}
+
+  if (!(CChr & BURNBIT)) { /* If Bridge */
+    RoadTotal += 4;			
+    if (DoBridge())  return;
+  }
+  if (CChr9 < LTRFBASE) tden = 0;
+  else if (CChr9 < HTRFBASE) tden = 1;
+  else {
+    RoadTotal++;
+    tden = 2;
+  }
+
+  Density = (TrfDensity[SMapX >>1][SMapY >>1]) >>6;  /* Set Traf Density  */
+  if (Density > 1) Density--;
+  if (tden != Density) { /* tden 0..2   */
+    z = ((CChr9 - ROADBASE) & 15) + DenTab[Density];
+    z += CChr & (ALLBITS - ANIMBIT);
+    if (Density) z += ANIMBIT;
+    Map[SMapX][SMapY] = z;
+  }
+}
+
+
+/* comefrom: DoSPZone DoHospChur */
+void RepairZone(int ZCent, int zsize)
+{
+  int cnt;
+  register int x, y, ThCh;
+
+  zsize--;
+  cnt = 0;
+  for (y = -1; y < zsize; y++)
+    for (x = -1; x < zsize; x++) {
+      int xx = SMapX + x;
+      int yy = SMapY + y;
+      cnt++;
+      if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+	ThCh = Map[xx][yy];
+	if (ThCh & ZONEBIT) continue;
+	if (ThCh & ANIMBIT) continue;
+	ThCh = ThCh & LOMASK;
+	if ((ThCh < RUBBLE) || (ThCh >= ROADBASE)) {
+	  Map[xx][yy] = ZCent - 3 - zsize + cnt + CONDBIT + BURNBIT;
+	}
       }
     }
 }
 
 
-/* comefrom: DoSimInit */
-void InitSimMemory()
-{	
-  register int x, z;
+/* comefrom: DoSPZone */
+void DrawStadium(int z)
+{
+  register int x, y;
 
-  z = 0;
-  SetCommonInits();
-  for (x = 0; x < 240; x++)  {
-    ResHis[x] = z;
-    ComHis[x] = z;
-    IndHis[x] = z;
-    MoneyHis[x] = 128;
-    CrimeHis[x] = z;
-    PollutionHis[x] = z;
-  }
-  CrimeRamp = z;
-  PolluteRamp = z;
-  TotalPop = z;
-  RValve = z;
-  CValve = z;
-  IValve = z;
-  ResCap = z;
-  ComCap = z;
-  IndCap = z;
-
-  EMarket = 6.0;
-  DisasterEvent = 0;
-  ScoreType = 0;
-
-  /* This clears powermem */
-  PowerStackNum = z;		
-  DoPowerScan();
-  NewPower = 1;		/* post rel */	
-
-  InitSimLoad = 0;
+  z = z - 5;
+  for (y = (SMapY - 1); y < (SMapY + 3); y++)
+    for (x = (SMapX - 1); x < (SMapX + 3); x++)
+      Map[x][y] = (z++) | BNCNBIT;
+  Map[SMapX][SMapY] |= ZONEBIT | PWRBIT;
 }
 
 
-/* comefrom: DoSimInit */
-void SimLoadInit()
+/* comefrom: DoSPZone */
+void CoalSmoke(int mx, int my)
 {
-  static int DisTab[9] = { 0, 2, 10, 5, 20, 3, 5, 5, 2 * 48};
-  static int ScoreWaitTab[9] = { 0, 30 * 48, 5 * 48, 5 * 48, 10 * 48,
-				   5 * 48, 10 * 48, 5 * 48, 10 * 48 };
+  static int SmTb[4] = { COALSMOKE1, COALSMOKE2, COALSMOKE3, COALSMOKE4 };
+  static int dx[4] = {  1,  2,  1,  2 };
+  static int dy[4] = { -1, -1,  0,  0 };
+  register int x;
+
+  for (x = 0; x < 4; x++)
+    Map[mx + dx[x]][my + dy[x]] =
+      SmTb[x] | ANIMBIT | CONDBIT | PWRBIT | BURNBIT;
+}
+
+
+/* comefrom: DoZone */
+void DoSPZone(int PwrOn)
+{
+  static int MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
   register int z;
 
-  z = 0;
-  EMarket = (float)MiscHis[1];
-  ResPop = MiscHis[2];
-  ComPop = MiscHis[3];
-  IndPop = MiscHis[4];
-  RValve = MiscHis[5];
-  CValve = MiscHis[6];
-  IValve = MiscHis[7];
-  CrimeRamp = MiscHis[10];
-  PolluteRamp = MiscHis[11];
-  LVAverage = MiscHis[12];
-  CrimeAverage = MiscHis[13];
-  PolluteAverage = MiscHis[14];
-  GameLevel = MiscHis[15];
+  switch (CChr9) {
 
-  if (CityTime < 0) CityTime = 0;
-  if (!EMarket) EMarket = 4.0;
-  if ((GameLevel > 2) || (GameLevel < 0)) GameLevel = 0;
-  SetGameLevel(GameLevel);
+  case POWERPLANT:
+    CoalPop++;
+    if (!(CityTime & 7))
+      RepairZone(POWERPLANT, 4); /* post */
+    PushPowerStack();
+    CoalSmoke(SMapX, SMapY);
+    return;
 
-  SetCommonInits();
+  case NUCLEAR:
+    if (!NoDisasters && !Rand(MltdwnTab[GameLevel])) {
+      DoMeltdown(SMapX, SMapY);
+      return;
+    }
+    NuclearPop++;
+    if (!(CityTime & 7))
+      RepairZone(NUCLEAR, 4); /* post */
+    PushPowerStack();
+    return;
 
-  CityClass = MiscHis[16];
-  CityScore = MiscHis[17];
+  case FIRESTATION:
+    FireStPop++;
+    if (!(CityTime & 7))
+      RepairZone(FIRESTATION, 3); /* post */
 
-  if ((CityClass > 5) || (CityClass < 0)) CityClass = 0;
-  if ((CityScore > 999) || (CityScore < 1)) CityScore = 500;
+    if (PwrOn)
+      z = FireEffect;			/* if powered get effect  */
+    else
+      z = FireEffect >>1;		/* from the funding ratio  */
 
-  ResCap = 0;
-  ComCap = 0;
-  IndCap = 0;
+    if (!FindPRoad())
+      z = z >>1;			/* post FD's need roads  */
 
-  AvCityTax = (CityTime % 48) * 7;  /* post */
+    FireStMap[SMapX >>3][SMapY >>3] += z;
+    return;
 
-  for (z = 0; z < PWRMAPSIZE; z++)
-    PowerMap[z] = ~0; /* set power Map */
-  DoNilPower();
+  case POLICESTATION:
+    PolicePop++;
+    if (!(CityTime & 7))
+      RepairZone(POLICESTATION, 3); /* post */
 
-  if (ScenarioID > 8) ScenarioID = 0;
+    if (PwrOn)
+      z = PoliceEffect;
+    else
+      z = PoliceEffect >>1;
 
-  if (ScenarioID) {
-    DisasterEvent = ScenarioID;
-    DisasterWait = DisTab[DisasterEvent];
-    ScoreType = DisasterEvent;
-    ScoreWait = ScoreWaitTab[DisasterEvent];
-  } else {
-    DisasterEvent = 0;
-    ScoreType = 0;
+    if (!FindPRoad())
+      z = z >>1; /* post PD's need roads */
+
+    PoliceMap[SMapX >>3][SMapY >>3] += z;
+    return;
+
+  case STADIUM:
+    StadiumPop++;
+    if (!(CityTime & 15))
+      RepairZone(STADIUM, 4);
+    if (PwrOn)
+      if (!((CityTime + SMapX + SMapY) & 31)) {	/* post release */
+	DrawStadium(FULLSTADIUM);
+	Map[SMapX + 1][SMapY] = FOOTBALLGAME1 + ANIMBIT;
+	Map[SMapX + 1][SMapY + 1] = FOOTBALLGAME2 + ANIMBIT;
+      }
+    return;
+
+ case FULLSTADIUM:
+    StadiumPop++;
+    if (!((CityTime + SMapX + SMapY) & 7))	/* post release */
+      DrawStadium(STADIUM);
+    return;
+
+ case AIRPORT:
+    APortPop++;
+    if (!(CityTime & 7))
+      RepairZone(AIRPORT, 6);
+
+    if (PwrOn) { /* post */
+      if ((Map[SMapX + 1][SMapY - 1] & LOMASK) == RADAR)
+	Map[SMapX + 1][SMapY - 1] = RADAR + ANIMBIT + CONDBIT + BURNBIT;
+    } else
+      Map[SMapX + 1][SMapY - 1] = RADAR + CONDBIT + BURNBIT;
+
+    if (PwrOn)
+      DoAirport();
+    return;
+
+ case PORT:
+    PortPop++;
+    if ((CityTime & 15) == 0) {
+      RepairZone(PORT, 4);
+    }
+    if (PwrOn &&
+	(GetSprite(SHI) == NULL)) {
+      GenerateShip();
+    }
+    return;
   }
-
-  RoadEffect = 32;
-  PoliceEffect = 1000; /*post*/
-  FireEffect = 1000;
-  InitSimLoad = 0;
 }
 
 
-/* comefrom: InitSimMemory SimLoadInit */
-void SetCommonInits()
+/* comefrom: Simulate DoSimInit */
+void MapScan(int x1, int x2)
 {
-  EvalInit();
-  RoadEffect = 32;
-  PoliceEffect = 1000;
-  FireEffect = 1000;
-  TaxFlag = 0;
-  TaxFund = 0;
-/*
-  if ((GameLevel > 2) || (GameLevel < 0)) GameLevel = 0;
-  setGameLevel(GameLevel);
-*/
+  register int x, y;
+
+  for (x = x1; x < x2; x++)  {
+    for (y = 0; y < WORLD_Y; y++) {
+      if (CChr = Map[x][y]) {
+	CChr9 = CChr & LOMASK;	/* Mask off status bits  */
+	if (CChr9 >= FLOOD) {
+	  SMapX = x;
+	  SMapY = y;
+	  if (CChr9 < ROADBASE) {
+	    if (CChr9 >= FIREBASE) {
+	      FirePop++;
+	      if (!(Rand16() & 3)) DoFire();	/* 1 in 4 times */
+	      continue;
+	    }
+	    if (CChr9 < RADTILE)  DoFlood();
+	    else DoRadTile();
+	    continue;
+	  }
+
+	  if (NewPower && (CChr & CONDBIT))
+	    SetZPower();
+
+	  if ((CChr9 >= ROADBASE) &&
+	      (CChr9 < POWERBASE)) {
+	    DoRoad();
+	    continue;
+	  }
+
+	  if (CChr & ZONEBIT) {	/* process Zones */
+	    DoZone();
+	    continue;
+	  }
+
+	  if ((CChr9 >= RAILBASE) &&
+	      (CChr9 < RESBASE)) {
+	    DoRail();
+	    continue;
+	  }
+	  if ((CChr9 >= SOMETINYEXP) &&
+	      (CChr9 <= LASTTINYEXP))  /* clear AniRubble */
+	    Map[x][y] = RUBBLE + (Rand16() & 3) + BULLBIT;
+	}
+      }
+    }
+  }
 }
 
 
@@ -685,6 +826,332 @@ void CollectTax()
 }
 
 
+/* comefrom: Simulate */
+void DecROGMem()			/* tends to empty RateOGMem   */
+{
+  register int x, y, z;
+
+  for (x = 0; x < SmX; x++)
+    for (y = 0; y < SmY; y++)	{
+      z = RateOGMem[x][y];
+      if (z == 0) continue;
+      if (z > 0)  {
+	--RateOGMem[x][y];
+	if (z > 200) RateOGMem[x][y] = 200;    /* prevent overflow */
+	continue;
+      }
+      if (z < 0)  {
+	++RateOGMem[x][y];
+	if (z < -200) RateOGMem[x][y] = -200;
+      }
+    }
+}
+
+
+/* comefrom: InitSimMemory SimLoadInit */
+void SetCommonInits()
+{
+  EvalInit();
+  RoadEffect = 32;
+  PoliceEffect = 1000;
+  FireEffect = 1000;
+  TaxFlag = 0;
+  TaxFund = 0;
+/*
+  if ((GameLevel > 2) || (GameLevel < 0)) GameLevel = 0;
+  setGameLevel(GameLevel);
+*/
+}
+
+
+/* comefrom: DoSimInit */
+void InitSimMemory()
+{	
+  register int x, z;
+
+  z = 0;
+  SetCommonInits();
+  for (x = 0; x < 240; x++)  {
+    ResHis[x] = z;
+    ComHis[x] = z;
+    IndHis[x] = z;
+    MoneyHis[x] = 128;
+    CrimeHis[x] = z;
+    PollutionHis[x] = z;
+  }
+  CrimeRamp = z;
+  PolluteRamp = z;
+  TotalPop = z;
+  RValve = z;
+  CValve = z;
+  IValve = z;
+  ResCap = z;
+  ComCap = z;
+  IndCap = z;
+
+  EMarket = 6.0;
+  DisasterEvent = 0;
+  ScoreType = 0;
+
+  /* This clears powermem */
+  PowerStackNum = z;		
+  DoPowerScan();
+  NewPower = 1;		/* post rel */	
+
+  InitSimLoad = 0;
+}
+
+
+/* comefrom: SimLoadInit */
+void DoNilPower()
+{
+  register int x, y, z;
+
+  for (x = 0; x < WORLD_X; x++)
+    for (y = 0; y < WORLD_Y; y++) {
+      z = Map[x][y];
+      if (z & ZONEBIT) {
+	SMapX = x;
+	SMapY = y;
+	CChr = z;
+	SetZPower();
+      }
+    }
+}
+
+
+/* comefrom: Simulate */
+void DecTrafficMem()		/* tends to empty TrfDensity   */
+{
+  register int x, y, z;
+
+  for (x = 0; x < HWLDX; x++)
+    for (y = 0; y < HWLDY; y++)
+      if (z = TrfDensity[x][y]) {
+	if (z > 24) {
+	  if (z > 200) TrfDensity[x][y] = z - 34;
+	  else TrfDensity[x][y] = z - 24;
+	}
+	else TrfDensity[x][y] = 0;
+      }
+}
+
+
+/* comefrom: DoSimInit */
+void SimLoadInit()
+{
+  static int DisTab[9] = { 0, 2, 10, 5, 20, 3, 5, 5, 2 * 48};
+  static int ScoreWaitTab[9] = { 0, 30 * 48, 5 * 48, 5 * 48, 10 * 48,
+				   5 * 48, 10 * 48, 5 * 48, 10 * 48 };
+  register int z;
+
+  z = 0;
+  EMarket = (float)MiscHis[1];
+  ResPop = MiscHis[2];
+  ComPop = MiscHis[3];
+  IndPop = MiscHis[4];
+  RValve = MiscHis[5];
+  CValve = MiscHis[6];
+  IValve = MiscHis[7];
+  CrimeRamp = MiscHis[10];
+  PolluteRamp = MiscHis[11];
+  LVAverage = MiscHis[12];
+  CrimeAverage = MiscHis[13];
+  PolluteAverage = MiscHis[14];
+  GameLevel = MiscHis[15];
+
+  if (CityTime < 0) CityTime = 0;
+  if (!EMarket) EMarket = 4.0;
+  if ((GameLevel > 2) || (GameLevel < 0)) GameLevel = 0;
+  SetGameLevel(GameLevel);
+
+  SetCommonInits();
+
+  CityClass = MiscHis[16];
+  CityScore = MiscHis[17];
+
+  if ((CityClass > 5) || (CityClass < 0)) CityClass = 0;
+  if ((CityScore > 999) || (CityScore < 1)) CityScore = 500;
+
+  ResCap = 0;
+  ComCap = 0;
+  IndCap = 0;
+
+  AvCityTax = (CityTime % 48) * 7;  /* post */
+
+  for (z = 0; z < PWRMAPSIZE; z++)
+    PowerMap[z] = ~0; /* set power Map */
+  DoNilPower();
+
+  if (ScenarioID > 8) ScenarioID = 0;
+
+  if (ScenarioID) {
+    DisasterEvent = ScenarioID;
+    DisasterWait = DisTab[DisasterEvent];
+    ScoreType = DisasterEvent;
+    ScoreWait = ScoreWaitTab[DisasterEvent];
+  } else {
+    DisasterEvent = 0;
+    ScoreType = 0;
+  }
+
+  RoadEffect = 32;
+  PoliceEffect = 1000; /*post*/
+  FireEffect = 1000;
+  InitSimLoad = 0;
+}
+
+
+void Simulate(int mod16)
+{
+    static int SpdPwr[4] = { 1,  2,  4,  5 };
+    static int SpdPtl[4] = { 1,  2,  7, 17 };
+    static int SpdCri[4] = { 1,  1,  8, 18 };
+    static int SpdPop[4] = { 1,  1,  9, 19 };
+    static int SpdFir[4] = { 1,  1, 10, 20 };
+    int x;
+
+    x = SimSpeed;
+    if (x > 3) x = 3;
+
+    switch (mod16)
+    {
+    case 0:
+        if (++Scycle > 1023) Scycle = 0;	/* this is cosmic */
+        if (DoInitialEval)
+        {
+            DoInitialEval = 0;
+            CityEvaluation();
+        }
+        CityTime++;
+        AvCityTax += CityTax;		/* post */
+        if (!(Scycle & 1)) SetValves();
+        ClearCensus();
+        break;
+    case 1:
+        MapScan(0, 1 * WORLD_X / 8);
+        break;
+    case 2:
+        MapScan(1 * WORLD_X / 8, 2 * WORLD_X / 8);
+        break;
+    case 3:
+        MapScan(2 * WORLD_X / 8, 3 * WORLD_X / 8);
+        break;
+    case 4:
+        MapScan(3 * WORLD_X / 8, 4 * WORLD_X / 8);
+        break;
+    case 5:
+        MapScan(4 * WORLD_X / 8, 5 * WORLD_X / 8);
+        break;
+    case 6:
+        MapScan(5 * WORLD_X / 8, 6 * WORLD_X / 8);
+        break;
+    case 7:
+        MapScan(6 * WORLD_X / 8, 7 * WORLD_X / 8);
+        break;
+    case 8:
+        MapScan(7 * WORLD_X / 8, WORLD_X);
+        break;
+    case 9:
+        if (!(CityTime % CENSUSRATE)) TakeCensus();
+        if (!(CityTime % (CENSUSRATE * 12))) Take2Census();
+
+        if (!(CityTime % TAXFREQ))
+        {
+            CollectTax();
+            CityEvaluation();
+        }
+        break;
+    case 10:
+        if (!(Scycle % 5)) DecROGMem();
+        DecTrafficMem();
+        NewMapFlags[TDMAP] = 1;
+        NewMapFlags[RDMAP] = 1;
+        NewMapFlags[ALMAP] = 1;
+        NewMapFlags[REMAP] = 1;
+        NewMapFlags[COMAP] = 1;
+        NewMapFlags[INMAP] = 1;
+        NewMapFlags[DYMAP] = 1;
+        SendMessages();
+        break;
+    case 11:
+        if (!(Scycle % SpdPwr[x]))
+        {
+            DoPowerScan();
+            NewMapFlags[PRMAP] = 1;
+            NewPower = 1; /* post-release change */
+        }
+        break;
+    case 12:
+        if (!(Scycle % SpdPtl[x])) PTLScan();
+        break;
+    case 13:
+        if (!(Scycle % SpdCri[x])) CrimeScan();
+        break;
+    case 14:
+        if (!(Scycle % SpdPop[x])) PopDenScan();
+        break;
+    case 15:
+        if (!(Scycle % SpdFir[x])) FireAnalysis();
+        DoDisasters();
+        break;
+    }
+}
+
+
+void SimFrame()
+{
+    int i;
+
+    if (SimSpeed == 0)
+        return;
+
+    if (++Spdcycle > 1023)
+        Spdcycle = 0;
+
+    if (SimSpeed == 1 && Spdcycle % 5)
+        return;
+
+    if (SimSpeed == 2 && Spdcycle % 3)
+        return;
+
+    if (++Fcycle > 1023) Fcycle = 0;
+    Simulate(Fcycle & 15);
+}
+
+
+void DoSimInit()
+{
+    Fcycle = 0;
+    Scycle = 0;
+
+    if (InitSimLoad == 2) 			/* if new city    */
+    {
+        InitSimMemory();
+    }
+
+    if (InitSimLoad == 1)  			/* if city just loaded  */
+    {
+        SimLoadInit();
+    }
+
+    SetValves();
+    ClearCensus();
+    MapScan(0, WORLD_X); /* XXX are you sure ??? */
+    DoPowerScan();
+    NewPower = 1;		/* post rel */
+    PTLScan();
+    CrimeScan();
+    PopDenScan();
+    FireAnalysis();
+    NewMap = 1;
+    doAllGraphs();
+    NewGraph = 1;
+    TotalPop = 1;
+    DoInitialEval = 1;
+}
+
+
 void UpdateFundEffects()
 {
   if (RoadFund)
@@ -706,269 +1173,6 @@ void UpdateFundEffects()
     FireEffect = 1000;
 
   drawCurrPercents();
-}
-
-
-/* comefrom: Simulate DoSimInit */
-void MapScan(int x1, int x2)
-{
-  register int x, y;
-
-  for (x = x1; x < x2; x++)  {
-    for (y = 0; y < WORLD_Y; y++) {
-      if (CChr = Map[x][y]) {
-	CChr9 = CChr & LOMASK;	/* Mask off status bits  */
-	if (CChr9 >= FLOOD) {
-	  SMapX = x;
-	  SMapY = y;
-	  if (CChr9 < ROADBASE) {
-	    if (CChr9 >= FIREBASE) {
-	      FirePop++;
-	      if (!(Rand16() & 3)) DoFire();	/* 1 in 4 times */
-	      continue;
-	    }
-	    if (CChr9 < RADTILE)  DoFlood();
-	    else DoRadTile();
-	    continue;
-	  }
-
-	  if (NewPower && (CChr & CONDBIT))
-	    SetZPower();
-
-	  if ((CChr9 >= ROADBASE) &&
-	      (CChr9 < POWERBASE)) {
-	    DoRoad();
-	    continue;
-	  }
-
-	  if (CChr & ZONEBIT) {	/* process Zones */
-	    DoZone();
-	    continue;
-	  }
-
-	  if ((CChr9 >= RAILBASE) &&
-	      (CChr9 < RESBASE)) {
-	    DoRail();
-	    continue;
-	  }
-	  if ((CChr9 >= SOMETINYEXP) &&
-	      (CChr9 <= LASTTINYEXP))  /* clear AniRubble */
-	    Map[x][y] = RUBBLE + (Rand16() & 3) + BULLBIT;
-	}
-      }
-    }
-  }
-}
-
-
-/* comefrom: MapScan */
-void DoRail()
-{
-  RailTotal++;
-  GenerateTrain(SMapX, SMapY);
-  if (RoadEffect < 30) /* Deteriorating  Rail  */
-    if (!(Rand16() & 511))
-      if (!(CChr & CONDBIT))
-	if (RoadEffect < (Rand16() & 31)) {
-	  if (CChr9 < (RAILBASE + 2))
-	    Map[SMapX][SMapY] = RIVER;
-	  else
-	    Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
-	  return;
-	}
-}
-
-
-/* comefrom: MapScan */
-void DoRadTile()
-{
-  if (!(Rand16() & 4095)) Map[SMapX][SMapY] = 0; /* Radioactive decay */
-}
-
-
-/* comefrom: MapScan */
-void DoRoad()
-{
-  register int Density, tden, z;
-  static int DenTab[3] = { ROADBASE, LTRFBASE, HTRFBASE };
-
-  RoadTotal++;
-/*  GenerateBus(SMapX, SMapY); */
-  if (RoadEffect < 30) /* Deteriorating Roads */
-    if (!(Rand16() & 511))
-      if (!(CChr & CONDBIT))
-	if (RoadEffect < (Rand16() & 31)) {
-	  if (((CChr9 & 15) < 2) || ((CChr9 & 15) == 15))
-	    Map[SMapX][SMapY] = RIVER;
-	  else
-	    Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
-	  return;
-	}
-
-  if (!(CChr & BURNBIT)) { /* If Bridge */
-    RoadTotal += 4;			
-    if (DoBridge())  return;
-  }
-  if (CChr9 < LTRFBASE) tden = 0;
-  else if (CChr9 < HTRFBASE) tden = 1;
-  else {
-    RoadTotal++;
-    tden = 2;
-  }
-
-  Density = (TrfDensity[SMapX >>1][SMapY >>1]) >>6;  /* Set Traf Density  */
-  if (Density > 1) Density--;
-  if (tden != Density) { /* tden 0..2   */
-    z = ((CChr9 - ROADBASE) & 15) + DenTab[Density];
-    z += CChr & (ALLBITS - ANIMBIT);
-    if (Density) z += ANIMBIT;
-    Map[SMapX][SMapY] = z;
-  }
-}
-
-
-/* comefrom: MapScan */
-bool DoBridge()
-{
-  static int HDx[7] = { -2,  2, -2, -1,  0,  1,  2 };
-  static int HDy[7] = { -1, -1,  0,  0,  0,  0,  0 };
-  static int HBRTAB[7] = {
-    HBRDG1 | BULLBIT, HBRDG3 | BULLBIT, HBRDG0 | BULLBIT,
-    RIVER, BRWH | BULLBIT, RIVER, HBRDG2 | BULLBIT };
-  static int HBRTAB2[7] = {
-    RIVER, RIVER, HBRIDGE | BULLBIT, HBRIDGE | BULLBIT, HBRIDGE | BULLBIT,
-    HBRIDGE | BULLBIT, HBRIDGE | BULLBIT };
-  static int VDx[7] = {  0,  1,  0,  0,  0,  0,  1 };
-  static int VDy[7] = { -2, -2, -1,  0,  1,  2,  2 };
-  static int VBRTAB[7] = {
-    VBRDG0 | BULLBIT, VBRDG1 | BULLBIT, RIVER, BRWV | BULLBIT,
-    RIVER, VBRDG2 | BULLBIT, VBRDG3 | BULLBIT };
-  static int VBRTAB2[7] = {
-    VBRIDGE | BULLBIT, RIVER, VBRIDGE | BULLBIT, VBRIDGE | BULLBIT,
-    VBRIDGE | BULLBIT, VBRIDGE | BULLBIT, RIVER };
-  register int z, x, y, MPtem;
-
-  if (CChr9 == BRWV) { /*  Vertical bridge close */
-    if ((!(Rand16() & 3)) &&
-	(GetBoatDis() > 340))
-      for (z = 0; z < 7; z++) { /* Close  */
-	x = SMapX + VDx[z];
-	y = SMapY + VDy[z];
-	if (TestBounds(x, y, WORLD_X, WORLD_Y))
-	  if ((Map[x][y] & LOMASK) == (VBRTAB[z] & LOMASK))
-	    Map[x][y] = VBRTAB2[z];
-      }
-    return (TRUE);
-  }
-  if (CChr9 == BRWH) { /*  Horizontal bridge close  */
-    if ((!(Rand16() & 3)) &&
-	(GetBoatDis() > 340))
-      for (z = 0; z < 7; z++) { /* Close  */
-	x = SMapX + HDx[z];
-	y = SMapY + HDy[z];
-	if (TestBounds(x, y, WORLD_X, WORLD_Y))
-	  if ((Map[x][y] & LOMASK) == (HBRTAB[z] & LOMASK))
-	    Map[x][y] = HBRTAB2[z];
-      }
-    return (TRUE);
-  }
-
-  if ((GetBoatDis() < 300) || (!(Rand16() & 7))) {
-    if (CChr9 & 1) {
-      if (SMapX < (WORLD_X - 1))
-	if (Map[SMapX + 1][SMapY] == CHANNEL) { /* Vertical open */
-	  for (z = 0; z < 7; z++) {
-	    x = SMapX + VDx[z];
-	    y = SMapY + VDy[z];
-	    if (TestBounds(x, y, WORLD_X, WORLD_Y))  {
-	      MPtem = Map[x][y];
-	      if ((MPtem == CHANNEL) ||
-		  ((MPtem & 15) == (VBRTAB2[z] & 15)))
-		Map[x][y] = VBRTAB[z];
-	    }
-	  }
-	  return (TRUE);
-	}
-      return (FALSE);
-    } else {
-      if (SMapY > 0)
-	if (Map[SMapX][SMapY - 1] == CHANNEL) { /* Horizontal open  */
-	  for (z = 0; z < 7; z++) {
-	    x = SMapX + HDx[z];
-	    y = SMapY + HDy[z];
-	    if (TestBounds(x, y, WORLD_X, WORLD_Y)) {
-	      MPtem = Map[x][y];
-	      if (((MPtem & 15) == (HBRTAB2[z] & 15)) ||
-		  (MPtem == CHANNEL))
-		Map[x][y] = HBRTAB[z];
-	    }
-	  }
-	  return (TRUE);
-	}
-      return (FALSE);
-    }
-  }
-  return (FALSE);
-}
-
-
-int
-GetBoatDis(void)
-{
-  register int dist, mx, my, dx, dy;
-  SimSprite *sprite;
-
-  dist = 99999;
-  mx = (SMapX <<4) + 8;
-  my = (SMapY <<4) + 8;
-
-  for (sprite = sim->sprite; sprite != NULL; sprite = sprite->next) {
-    if ((sprite->type == SHI) &&
-	(sprite->frame != 0)) {
-      if ((dx = sprite->x + sprite->x_hot - mx) < 0) dx = -dx;
-      if ((dy = sprite->y + sprite->y_hot - my) < 0) dy = -dy;
-      dx += dy;
-      if (dx < dist) dist = dx;
-    }
-  }
-  return (dist);
-}
-
-
-/* comefrom: MapScan */
-void DoFire()
-{
-  static int DX[4] = { -1,  0,  1,  0 };
-  static int DY[4] = {  0, -1,  0,  1 };
-  register int z, Xtem, Ytem, Rate, c;
-
-  for (z = 0; z < 4; z++) {
-    if (!(Rand16() & 7)) {
-      Xtem = SMapX + DX[z];
-      Ytem = SMapY + DY[z];
-      if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y)) {
-	c = Map[Xtem][Ytem];
-	if (c & BURNBIT) {
-	  if (c & ZONEBIT) {
-	    FireZone(Xtem, Ytem, c);
-	    if ((c & LOMASK) > IZB)  { /*  Explode  */
-	      MakeExplosionAt((Xtem <<4) + 8, (Ytem <<4) + 8);
-	    }
-	  }
-	  Map[Xtem][Ytem] = FIRE + (Rand16() & 3) + ANIMBIT;
-	}
-      }
-    }
-  }
-  z = FireRate[SMapX >>3][SMapY >>3];
-  Rate = 10;
-  if (z) {
-    Rate = 3;
-    if (z > 20) Rate = 2;
-    if (z > 100) Rate = 1;
-  }
-  if (!Rand(Rate))
-    Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
 }
 
 
@@ -999,211 +1203,6 @@ void FireZone(int Xloc, int Yloc, int ch)
       if ((int)(Map[Xtem][Ytem] & LOMASK) >= ROADBASE) /* post release */
 	Map[Xtem][Ytem] |= BULLBIT;
     }
-}
-
-
-/* comefrom: DoSPZone DoHospChur */
-void RepairZone(int ZCent, int zsize)
-{
-  int cnt;
-  register int x, y, ThCh;
-
-  zsize--;
-  cnt = 0;
-  for (y = -1; y < zsize; y++)
-    for (x = -1; x < zsize; x++) {
-      int xx = SMapX + x;
-      int yy = SMapY + y;
-      cnt++;
-      if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
-	ThCh = Map[xx][yy];
-	if (ThCh & ZONEBIT) continue;
-	if (ThCh & ANIMBIT) continue;
-	ThCh = ThCh & LOMASK;
-	if ((ThCh < RUBBLE) || (ThCh >= ROADBASE)) {
-	  Map[xx][yy] = ZCent - 3 - zsize + cnt + CONDBIT + BURNBIT;
-	}
-      }
-    }
-}
-
-
-/* comefrom: DoZone */
-void DoSPZone(int PwrOn)
-{
-  static int MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
-  register int z;
-
-  switch (CChr9) {
-
-  case POWERPLANT:
-    CoalPop++;
-    if (!(CityTime & 7))
-      RepairZone(POWERPLANT, 4); /* post */
-    PushPowerStack();
-    CoalSmoke(SMapX, SMapY);
-    return;
-
-  case NUCLEAR:
-    if (!NoDisasters && !Rand(MltdwnTab[GameLevel])) {
-      DoMeltdown(SMapX, SMapY);
-      return;
-    }
-    NuclearPop++;
-    if (!(CityTime & 7))
-      RepairZone(NUCLEAR, 4); /* post */
-    PushPowerStack();
-    return;
-
-  case FIRESTATION:
-    FireStPop++;
-    if (!(CityTime & 7))
-      RepairZone(FIRESTATION, 3); /* post */
-
-    if (PwrOn)
-      z = FireEffect;			/* if powered get effect  */
-    else
-      z = FireEffect >>1;		/* from the funding ratio  */
-
-    if (!FindPRoad())
-      z = z >>1;			/* post FD's need roads  */
-
-    FireStMap[SMapX >>3][SMapY >>3] += z;
-    return;
-
-  case POLICESTATION:
-    PolicePop++;
-    if (!(CityTime & 7))
-      RepairZone(POLICESTATION, 3); /* post */
-
-    if (PwrOn)
-      z = PoliceEffect;
-    else
-      z = PoliceEffect >>1;
-
-    if (!FindPRoad())
-      z = z >>1; /* post PD's need roads */
-
-    PoliceMap[SMapX >>3][SMapY >>3] += z;
-    return;
-
-  case STADIUM:
-    StadiumPop++;
-    if (!(CityTime & 15))
-      RepairZone(STADIUM, 4);
-    if (PwrOn)
-      if (!((CityTime + SMapX + SMapY) & 31)) {	/* post release */
-	DrawStadium(FULLSTADIUM);
-	Map[SMapX + 1][SMapY] = FOOTBALLGAME1 + ANIMBIT;
-	Map[SMapX + 1][SMapY + 1] = FOOTBALLGAME2 + ANIMBIT;
-      }
-    return;
-
- case FULLSTADIUM:
-    StadiumPop++;
-    if (!((CityTime + SMapX + SMapY) & 7))	/* post release */
-      DrawStadium(STADIUM);
-    return;
-
- case AIRPORT:
-    APortPop++;
-    if (!(CityTime & 7))
-      RepairZone(AIRPORT, 6);
-
-    if (PwrOn) { /* post */
-      if ((Map[SMapX + 1][SMapY - 1] & LOMASK) == RADAR)
-	Map[SMapX + 1][SMapY - 1] = RADAR + ANIMBIT + CONDBIT + BURNBIT;
-    } else
-      Map[SMapX + 1][SMapY - 1] = RADAR + CONDBIT + BURNBIT;
-
-    if (PwrOn)
-      DoAirport();
-    return;
-
- case PORT:
-    PortPop++;
-    if ((CityTime & 15) == 0) {
-      RepairZone(PORT, 4);
-    }
-    if (PwrOn &&
-	(GetSprite(SHI) == NULL)) {
-      GenerateShip();
-    }
-    return;
-  }
-}
-
-
-/* comefrom: DoSPZone */
-void DrawStadium(int z)
-{
-  register int x, y;
-
-  z = z - 5;
-  for (y = (SMapY - 1); y < (SMapY + 3); y++)
-    for (x = (SMapX - 1); x < (SMapX + 3); x++)
-      Map[x][y] = (z++) | BNCNBIT;
-  Map[SMapX][SMapY] |= ZONEBIT | PWRBIT;
-}
-
-
-/* comefrom: DoSPZone */
-void DoAirport()
-{
-  if (!(Rand(5))) {
-    GeneratePlane(SMapX, SMapY);
-    return;
-  }
-  if (!(Rand(12)))
-    GenerateCopter(SMapX, SMapY);
-}
-
-
-/* comefrom: DoSPZone */
-void CoalSmoke(int mx, int my)
-{
-  static int SmTb[4] = { COALSMOKE1, COALSMOKE2, COALSMOKE3, COALSMOKE4 };
-  static int dx[4] = {  1,  2,  1,  2 };
-  static int dy[4] = { -1, -1,  0,  0 };
-  register int x;
-
-  for (x = 0; x < 4; x++)
-    Map[mx + dx[x]][my + dy[x]] =
-      SmTb[x] | ANIMBIT | CONDBIT | PWRBIT | BURNBIT;
-}
-
-
-/* comefrom: DoSPZone MakeMeltdown */
-void DoMeltdown(int SX, int SY)
-{
-  register int x, y, z, t;
-
-  MeltX = SX; MeltY = SY;
-
-  MakeExplosion(SX - 1, SY - 1);
-  MakeExplosion(SX - 1, SY + 2);
-  MakeExplosion(SX + 2, SY - 1);
-  MakeExplosion(SX + 2, SY + 2);
-
-  for (x = (SX - 1); x < (SX + 3); x++)
-    for (y = (SY - 1); y < (SY + 3); y++)
-      Map[x][y] = FIRE + (Rand16() & 3) + ANIMBIT;
-
-  for (z = 0; z < 200; z++)  {
-    x = SX - 20 + Rand(40);
-    y = SY - 15 + Rand(30);
-    if ((x < 0) || (x >= WORLD_X) ||
-	(y < 0) || (y >= WORLD_Y))
-      continue;
-    t = Map[x][y];
-    if (t & ZONEBIT)
-      continue;
-    if ((t & BURNBIT) || (t == 0))
-      Map[x][y] = RADTILE;
-  }
-
-  ClearMes();
-  SendMesAt(-43, SX, SY);
 }
 
 
