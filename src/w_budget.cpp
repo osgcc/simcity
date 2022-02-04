@@ -62,6 +62,14 @@
 #include "main.h"
 
 
+#include "s_msg.h"
+
+#include "w_stubs.h"
+#include "w_tk.h"
+#include "w_update.h"
+#include "w_util.h"
+
+
 float roadPercent = 0.0;
 float policePercent = 0.0;
 float firePercent = 0.0;
@@ -73,8 +81,6 @@ int policeMaxValue;
 int fireMaxValue;
 int MustDrawCurrPercents = 0;
 int MustDrawBudgetWindow = 0;
-int SetBudget(char *flowStr, char *previousStr, char *currentStr, char *collectedStr, int tax);
-
 
 
 void InitFundingLevel()
@@ -96,13 +102,13 @@ void DoBudget()
 }
 
 
-DoBudgetFromMenu()
+void DoBudgetFromMenu()
 {
   DoBudgetNow(1);
 }
 
 
-DoBudgetNow(int fromMenu)
+void DoBudgetNow(int fromMenu)
 {
   int yumDuckets;
   int total;
@@ -218,13 +224,13 @@ DoBudgetNow(int fromMenu)
 }
 
 
-drawBudgetWindow(void)
+void drawBudgetWindow()
 {
   MustDrawBudgetWindow = 1;
 }
 
 
-ReallyDrawBudgetWindow(void)
+void ReallyDrawBudgetWindow()
 {
   int cashFlow, cashFlow2;
   char numStr[256], dollarStr[256], collectedStr[256],
@@ -263,7 +269,7 @@ void drawCurrPercents()
 }
 
 
-ReallyDrawCurrPercents(void)
+void ReallyDrawCurrPercents()
 {
   char num[256];
   char fireWant[256], policeWant[256], roadWant[256];
@@ -323,8 +329,7 @@ void ShowBudgetWindowAndStartWaiting()
 }
 
 
-SetBudget(char *flowStr, char *previousStr,
-	  char *currentStr, char *collectedStr, int tax)
+void SetBudget(char *flowStr, char *previousStr, char *currentStr, char *collectedStr, int tax)
 {
   char buf[256];
 
@@ -334,9 +339,7 @@ SetBudget(char *flowStr, char *previousStr,
 }
 
 
-SetBudgetValues(char *roadGot, char *roadWant,
-		char *policeGot, char *policeWant,
-		char *fireGot, char *fireWant)
+void SetBudgetValues(char *roadGot, char *roadWant, char *policeGot, char *policeWant, char *fireGot, char *fireWant)
 {
   char buf[256];
 
