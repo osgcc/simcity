@@ -273,7 +273,7 @@ void CheckGrowth()
 
 void SendMessages()
 {
-    register int z;
+    int z;
     int PowerPop;
     float TM;
 
@@ -369,7 +369,7 @@ void SendMessages()
         break;
 
     case 32:
-        TM = unPwrdZCnt + PwrdZCnt;	/* dec score for unpowered zones */
+        TM = static_cast<float>(unPwrdZCnt + PwrdZCnt);	/* dec score for unpowered zones */
         if (TM)
         {
             if ((PwrdZCnt / TM) < .7)
