@@ -61,8 +61,15 @@
  */
 #include "main.h"
 
-#include "w_stubs.h"
+#include "s_fileio.h"
 
+#include "w_stubs.h"
+#include "w_tk.h"
+#include "w_update.h"
+
+
+#include <SDL2/SDL.h>
+#include <string>
 
 /* Stubs */
 
@@ -77,11 +84,16 @@ int ScenarioID;
 int SimSpeed;
 int SimMetaSpeed;
 int UserSoundOn;
-char *CityName;
+std::string CityName;
 int NoDisasters;
 int MesNum;
 int EvalChanged;
 int flagBlink;
+
+
+void setCityName(const std::string& name)
+{
+}
 
 
 void Spend(int dollars)
@@ -101,11 +113,7 @@ void SetFunds(int dollars)
 
 int TickCount()
 {
-  struct timeval time;
-
-  gettimeofday(&time, 0);
-
-  return (int)((time.tv_sec / 60) + (time.tv_usec * 1000000 / 60));
+    return static_cast<int>(SDL_GetTicks());
 }
 
 
@@ -115,83 +123,83 @@ Ptr NewPtr(int size)
 }
 
 
-/* w_hlhandlers.c */
-
-GameStarted()
+void DoPlayNewCity()
 {
-  InvalidateMaps();
-  InvalidateEditors();
+    Eval("UIPlayNewCity");
+}
 
-  switch (Startup) {
-  case -2: /* Load a city */
-    if (LoadCity(StartupName)) {
-      DoStartLoad();
-      StartupName = NULL;
-      break;
+
+void DoReallyStartGame()
+{
+    Eval("UIReallyStartGame");
+}
+
+
+void DoStartLoad()
+{
+    Eval("UIStartLoad");
+}
+
+
+void DoStartScenario(int scenario)
+{
+    Eval("UIStartScenario " + std::to_string(scenario));
+}
+
+
+void DropFireBombs()
+{
+    Eval("DropFireBombs");
+}
+
+
+void InitGame()
+{
+    sim_skips = sim_skip = sim_paused = sim_paused_speed = heat_steps = 0;
+    setSpeed(0);
+}
+
+
+void ReallyQuit()
+{
+    sim_exit(0); // Just sets tkMustExit and ExitReturn
+}
+
+
+void GameStarted()
+{
+    InvalidateMaps();
+    InvalidateEditors();
+
+    switch (Startup) {
+    case -2: /* Load a city */
+        if (LoadCity(StartupName))
+        {
+            DoStartLoad();
+            StartupName = "";
+            break;
+        }
+        StartupName = "";
+
+    case -1:
+        if (!StartupName.empty())
+        {
+            setCityName(StartupName);
+            StartupName = "";
+        }
+        else
+        {
+            setCityName("NowHere");
+        }
+        DoPlayNewCity();
+        break;
+
+    case 0:
+        DoReallyStartGame();
+        break;
+
+    default: /* scenario number */
+        DoStartScenario(Startup);
+        break;
     }
-    StartupName = NULL;
-  case -1:
-    if (StartupName != NULL) {
-      setCityName(StartupName);
-      StartupName = NULL;
-    } else {
-      setCityName("NowHere");
-    }
-    DoPlayNewCity();
-    break;
-  case 0:
-    DoReallyStartGame();
-    break;
-  default: /* scenario number */
-    DoStartScenario(Startup);
-    break;
-  }
 }
-
-
-DoPlayNewCity()
-{
-  Eval("UIPlayNewCity");
-}
-
-
-DoReallyStartGame()
-{
-  Eval("UIReallyStartGame");
-}
-
-
-DoStartLoad()
-{
-  Eval("UIStartLoad");
-}
-
-
-DoStartScenario(int scenario)
-{
-  char buf[256];
-
-  sprintf(buf, "UIStartScenario %d", scenario);
-  Eval(buf);
-}
-
-
-DropFireBombs()
-{
-  Eval("DropFireBombs");
-}
-
-
-InitGame()
-{
-  sim_skips = sim_skip = sim_paused = sim_paused_speed = heat_steps = 0;
-  setSpeed(0);
-}
-
-
-ReallyQuit()
-{
-  sim_exit(0); // Just sets tkMustExit and ExitReturn
-}
-
-

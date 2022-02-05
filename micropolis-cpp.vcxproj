@@ -62,6 +62,7 @@
     <ClInclude Include="src\rand.h" />
     <ClInclude Include="src\s_disast.h" />
     <ClInclude Include="src\s_eval.h" />
+    <ClInclude Include="src\s_fileio.h" />
     <ClInclude Include="src\s_gen.h" />
     <ClInclude Include="src\s_init.h" />
     <ClInclude Include="src\s_msg.h" />

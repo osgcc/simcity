@@ -230,5 +230,8 @@
     <ClInclude Include="src\w_tool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\s_fileio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

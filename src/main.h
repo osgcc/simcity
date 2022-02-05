@@ -416,7 +416,6 @@ extern int CoalPop, NuclearPop, PortPop, APortPop;
 extern int NeedHosp, NeedChurch;
 extern int CrimeAverage, PolluteAverage, LVAverage;
 extern const std::string MicropolisVersion;
-extern std::string CityName;
 extern std::string CityFileName;
 extern std::string StartupName;
 extern int StartingYear;

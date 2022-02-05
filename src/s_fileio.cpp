@@ -276,7 +276,7 @@ void DidLoadScenario()
 }
 
 
-int LoadCity(char *filename)
+int LoadCity(const std::string& filename)
 {
   /*
     char *cp;
