@@ -61,6 +61,8 @@
  */
 #include "main.h"
 
+#include "w_stubs.h"
+
 
 int _RoadTable[16] = {
   66, 67, 66, 68,
@@ -494,7 +496,7 @@ _LayWire(int x, int y, int *TileAdrPtr)
 
 
 /* comefrom: ConnecTile */
-_FixZone(int x, int y, int *TileAdrPtr)
+void _FixZone(int x, int y, int *TileAdrPtr)
 {
   _FixSingle(x,y, &TileAdrPtr[0]);
 
@@ -518,7 +520,7 @@ _FixZone(int x, int y, int *TileAdrPtr)
 
 
 /* comefrom: _FixZone */
-_FixSingle(int x, int y, int *TileAdrPtr)
+void _FixSingle(int x, int y, int *TileAdrPtr)
 {
   int Tile;
   int adjTile = 0;
