@@ -61,6 +61,10 @@
  */
 #include "main.h"
 
+#include "w_stubs.h"
+#include "w_tk.h"
+#include "w_update.h"
+
 #include <string>
 
 std::string NumberToDollarDecimal(int value)
@@ -142,26 +146,7 @@ void makeDollarDecimalStr(char *numStr, char *dollarStr)
 }
 
 
-void Pause()
-{
-  if (!sim_paused) {
-    sim_paused_speed = SimMetaSpeed;
-    setSpeed(0);
-    sim_paused = 1;
-  }
-}
-
-
-void Resume()
-{
-  if (sim_paused) {
-    sim_paused = 0;
-    setSpeed(sim_paused_speed);
-  }
-}
-
-
-setSpeed(int speed)
+void setSpeed(int speed)
 {
   if (speed < 0) speed = 0;
   else if (speed > 3) speed = 3;
@@ -181,21 +166,59 @@ setSpeed(int speed)
     StartMicropolisTimer();
   }
 
-  { char buf[256];
+  { /*char buf[256];
     sprintf(buf, "UISetSpeed %d", sim_paused ? 0 : SimMetaSpeed);
     Eval(buf);
+    */
   }
 }
 
 
-setSkips(int skips)
+void Pause()
+{
+  if (!sim_paused) {
+    sim_paused_speed = SimMetaSpeed;
+    setSpeed(0);
+    sim_paused = 1;
+  }
+}
+
+
+void Resume()
+{
+  if (sim_paused) {
+    sim_paused = 0;
+    setSpeed(sim_paused_speed);
+  }
+}
+
+
+void setSkips(int skips)
 {
   sim_skips = skips;
   sim_skip = 0;
 }
 
 
-SetGameLevelFunds(int level)
+void UpdateGameLevel()
+{
+  /*
+  char buf[256];
+
+  sprintf(buf, "UISetGameLevel %d", GameLevel);
+  Eval(buf);
+  */
+}
+
+
+void SetGameLevel(int level)
+{
+  GameLevel = level;
+  UpdateGameLevel();
+}
+
+
+void SetGameLevelFunds(int level)
 {
   switch (level) {
   default:
@@ -215,29 +238,15 @@ SetGameLevelFunds(int level)
 }
 
 
-SetGameLevel(int level)
-{
-  GameLevel = level;
-  UpdateGameLevel();
-}
-
-
-UpdateGameLevel()
-{
-  char buf[256];
-
-  sprintf(buf, "UISetGameLevel %d", GameLevel);
-  Eval(buf);
-}
-
-
 void setAnyCityName(const char *name)
 {
+  /*
   char buf[1024];
 
   CityName = name;
   sprintf(buf, "UISetCityName {%s}", CityName);
   Eval(buf);
+  */
 }
 
 
@@ -261,43 +270,43 @@ int CurrentYear()
 }
 
 
-DoSetMapState(SimView *view, int state)
+void DoSetMapState(SimView *view, int state)
 {
-  char buf[256];
+  //char buf[256];
 
   view->map_state = state;
   view->invalid = 1;
   EventuallyRedrawView(view);
 
-  sprintf(buf, "UISetMapState %s %d", Tk_PathName(view->tkwin), state);
-  Eval(buf);
+  //sprintf(buf, "UISetMapState %s %d", Tk_PathName(view->tkwin), state);
+  //Eval(buf);
 }
 
 
 void DoNewGame()
 {
-  Eval("UINewGame");
+  //Eval("UINewGame");
 }
 
 
-DoGeneratedCityImage(char *name, int time, int pop, char* _class, int score)
+void DoGeneratedCityImage(char *name, int time, int pop, char* _class, int score)
 {
   /* XXX: TODO: print city */
 }
 
 
-DoStartElmd()
+void DoStartElmd()
 {
   /* XXX: TODO: start elm daemon */
 }
 
 
-DoPopUpMessage(char *msg)
+void DoPopUpMessage(char *msg)
 {
+  /*
   char buf[1024];
 
   sprintf(buf, "UIPopUpMessage {%s}", msg);
   Eval(buf);
+  */
 }
-
-
