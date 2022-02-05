@@ -61,6 +61,8 @@
  */
 #include "main.h"
 
+#include "s_sim.h"
+
 #include "w_resrc.h"
 #include "w_sound.h"
 #include "w_stubs.h"

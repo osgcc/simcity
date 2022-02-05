@@ -93,9 +93,6 @@
     <ClCompile Include="src\w_graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_inter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\w_keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

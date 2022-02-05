@@ -45,7 +45,6 @@
     <ClCompile Include="src\w_editor.cpp" />
     <ClCompile Include="src\w_eval.cpp" />
     <ClCompile Include="src\w_graph.cpp" />
-    <ClCompile Include="src\w_inter.cpp" />
     <ClCompile Include="src\w_keys.cpp" />
     <ClCompile Include="src\w_map.cpp" />
     <ClCompile Include="src\w_piem.cpp" />

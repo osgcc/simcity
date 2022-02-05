@@ -62,6 +62,8 @@
 #include "main.h"
 
 #include "s_alloc.h"
+#include "s_sim.h"
+
 #include "w_eval.h"
 
 /* City Evaluation */
