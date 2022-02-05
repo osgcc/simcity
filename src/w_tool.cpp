@@ -61,9 +61,22 @@
  */
 #include "main.h"
 
-#include "w_tool.h"
+#include "s_alloc.h"
+#include "s_msg.h"
+#include "s_sim.h"
 
+#include "w_con.h"
+#include "w_resrc.h"
+#include "w_sound.h"
+#include "w_stubs.h"
+#include "w_tk.h"
+#include "w_tool.h"
+#include "w_update.h"
+#include "w_x.h"
+
+#include <array>
 #include <cmath>
+#include <string>
 
 int specialBase = CHURCH;
 int OverRide = 0;
@@ -128,11 +141,30 @@ int toolColors[] = {
 Ink *NewInk();
 
 
-int DoSetWandState(SimView *view, int state);
-
-
 /*************************************************************************/
 /* UTILITIES */
+
+void DidTool(SimView* view, const std::string& toolName, int x, int y)
+{
+  /*
+  char buf[256];
+
+  if (view != NULL) {
+    sprintf(buf, "UIDidTool%s %s %d %d",
+	    name, Tk_PathName(view->tkwin), x, y);
+    Eval(buf);
+  }
+  */
+}
+
+
+void DoSetWandState(SimView *view, int state)
+{
+  //char buf[256];
+
+  //sprintf(buf, "UISetToolState %s %d", Tk_PathName(view->tkwin), state);
+  //Eval(buf);
+}
 
 
 void setWandState(SimView* view, int state)
@@ -428,14 +460,15 @@ check3x3(SimView *view, int mapH, int mapV, int base, int tool)
 void
 check4x4border(int xMap, int yMap)
 {
-  Ptr tilePtr;
+  //Ptr tilePtr;
+    int* tilePtr;
   int xPos, yPos;
   int cnt;
 
   xPos = xMap; yPos = yMap - 1;
   for (cnt = 0; cnt < 4; cnt++) {
     /* this will do the upper bordering row */
-    tilePtr = (Ptr) &Map[xPos][yPos];
+    tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
     ConnecTile(xPos, yPos, tilePtr, 0);
     xPos++;
   }
@@ -443,7 +476,7 @@ check4x4border(int xMap, int yMap)
   xPos = xMap - 1; yPos = yMap;
   for (cnt = 0; cnt < 4; cnt++) {
     /* this will do the left bordering row */
-    tilePtr = (Ptr) &Map[xPos][yPos];
+      tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
     ConnecTile(xPos, yPos, tilePtr, 0);
     yPos++;
   }
@@ -451,7 +484,7 @@ check4x4border(int xMap, int yMap)
   xPos = xMap; yPos = yMap + 4;
   for (cnt = 0; cnt < 4;cnt++) {
     /* this will do the bottom bordering row */
-    tilePtr = (Ptr) &Map[xPos][yPos];
+      tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
     ConnecTile(xPos, yPos, tilePtr, 0);
     xPos++;
   }
@@ -459,7 +492,7 @@ check4x4border(int xMap, int yMap)
   xPos = xMap + 4; yPos = yMap;
   for (cnt = 0; cnt < 4; cnt++) {
     /* this will do the right bordering row */
-    tilePtr = (Ptr) &Map[xPos][yPos];
+      tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
     ConnecTile(xPos, yPos, tilePtr, 0);
     yPos++;
   }
@@ -753,61 +786,90 @@ int getDensityStr(int catNo, int mapH, int mapV)
 }
 
 
-doZoneStatus(int mapH, int mapV)
+struct ZoneStatsString
 {
-  char localStr[256];
-  char statusStr[5][256];
-  int id;
-  int x;
-  int tileNum;
-  int found;
+    const std::string str;
+    const std::string s0;
+    const std::string s1;
+    const std::string s2;
+    const std::string s3;
+    const std::string s4;
+};
 
-  tileNum = Map[mapH][mapV] & LOMASK;
 
-  if (tileNum >= COALSMOKE1 && tileNum < FOOTBALLGAME1)
-    tileNum = COALBASE;
+void DoShowZoneStatus(const ZoneStatsString zoneStats, int x, int y)
+{
+    const std::string msg{
+        "UIShowZoneStatus {" +
+        zoneStats.str + "} {" +
+        zoneStats.s0 + "} {" +
+        zoneStats.s1 + "} {" +
+        zoneStats.s2 + "} {" +
+        zoneStats.s3 + "} {" +
+        zoneStats.s4 + "} {" +
+        std::to_string(x) + "} {" +
+        std::to_string(y) + "}"
+    };
 
-  found = 1;
-  for (x = 1; x < 29 && found; x++) {
-    if (tileNum < idArray[x]) {
-      found = 0;
-    }
-  }
-  x--;
-
-  if (x < 1 || x > 28)
-    x = 28;
-
-  GetIndString(localStr, 219, x);
-
-  for (x = 0; x < 5; x++) {
-    id = getDensityStr(x, mapH, mapV);
-    id++;
-    if (id <= 0) id = 1;
-    if (id > 20) id = 20;
-    GetIndString(statusStr[x], 202, id);
-  }
-
-  DoShowZoneStatus(localStr, statusStr[0], statusStr[1],
-		   statusStr[2], statusStr[3], statusStr[4], mapH, mapV);
+    Eval(msg);
 }
 
 
-DoShowZoneStatus(char *str, char *s0, char *s1, char *s2, char *s3, char *s4,
-		 int x, int y)
+void doZoneStatus(int mapH, int mapV)
 {
-  char buf[1024];
+    std::string localStr;
+    std::array<std::string, 5> statusStr;
 
-  sprintf(buf, "UIShowZoneStatus {%s} {%s} {%s} {%s} {%s} {%s} %d %d",
-	  str, s0, s1, s2, s3, s4, x, y);
-  Eval(buf);
+
+    int id;
+    int x;
+    int tileNum;
+    int found;
+
+    tileNum = Map[mapH][mapV] & LOMASK;
+
+    if (tileNum >= COALSMOKE1 && tileNum < FOOTBALLGAME1)
+    {
+        tileNum = COALBASE;
+    }
+
+    found = 1;
+
+    for (x = 1; x < 29 && found; x++)
+    {
+        if (tileNum < idArray[x])
+        {
+            found = 0;
+        }
+    }
+
+    x--;
+
+    if (x < 1 || x > 28)
+    {
+        x = 28;
+    }
+
+    localStr = GetIndString(219, x);
+
+    for (x = 0; x < 5; x++)
+    {
+        id = getDensityStr(x, mapH, mapV);
+        id++;
+        if (id <= 0) { id = 1; }
+        if (id > 20) { id = 20; }
+        statusStr[x] = GetIndString(202, id);
+    }
+
+    DoShowZoneStatus({ localStr, statusStr[0], statusStr[1],
+             statusStr[2], statusStr[3], statusStr[4] }, mapH, mapV);
 }
 
 
 /* comefrom: processWand */
-put3x3Rubble(int x, int y)
+void put3x3Rubble(int x, int y)
 {
-  register xx, yy, zz;
+  int xx, yy, zz;
 	
   for (xx = x - 1; xx < x + 2; xx++) {
     for (yy = y - 1; yy < y + 2; yy++)  {
@@ -827,9 +889,9 @@ put3x3Rubble(int x, int y)
 
 
 /* comefrom: processWand */
-put4x4Rubble(int x, int y)
+void put4x4Rubble(int x, int y)
 {
-  register xx, yy, zz;
+  int xx, yy, zz;
 	
   for (xx = x - 1; xx < x + 3; xx++) {
     for (yy = y - 1; yy < y + 3; yy++) {
@@ -849,9 +911,9 @@ put4x4Rubble(int x, int y)
 
 
 /* comefrom: processWand */
-put6x6Rubble(int x, int y)
+void put6x6Rubble(int x, int y)
 {
-  register xx, yy, zz;
+  register int xx, yy, zz;
 
   for (xx = x - 1; xx < x + 5; xx++) {
     for (yy = y - 1; yy < y + 5; yy++)  {
@@ -868,27 +930,6 @@ put6x6Rubble(int x, int y)
     }
   }
 }	
-
-
-DidTool(SimView *view, char *name, int x, int y)
-{
-  char buf[256];
-
-  if (view != NULL) {
-    sprintf(buf, "UIDidTool%s %s %d %d",
-	    name, Tk_PathName(view->tkwin), x, y);
-    Eval(buf);
-  }
-}
-
-
-DoSetWandState(SimView *view, int state)
-{
-  char buf[256];
-
-  sprintf(buf, "UISetToolState %s %d", Tk_PathName(view->tkwin), state);
-  Eval(buf);
-}
 
 
 /************************************************************************/
@@ -1278,6 +1319,7 @@ network_tool(SimView *view, int x, int y)
 }
 
 
+/*
 int
 ChalkTool(SimView *view, int x, int y, int color, int first)
 {
@@ -1289,6 +1331,7 @@ ChalkTool(SimView *view, int x, int y, int color, int first)
   DidTool(view, "Chlk", x, y);
   return 1;
 }
+
 
 
 ChalkStart(SimView *view, int x, int y, int color)
@@ -1434,6 +1477,7 @@ EraserTo(SimView *view, int x, int y)
     }
   }
 }
+*/
 
 
 int
@@ -1472,12 +1516,12 @@ do_tool(SimView *view, int state, int x, int y, int first)
   case roadState:
     result = road_tool(view, x >>4, y >>4);
     break;
-  case chalkState:
+  /*case chalkState:
     result = ChalkTool(view, x - 5, y + 11, COLOR_WHITE, first);
     break;
   case eraserState:
     result = EraserTool(view, x, y, first);
-    break;
+    break;*/
   case stadiumState:
     result = stadium_tool(view, x >>4, y >>4);
     break;
@@ -1516,7 +1560,7 @@ current_tool(SimView *view, int x, int y, int first)
 }
 
 
-DoTool(SimView *view, int tool, int x, int y)
+void DoTool(SimView *view, int tool, int x, int y)
 {
   int result;
 
@@ -1538,11 +1582,23 @@ DoTool(SimView *view, int tool, int x, int y)
 }
 
 
-ToolDown(SimView *view, int x, int y)
+void DoPendTool(SimView *view, int tool, int x, int y)
+{
+  /*
+  char buf[256];
+
+  sprintf(buf, "DoPendTool %s %d %d %d",
+	  Tk_PathName(view->tkwin), tool, x, y);
+  Eval(buf);
+  */
+}
+
+
+void ToolDown(SimView *view, int x, int y)
 {
   int result;
 
-  ViewToPixelCoords(view, x, y, &x, &y);
+  ViewToPixelCoords(view, x, y, x, y);
   view->last_x = x;
   view->last_y = y;
 
@@ -1566,22 +1622,12 @@ ToolDown(SimView *view, int x, int y)
 }
 
 
-ToolUp(SimView *view, int x, int y)
-{
-  int result;
-
-  result = ToolDrag(view, x, y);
-
-  return (result);
-}
-
-
-ToolDrag(SimView *view, int px, int py)
+void ToolDrag(SimView *view, int px, int py)
 {
   int x, y, dx, dy, adx, ady, lx, ly, dist;
   float i, step, tx, ty, dtx, dty, rx, ry;
 
-  ViewToPixelCoords(view, px, py, &x, &y);
+  ViewToPixelCoords(view, px, py, x, y);
   view->tool_x = x; view->tool_y = y;
 
   if ((view->tool_state == chalkState) ||
@@ -1659,11 +1705,14 @@ ToolDrag(SimView *view, int px, int py)
 }
 
 
-DoPendTool(SimView *view, int tool, int x, int y)
+int ToolUp(SimView *view, int x, int y)
 {
-  char buf[256];
+  /*
+  int result;
 
-  sprintf(buf, "DoPendTool %s %d %d %d",
-	  Tk_PathName(view->tkwin), tool, x, y);
-  Eval(buf);
+  result = ToolDrag(view, x, y);
+
+  return (result);
+  */
+    return 0;
 }
