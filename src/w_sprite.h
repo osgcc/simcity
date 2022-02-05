@@ -1,10 +1,11 @@
 #pragma once
 
+#include <string>
 
 struct SimSprite
 {
 	struct SimSprite* next{ nullptr };
-	char* name{ nullptr };
+	std::string name{};
 	int type{ 0 };
 	int frame{ 0 };
 	int x{ 0 }, y{ 0 };

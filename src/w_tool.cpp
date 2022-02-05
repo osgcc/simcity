@@ -61,6 +61,8 @@
  */
 #include "main.h"
 
+#include "w_tool.h"
+
 #include <cmath>
 
 int specialBase = CHURCH;
@@ -125,7 +127,7 @@ int toolColors[] = {
 
 Ink *NewInk();
 
-int tally(int tileValue);
+
 int DoSetWandState(SimView *view, int state);
 
 
@@ -268,20 +270,12 @@ checkBigZone(int id, int *deltaHPtr, int *deltaVPtr)
 }
 
 
-int
-tally(int tileValue)
+bool tally(int tileValue)
 {
-  /* can we autobulldoze this tile? */
-  if (((tileValue >= FIRSTRIVEDGE) &&
-       (tileValue <= LASTRUBBLE)) || 
-      ((tileValue >= (POWERBASE + 2)) &&
-       (tileValue <= (POWERBASE + 12))) ||
-      ((tileValue >= TINYEXP) &&
-       (tileValue <= (LASTTINYEXP + 2)))) { /* ??? */
-    return (1);
-  } else {
-    return (0);
-  }
+    /* can we autobulldoze this tile? */
+    return (((tileValue >= FIRSTRIVEDGE) && (tileValue <= LASTRUBBLE)) ||
+        ((tileValue >= (POWERBASE + 2)) && (tileValue <= (POWERBASE + 12))) ||
+        ((tileValue >= TINYEXP) && (tileValue <= (LASTTINYEXP + 2))));/* ??? */
 }
 
 
@@ -915,84 +909,100 @@ query_tool(SimView *view, int x, int y)
 }
 
 
-int
-bulldozer_tool(SimView *view, int x, int y)
+int bulldozer_tool(SimView* view, int x, int y)
 {
-  unsigned int currTile, temp;
-  int zoneSize, deltaH, deltaV;
-  int result = 1;
+    unsigned int currTile, temp;
+    int zoneSize, deltaH, deltaV;
+    int result = 1;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
-    return -1;
-  }
-
-  currTile = Map[x][y];
-  temp = currTile & LOMASK;
-
-  if (currTile & ZONEBIT) { /* zone center bit is set */
-    if (TotalFunds > 0) {
-      Spend(1);
-      switch (checkSize(temp)) {
-      case 3:
-	MakeSound("city", "Explosion-High");
-	put3x3Rubble(x, y);
-	break;
-
-      case 4:
-	put4x4Rubble(x, y);
-	MakeSound("city", "Explosion-Low");
-	break;
-
-      case 6: 
-	MakeSound("city", "Explosion-High");
-	MakeSound("city", "Explosion-Low");
-	put6x6Rubble(x, y);
-	break;
-
-      default:
-	break;
-      }
+    if ((x < 0) || (x > (WORLD_X - 1)) || (y < 0) || (y > (WORLD_Y - 1)))
+    {
+        return -1;
     }
-  } else if ((zoneSize = checkBigZone(temp, &deltaH, &deltaV))) {
-    if (TotalFunds > 0) {
-      Spend(1);
-      switch (zoneSize) {
-      case 3:
-	MakeSound("city", "Explosion-High");
-	break;
 
-      case 4:
-	MakeSound("city", "Explosion-Low");
-	put4x4Rubble(x + deltaH, y + deltaV);
-	break;
+    currTile = Map[x][y];
+    temp = currTile & LOMASK;
 
-      case 6: 
-	MakeSound("city", "Explosion-High");
-	MakeSound("city", "Explosion-Low");
-	put6x6Rubble(x + deltaH, y + deltaV);
-	break;
-      }
+    if (currTile & ZONEBIT)
+    { /* zone center bit is set */
+        if (TotalFunds > 0)
+        {
+            Spend(1);
+            switch (checkSize(temp))
+            {
+            case 3:
+                MakeSound("city", "Explosion-High");
+                put3x3Rubble(x, y);
+                break;
+
+            case 4:
+                put4x4Rubble(x, y);
+                MakeSound("city", "Explosion-Low");
+                break;
+
+            case 6:
+                MakeSound("city", "Explosion-High");
+                MakeSound("city", "Explosion-Low");
+                put6x6Rubble(x, y);
+                break;
+
+            default:
+                break;
+            }
+        }
     }
-  } else {
-    if (temp == RIVER || temp == REDGE || temp == CHANNEL) {
-      if (TotalFunds >= 6) {
-	result = ConnecTile(x, y, &Map[x][y], 1);
-	if (temp != (Map[x][y] & LOMASK)) {
-	  Spend(5);
-	}
-      } else {
-	result = 0;
-      }
-    } else {
-      result = ConnecTile(x, y, &Map[x][y], 1);
+    else if ((zoneSize = checkBigZone(temp, &deltaH, &deltaV)))
+    {
+        if (TotalFunds > 0)
+        {
+            Spend(1);
+            switch (zoneSize)
+            {
+            case 3:
+                MakeSound("city", "Explosion-High");
+                break;
+
+            case 4:
+                MakeSound("city", "Explosion-Low");
+                put4x4Rubble(x + deltaH, y + deltaV);
+                break;
+
+            case 6:
+                MakeSound("city", "Explosion-High");
+                MakeSound("city", "Explosion-Low");
+                put6x6Rubble(x + deltaH, y + deltaV);
+                break;
+            }
+        }
     }
-  }
-  UpdateFunds();
-  if (result == 1) {
-    DidTool(view, "Dozr", x, y);
-  }
-  return result;
+    else
+    {
+        if (temp == RIVER || temp == REDGE || temp == CHANNEL)
+        {
+            if (TotalFunds >= 6)
+            {
+                result = ConnecTile(x, y, &Map[x][y], 1);
+                if (temp != (Map[x][y] & LOMASK))
+                {
+                    Spend(5);
+                }
+            }
+            else
+            {
+                result = 0;
+            }
+        }
+        else
+        {
+            result = ConnecTile(x, y, &Map[x][y], 1);
+        }
+    }
+    UpdateFunds();
+    if (result == 1)
+    {
+        DidTool(view, "Dozr", x, y);
+    }
+    return result;
 }
 
 
