@@ -336,7 +336,7 @@ void DidSaveCity()
 void DidntSaveCity(const std::string& msg)
 {
     std::string buf = "UIDidntSaveCity {" + msg + "}";
-    Eval(buf.c_str());
+    Eval(buf);
 }
 
 

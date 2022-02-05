@@ -94,15 +94,18 @@ void ShutDownSound()
 }
 
 
-void MakeSound(const char* channel, const char* id)
+void MakeSound(const std::string& channel, const std::string& id)
 {
-    char buf[256]{};
+    if (!UserSoundOn)
+    {
+        return;
+    }
+    if (!SoundInitialized)
+    {
+        InitializeSound();
+    }
 
-    if (!UserSoundOn) return;
-    if (!SoundInitialized) InitializeSound();
-
-    sprintf(buf, "UIMakeSound \"%s\" \"%s\"", channel, id);
-    Eval(buf);
+    Eval("UIMakeSound \"" + channel + "\" \"" + id + "\"");
 }
 
 
@@ -119,10 +122,31 @@ void MakeSoundOn(SimView* view, const char* channel, const char* id)
         InitializeSound();
     }
 
-    sprintf(buf, "UIMakeSoundOn %s \"%s\" \"%s\"",
-        /*Tk_PathName(view->tkwin)*/ "window-path",
-        channel, id);
+    //sprintf(buf, "UIMakeSoundOn %s \"%s\" \"%s\"", /*Tk_PathName(view->tkwin)*/ "window-path", channel, id);
     Eval(buf);
+}
+
+
+void SoundOff()
+{
+    if (!SoundInitialized)
+    {
+        InitializeSound();
+    }
+    Eval("UISoundOff");
+    Dozing = 0;
+}
+
+
+void DoStartSound(const std::string& channel, const std::string& id)
+{
+    Eval("UIStartSound " + channel + " " + id);
+}
+
+
+void DoStopSound(const char* id)
+{
+    Eval("UIStopSound " + std::string(id));
 }
 
 
@@ -153,31 +177,4 @@ void StopBulldozer()
 
     DoStopSound("1");
     Dozing = 0;
-}
-
-
-void SoundOff()
-{
-    if (!SoundInitialized)
-    {
-        InitializeSound();
-    }
-    Eval("UISoundOff");
-    Dozing = 0;
-}
-
-
-void DoStartSound(const char* channel, const char* id)
-{
-char buf[256]{};
-
-    sprintf(buf, "UIStartSound %s %s", channel, id);
-    Eval(buf);
-}
-
-
-void DoStopSound(const char* id)
-{
-    const std::string command = "UIStopSound " + std::string(id);
-    Eval(command.c_str());
 }

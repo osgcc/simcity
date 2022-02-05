@@ -1,10 +1,12 @@
 #pragma once
 
+#include <string>
+
 struct SimView;
 
 void InitializeSound();
 void ShutDownSound();
-void MakeSound(const char* channel, const char* id);
+void MakeSound(const std::string& channel, const std::string& id);
 void MakeSoundOn(SimView* view, const char* channel, const char* id);
 void StartBulldozer();
 void StopBulldozer();
