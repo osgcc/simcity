@@ -48,7 +48,6 @@
     <ClCompile Include="src\w_keys.cpp" />
     <ClCompile Include="src\w_map.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
-    <ClCompile Include="src\w_sim.cpp" />
     <ClCompile Include="src\w_sound.cpp" />
     <ClCompile Include="src\w_sprite.cpp" />
     <ClCompile Include="src\w_stubs.cpp" />

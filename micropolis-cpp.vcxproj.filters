@@ -102,9 +102,6 @@
     <ClCompile Include="src\w_resrc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_sim.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\w_sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
