@@ -93,65 +93,6 @@ int _WireTable[16] = {
   }
 
 
-/* comefrom: check3Border check4Border check5Border processWand */
-int
-ConnecTile(int x, int y, int *TileAdrPtr, int Command)
-{
-  int Tile;
-  int result = 1;
-
-  /* make sure the array subscripts are in bounds */
-  if (!TestBounds(x, y, WORLD_X, WORLD_Y)) {
-    return (0);
-  }
-
-  /* AutoDoze */
-  if ((Command >= 2) && (Command <= 4)) {
-
-    if ((autoBulldoze != 0) &&
-	(TotalFunds > 0) &&
-	((Tile = (*TileAdrPtr)) & BULLBIT)) {
-      NeutralizeRoad(Tile);
-      /* Maybe this should check BULLBIT instead of checking tile values? */
-      if (((Tile >= TINYEXP) && (Tile <= LASTTINYEXP)) ||
-	  ((Tile < 64) && (Tile != 0))) {
-	Spend(1);
-	(*TileAdrPtr) = 0;
-      }
-    }
-  }
-
-  switch (Command) {
-
-  case 0:	/* Fix zone */
-    _FixZone(x, y, TileAdrPtr);
-    break;
-    
-  case 1:	/* Doze zone */
-    result = _LayDoze(x, y, TileAdrPtr);
-    _FixZone(x, y, TileAdrPtr);
-    break;
-    
-  case 2:	/* Lay Road */
-    result = _LayRoad(x, y, TileAdrPtr);
-    _FixZone(x, y, TileAdrPtr);
-    break;
-    
-  case 3:	/* Lay Rail */
-    result = _LayRail(x, y, TileAdrPtr);
-    _FixZone(x, y, TileAdrPtr);
-    break;
-    
-  case 4:	/* Lay Wire */
-    result = _LayWire(x, y, TileAdrPtr);
-    _FixZone(x, y, TileAdrPtr);
-    break;
-
-  }
-  
-  return result;
-}
-
 /* comefrom: ConnecTile */
 int
 _LayDoze(int x, int y, int *TileAdrPtr)
@@ -495,30 +436,6 @@ _LayWire(int x, int y, int *TileAdrPtr)
 }
 
 
-/* comefrom: ConnecTile */
-void _FixZone(int x, int y, int *TileAdrPtr)
-{
-  _FixSingle(x,y, &TileAdrPtr[0]);
-
-  if (y > 0) {
-    _FixSingle(x, y-1, &TileAdrPtr[-1]);
-  }
-
-  if (x < (WORLD_X - 1)) {
-    _FixSingle(x+1, y, &TileAdrPtr[WORLD_Y]);
-  }
-
-  if (y < (WORLD_Y - 1)) {
-    _FixSingle(x, y+1, &TileAdrPtr[1]);
-  }
-
-  if (x > 0) {
-    _FixSingle(x-1, y, &TileAdrPtr[-WORLD_Y]);
-  }
-
-}
-
-
 /* comefrom: _FixZone */
 void _FixSingle(int x, int y, int *TileAdrPtr)
 {
@@ -646,3 +563,85 @@ void _FixSingle(int x, int y, int *TileAdrPtr)
   }
 }
 
+/* comefrom: ConnecTile */
+void _FixZone(int x, int y, int *TileAdrPtr)
+{
+  _FixSingle(x,y, &TileAdrPtr[0]);
+
+  if (y > 0) {
+    _FixSingle(x, y-1, &TileAdrPtr[-1]);
+  }
+
+  if (x < (WORLD_X - 1)) {
+    _FixSingle(x+1, y, &TileAdrPtr[WORLD_Y]);
+  }
+
+  if (y < (WORLD_Y - 1)) {
+    _FixSingle(x, y+1, &TileAdrPtr[1]);
+  }
+
+  if (x > 0) {
+    _FixSingle(x-1, y, &TileAdrPtr[-WORLD_Y]);
+  }
+
+}
+
+
+/* comefrom: check3Border check4Border check5Border processWand */
+int
+ConnecTile(int x, int y, int *TileAdrPtr, int Command)
+{
+  int Tile;
+  int result = 1;
+
+  /* make sure the array subscripts are in bounds */
+  if (!TestBounds(x, y, WORLD_X, WORLD_Y)) {
+    return (0);
+  }
+
+  /* AutoDoze */
+  if ((Command >= 2) && (Command <= 4)) {
+
+    if ((autoBulldoze != 0) &&
+	(TotalFunds > 0) &&
+	((Tile = (*TileAdrPtr)) & BULLBIT)) {
+      NeutralizeRoad(Tile);
+      /* Maybe this should check BULLBIT instead of checking tile values? */
+      if (((Tile >= TINYEXP) && (Tile <= LASTTINYEXP)) ||
+	  ((Tile < 64) && (Tile != 0))) {
+	Spend(1);
+	(*TileAdrPtr) = 0;
+      }
+    }
+  }
+
+  switch (Command) {
+
+  case 0:	/* Fix zone */
+    _FixZone(x, y, TileAdrPtr);
+    break;
+    
+  case 1:	/* Doze zone */
+    result = _LayDoze(x, y, TileAdrPtr);
+    _FixZone(x, y, TileAdrPtr);
+    break;
+    
+  case 2:	/* Lay Road */
+    result = _LayRoad(x, y, TileAdrPtr);
+    _FixZone(x, y, TileAdrPtr);
+    break;
+    
+  case 3:	/* Lay Rail */
+    result = _LayRail(x, y, TileAdrPtr);
+    _FixZone(x, y, TileAdrPtr);
+    break;
+    
+  case 4:	/* Lay Wire */
+    result = _LayWire(x, y, TileAdrPtr);
+    _FixZone(x, y, TileAdrPtr);
+    break;
+
+  }
+  
+  return result;
+}
