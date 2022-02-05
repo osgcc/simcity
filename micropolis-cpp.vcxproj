@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graph.h" />
+    <ClInclude Include="src\g_setup.h" />
     <ClInclude Include="src\rand.h" />
     <ClInclude Include="src\s_disast.h" />
     <ClInclude Include="src\s_eval.h" />

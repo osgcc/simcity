@@ -236,5 +236,8 @@
     <ClInclude Include="src\w_con.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\g_setup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
