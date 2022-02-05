@@ -6,3 +6,4 @@ void makeDollarDecimalStr(char* numStr, char* dollarStr);
 std::string NumberToDollarDecimal(int value);
 void Pause();
 void Resume();
+int CurrentYear();

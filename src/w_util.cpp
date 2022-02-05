@@ -254,10 +254,9 @@ SetYear(int year)
 }
 
 
-int
-CurrentYear()
+int CurrentYear()
 {
-  return (CityTime/48 + StartingYear);
+    return (CityTime / 48 + StartingYear);
 }
 
 
