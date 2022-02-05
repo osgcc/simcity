@@ -47,7 +47,6 @@
     <ClCompile Include="src\w_graph.cpp" />
     <ClCompile Include="src\w_keys.cpp" />
     <ClCompile Include="src\w_map.cpp" />
-    <ClCompile Include="src\w_piem.cpp" />
     <ClCompile Include="src\w_print.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
     <ClCompile Include="src\w_sim.cpp" />
