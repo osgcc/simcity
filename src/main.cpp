@@ -118,7 +118,7 @@ int ExitReturn = 0;
 
 void sim_exit(int val)
 {
-  ExitReturn = val;
+    ExitReturn = val;
 }
 
 

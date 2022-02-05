@@ -1208,17 +1208,19 @@ void FireZone(int Xloc, int Yloc, int ch)
 
 #define RANDOM_RANGE 0xffff
 
-int
-Rand(int range)
+int Rand(int range)
 {
-  int maxMultiple, rnum;
+    int maxMultiple, rnum;
 
-  range++;
-  maxMultiple = RANDOM_RANGE / range;
-  maxMultiple *= range;
-  while ((rnum = Rand16()) >= maxMultiple)
-    continue;
-  return (rnum % range);
+    range++;
+
+    maxMultiple = RANDOM_RANGE / range;
+    maxMultiple *= range;
+
+    while ((rnum = Rand16()) >= maxMultiple)
+        continue;
+
+    return (rnum % range);
 }
 
 

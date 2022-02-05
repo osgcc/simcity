@@ -9,3 +9,4 @@ void RandomlySeedRand();
 void DoSPZone(int PwrOn);
 void RepairZone(int ZCent, int zsize);
 int Rand16Signed();
+int Rand(int range);

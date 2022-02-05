@@ -115,14 +115,11 @@ int ConfigureTileView(Tcl_Interp* interp, SimView* view, int argc, char** argv, 
 static void TileViewEventProc(ClientData clientData, XEvent* eventPtr);
 static void DestroyTileView(ClientData clientData);
 
-int ConfigureSimGraph(Tcl_Interp* interp, Graph* graph, int argc, char** argv, int flags);
-
 static void MicropolisTimerProc(ClientData clientData);
 
 int SimCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
 int DoEditorCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
 int DoMapCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
-int GraphViewCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
 int DoGraphCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
 int SpriteCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
 extern int Tk_PieMenuCmd();

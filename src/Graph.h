@@ -28,5 +28,5 @@ struct Graph
 	int borderWidth;
 	int relief;
 
-	Tk_TimerToken draw_graph_token;
+	//Tk_TimerToken draw_graph_token;
 };

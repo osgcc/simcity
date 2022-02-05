@@ -575,8 +575,9 @@ extern int ExitReturn;
 extern int FlushStyle;
 extern int GotXError;
 
-extern int Rand(int range);
-extern int RandInt(void);
+void sim_exit(int val);
+
+
 
 extern Sim* MakeNewSim();
 extern SimView* MakeNewView();

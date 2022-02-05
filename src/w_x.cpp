@@ -181,6 +181,7 @@ int CatchXError(void* dpy, void* err)
 
 void DoStopMicropolis()
 {
+    /*
     if (sim)
     {
         while (sim->editor != nullptr)
@@ -198,6 +199,7 @@ void DoStopMicropolis()
             //DestroyGraph(sim->graph);
         }
     }
+    */
 }
 
 
