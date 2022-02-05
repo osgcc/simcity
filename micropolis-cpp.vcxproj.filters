@@ -233,5 +233,8 @@
     <ClInclude Include="src\s_fileio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\w_con.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -72,6 +72,7 @@
     <ClInclude Include="src\s_traf.h" />
     <ClInclude Include="src\s_zone.h" />
     <ClInclude Include="src\w_budget.h" />
+    <ClInclude Include="src\w_con.h" />
     <ClInclude Include="src\w_date.h" />
     <ClInclude Include="src\w_graph.h" />
     <ClInclude Include="src\animtab.h" />
@@ -195,6 +196,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -209,6 +211,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

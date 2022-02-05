@@ -588,60 +588,63 @@ void _FixZone(int x, int y, int *TileAdrPtr)
 
 
 /* comefrom: check3Border check4Border check5Border processWand */
-int
-ConnecTile(int x, int y, int *TileAdrPtr, int Command)
+int ConnecTile(int x, int y, int* TileAdrPtr, int Command)
 {
-  int Tile;
-  int result = 1;
+    int Tile;
+    int result = 1;
 
-  /* make sure the array subscripts are in bounds */
-  if (!TestBounds(x, y, WORLD_X, WORLD_Y)) {
-    return (0);
-  }
-
-  /* AutoDoze */
-  if ((Command >= 2) && (Command <= 4)) {
-
-    if ((autoBulldoze != 0) &&
-	(TotalFunds > 0) &&
-	((Tile = (*TileAdrPtr)) & BULLBIT)) {
-      NeutralizeRoad(Tile);
-      /* Maybe this should check BULLBIT instead of checking tile values? */
-      if (((Tile >= TINYEXP) && (Tile <= LASTTINYEXP)) ||
-	  ((Tile < 64) && (Tile != 0))) {
-	Spend(1);
-	(*TileAdrPtr) = 0;
-      }
+    /* make sure the array subscripts are in bounds */
+    if (!TestBounds(x, y, WORLD_X, WORLD_Y))
+    {
+        return (0);
     }
-  }
 
-  switch (Command) {
+    /* AutoDoze */
+    if ((Command >= 2) && (Command <= 4))
+    {
 
-  case 0:	/* Fix zone */
-    _FixZone(x, y, TileAdrPtr);
-    break;
-    
-  case 1:	/* Doze zone */
-    result = _LayDoze(x, y, TileAdrPtr);
-    _FixZone(x, y, TileAdrPtr);
-    break;
-    
-  case 2:	/* Lay Road */
-    result = _LayRoad(x, y, TileAdrPtr);
-    _FixZone(x, y, TileAdrPtr);
-    break;
-    
-  case 3:	/* Lay Rail */
-    result = _LayRail(x, y, TileAdrPtr);
-    _FixZone(x, y, TileAdrPtr);
-    break;
-    
-  case 4:	/* Lay Wire */
-    result = _LayWire(x, y, TileAdrPtr);
-    _FixZone(x, y, TileAdrPtr);
-    break;
+        if ((autoBulldoze != 0) &&
+            (TotalFunds > 0) &&
+            ((Tile = (*TileAdrPtr)) & BULLBIT))
+        {
+            NeutralizeRoad(Tile);
+            /* Maybe this should check BULLBIT instead of checking tile values? */
+            if (((Tile >= TINYEXP) && (Tile <= LASTTINYEXP)) || ((Tile < 64) && (Tile != 0)))
+            {
+                Spend(1);
+                (*TileAdrPtr) = 0;
+            }
+        }
+    }
 
-  }
-  
-  return result;
+    switch (Command)
+    {
+
+    case 0:	/* Fix zone */
+        _FixZone(x, y, TileAdrPtr);
+        break;
+
+    case 1:	/* Doze zone */
+        result = _LayDoze(x, y, TileAdrPtr);
+        _FixZone(x, y, TileAdrPtr);
+        break;
+
+    case 2:	/* Lay Road */
+        result = _LayRoad(x, y, TileAdrPtr);
+        _FixZone(x, y, TileAdrPtr);
+        break;
+
+    case 3:	/* Lay Rail */
+        result = _LayRail(x, y, TileAdrPtr);
+        _FixZone(x, y, TileAdrPtr);
+        break;
+
+    case 4:	/* Lay Wire */
+        result = _LayWire(x, y, TileAdrPtr);
+        _FixZone(x, y, TileAdrPtr);
+        break;
+
+    }
+
+    return result;
 }
