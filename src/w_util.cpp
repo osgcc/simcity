@@ -61,6 +61,27 @@
  */
 #include "main.h"
 
+#include <string>
+
+std::string NumberToDollarDecimal(int value)
+{
+    std::string valueString{ "$" + std::to_string(value)};
+
+    if (value < 1000)
+    {
+        return valueString;
+    }
+
+    const int numOfCommas = (valueString.size() - 1) / 3;
+
+    for (size_t i = 1; i <= numOfCommas; ++i)
+    {
+        valueString.insert((valueString.size() - (i - 1)) - (i * 3), ",");
+    }
+
+    return valueString;
+}
+
 
 /* comefrom: drawTaxesCollected incBoxValue decBoxValue drawCurrentFunds 
 	     drawActualBox UpdateFunds updateCurrentCost */
