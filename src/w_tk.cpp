@@ -117,118 +117,111 @@ static void DestroyTileView(ClientData clientData);
 
 static void MicropolisTimerProc(ClientData clientData);
 
-int SimCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
-int DoEditorCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
-int DoMapCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
-int DoGraphCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
-int SpriteCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
-extern int Tk_PieMenuCmd();
-extern int Tk_IntervalCmd();
 
-
-int TileViewCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
+int TileViewCmd(ClientData clientData, Tcl_Interp* interp, int argc, char** argv)
 {
-  Tk_Window tkwin = (Tk_Window) clientData;
-  SimView *view;
-  int viewclass;
+    Tk_Window tkwin = (Tk_Window)clientData;
+    SimView* view;
+    int viewclass;
 
-  if (argc < 2)
-  {
-    Tcl_AppendResult(interp, "wrong # args:  should be \"",		     argv[0], " pathName ?options?\"", (char *) NULL);
-    return 1 /*TCL_ERROR*/;
-  }
+    if (argc < 2)
+    {
+        Tcl_AppendResult(interp, "wrong # args:  should be \"", argv[0], " pathName ?options?\"", (char*)NULL);
+        return 1 /*TCL_ERROR*/;
+    }
 
-  if (strcmp(argv[0], "editorview") == 0)
-  {
-      viewclass = Editor_Class;
-  }
-  else if (strcmp(argv[0], "mapview") == 0)
-  {
-      viewclass = Map_Class;
-  }
-  else
-  {
-    return 1 /*TCL_ERROR*/;
-  }
+    if (strcmp(argv[0], "editorview") == 0)
+    {
+        viewclass = Editor_Class;
+    }
+    else if (strcmp(argv[0], "mapview") == 0)
+    {
+        viewclass = Map_Class;
+    }
+    else
+    {
+        return 1 /*TCL_ERROR*/;
+    }
 
-  tkwin = Tk_CreateWindowFromPath(interp, tkwin,				  argv[1], (char *) NULL);
-  if (tkwin == NULL)
-  {
-      return 1 /*TCL_ERROR*/;
-  }
+    tkwin = Tk_CreateWindowFromPath(interp, tkwin, argv[1], (char*)NULL);
+    if (tkwin == NULL)
+    {
+        return 1 /*TCL_ERROR*/;
+    }
 
-  view = (SimView *)malloc(sizeof (SimView));
+    view = (SimView*)malloc(sizeof(SimView));
 
-  //view->tkwin = tkwin;
-  //view->interp = interp;
-  view->flags = 0;
+    //view->tkwin = tkwin;
+    //view->interp = interp;
+    view->flags = 0;
 
-  if (viewclass == Editor_Class)
-  {
-    Tk_SetClass(view->tkwin, "EditorView");
+    if (viewclass == Editor_Class)
+    {
+        Tk_SetClass(view->tkwin, "EditorView");
 
-    Tk_CreateEventHandler(view->tkwin,
-			  VisibilityChangeMask |
-			  ExposureMask |
-			  StructureNotifyMask |
-			  EnterWindowMask |
-			  LeaveWindowMask |
-			  PointerMotionMask,
-			  TileViewEventProc, (ClientData) view);
-    Tcl_CreateCommand(interp, Tk_PathName(view->tkwin),		      DoEditorCmd, (ClientData) view, (void (*)()) NULL);
-  }
-  else 
-  {
-    Tk_SetClass(view->tkwin, "MapView");
+        Tk_CreateEventHandler(view->tkwin,
+            VisibilityChangeMask |
+            ExposureMask |
+            StructureNotifyMask |
+            EnterWindowMask |
+            LeaveWindowMask |
+            PointerMotionMask,
+            TileViewEventProc, (ClientData)view);
+        Tcl_CreateCommand(interp, Tk_PathName(view->tkwin), DoEditorCmd, (ClientData)view, (void (*)()) NULL);
+    }
+    else
+    {
+        Tk_SetClass(view->tkwin, "MapView");
 
-    Tk_CreateEventHandler(view->tkwin,
-			  VisibilityChangeMask |
-			  ExposureMask |
-			  StructureNotifyMask /* |
-			  EnterWindowMask |
-			  LeaveWindowMask |
-			  PointerMotionMask */ ,
-			  TileViewEventProc, (ClientData) view);
-    Tcl_CreateCommand(interp, Tk_PathName(view->tkwin),		      DoMapCmd, (ClientData) view, (void (*)()) NULL);
-  }
+        Tk_CreateEventHandler(view->tkwin,
+            VisibilityChangeMask |
+            ExposureMask |
+            StructureNotifyMask /* |
+            EnterWindowMask |
+            LeaveWindowMask |
+            PointerMotionMask */,
+            TileViewEventProc, (ClientData)view);
+        Tcl_CreateCommand(interp, Tk_PathName(view->tkwin), DoMapCmd, (ClientData)view, (void (*)()) NULL);
+    }
 
-  Tk_MakeWindowExist(view->tkwin);
+    Tk_MakeWindowExist(view->tkwin);
 
-  if (getenv("XSYNCHRONIZE") != NULL)
-  {
-    XSynchronize(Tk_Display(tkwin), 1);
-  }
+    if (getenv("XSYNCHRONIZE") != NULL)
+    {
+        XSynchronize(Tk_Display(tkwin), 1);
+    }
 
-  if (viewclass == Editor_Class) 
-  {
-    InitNewView(view, "MicropolisEditor", Editor_Class, EDITOR_W, EDITOR_H);
-    DoNewEditor(view);
-  }
-  else
-  {
-    InitNewView(view, "MicropolisMap", Map_Class, MAP_W, MAP_H);
-    DoNewMap(view);
-  }
+    if (viewclass == Editor_Class)
+    {
+        InitNewView(view, "MicropolisEditor", Editor_Class, EDITOR_W, EDITOR_H);
+        DoNewEditor(view);
+    }
+    else
+    {
+        InitNewView(view, "MicropolisMap", Map_Class, MAP_W, MAP_H);
+        DoNewMap(view);
+    }
 
-  if (ConfigureTileView(interp, view, argc-2, argv+2, 0) != 0 /*TCL_OK*/)
-  {
-    /* XXX: destroy view */
-    Tk_DestroyWindow(view->tkwin);
-    return 1 /*TCL_ERROR*/;
-  }
+    if (ConfigureTileView(interp, view, argc - 2, argv + 2, 0) != 0 /*TCL_OK*/)
+    {
+        /* XXX: destroy view */
+        Tk_DestroyWindow(view->tkwin);
+        return 1 /*TCL_ERROR*/;
+    }
 
-  switch (view->viewClass) {
-  case Editor_Class:
-    break;
-  case Map_Class:
-    view->invalid = 1;
-    view->update = 1;
-    DoUpdateMap(view);
-    break;
-  }
+    switch (view->viewClass)
+    {
+    case Editor_Class:
+        break;
+    case Map_Class:
+        view->invalid = 1;
+        view->update = 1;
+        DoUpdateMap(view);
+        break;
+    }
 
-  interp->result = Tk_PathName(view->tkwin);
-  return 0 /*TCL_OK*/;
+    interp->result = Tk_PathName(view->tkwin);
+    return 0 /*TCL_OK*/;
 }
 
 
