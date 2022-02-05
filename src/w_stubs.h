@@ -4,6 +4,7 @@ typedef Byte* Ptr;
 typedef char** Handle;
 
 extern std::string CityName;
+extern int autoGo;
 
 Ptr NewPtr(int size);
 

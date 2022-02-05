@@ -241,16 +241,17 @@ void setAnyCityName(const char *name)
 }
 
 
-SetYear(int year)
+void SetYear(int year)
 {
-  // Must prevent year from going negative, since it screws up the non-floored modulo arithmetic.
-  if (year < StartingYear) {
-    year = StartingYear;
-  }
+    // Must prevent year from going negative, since it screws up the non-floored modulo arithmetic.
+    if (year < StartingYear)
+    {
+        year = StartingYear;
+    }
 
-  year = (year - StartingYear) - (CityTime / 48);
-  CityTime += year * 48;
-  doTimeStuff();
+    year = (year - StartingYear) - (CityTime / 48);
+    CityTime += year * 48;
+    doTimeStuff();
 }
 
 

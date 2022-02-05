@@ -7,3 +7,4 @@ std::string NumberToDollarDecimal(int value);
 void Pause();
 void Resume();
 int CurrentYear();
+void SetYear(int year);

@@ -77,6 +77,7 @@
 int TotalFunds;
 int PunishCnt;
 int autoBulldoze, autoBudget;
+int autoGo;
 int LastMesTime;
 int GameLevel;
 int InitSimLoad;
