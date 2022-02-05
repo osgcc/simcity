@@ -63,7 +63,7 @@
 #include "main.h"
 #include "view.h"
 
-
+/*
 Tcl_HashTable EditorCmds;
 int DoOverlay = 2;
 int BobHeight = 8;
@@ -585,7 +585,7 @@ int EditorCmdAutoGoal(SimView *view, Tcl_Interp *interp, int argc, char **argv)
     }
     view->auto_x_goal = x;
     view->auto_y_goal = y;
-    /* actually go there if more than a block away */
+    // actually go there if more than a block away
     dx = view->pan_x - x;
     dy = view->pan_y - y;
     view->auto_going = (((dx * dx) + (dy * dy)) > (64 * 64));
@@ -825,11 +825,6 @@ DoEditorCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
   return result;
 }
 
-
-
-/*************************************************************************/
-
-
 DoNewEditor(SimView *view)
 {
   sim->editors++; view->next = sim->editor; sim->editor = view;
@@ -1018,7 +1013,7 @@ char CursorDashes[] = { 4, 4 };
 
 void DrawPending(SimView* view)
 {
-    /*
+    
     Pixmap pm = view->pixmap2;
     int left = (view->w_width / 2) - view->pan_x;
     int top = (view->w_height / 2) - view->pan_y;
@@ -1091,7 +1086,7 @@ void DrawPending(SimView* view)
             XCopyArea(view->x->dpy, icon, pm, view->x->gc, 0, 0, size, size, x + i, y - i);
         }
     }
-    */
+    
 }
 
 
@@ -1108,7 +1103,7 @@ DrawCursor(SimView *view)
     if ((v->show_me != 0) &&
 	((mode == -1) || v->tool_showing)) {
       x = v->tool_x; y = v->tool_y;
-      if (mode == -1) { /* pan cursor */
+      if (mode == -1) { // pan cursor
 
 	x += left; y += top;
 
@@ -1139,7 +1134,7 @@ DrawCursor(SimView *view)
 	XSetLineAttributes(view->x->dpy, view->x->gc, 1,
 			   LineSolid, CapButt, JoinMiter);
 
-      } else { /* edit cursor */
+      } else { // edit cursor
 
 	size = toolSize[v->tool_state];
 	fg = toolColors[v->tool_state] & 0xff;
@@ -1269,7 +1264,7 @@ DrawCursor(SimView *view)
 	    XSetFillStyle(view->x->dpy, view->x->gc, FillOpaqueStippled);
 	  }
 
-	  /* top */
+	  //* top
 	  XDrawLine(view->x->dpy, pm, view->x->gc,
 		    x - 8 + offset, y - 8 - offset,
 		    x + 8 + offset, y - 8 - offset);
@@ -1280,7 +1275,7 @@ DrawCursor(SimView *view)
 		    x - 6 + offset, y - 6 - offset,
 		    x + 6 + offset, y - 6 - offset);
 
-	  /* left */
+	  //* left
 	  XDrawLine(view->x->dpy, pm, view->x->gc,
 		    x - 8 + offset, y - 8 - offset,
 		    x - 8 + offset, y + 8 - offset);
@@ -1298,7 +1293,7 @@ DrawCursor(SimView *view)
 	    XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
 	  }
 
-	  /* bottom */
+	  //* bottom 
 	  XDrawLine(view->x->dpy, pm, view->x->gc,
 		    x - 7 + offset, y + 7 - offset,
 		    x + 8 + offset, y + 7 - offset);
@@ -1309,7 +1304,7 @@ DrawCursor(SimView *view)
 		    x - 5 + offset, y + 5 - offset,
 		    x + 6 + offset, y + 5 - offset);
 
-	  /* right */
+	  //* right *
 	  XDrawLine(view->x->dpy, pm, view->x->gc,
 		    x + 7 + offset, y + 8 - offset,
 		    x + 7 + offset, y - 7 - offset);
@@ -1476,7 +1471,7 @@ DrawOverlay(SimView *view)
         draw lines to pm => 3
    4 => clipping faster: 
         clip ol to pm => 4
-*/   
+
 
   switch (view->overlay_mode) {
   case 0:
@@ -1598,3 +1593,5 @@ ClipTheOverlay(SimView *view)
     XSetClipMask(view->x->dpy, view->x->gc, None);
   }
 }
+
+*/
