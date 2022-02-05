@@ -11,3 +11,6 @@ void tk_main();
 void InvalidateEditors();
 void InvalidateMaps();
 void Kick();
+void StartMicropolisTimer();
+void StopMicropolisTimer();
+void EventuallyRedrawView(SimView* view);

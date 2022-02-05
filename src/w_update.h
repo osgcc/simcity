@@ -8,3 +8,4 @@ void UpdateEvaluation();
 void UpdateHeads();
 void UpdateFunds();
 void DoUpdateHeads();
+void doTimeStuff();

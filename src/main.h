@@ -576,16 +576,7 @@ extern int GotXError;
 
 void sim_exit(int val);
 
-
-
 extern Sim* MakeNewSim();
 extern SimView* MakeNewView();
 extern SimSprite* MakeSprite();
 extern SimSprite* MakeNewSprite();
-
-extern int setSpeed(int speed);
-extern int setSkips(int skips);
-extern int SetGameLevel(int level);
-extern int SetGameLevelFunds(int level);
-
-extern struct XDisplay *XDisplays;
