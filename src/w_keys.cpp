@@ -62,6 +62,17 @@
 #include "main.h"
 
 
+#include "s_alloc.h"
+#include "s_disast.h"
+#include "s_sim.h"
+
+#include "w_sound.h"
+#include "w_sprite.h"
+#include "w_stubs.h"
+#include "w_tk.h"
+#include "w_tool.h"
+
+
 static char LastKeys[5];
 
 
@@ -91,7 +102,7 @@ void ResetLastKeys()
 
 
 /* comefrom: processEvent */
-doKeyDown(SimView *view, int charCode)
+void doKeyDown(SimView *view, int charCode)
 {
   LastKeys[0] = LastKeys[1];
   LastKeys[1] = LastKeys[2];
@@ -278,36 +289,33 @@ doKeyDown(SimView *view, int charCode)
 }
 
 
-/* comefrom: processEvent */
-doKeyUp(SimView *view, int charCode)
+void doKeyUp(SimView* view, int charCode)
 {
-  switch(charCode) {
-
+    switch (charCode)
+    {
     case 'b':
     case 'B':
-    case 'B'-'@':
+    case 'B' - '@':
     case 'R':
     case 'r':
-    case 'R'-'@':
+    case 'R' - '@':
     case 'P':
     case 'p':
-    case 'P'-'@':
+    case 'P' - '@':
     case 'T':
     case 't':
-    case 'T'-'@':
+    case 'T' - '@':
     case 'q':
     case 'Q':
-    case 'Q'-'@': {
-      if (view->tool_state_save != -1) {
-	setWandState(view, view->tool_state_save);
-      }
-      view->tool_state_save = -1;
-      break;
-    }
+    case 'Q' - '@':
+        if (view->tool_state_save != -1)
+        {
+            setWandState(view, view->tool_state_save);
+        }
+        view->tool_state_save = -1;
+        break;
 
-    default: {
-      break;
+    default:
+        break;
     }
-
-  }
 }
