@@ -62,6 +62,10 @@
 #include "main.h"
 #include "view.h"
 
+#include "g_setup.h"
+
+#include "w_tk.h"
+
 #include <algorithm>
 
 
@@ -225,6 +229,7 @@ Sim* MakeNewSim()
 }
 
 
+/*
 XDisplay* FindXDisplay(Tk_Window tkwin)
 {
     return nullptr;
@@ -240,13 +245,14 @@ IncRefDisplay(XDisplay *xd)
 DecRefDisplay(XDisplay *xd)
 {
   if ((--xd->references) == 0) {
-    /* I'd blow it away, but tk may still be using the display */
+    //* I'd blow it away, but tk may still be using the display
   }
 }
-
+*/
 
 SimView* InitNewView(SimView* view, char* title, int _class, int w, int h)
 {
+    /*
     int type, i;
     int d = 8;
     unsigned int valuemask = 0;
@@ -301,10 +307,10 @@ SimView* InitNewView(SimView* view, char* title, int _class, int w, int h)
     view->track_info = NULL;
     view->message_var = NULL;
 
-    /* This stuff was initialized in our caller (SimViewCmd) */
-    /*  view->tkwin = NULL; */
-    /*  view->interp = NULL; */
-    /*  view->flags = 0; */
+    /* This stuff was initialized in our caller (SimViewCmd)
+    /*  view->tkwin = NULL;
+    /*  view->interp = NULL;
+    /*  view->flags = 0;
 
     view->x = NULL;
     view->shminfo = NULL;
@@ -335,7 +341,7 @@ SimView* InitNewView(SimView* view, char* title, int _class, int w, int h)
     IncRefDisplay(view->x);
 
     /* view->x->shared is 1 if the shared memory extension is present and
-       supports shared memory pixmaps, and -1 if it is present but doesn't. */
+       supports shared memory pixmaps, and -1 if it is present but doesn't.
     if (view->x->shared != 1)
     {
         view->type = X_Wire_View;
@@ -348,24 +354,26 @@ SimView* InitNewView(SimView* view, char* title, int _class, int w, int h)
     GetPixmaps(view->x);
     view->pixels = view->x->pixels;
 
-    if (w == EDITOR_W) w = 256; /* XXX */
-    if (h == EDITOR_H) h = 256; /* XXX */
+    if (w == EDITOR_W) w = 256; /* XXX 
+    if (h == EDITOR_H) h = 256; /* XXX 
 
     view->pan_x = w / 2; view->pan_y = h / 2;
     DoResizeView(view, w, h);
 
     GetViewTiles(view);
+    */
 
     return (view);
 }
 
 
-DestroyView(SimView *view)
+void DestroyView(SimView *view)
 {
   SimView **vp;
 
   CancelRedrawView(view);
 
+  /*
   for (vp = ((view->viewClass == Editor_Class) ?
 	     (&sim->editor) : (&sim->map));
        (*vp) != NULL;
@@ -475,7 +483,7 @@ DoResizeView(SimView *view, int w, int h)
   view->w_width = w;
   view->w_height = h;
 
-  if (view->viewClass == Map_Class) { /* Map_Class */
+  if (view->viewClass == Map_Class) { /* Map_Class 
     view->m_width = w;
     view->m_height = h;
 
@@ -492,7 +500,7 @@ DoResizeView(SimView *view, int w, int h)
       }
     }
 
-  } else { /* Editor_Class */
+  } else { /* Editor_Class 
 
     if ((w = (w + 31) & (~15)) > view->m_width)
       view->m_width = w, resize++;
@@ -605,14 +613,14 @@ DoResizeView(SimView *view, int w, int h)
       break;
 
     case 24:
-      /* XXX: TODO: 24 and 32 bit support */
+      /* XXX: TODO: 24 and 32 bit support 
       view->pixel_bytes = 4;
       //view->pixel_bytes = 3;
       view->depth = 24;
       break;
 
     case 32:
-      /* XXX: TODO: 24 and 32 bit support */
+      /* XXX: TODO: 24 and 32 bit support 
       view->pixel_bytes = 4;
       view->depth = 32;
       break;
@@ -790,14 +798,14 @@ DoResizeView(SimView *view, int w, int h)
 
   } else if (view->viewClass == Map_Class) {
 
-    if (view->type == X_Mem_View) { /* Memory Map */
+    if (view->type == X_Mem_View) { /* Memory Map 
 
       if (view->x->color) {
 
-	/* Color, Shared Memory */
+	/* Color, Shared Memory 
 
 	view->data8 = view->data;
-	view->line_bytes8 = view->line_bytes; /* XXX: ??? */
+	view->line_bytes8 = view->line_bytes; /* XXX: ??? 
 
 	switch (view->x->depth) {
 
@@ -817,14 +825,14 @@ DoResizeView(SimView *view, int w, int h)
 	  break;
 
 	case 24:
-	  /* XXX: TODO: 24 and 32 bit support */
+	  /* XXX: TODO: 24 and 32 bit support 
 	  view->pixel_bytes = 4;
 	  //view->pixel_bytes = 3;
 	  view->depth = 24;
 	  break;
 
 	case 32:
-	  /* XXX: TODO: 24 and 32 bit support */
+	  /* XXX: TODO: 24 and 32 bit support 
 	  view->pixel_bytes = 4;
 	  view->depth = 32;
 	  break;
@@ -838,27 +846,27 @@ DoResizeView(SimView *view, int w, int h)
 
       } else {
 
-	/* Black and White, Shared Memory */
+	/* Black and White, Shared Memory 
 
 	if (view->other_image != NULL) {
 	  XDestroyImage(view->other_image);
 	}
 
-	view->line_bytes8 = view->m_width; /* XXX: fix depth */
+	view->line_bytes8 = view->m_width; /* XXX: fix depth 
 	view->pixel_bytes = 0;
 	view->depth = 1;
 
 	view->other_data = view->data8 =
-	  AllocPixels(view->m_height * view->line_bytes8, /* XXX: fix depth */
+	  AllocPixels(view->m_height * view->line_bytes8, /* XXX: fix depth 
 		      view->pixels[COLOR_WHITE]);
 	view->other_image =
-	  XCreateImage(view->x->dpy, view->x->visual, 8, /* XXX: fix depth */
+	  XCreateImage(view->x->dpy, view->x->visual, 8, /* XXX: fix depth 
 		       ZPixmap, 0, (char *)view->other_data,
 		       view->m_width, view->m_height,
-		       8, view->line_bytes8); /* XXX: fix depth */
+		       8, view->line_bytes8); /* XXX: fix depth 
       }
 
-    } else { /* Wire Map */
+    } else { /* Wire Map 
       int bitmap_pad;
       int bitmap_depth;
 
@@ -874,7 +882,7 @@ DoResizeView(SimView *view, int w, int h)
 
       if (view->x->color) {
 
-	/* Color, Wire */
+	/* Color, Wire 
 
 	switch (view->x->depth) {
 
@@ -925,7 +933,7 @@ DoResizeView(SimView *view, int w, int h)
 	  break;
 
 	default:
-	  assert(0); /* Unknown depth */
+	  assert(0); /* Unknown depth 
 	  break;
 
 	} // switch
@@ -935,12 +943,12 @@ DoResizeView(SimView *view, int w, int h)
 
       } else {
 
-	/* Black and White, Wire */
+	/* Black and White, Wire 
 
 	view->pixel_bytes = 0;
 	view->depth = 1;
         view->line_bytes8 =
-	  (view->m_width + 3) & (~3); /* XXX: handle depth */
+	  (view->m_width + 3) & (~3); /* XXX: handle depth 
 	view->line_bytes =
 	  (view->m_width + 7) >>3;
 	bitmap_pad = 8;
@@ -977,32 +985,7 @@ DoResizeView(SimView *view, int w, int h)
       }
     }
   }
-}
-
-
-DoPanBy(struct SimView *view, int dx, int dy)
-{
-  DoPanTo(view, view->pan_x + dx, view->pan_y + dy);
-}
-
-
-void DoPanTo(SimView* view, int x, int y)
-{
-    if (view->viewClass != Editor_Class)
-    {
-        return;
-    }
-
-    if (x < 0) x = 0;
-    if (y < 0) y = 0;
-    if (x > view->i_width) x = view->i_width - 1;
-    if (y > view->i_height) y = view->i_height - 1;
-    if ((view->pan_x != x) || (view->pan_y != y))
-    {
-        view->pan_x = x;
-        view->pan_y = y;
-        DoAdjustPan(view);
-    }
+  */
 }
 
 
@@ -1107,18 +1090,59 @@ void DoAdjustPan(SimView* view)
                 dx << 4, dy << 4);
              */
 
-            /*
-            if (view->type == X_Mem_View)
-            {
-                XSync(view->x->dpy, False);
-            }
-            */
+             /*
+             if (view->type == X_Mem_View)
+             {
+                 XSync(view->x->dpy, False);
+             }
+             */
         }
     }
 }
 
 
-AllocTiles(SimView *view)
+void DoPanTo(SimView* view, int x, int y)
+{
+    if (view->viewClass != Editor_Class)
+    {
+        return;
+    }
+
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x > view->i_width) x = view->i_width - 1;
+    if (y > view->i_height) y = view->i_height - 1;
+    if ((view->pan_x != x) || (view->pan_y != y))
+    {
+        view->pan_x = x;
+        view->pan_y = y;
+        DoAdjustPan(view);
+    }
+}
+
+
+void DoPanBy(struct SimView *view, int dx, int dy)
+{
+  DoPanTo(view, view->pan_x + dx, view->pan_y + dy);
+}
+
+
+void FreeTiles(SimView *view)
+{
+  int col;
+
+  for (col = 0; view->tiles[col] != NULL; col++) {
+    free ((char *)view->tiles[col]);
+    free ((char *)view->other_tiles[col]);
+  }
+  free ((char *)view->tiles);
+  view->tiles = NULL;
+  free ((char *)view->other_tiles);
+  view->other_tiles = NULL;
+}
+
+
+void AllocTiles(SimView *view)
 {
   int row, col;
   int **have, **want;
@@ -1146,21 +1170,6 @@ AllocTiles(SimView *view)
       want[col][row] = -1;
     }
   }
-}
-
-
-FreeTiles(SimView *view)
-{
-  int col;
-
-  for (col = 0; view->tiles[col] != NULL; col++) {
-    free ((char *)view->tiles[col]);
-    free ((char *)view->other_tiles[col]);
-  }
-  free ((char *)view->tiles);
-  view->tiles = NULL;
-  free ((char *)view->other_tiles);
-  view->other_tiles = NULL;
 }
 
 
@@ -1192,14 +1201,14 @@ Ink* NewInk()
 }
 
 
-FreeInk(Ink *ink)
+void FreeInk(Ink *ink)
 {
   ink->next = OldInk;
   OldInk = ink;
 }
 
 
-StartInk(Ink *ink, int x, int y)
+void StartInk(Ink *ink, int x, int y)
 {
   ink->length = 1;
   ink->left = ink->right = ink->last_x = ink->points[0].x = x;
@@ -1207,7 +1216,7 @@ StartInk(Ink *ink, int x, int y)
 }
 
 
-AddInk(Ink *ink, int x, int y)
+void AddInk(Ink *ink, int x, int y)
 {
   int dx = x - ink->last_x;
   int dy = y - ink->last_y;
@@ -1278,7 +1287,7 @@ AddInk(Ink *ink, int x, int y)
 }
 
 
-EraseOverlay()
+void EraseOverlay()
 {
   Ink *ink;
 
