@@ -1545,13 +1545,13 @@ void GenerateShip()
 }
 
 
-MakeShipHere(int x, int y, int z)	
+void MakeShipHere(int x, int y, int z)
 {
-  MakeSprite(SHI, (x <<4) - (48 - 1), (y <<4));
+    MakeSprite(SHI, (x << 4) - (48 - 1), (y << 4));
 }
 
 
-MakeMonster(void)
+void MakeMonster()
 {
   register x, y, z, done = 0;
   SimSprite *sprite;
@@ -1610,21 +1610,24 @@ void GeneratePlane(int x, int y)
 }
 
 
-MakeTornado(void)
+void MakeTornado()
 {
-  int x, y;
-  SimSprite *sprite;
+    int x, y;
+    SimSprite* sprite;
 
-  if ((sprite = GetSprite(TOR)) != NULL) {
-    sprite->count = 200;
-    return;
-  }
+    if ((sprite = GetSprite(TOR)) != NULL)
+    {
+        sprite->count = 200;
+        return;
+    }
 
-  x = Rand((WORLD_X <<4) - 800) + 400;
-  y = Rand((WORLD_Y <<4) - 200) + 100;
-  MakeSprite(TOR, x, y);
-  ClearMes();
-  SendMesAt(-22, (x >>4) + 3, (y >>4) + 2);
+    x = Rand((WORLD_X << 4) - 800) + 400;
+    y = Rand((WORLD_Y << 4) - 200) + 100;
+
+    MakeSprite(TOR, x, y);
+
+    ClearMes();
+    SendMesAt(-22, (x >> 4) + 3, (y >> 4) + 2);
 }
 
 

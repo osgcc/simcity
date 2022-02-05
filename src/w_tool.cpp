@@ -133,11 +133,11 @@ int DoSetWandState(SimView *view, int state);
 /* UTILITIES */
 
 
-setWandState(SimView *view, int state)
+void setWandState(SimView* view, int state)
 {
-  view->tool_state = state;
-  DoUpdateHeads();
-  DoSetWandState(view, state);
+    view->tool_state = state;
+    DoUpdateHeads();
+    DoSetWandState(view, state);
 }
 
 

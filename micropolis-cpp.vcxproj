@@ -91,6 +91,7 @@
     <ClInclude Include="src\w_sprite.h" />
     <ClInclude Include="src\w_stubs.h" />
     <ClInclude Include="src\w_tk.h" />
+    <ClInclude Include="src\w_tool.h" />
     <ClInclude Include="src\w_update.h" />
     <ClInclude Include="src\w_util.h" />
     <ClInclude Include="src\w_x.h" />

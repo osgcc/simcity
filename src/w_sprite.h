@@ -34,3 +34,5 @@ void GenerateTrain(int x, int y);
 
 void MakeExplosionAt(int x, int y);
 void MakeExplosion(int x, int y);
+void MakeTornado();
+void MakeMonster();

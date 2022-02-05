@@ -236,5 +236,8 @@
     <ClInclude Include="src\Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\w_tool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
