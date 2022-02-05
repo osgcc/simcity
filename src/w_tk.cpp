@@ -63,25 +63,18 @@
 #include "main.h"
 #include "view.h"
 
+#include "w_sound.h"
 
 #include <iostream>
 #include <string>
 
-//Tcl_Interp *tk_mainInterp = NULL;
-//Tcl_CmdBuf buffer = NULL;
-//Tk_TimerToken sim_timer_token = 0;
-
 int sim_timer_idle = 0;
 int sim_timer_set = 0;
-
-//Tk_Window MainWindow;
 
 int UpdateDelayed = 0;
 int AutoScrollEdge = 16;
 int AutoScrollStep = 16;
 int AutoScrollDelay = 10;
-
-//Tk_TimerToken earthquake_timer_token;
 
 int earthquake_timer_set = 0;
 int earthquake_delay = 3000;
@@ -90,205 +83,82 @@ double FlushTime;
 int NeedRest = 0;
 
 
-/*
-#define DEF_VIEW_FONT	"-Adobe-Helvetica-Bold-R-Normal-*-140-*"
-
-
-Tk_ConfigSpec TileViewConfigSpecs[] =
+void EventuallyRedrawView(SimView* view)
 {
-    {TK_CONFIG_FONT, "-font", (char *) NULL, (char *) NULL,
-	DEF_VIEW_FONT, Tk_Offset(SimView, fontPtr), 0},
-    {TK_CONFIG_STRING, "-messagevar", (char *) NULL, (char *) NULL,
-	NULL, Tk_Offset(SimView, message_var), 0},
-    {TK_CONFIG_PIXELS, "-width", "width", "Width",
-	0, Tk_Offset(SimView, width), 0},
-    {TK_CONFIG_PIXELS, "-height", "height", "Height",
-	0, Tk_Offset(SimView, height), 0},
-    {TK_CONFIG_END, (char *) NULL, (char *) NULL, (char *) NULL,
-	(char *) NULL, 0, 0}
-};
-*/
-
-
-int TileViewCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv);
-int ConfigureTileView(Tcl_Interp* interp, SimView* view, int argc, char** argv, int flags);
-static void TileViewEventProc(ClientData clientData, XEvent* eventPtr);
-static void DestroyTileView(ClientData clientData);
-
-static void MicropolisTimerProc(ClientData clientData);
-
-
-int TileViewCmd(ClientData clientData, Tcl_Interp* interp, int argc, char** argv)
-{
-    Tk_Window tkwin = (Tk_Window)clientData;
-    SimView* view;
-    int viewclass;
-
-    if (argc < 2)
+    /*
+    if (!(view->flags & VIEW_REDRAW_PENDING))
     {
-        Tcl_AppendResult(interp, "wrong # args:  should be \"", argv[0], " pathName ?options?\"", (char*)NULL);
-        return 1 /*TCL_ERROR*/;
+        Tk_DoWhenIdle(DisplayTileView, (ClientData)view);
+        view->flags |= VIEW_REDRAW_PENDING;
     }
-
-    if (strcmp(argv[0], "editorview") == 0)
-    {
-        viewclass = Editor_Class;
-    }
-    else if (strcmp(argv[0], "mapview") == 0)
-    {
-        viewclass = Map_Class;
-    }
-    else
-    {
-        return 1 /*TCL_ERROR*/;
-    }
-
-    tkwin = Tk_CreateWindowFromPath(interp, tkwin, argv[1], (char*)NULL);
-    if (tkwin == NULL)
-    {
-        return 1 /*TCL_ERROR*/;
-    }
-
-    view = (SimView*)malloc(sizeof(SimView));
-
-    //view->tkwin = tkwin;
-    //view->interp = interp;
-    view->flags = 0;
-
-    if (viewclass == Editor_Class)
-    {
-        Tk_SetClass(view->tkwin, "EditorView");
-
-        Tk_CreateEventHandler(view->tkwin,
-            VisibilityChangeMask |
-            ExposureMask |
-            StructureNotifyMask |
-            EnterWindowMask |
-            LeaveWindowMask |
-            PointerMotionMask,
-            TileViewEventProc, (ClientData)view);
-        Tcl_CreateCommand(interp, Tk_PathName(view->tkwin), DoEditorCmd, (ClientData)view, (void (*)()) NULL);
-    }
-    else
-    {
-        Tk_SetClass(view->tkwin, "MapView");
-
-        Tk_CreateEventHandler(view->tkwin,
-            VisibilityChangeMask |
-            ExposureMask |
-            StructureNotifyMask /* |
-            EnterWindowMask |
-            LeaveWindowMask |
-            PointerMotionMask */,
-            TileViewEventProc, (ClientData)view);
-        Tcl_CreateCommand(interp, Tk_PathName(view->tkwin), DoMapCmd, (ClientData)view, (void (*)()) NULL);
-    }
-
-    Tk_MakeWindowExist(view->tkwin);
-
-    if (getenv("XSYNCHRONIZE") != NULL)
-    {
-        XSynchronize(Tk_Display(tkwin), 1);
-    }
-
-    if (viewclass == Editor_Class)
-    {
-        InitNewView(view, "MicropolisEditor", Editor_Class, EDITOR_W, EDITOR_H);
-        DoNewEditor(view);
-    }
-    else
-    {
-        InitNewView(view, "MicropolisMap", Map_Class, MAP_W, MAP_H);
-        DoNewMap(view);
-    }
-
-    if (ConfigureTileView(interp, view, argc - 2, argv + 2, 0) != 0 /*TCL_OK*/)
-    {
-        /* XXX: destroy view */
-        Tk_DestroyWindow(view->tkwin);
-        return 1 /*TCL_ERROR*/;
-    }
-
-    switch (view->viewClass)
-    {
-    case Editor_Class:
-        break;
-    case Map_Class:
-        view->invalid = 1;
-        view->update = 1;
-        DoUpdateMap(view);
-        break;
-    }
-
-    interp->result = Tk_PathName(view->tkwin);
-    return 0 /*TCL_OK*/;
+    */
 }
 
 
-int ConfigureTileView(Tcl_Interp* interp, SimView* view, int argc, char** argv, int flags)
+int Eval(const std::string& buf)
 {
-    if (Tk_ConfigureWidget(interp, view->tkwin, TileViewConfigSpecs, argc, argv, (char*)view, flags) != 0 /*TCL_OK*/)
+    std::cout << buf << std::endl;
+    /*
+    int result = Tcl_Eval(tk_mainInterp, buf, 0, (char**)NULL);
+    if (result != TCL_OK)
     {
-        return 1 /*TCL_ERROR*/;
+        char* errorinfo = Tcl_GetVar(tk_mainInterp, "errorInfo", TCL_GLOBAL_ONLY);
+        if (errorinfo == NULL) errorinfo = "<no backtrace>";
+        fprintf(stderr, "Micropolis: error in TCL code: %s\n%s\n", tk_mainInterp->result, errorinfo);
     }
+    */
 
-    if (view->viewClass == Map_Class)
-    {
-        Tk_GeometryRequest(view->tkwin, MAP_W, MAP_H);
-    }
-    else
-    {
-        if (view->width || view->height)
-        {
-            Tk_GeometryRequest(view->tkwin, view->width, view->height);
-        }
-    }
-    EventuallyRedrawView(view);
-    return 0 /*TCL_OK*/;
+    return 0;
 }
 
 
 void InvalidateMaps()
 {
-    //fprintf(stderr, "InvalidateMaps\n");
+    std::cout << "InvalidateMaps" << std::endl;
+
     for (SimView* view = sim->map; view != NULL; view = view->next)
     {
         view->invalid = 1;
         view->skip = 0;
         EventuallyRedrawView(view);
     }
+
     sim_skip = 0;
 }
 
 
 void InvalidateEditors()
 {
-    //fprintf(stderr, "InvalidateEditors\n");
+    std::cout << "InvalidateEditors" << std::endl;
+
     for (SimView* view = sim->editor; view != NULL; view = view->next)
     {
         view->invalid = 1;
         view->skip = 0;
         EventuallyRedrawView(view);
     }
+
     sim_skip = 0;
 }
 
 
-RedrawMaps()
+void RedrawMaps()
 {
-    //fprintf(stderr, "RedrawMaps\n");
+    std::cout << "RedrawMaps" << std::endl;
+
     for (SimView* view = sim->map; view != NULL; view = view->next)
     {
         view->skip = 0;
         EventuallyRedrawView(view);
     }
+
     sim_skip = 0;
 }
 
 
-RedrawEditors()
+void RedrawEditors()
 {
-    //fprintf(stderr, "RedrawEditors\n");
+    std::cout << "RedrawEditors" << std::endl;
 
     for (SimView* view = sim->editor; view != NULL; view = view->next)
     {
@@ -299,53 +169,19 @@ RedrawEditors()
 }
 
 
-static void DisplayTileView(ClientData clientData)
-{
-    SimView* view = (SimView*)clientData;
-    Tk_Window tkwin = view->tkwin;
-    Pixmap pm = None;
-    Drawable d;
-
-    view->flags &= ~VIEW_REDRAW_PENDING;
-    if (view->visible && (tkwin != NULL) && Tk_IsMapped(tkwin))
-    {
-        switch (view->viewClass)
-        {
-        case Editor_Class:
-            view->skip = 0;
-            view->update = 1;
-            DoUpdateEditor(view);
-            break;
-        case Map_Class:
-            //fprintf(stderr, "DisplayTileView\n");
-            view->skip = 0;
-            view->update = 1;
-            DoUpdateMap(view);
-            break;
-        }
-    }
-}
-
-
-EventuallyRedrawView(SimView* view)
-{
-    if (!(view->flags & VIEW_REDRAW_PENDING))
-    {
-        Tk_DoWhenIdle(DisplayTileView, (ClientData)view);
-        view->flags |= VIEW_REDRAW_PENDING;
-    }
-}
-
-
 void CancelRedrawView(SimView* view)
 {
-  if (view->flags & VIEW_REDRAW_PENDING) {
-    Tk_CancelIdleCall(DisplayTileView, (ClientData) view);
-  }
-  view->flags &= ~VIEW_REDRAW_PENDING;
+    /*
+    if (view->flags & VIEW_REDRAW_PENDING)
+    {
+        Tk_CancelIdleCall(DisplayTileView, (ClientData)view);
+    }
+    view->flags &= ~VIEW_REDRAW_PENDING;
+    */
 }
 
 
+/*
 static void TileAutoScrollProc(ClientData clientData)
 {
     SimView* view = (SimView*)clientData;
@@ -488,8 +324,8 @@ static void TileViewEventProc(ClientData clientData, XEvent* eventPtr)
             view->tool_x = x; view->tool_y = y;
         }
 
-        /* XXX: redraw all views showing cursor */
-        /* XXX: also, make sure switching tools works w/out moving */
+        // XXX: redraw all views showing cursor
+        // XXX: also, make sure switching tools works w/out moving
         if (((view->tool_showing != last_showing) ||
             (view->tool_x != last_x) ||
             (view->tool_y != last_y)))
@@ -574,7 +410,7 @@ static void DelayedMap(ClientData clientData)
 {
     while (Tk_DoOneEvent(TK_IDLE_EVENTS) != 0)
     {
-        /* Empty loop body. */
+        //* Empty loop body.
     }
     if (MainWindow == NULL)
     {
@@ -582,17 +418,20 @@ static void DelayedMap(ClientData clientData)
     }
     Tk_MapWindow(MainWindow);
 }
+*/
 
 
 void DidStopPan(SimView* view)
 {
+    /*
     char buf[256];
     sprintf(buf, "UIDidStopPan %s", Tk_PathName(view->tkwin));
 
     Eval(buf);
+    */
 }
 
-
+/*
 static void MicropolisTimerProc(ClientData clientData)
 {
     sim_timer_token = NULL;
@@ -645,19 +484,23 @@ void ReallyStartMicropolisTimer(ClientData clientData)
 
     sim_timer_set = 1;
 }
+*/
 
 
 void StartMicropolisTimer()
 {
+    /*
     if (sim_timer_idle == 0) {
         sim_timer_idle = 1;
         Tk_DoWhenIdle(ReallyStartMicropolisTimer, NULL);
     }
+    */
 }
 
 
 void StopMicropolisTimer()
 {
+    /*
     if (sim_timer_idle != 0)
     {
         sim_timer_idle = 0;
@@ -673,6 +516,7 @@ void StopMicropolisTimer()
         }
         sim_timer_set = 0;
     }
+    */
 }
 
 
@@ -680,11 +524,12 @@ void FixMicropolisTimer()
 {
     if (sim_timer_set)
     {
-        StartMicropolisTimer(NULL);
+        StartMicropolisTimer();
     }
 }
 
 
+/*
 static void DelayedUpdate(ClientData clientData)
 {
     //fprintf(stderr, "DelayedUpdate\n");
@@ -692,15 +537,17 @@ static void DelayedUpdate(ClientData clientData)
     sim_skip = 0;
     sim_update();
 }
-
+*/
 
 void Kick()
 {
+    /*
     if (!UpdateDelayed)
     {
         UpdateDelayed = 1;
         Tk_DoWhenIdle(DelayedUpdate, (ClientData)NULL);
     }
+    */
 }
 
 
@@ -709,40 +556,23 @@ void StopEarthquake()
     ShakeNow = 0;
     if (earthquake_timer_set)
     {
-        Tk_DeleteTimerHandler(earthquake_timer_token);
+        //Tk_DeleteTimerHandler(earthquake_timer_token);
     }
     earthquake_timer_set = 0;
 }
 
 
-DoEarthQuake(void)
+void DoEarthQuake()
 {
     MakeSound("city", "Explosion-Low");
     Eval("UIEarthQuake");
     ShakeNow++;
     if (earthquake_timer_set)
     {
-        Tk_DeleteTimerHandler(earthquake_timer_token);
+        //Tk_DeleteTimerHandler(earthquake_timer_token);
     }
-    Tk_CreateTimerHandler(earthquake_delay, (void (*)())StopEarthquake, (ClientData)0);
+    //Tk_CreateTimerHandler(earthquake_delay, (void (*)())StopEarthquake, (ClientData)0);
     earthquake_timer_set = 1;
-}
-
-
-int Eval(const std::string& buf)
-{
-    std::cout << buf << std::endl;
-    /*
-    int result = Tcl_Eval(tk_mainInterp, buf, 0, (char**)NULL);
-    if (result != TCL_OK)
-    {
-        char* errorinfo = Tcl_GetVar(tk_mainInterp, "errorInfo", TCL_GLOBAL_ONLY);
-        if (errorinfo == NULL) errorinfo = "<no backtrace>";
-        fprintf(stderr, "Micropolis: error in TCL code: %s\n%s\n", tk_mainInterp->result, errorinfo);
-    }
-    */
-
-    return 0;
 }
 
 
