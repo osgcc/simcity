@@ -554,7 +554,7 @@ extern int toolOffset[];
 extern int toolColors[];
 extern std::string Displays;
 extern std::string FirstDisplay;
-extern char *dateStr[12];
+extern const char *dateStr[12];
 
 extern int NewMap;
 extern int NewMapFlags[NMAPS];

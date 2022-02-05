@@ -61,6 +61,14 @@
  */
 #include "main.h"
 
+#include "s_msg.h"
+
+#include "w_eval.h"
+#include "w_graph.h"
+#include "w_stubs.h"
+#include "w_tk.h"
+#include "w_util.h"
+
 
 int MustUpdateFunds;
 int MustUpdateOptions;
@@ -70,11 +78,164 @@ int LastCityMonth;
 int LastFunds;
 int LastR, LastC, LastI;
 
-char *dateStr[12] =
+const char *dateStr[12] =
 {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
+
+
+void SetDemand(double r, double c, double i)
+{
+  /*
+  char buf[256];
+
+  sprintf(buf, "UISetDemand %d %d %d",
+	  (int)(r / 100), (int)(c / 100), (int)(i / 100));
+  Eval(buf);
+  */
+}
+
+
+void drawValve()
+{
+  double r, c, i;
+
+  r = RValve;
+  if (r < -1500) r = -1500;
+  if (r > 1500) r = 1500;
+
+  c = CValve;
+  if (c < -1500) c = -1500;
+  if (c > 1500) c = 1500;
+
+  i = IValve;
+  if (i < -1500) i = -1500;
+  if (i > 1500) i = 1500;
+
+  if ((r != LastR) ||
+      (c != LastC) ||
+      (i != LastI)) {
+    LastR = r;
+    LastC = c;
+    LastI = i;
+    SetDemand(r, c, i);
+  }
+}
+
+
+void showValves()
+{
+  if (ValveFlag) {
+    drawValve();
+    ValveFlag = 0;
+  }
+}
+
+
+void updateDate()
+{	
+  int y;
+  int m;
+  char str[256], buf[256];
+  int megalinium = 1000000;
+
+  LastCityTime = CityTime >> 2;
+
+  y = ((int)CityTime / 48) + (int)StartingYear;
+  m = ((int)CityTime % 48) >> 2;
+
+  if (y >= megalinium) {
+    SetYear(StartingYear);
+    y = StartingYear;
+    SendMes(-40);
+  }
+
+  doMessage();
+
+  if ((LastCityYear != y) ||
+      (LastCityMonth != m)) {
+
+    LastCityYear = y;
+    LastCityMonth = m;
+
+    /*sprintf(str, "%s %d", dateStr[m], y);
+
+    sprintf(buf,
+	    "UISetDate {%s} %d %d",
+	    str, m, y);
+    Eval(buf);
+    */
+  }
+}
+
+
+void UpdateOptionsMenu(int options)
+{
+  /*
+  char buf[256];
+  sprintf(buf, "UISetOptions %d %d %d %d %d %d %d %d",
+	  (options&1)?1:0, (options&2)?1:0,
+	  (options&4)?1:0, (options&8)?1:0,
+	  (options&16)?1:0, (options&32)?1:0,
+	  (options&64)?1:0, (options&128)?1:0);
+  Eval(buf);
+  */
+}
+
+
+void updateOptions()
+{
+  int options;
+
+  if (MustUpdateOptions) {
+    options = 0;
+    if (autoBudget)	options |= 1;
+    if (autoGo)		options |= 2;
+    if (autoBulldoze)	options |= 4;
+    if (!NoDisasters)	options |= 8;
+    if (UserSoundOn)	options |= 16;
+    if (DoAnimation)	options |= 32;
+    if (DoMessages)	options |= 64;
+    if (DoNotices)	options |= 128;
+
+    MustUpdateOptions = 0;
+    UpdateOptionsMenu(options);
+  }
+}
+
+
+
+
+void doTimeStuff() 
+{
+//  if ((CityTime >> 2) != LastCityTime) {
+    updateDate();
+//  }
+}
+
+
+void ReallyUpdateFunds()
+{
+  char localStr[256], dollarStr[256], buf[256];
+
+  if (!MustUpdateFunds) return;
+
+  MustUpdateFunds = 0;
+
+  if (TotalFunds < 0) TotalFunds = 0;
+
+  if (TotalFunds != LastFunds) {
+    LastFunds = TotalFunds;
+    //sprintf(localStr, "%d", TotalFunds);
+    //makeDollarDecimalStr(localStr, dollarStr);
+
+    //sprintf(localStr, "Funds: %s", dollarStr);
+
+    //sprintf(buf, "UISetFunds {%s}", localStr);
+    //Eval(buf);
+  }
+}
 
 
 void DoUpdateHeads()
@@ -123,151 +284,3 @@ void UpdateFunds()
 {
   MustUpdateFunds = 1;
 }
-
-
-ReallyUpdateFunds(void)
-{
-  char localStr[256], dollarStr[256], buf[256];
-
-  if (!MustUpdateFunds) return;
-
-  MustUpdateFunds = 0;
-
-  if (TotalFunds < 0) TotalFunds = 0;
-
-  if (TotalFunds != LastFunds) {
-    LastFunds = TotalFunds;
-    sprintf(localStr, "%d", TotalFunds);
-    makeDollarDecimalStr(localStr, dollarStr);
-
-    sprintf(localStr, "Funds: %s", dollarStr);
-
-    sprintf(buf, "UISetFunds {%s}", localStr);
-    Eval(buf);
-  }
-}
-
-
-doTimeStuff(void) 
-{
-//  if ((CityTime >> 2) != LastCityTime) {
-    updateDate();
-//  }
-}
-
-
-updateDate(void)
-{	
-  int y;
-  int m;
-  char str[256], buf[256];
-  int megalinium = 1000000;
-
-  LastCityTime = CityTime >> 2;
-
-  y = ((int)CityTime / 48) + (int)StartingYear;
-  m = ((int)CityTime % 48) >> 2;
-
-  if (y >= megalinium) {
-    SetYear(StartingYear);
-    y = StartingYear;
-    SendMes(-40);
-  }
-
-  doMessage();
-
-  if ((LastCityYear != y) ||
-      (LastCityMonth != m)) {
-
-    LastCityYear = y;
-    LastCityMonth = m;
-
-    sprintf(str, "%s %d", dateStr[m], y);
-
-    sprintf(buf,
-	    "UISetDate {%s} %d %d",
-	    str, m, y);
-    Eval(buf);
-  }
-}
-
-
-showValves(void)
-{
-  if (ValveFlag) {
-    drawValve();
-    ValveFlag = 0;
-  }
-}
-
-
-drawValve(void)
-{
-  double r, c, i;
-
-  r = RValve;
-  if (r < -1500) r = -1500;
-  if (r > 1500) r = 1500;
-
-  c = CValve;
-  if (c < -1500) c = -1500;
-  if (c > 1500) c = 1500;
-
-  i = IValve;
-  if (i < -1500) i = -1500;
-  if (i > 1500) i = 1500;
-
-  if ((r != LastR) ||
-      (c != LastC) ||
-      (i != LastI)) {
-    LastR = r;
-    LastC = c;
-    LastI = i;
-    SetDemand(r, c, i);
-  }
-}
-
-
-SetDemand(double r, double c, double i)
-{
-  char buf[256];
-
-  sprintf(buf, "UISetDemand %d %d %d",
-	  (int)(r / 100), (int)(c / 100), (int)(i / 100));
-  Eval(buf);
-}
-
-
-updateOptions()
-{
-  int options;
-
-  if (MustUpdateOptions) {
-    options = 0;
-    if (autoBudget)	options |= 1;
-    if (autoGo)		options |= 2;
-    if (autoBulldoze)	options |= 4;
-    if (!NoDisasters)	options |= 8;
-    if (UserSoundOn)	options |= 16;
-    if (DoAnimation)	options |= 32;
-    if (DoMessages)	options |= 64;
-    if (DoNotices)	options |= 128;
-
-    MustUpdateOptions = 0;
-    UpdateOptionsMenu(options);
-  }
-}
-
-
-UpdateOptionsMenu(int options)
-{
-  char buf[256];
-  sprintf(buf, "UISetOptions %d %d %d %d %d %d %d %d",
-	  (options&1)?1:0, (options&2)?1:0,
-	  (options&4)?1:0, (options&8)?1:0,
-	  (options&16)?1:0, (options&32)?1:0,
-	  (options&64)?1:0, (options&128)?1:0);
-  Eval(buf);
-}
-
-
