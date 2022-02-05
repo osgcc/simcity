@@ -61,9 +61,11 @@
  */
 #include "main.h"
 
+#include "w_date.h"
+
 
 int NewDate = 0;
-Tcl_HashTable DateCmds;
+//Tcl_HashTable DateCmds;
 int DateUpdateTime = 200;
 
 
@@ -77,6 +79,7 @@ int DateUpdateTime = 200;
 #define DEF_DATE_MONTHTAB	"7"
 #define DEF_DATE_YEARTAB	"13"
 
+/*
 Tk_ConfigSpec DateConfigSpecs[] = {
     {TK_CONFIG_FONT, "-font", (char *) NULL, (char *) NULL,
        DEF_DATE_FONT, Tk_Offset(SimDate, fontPtr), 0},
@@ -101,11 +104,11 @@ Tk_ConfigSpec DateConfigSpecs[] = {
     {TK_CONFIG_END, (char *) NULL, (char *) NULL, (char *) NULL,
        (char *) NULL, 0, 0}
   };
+  */
 
+//XDisplay *FindXDisplay();
 
-XDisplay *FindXDisplay();
-
-
+/*
 static void
 DisplaySimDate(ClientData clientData)
 {
@@ -136,10 +139,15 @@ DestroySimDate(ClientData clientData)
 
   DestroyDate(date);
 }
+*/
 
 
-EventuallyRedrawDate(SimDate *date)
+/*
+ * Lazy draw?
+ */
+void EventuallyRedrawDate(const SimDate& date)
 {
+    /*
   if (!(date->flags & VIEW_REDRAW_PENDING)) {
     assert(date->draw_date_token == 0);
     if (date->draw_date_token == 0) {
@@ -149,14 +157,15 @@ EventuallyRedrawDate(SimDate *date)
 	  DisplaySimDate,
 	  (ClientData) date);
       date->flags |= VIEW_REDRAW_PENDING;
-//fprintf(stderr, "EventuallyRedrawDate set VIEW_REDRAW_PENDING\n");
+      fprintf(stderr, "EventuallyRedrawDate set VIEW_REDRAW_PENDING\n");
     }
   }
+  */
 }
 
 
-void
-SimDateEventProc(ClientData clientData, XEvent *eventPtr)
+/*
+void SimDateEventProc(ClientData clientData, XEvent *eventPtr)
 {
   SimDate *date = (SimDate *) clientData;
 
@@ -187,16 +196,17 @@ SimDateEventProc(ClientData clientData, XEvent *eventPtr)
 	date->draw_date_token = 0;
       }
       date->flags &= ~VIEW_REDRAW_PENDING;
-//fprintf(stderr, "SimDateEventProc cleared VIEW_REDRAW_PENDING\n");
+      fprintf(stderr, "SimDateEventProc cleared VIEW_REDRAW_PENDING\n");
     }
    Tk_EventuallyFree((ClientData) date, DestroySimDate);
   }
 }
+*/
 
 
-static void
-ComputeDateGeometry(SimDate *date)
+static void ComputeDateGeometry(const SimDate& date)
 {
+    /*
     XCharStruct bbox;
     int dummy;
     unsigned int width, height;
@@ -232,143 +242,163 @@ ComputeDateGeometry(SimDate *date)
 
     date->yearTabX = date->yearTab * charWidth;
     date->monthTabX = date->monthTab * charWidth;
+    */
 }
 
 
-int DateCmdconfigure(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
+int DateCmdconfigure(SimDate* date, void* /*Tcl_Interp**/ interp, int argc, char** argv)
 {
+    /*
   int result = TCL_OK;
 
   if (argc == 2) {
     result = Tk_ConfigureInfo(interp, date->tkwin, DateConfigSpecs,
-			      (char *) date, (char *) NULL, 0);
+                  (char *) date, (char *) NULL, 0);
   } else if (argc == 3) {
     result = Tk_ConfigureInfo(interp, date->tkwin, DateConfigSpecs,
-			      (char *) date, argv[2], 0);
+                  (char *) date, argv[2], 0);
   } else {
     result = ConfigureSimDate(interp, date, argc-2, argv+2,
-			    TK_CONFIG_ARGV_ONLY);
+                TK_CONFIG_ARGV_ONLY);
   }
   return TCL_OK;
+  */
+    return 0;
 }
 
 
-int DateCmdposition(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
+int DateCmdposition(SimDate* date, void* /*Tcl_Interp**/ interp, int argc, char** argv)
 {
-  int result = TCL_OK;
+    /*
+    int result = TCL_OK;
 
     if ((argc != 2) && (argc != 4)) {
-      return TCL_ERROR;
+        return TCL_ERROR;
     }
     if (argc == 4) {
-      if ((Tcl_GetInt(interp, argv[2], &date->w_x) != TCL_OK)
-	  || (Tcl_GetInt(interp, argv[3], &date->w_y) != TCL_OK)) {
-	return TCL_ERROR;
-      }
+        if ((Tcl_GetInt(interp, argv[2], &date->w_x) != TCL_OK)
+            || (Tcl_GetInt(interp, argv[3], &date->w_y) != TCL_OK)) {
+            return TCL_ERROR;
+        }
     }
     sprintf(interp->result, "%d %d", date->w_x, date->w_y);
     return TCL_OK;
+    */
+    return 0;
 }
 
 
-int DateCmdsize(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
+int DateCmdsize(SimDate* date, void* /*Tcl_Interp**/ interp, int argc, char** argv)
 {
-  if ((argc != 2) && (argc != 4)) {
-    return TCL_ERROR;
-  }
-  if (argc == 4) {
-    int w, h;
-    
-    if (Tcl_GetInt(interp, argv[2], &w) != TCL_OK) {
-      return TCL_ERROR;
+    /*
+    if ((argc != 2) && (argc != 4)) {
+        return TCL_ERROR;
     }
-    if (Tcl_GetInt(interp, argv[3], &h) != TCL_OK) {
-      return TCL_ERROR;
+    if (argc == 4) {
+        int w, h;
+
+        if (Tcl_GetInt(interp, argv[2], &w) != TCL_OK) {
+            return TCL_ERROR;
+        }
+        if (Tcl_GetInt(interp, argv[3], &h) != TCL_OK) {
+            return TCL_ERROR;
+        }
+        date->w_width = w;
+        date->w_height = h;
     }
-    date->w_width = w;
-    date->w_height = h;
-  }
-  sprintf(interp->result, "%d %d", date->w_width, date->w_height);
-  return TCL_OK;
+    sprintf(interp->result, "%d %d", date->w_width, date->w_height);
+    return TCL_OK;
+    */
+    return 0;
 }
 
 
-int DateCmdVisible(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
+int DateCmdVisible(SimDate* date, void* /*Tcl_Interp**/ interp, int argc, char** argv)
 {
-  int visible;
+    /*
+    int visible;
 
-  if ((argc != 2) && (argc != 3)) {
-    Tcl_AppendResult(interp, "wrong # args", (char *) NULL);
-    return TCL_ERROR;
-  }
-
-  if (argc == 3) {
-    if ((Tcl_GetInt(interp, argv[2], &visible) != TCL_OK) ||
-	(visible < 0) || (visible > 1)) {
-      Tcl_AppendResult(interp, " bogus args", (char *) NULL);
-      return TCL_ERROR;
+    if ((argc != 2) && (argc != 3)) {
+        Tcl_AppendResult(interp, "wrong # args", (char*)NULL);
+        return TCL_ERROR;
     }
 
-    date->visible = visible;
-  }
+    if (argc == 3) {
+        if ((Tcl_GetInt(interp, argv[2], &visible) != TCL_OK) ||
+            (visible < 0) || (visible > 1)) {
+            Tcl_AppendResult(interp, " bogus args", (char*)NULL);
+            return TCL_ERROR;
+        }
 
-  sprintf(interp->result, "%d", date->visible);
+        date->visible = visible;
+    }
 
-  return TCL_OK;
+    sprintf(interp->result, "%d", date->visible);
+
+    return TCL_OK;
+    */
+    return 0;
 }
 
 
-int DateCmdReset(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
+int DateCmdReset(SimDate* date, void* /*Tcl_Interp**/ interp, int argc, char** argv)
 {
-  int range;
+    /*
+    int range;
 
-  if (argc != 2) {
-    Tcl_AppendResult(interp, "wrong # args", (char *) NULL);
-    return TCL_ERROR;
-  }
+    if (argc != 2) {
+        Tcl_AppendResult(interp, "wrong # args", (char*)NULL);
+        return TCL_ERROR;
+    }
 
-  date->reset = 1;
+    date->reset = 1;
 
-//  ComputeDateGeometry(date); // ???
+    ComputeDateGeometry(date);
 
-  EventuallyRedrawDate(date);
+    EventuallyRedrawDate(date);
 
-  return TCL_OK;
+    return TCL_OK;
+    */
+
+    return 0;
 }
 
 
-int DateCmdSet(SimDate *date, Tcl_Interp *interp, int argc, char **argv)
+int DateCmdSet(SimDate* date, void* /*Tcl_Interp**/ interp, int argc, char** argv)
 {
-  int range;
+    /*
+    int range;
 
-  if (argc != 4) {
-    Tcl_AppendResult(interp, "wrong # args", (char *) NULL);
-    return TCL_ERROR;
-  }
+    if (argc != 4) {
+        Tcl_AppendResult(interp, "wrong # args", (char*)NULL);
+        return TCL_ERROR;
+    }
 
-  if ((Tcl_GetInt(interp, argv[2], &date->month) != TCL_OK) ||
-      (date->month < 0) ||
-      (date->month >= 12)) {
-    Tcl_AppendResult(interp, " bogus args", (char *) NULL);
-    return TCL_ERROR;
-  }
-  
-  if ((Tcl_GetInt(interp, argv[3], &date->year) != TCL_OK) ||
-      (date->year < 0)) {
-    Tcl_AppendResult(interp, " bogus args", (char *) NULL);
-    return TCL_ERROR;
-  }
+    if ((Tcl_GetInt(interp, argv[2], &date->month) != TCL_OK) ||
+        (date->month < 0) ||
+        (date->month >= 12)) {
+        Tcl_AppendResult(interp, " bogus args", (char*)NULL);
+        return TCL_ERROR;
+    }
 
-//  ComputeDateGeometry(date); // ???
+    if ((Tcl_GetInt(interp, argv[3], &date->year) != TCL_OK) ||
+        (date->year < 0)) {
+        Tcl_AppendResult(interp, " bogus args", (char*)NULL);
+        return TCL_ERROR;
+    }
 
-  EventuallyRedrawDate(date);
+    ComputeDateGeometry(date);
 
-  return TCL_OK;
+    EventuallyRedrawDate(date);
+
+    return TCL_OK;
+    */
+    return 0;
 }
 
 
-int
-DoDateCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
+/*
+int DoDateCmd(ClientData clientData, void* interp, int argc, char **argv)
 {
   SimDate *date = (SimDate *) clientData;
   Tcl_HashEntry *ent;
@@ -391,338 +421,346 @@ DoDateCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
   }
   return result;
 }
-
-
-int
-DateViewCmd(ClientData clientData, Tcl_Interp *interp, int argc, char **argv)
-{
-  SimDate *date;
-  Tk_Window tkwin = (Tk_Window) clientData;
-
-  if (argc < 2) {
-    Tcl_AppendResult(interp, "wrong # args:  should be \"",
-		     argv[0], " pathName ?options?\"", (char *) NULL);
-    return TCL_ERROR;
-  }
-
-  tkwin = Tk_CreateWindowFromPath(interp, tkwin,
-				  argv[1], (char *) NULL);
-  if (tkwin == NULL) {
-    return TCL_ERROR;
-  }
-
-  date = (SimDate *)malloc(sizeof (SimDate));
-
-  date->tkwin = tkwin;
-  date->interp = interp;
-  date->flags = 0;
-  date->reset = 1;
-  date->month = 0;
-  date->year = 0;
-  date->lastmonth = 0;
-  date->lastyear = 0;
-  
-  Tk_SetClass(date->tkwin, "DateView");
-  Tk_CreateEventHandler(date->tkwin,
-			VisibilityChangeMask |
-			ExposureMask |
-			StructureNotifyMask,
-			SimDateEventProc, (ClientData) date);
-  Tcl_CreateCommand(interp, Tk_PathName(date->tkwin),
-		    DoDateCmd, (ClientData) date, (void (*)()) NULL);
+*/
 
 /*
-  Tk_MakeWindowExist(date->tkwin);
+int DateViewCmd(ClientData clientData, Tcl_Interp* interp, int argc, char** argv)
+{
+    SimDate* date;
+    Tk_Window tkwin = (Tk_Window)clientData;
+
+    if (argc < 2) {
+        Tcl_AppendResult(interp, "wrong # args:  should be \"",
+            argv[0], " pathName ?options?\"", (char*)NULL);
+        return TCL_ERROR;
+    }
+
+    tkwin = Tk_CreateWindowFromPath(interp, tkwin,
+        argv[1], (char*)NULL);
+    if (tkwin == NULL) {
+        return TCL_ERROR;
+    }
+
+    date = (SimDate*)malloc(sizeof(SimDate));
+
+    date->tkwin = tkwin;
+    date->interp = interp;
+    date->flags = 0;
+    date->reset = 1;
+    date->month = 0;
+    date->year = 0;
+    date->lastmonth = 0;
+    date->lastyear = 0;
+
+    Tk_SetClass(date->tkwin, "DateView");
+    Tk_CreateEventHandler(date->tkwin,
+        VisibilityChangeMask |
+        ExposureMask |
+        StructureNotifyMask,
+        SimDateEventProc, (ClientData)date);
+    Tcl_CreateCommand(interp, Tk_PathName(date->tkwin),
+        DoDateCmd, (ClientData)date, (void (*)()) NULL);
+
+    
+      Tk_MakeWindowExist(date->tkwin);
+    
+
+    if (getenv("XSYNCHRONIZE") != NULL) {
+        XSynchronize(Tk_Display(tkwin), 1);
+    }
+
+    InitNewDate(date);
+    DoNewDate(date);
+
+    if (ConfigureSimDate(interp, date, argc - 2, argv + 2, 0) != TCL_OK) {
+        // XXX: destroy date
+        Tk_DestroyWindow(date->tkwin);
+        return TCL_ERROR;
+    }
+
+    interp->result = Tk_PathName(date->tkwin);
+    return TCL_OK;
+}
 */
-  
-  if (getenv("XSYNCHRONIZE") != NULL) {
-    XSynchronize(Tk_Display(tkwin), 1);
-  }
 
-  InitNewDate(date);
-  DoNewDate(date);
+int ConfigureSimDate(void* /*Tcl_Interp**/ interp, SimDate* date, int argc, char** argv, int flags)
+{
+    /*
+    if (Tk_ConfigureWidget(interp, date->tkwin, DateConfigSpecs,
+        argc, argv, (char*)date, flags) != TCL_OK) {
+        return TCL_ERROR;
+    }
 
-  if (ConfigureSimDate(interp, date, argc-2, argv+2, 0) != TCL_OK) {
-    /* XXX: destroy date */
-    Tk_DestroyWindow(date->tkwin);
-    return TCL_ERROR;
-  }
+    Tk_SetBackgroundFromBorder(date->tkwin, date->border);
 
-  interp->result = Tk_PathName(date->tkwin);
-  return TCL_OK;
+    ComputeDateGeometry(date);
+
+    EventuallyRedrawDate(date);
+
+    return TCL_OK;
+    */
+    return 0;
 }
 
 
-int
-ConfigureSimDate(Tcl_Interp *interp, SimDate *date,
-		  int argc, char **argv, int flags)
+void date_command_init()
 {
-  if (Tk_ConfigureWidget(interp, date->tkwin, DateConfigSpecs,
-			 argc, argv, (char *) date, flags) != TCL_OK) {
-    return TCL_ERROR;
-  }
-  
-  Tk_SetBackgroundFromBorder(date->tkwin, date->border);
+    /*
+    int new;
 
-  ComputeDateGeometry(date);
+    Tcl_CreateCommand(tk_mainInterp, "dateview", DateViewCmd, (ClientData)MainWindow, (void (*)()) NULL);
 
-  EventuallyRedrawDate(date);
-
-  return TCL_OK;
-}
-
-
-date_command_init()
-{
-  int new;
-
-  Tcl_CreateCommand(tk_mainInterp, "dateview", DateViewCmd,
-		    (ClientData)MainWindow, (void (*)()) NULL);
-
-  Tcl_InitHashTable(&DateCmds, TCL_STRING_KEYS);
+    Tcl_InitHashTable(&DateCmds, TCL_STRING_KEYS);
 
 #define DATE_CMD(name) HASHED_CMD(Date, name)
 
-  DATE_CMD(configure);
-  DATE_CMD(position);
-  DATE_CMD(size);
-  DATE_CMD(Visible);
-  DATE_CMD(Reset);
-  DATE_CMD(Set);
+    DATE_CMD(configure);
+    DATE_CMD(position);
+    DATE_CMD(size);
+    DATE_CMD(Visible);
+    DATE_CMD(Reset);
+    DATE_CMD(Set);
+    */
 }
 
 
-InitNewDate(SimDate *date)
+void InitNewDate(SimDate* date)
 {
-  int d = 8;
-  struct XDisplay *xd;
+    /*
+    int d = 8;
+    struct XDisplay* xd;
 
-  date->next = NULL;
+    date->next = NULL;
 
-/* This stuff was initialized in our caller (DateCmd) */
-/*  date->tkwin = NULL; */
-/*  date->interp = NULL; */
-/*  date->flags = 0; */
+    //date->tkwin = NULL;
+    //date->interp = NULL;
+    //date->flags = 0;
 
-  date->x = NULL;
-  date->visible = 0;
-  date->w_x = date->w_y = 0;
-  date->w_width = date->w_height = 0;
-  date->pixmap = None;
-  date->pixels = NULL;
-  date->fontPtr = NULL;
-  date->border = NULL;
-  date->borderWidth = 0;
-  date->padX = 0;
-  date->padY = 0;
-  date->width = 0;
-  date->monthTab = 0;
-  date->monthTabX = 0;
-  date->yearTab = 0;
-  date->yearTabX = 0;
-  date->draw_date_token = 0;
-  date->reset = 1;
-  date->year = 0;
-  date->month = 0;
-  date->lastyear = 0;
-  date->lastmonth = 0;
+    date->x = NULL;
+    date->visible = 0;
+    date->w_x = date->w_y = 0;
+    date->w_width = date->w_height = 0;
+    date->pixmap = None;
+    date->pixels = NULL;
+    date->fontPtr = NULL;
+    date->border = NULL;
+    date->borderWidth = 0;
+    date->padX = 0;
+    date->padY = 0;
+    date->width = 0;
+    date->monthTab = 0;
+    date->monthTabX = 0;
+    date->yearTab = 0;
+    date->yearTabX = 0;
+    date->draw_date_token = 0;
+    date->reset = 1;
+    date->year = 0;
+    date->month = 0;
+    date->lastyear = 0;
+    date->lastmonth = 0;
 
-  date->x = FindXDisplay(date->tkwin);
-  IncRefDisplay(date->x);
+    date->x = FindXDisplay(date->tkwin);
+    IncRefDisplay(date->x);
 
-  date->pixels = date->x->pixels;
-  date->fontPtr = NULL;
+    date->pixels = date->x->pixels;
+    date->fontPtr = NULL;
 
-  DoResizeDate(date, 16, 16);
+    DoResizeDate(date, 16, 16);
+    */
 }
 
 
-DestroyDate(SimDate *date)
+void DestroyDate(SimDate* date)
 {
-  SimDate **gp;
+    /*
+    SimDate** gp;
 
-  for (gp = &sim->date;
-       (*gp) != NULL;
-       gp = &((*gp)->next)) {
-    if ((*gp) == date) {
-      (*gp) = date->next;
-      sim->dates--;
-      break;
+    for (gp = &sim->date;
+        (*gp) != NULL;
+        gp = &((*gp)->next)) {
+        if ((*gp) == date) {
+            (*gp) = date->next;
+            sim->dates--;
+            break;
+        }
     }
-  }
 
-  if (date->pixmap != None) {
-    XFreePixmap(date->x->dpy, date->pixmap);
-    date->pixmap = None;
-  }
+    if (date->pixmap != None) {
+        XFreePixmap(date->x->dpy, date->pixmap);
+        date->pixmap = None;
+    }
 
-  DecRefDisplay(date->x);
+    DecRefDisplay(date->x);
 
-  free((char *) date);
+    free((char*)date);
+    */
 }
 
 
-DoResizeDate(SimDate *date, int w, int h)
+void DoResizeDate(SimDate* date, int w, int h)
 {
-  int resize = 0;
+    /*
+    int resize = 0;
 
-  date->w_width = w; date->w_height = h;
+    date->w_width = w; date->w_height = h;
 
-  if (date->pixmap != None) {
-    XFreePixmap(date->x->dpy, date->pixmap);
-    date->pixmap = None;
-  }
-  date->pixmap = XCreatePixmap(date->x->dpy, date->x->root,
-				w, h, date->x->depth);
-  if (date->pixmap == None) {
-    fprintf(stderr,
-	    "Sorry, Micropolis can't create a pixmap on X display \"%s\".\n",
-	    date->x->display);
-    sim_exit(1); // Just sets tkMustExit and ExitReturn
-    return;
-  }
+    if (date->pixmap != None) {
+        XFreePixmap(date->x->dpy, date->pixmap);
+        date->pixmap = None;
+    }
+    date->pixmap = XCreatePixmap(date->x->dpy, date->x->root,
+        w, h, date->x->depth);
+    if (date->pixmap == None) {
+        fprintf(stderr,
+            "Sorry, Micropolis can't create a pixmap on X display \"%s\".\n",
+            date->x->display);
+        sim_exit(1); // Just sets tkMustExit and ExitReturn
+        return;
+    }
+    */
 }
 
 
-DoNewDate(SimDate *date)
+void DoNewDate(SimDate* date)
 {
-  sim->dates++; date->next = sim->date; sim->date = date;
-
-  NewDate = 1;
+    /*
+    sim->dates++; date->next = sim->date; sim->date = date;
+    NewDate = 1;
+    */
 }
 
 
 #define BORDER 1
 
-DoUpdateDate(SimDate *date)
+void DoUpdateDate(SimDate* date)
 {
-  Display *dpy;
-  GC gc;
-  Pixmap pm;
-  int *pix;
-  int w, h, i, j, x, y;
-  int tx, ty;
-  float sx, sy;
+    /*
+    Display* dpy;
+    GC gc;
+    Pixmap pm;
+    int* pix;
+    int w, h, i, j, x, y;
+    int tx, ty;
+    float sx, sy;
 
-  if (!date->visible) {
-    return;
-  }
-
-  dpy = date->x->dpy;
-  gc = date->x->gc;
-  pm = date->pixmap;
-  pix = date->pixels;
-
-  w = date->w_width;
-  h = date->w_height;
-
-  XSetFont(date->x->dpy, date->x->gc, date->fontPtr->fid);
-
-  XSetForeground(dpy, gc, Tk_3DBorderColor(date->border)->pixel);
-
-  XFillRectangle(dpy, pm, gc, 0, 0, w, h);
-
-  tx = BORDER; ty = BORDER;
-
-  if ((w -= (2 * BORDER)) < 1) w = 1;
-  if ((h -= (2 * BORDER)) < 1) h = 1;
-
-  x = date->borderWidth + date->padX + 1;
-  y = date->borderWidth + date->padY + date->fontPtr->ascent;
-
-  if (date->reset) {
-    date->reset = 0;
-    date->lastyear = date->year;
-    date->lastmonth = date->month;
-  }
-
-  {
-    char *dateString = "Date:";
-    char yearString[256];
-    int month = date->month;
-    int year = date->year;
-    int lastmonth = date->lastmonth;
-    int lastyear = date->lastyear;
-    int yearsPassed;
-    int monthsPassed;
-    yearsPassed =
-        (year - lastyear);
-    if (yearsPassed < 0) yearsPassed = 1;
-    if (yearsPassed > 9) yearsPassed = 9;
-    monthsPassed =
-      (month - lastmonth) +
-      (12 * yearsPassed);
-
-    if (monthsPassed > 11) monthsPassed = 11;
-    if (monthsPassed == 1) monthsPassed = 0;
-    if (monthsPassed) {
-      int m = lastmonth;
-      int i;
-
-      XSetForeground(dpy, gc, pix[COLOR_DARKGRAY]);
-
-      for (i = 0; i < monthsPassed; i++) {
-	
-	XDrawString(date->x->dpy, pm, date->x->gc,
-		    x + date->monthTabX, y,
-		    dateStr[m],
-		    strlen(dateStr[date->month]));
-
-	m++;
-	if (m == 12) m = 0;
-      }
-
-      if (year != lastyear) {
-	int yy = lastyear;
-	if ((year - yy) > 10) {
-	  yy = year - 10;
-	}
-
-	for (i = yy; i < year; i++) {
-	  sprintf(
-	    yearString,
-	    "%d",
-	    i);
-
-	  XDrawString(date->x->dpy, pm, date->x->gc,
-		      x + date->yearTabX, y,
-		      yearString,
-		      strlen(yearString));
-	}
-      }
-
-      EventuallyRedrawDate(date);
+    if (!date->visible) {
+        return;
     }
 
-    date->lastmonth = month;
-    date->lastyear = year;
+    dpy = date->x->dpy;
+    gc = date->x->gc;
+    pm = date->pixmap;
+    pix = date->pixels;
 
-    XSetForeground(dpy, gc, pix[COLOR_BLACK]);
+    w = date->w_width;
+    h = date->w_height;
 
-    XDrawString(date->x->dpy, pm, date->x->gc,
-		x, y,
-		dateString,
-		strlen(dateString));
+    XSetFont(date->x->dpy, date->x->gc, date->fontPtr->fid);
 
-    XDrawString(date->x->dpy, pm, date->x->gc,
-		x + date->monthTabX, y,
-		dateStr[date->month],
-		strlen(dateStr[date->month]));
+    XSetForeground(dpy, gc, Tk_3DBorderColor(date->border)->pixel);
 
-    sprintf(
-      yearString,
-      "%d",
-      year);
+    XFillRectangle(dpy, pm, gc, 0, 0, w, h);
 
-    XDrawString(date->x->dpy, pm, date->x->gc,
-		x + date->yearTabX, y,
-		yearString,
-		strlen(yearString));
-  }
+    tx = BORDER; ty = BORDER;
 
-  XCopyArea(date->x->dpy, date->pixmap,
-	    Tk_WindowId(date->tkwin), date->x->gc,
-	    0, 0, date->w_width, date->w_height, 0, 0);
+    if ((w -= (2 * BORDER)) < 1) w = 1;
+    if ((h -= (2 * BORDER)) < 1) h = 1;
+
+    x = date->borderWidth + date->padX + 1;
+    y = date->borderWidth + date->padY + date->fontPtr->ascent;
+
+    if (date->reset) {
+        date->reset = 0;
+        date->lastyear = date->year;
+        date->lastmonth = date->month;
+    }
+
+    {
+        char* dateString = "Date:";
+        char yearString[256];
+        int month = date->month;
+        int year = date->year;
+        int lastmonth = date->lastmonth;
+        int lastyear = date->lastyear;
+        int yearsPassed;
+        int monthsPassed;
+        yearsPassed =
+            (year - lastyear);
+        if (yearsPassed < 0) yearsPassed = 1;
+        if (yearsPassed > 9) yearsPassed = 9;
+        monthsPassed =
+            (month - lastmonth) +
+            (12 * yearsPassed);
+
+        if (monthsPassed > 11) monthsPassed = 11;
+        if (monthsPassed == 1) monthsPassed = 0;
+        if (monthsPassed) {
+            int m = lastmonth;
+            int i;
+
+            XSetForeground(dpy, gc, pix[COLOR_DARKGRAY]);
+
+            for (i = 0; i < monthsPassed; i++) {
+
+                XDrawString(date->x->dpy, pm, date->x->gc,
+                    x + date->monthTabX, y,
+                    dateStr[m],
+                    strlen(dateStr[date->month]));
+
+                m++;
+                if (m == 12) m = 0;
+            }
+
+            if (year != lastyear) {
+                int yy = lastyear;
+                if ((year - yy) > 10) {
+                    yy = year - 10;
+                }
+
+                for (i = yy; i < year; i++) {
+                    sprintf(
+                        yearString,
+                        "%d",
+                        i);
+
+                    XDrawString(date->x->dpy, pm, date->x->gc,
+                        x + date->yearTabX, y,
+                        yearString,
+                        strlen(yearString));
+                }
+            }
+
+            EventuallyRedrawDate(date);
+        }
+
+        date->lastmonth = month;
+        date->lastyear = year;
+
+        XSetForeground(dpy, gc, pix[COLOR_BLACK]);
+
+        XDrawString(date->x->dpy, pm, date->x->gc,
+            x, y,
+            dateString,
+            strlen(dateString));
+
+        XDrawString(date->x->dpy, pm, date->x->gc,
+            x + date->monthTabX, y,
+            dateStr[date->month],
+            strlen(dateStr[date->month]));
+
+        sprintf(
+            yearString,
+            "%d",
+            year);
+
+        XDrawString(date->x->dpy, pm, date->x->gc,
+            x + date->yearTabX, y,
+            yearString,
+            strlen(yearString));
+    }
+
+    XCopyArea(date->x->dpy, date->pixmap,
+        Tk_WindowId(date->tkwin), date->x->gc,
+        0, 0, date->w_width, date->w_height, 0, 0);
+    */
 }
-
-

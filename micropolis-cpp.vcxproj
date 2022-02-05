@@ -75,6 +75,7 @@
     <ClInclude Include="src\s_traf.h" />
     <ClInclude Include="src\s_zone.h" />
     <ClInclude Include="src\w_budget.h" />
+    <ClInclude Include="src\w_date.h" />
     <ClInclude Include="src\w_graph.h" />
     <ClInclude Include="src\animtab.h" />
     <ClInclude Include="src\g_map.h" />

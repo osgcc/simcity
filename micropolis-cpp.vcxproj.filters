@@ -236,5 +236,8 @@
     <ClInclude Include="src\s_traf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\w_date.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
