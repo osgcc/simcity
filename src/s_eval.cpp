@@ -74,8 +74,8 @@ int ProblemTaken[PROBNUM];
 int ProblemVotes[PROBNUM];		/* these are the votes for each  */
 int ProblemOrder[4];			/* sorted index to above  */
 int CityPop, deltaCityPop;
-int CityAssValue;
-int CityClass;			/*  0..5  */
+int CityAssValue;               /* assessed city value */
+int CityClass;                  /*  0..5  */
 int CityScore, deltaCityScore, AverageCityScore;
 int TrafficAverage;
 

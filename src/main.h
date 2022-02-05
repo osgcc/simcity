@@ -506,10 +506,8 @@ extern int FloodX, FloodY;
 extern int CrashX, CrashY;
 extern int CCx, CCy;
 extern int CityPop, deltaCityPop;
-extern char *cityClassStr[6];
 extern int CityYes, CityNo;
 extern int ProblemTable[PROBNUM];
-extern int ProblemVotes[PROBNUM];
 extern int ProblemOrder[4];
 extern int CityAssValue;
 
