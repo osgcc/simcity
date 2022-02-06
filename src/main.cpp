@@ -173,12 +173,12 @@ void sim_update_maps()
             if (mustUpdateMap)
             {
                 //fprintf(stderr, "sim_update_maps mustUpdateMap\n");
-                //view->skip = 0;
+                view->skip = 0;
             }
             if (DoUpdateMap(view))
             {
-                //CancelRedrawView(view);
-                //view->invalid = 1;
+                CancelRedrawView(view);
+                view->invalid = 1;
             }
         }
     }
