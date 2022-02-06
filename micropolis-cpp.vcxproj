@@ -26,7 +26,6 @@
     <ClCompile Include="src\g_smmaps.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\rand.cpp" />
-    <ClCompile Include="src\random.cpp" />
     <ClCompile Include="src\s_alloc.cpp" />
     <ClCompile Include="src\s_disast.cpp" />
     <ClCompile Include="src\s_eval.cpp" />

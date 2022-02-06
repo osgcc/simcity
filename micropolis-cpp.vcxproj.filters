@@ -36,9 +36,6 @@
     <ClCompile Include="src\rand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\random.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\s_alloc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

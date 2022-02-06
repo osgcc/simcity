@@ -117,10 +117,6 @@
 static int degrees[MAX_TYPES] =	{ DEG_0, DEG_1, DEG_2, DEG_3, DEG_4 };
 static int seps [MAX_TYPES] =	{ SEP_0, SEP_1, SEP_2, SEP_3, SEP_4 };
 
-int sim_random();
-void sim_srandom();
-char *sim_initstate();
-char *sim_setstate();
 
 /*
  * Initially, everything is set up as if from:
@@ -179,6 +175,43 @@ static int rand_deg = DEG_3;
 static int rand_sep = SEP_3;
 static int *end_ptr = &randtbl[DEG_3 + 1];
 
+
+/*
+ * random:
+ *
+ * If we are using the trivial TYPE_0 R.N.G., just do the old linear
+ * congruential bit.  Otherwise, we do our fancy trinomial stuff, which is
+ * the same in all the other cases due to all the global variables that have
+ * been set up.  The basic operation is to add the number at the rear pointer
+ * into the one at the front pointer.  Then both pointers are advanced to
+ * the next location cyclically in the table.  The value returned is the sum
+ * generated, reduced to 31 bits by throwing away the "least random" low bit.
+ *
+ * Note: the code takes advantage of the fact that both the front and
+ * rear pointers can't wrap on the same call by not testing the rear
+ * pointer if the front one has wrapped.
+ *
+ * Returns a 31-bit random number.
+ */
+int
+sim_random()
+{
+	int i;
+
+	if (rand_type == TYPE_0)
+		i = state[0] = (state[0] * 1103515245 + 12345) & 0x7fffffff;
+	else {
+		*fptr += *rptr;
+		i = (*fptr >> 1) & 0x7fffffff;	/* chucking least random bit */
+		if (++fptr >= end_ptr) {
+			fptr = state;
+			++rptr;
+		} else if (++rptr >= end_ptr)
+			rptr = state;
+	}
+	return(i);
+}
+
 /*
  * srandom:
  *
@@ -218,20 +251,20 @@ void sim_srandom(unsigned int x)
  * the break values for the different R.N.G.'s, we choose the best (largest)
  * one we can and set things up for it.  srandom() is then called to
  * initialize the state information.
- * 
+ *
  * Note that on return from srandom(), we set state[-1] to be the type
  * multiplexed with the current value of the rear pointer; this is so
  * successive calls to initstate() won't lose this information and will be
  * able to restart with setstate().
- * 
+ *
  * Note: the first thing we do is save the current state, if any, just like
  * setstate() so that it doesn't matter when initstate is called.
  *
  * Returns a pointer to the old state.
  */
-char * sim_initstate(unsigned int seed, char *arg_state, int n)
+char* sim_initstate(unsigned int seed, char* arg_state, int n)
 {
-	char *ostate = (char *)(&state[-1]);
+	char* ostate = (char*)(&state[-1]);
 
 	if (rand_type == TYPE_0)
 		state[-1] = rand_type;
@@ -239,37 +272,41 @@ char * sim_initstate(unsigned int seed, char *arg_state, int n)
 		state[-1] = MAX_TYPES * (rptr - state) + rand_type;
 	if (n < BREAK_0) {
 		(void)fprintf(stderr,
-		    "random: not enough state (%d bytes); ignored.\n", n);
+			"random: not enough state (%d bytes); ignored.\n", n);
 		return(0);
 	}
 	if (n < BREAK_1) {
 		rand_type = TYPE_0;
 		rand_deg = DEG_0;
 		rand_sep = SEP_0;
-	} else if (n < BREAK_2) {
+	}
+	else if (n < BREAK_2) {
 		rand_type = TYPE_1;
 		rand_deg = DEG_1;
 		rand_sep = SEP_1;
-	} else if (n < BREAK_3) {
+	}
+	else if (n < BREAK_3) {
 		rand_type = TYPE_2;
 		rand_deg = DEG_2;
 		rand_sep = SEP_2;
-	} else if (n < BREAK_4) {
+	}
+	else if (n < BREAK_4) {
 		rand_type = TYPE_3;
 		rand_deg = DEG_3;
 		rand_sep = SEP_3;
-	} else {
+	}
+	else {
 		rand_type = TYPE_4;
 		rand_deg = DEG_4;
 		rand_sep = SEP_4;
 	}
-	state = &(((int *)arg_state)[1]);	/* first location */
+	state = &(((int*)arg_state)[1]);	/* first location */
 	end_ptr = &state[rand_deg];	/* must set end_ptr before srandom */
 	sim_srandom(seed);
 	if (rand_type == TYPE_0)
 		state[-1] = rand_type;
 	else
-		state[-1] = MAX_TYPES*(rptr - state) + rand_type;
+		state[-1] = MAX_TYPES * (rptr - state) + rand_type;
 	return(ostate);
 }
 
@@ -288,18 +325,18 @@ char * sim_initstate(unsigned int seed, char *arg_state, int n)
  *
  * Returns a pointer to the old state information.
  */
-char *sim_setstate(char *arg_state)
+char* sim_setstate(char* arg_state)
 {
-	int *new_state = (int *)arg_state;
+	int* new_state = (int*)arg_state;
 	int type = new_state[0] % MAX_TYPES;
 	int rear = new_state[0] / MAX_TYPES;
-	char *ostate = (char *)(&state[-1]);
+	char* ostate = (char*)(&state[-1]);
 
 	if (rand_type == TYPE_0)
 		state[-1] = rand_type;
 	else
 		state[-1] = MAX_TYPES * (rptr - state) + rand_type;
-	switch(type) {
+	switch (type) {
 	case TYPE_0:
 	case TYPE_1:
 	case TYPE_2:
@@ -311,7 +348,7 @@ char *sim_setstate(char *arg_state)
 		break;
 	default:
 		(void)fprintf(stderr,
-		    "random: state info corrupted; not changed.\n");
+			"random: state info corrupted; not changed.\n");
 	}
 	state = &new_state[1];
 	if (rand_type != TYPE_0) {
@@ -320,40 +357,4 @@ char *sim_setstate(char *arg_state)
 	}
 	end_ptr = &state[rand_deg];		/* set end_ptr too */
 	return(ostate);
-}
-
-/*
- * random:
- *
- * If we are using the trivial TYPE_0 R.N.G., just do the old linear
- * congruential bit.  Otherwise, we do our fancy trinomial stuff, which is
- * the same in all the other cases due to all the global variables that have
- * been set up.  The basic operation is to add the number at the rear pointer
- * into the one at the front pointer.  Then both pointers are advanced to
- * the next location cyclically in the table.  The value returned is the sum
- * generated, reduced to 31 bits by throwing away the "least random" low bit.
- *
- * Note: the code takes advantage of the fact that both the front and
- * rear pointers can't wrap on the same call by not testing the rear
- * pointer if the front one has wrapped.
- *
- * Returns a 31-bit random number.
- */
-int
-sim_random()
-{
-	int i;
-
-	if (rand_type == TYPE_0)
-		i = state[0] = (state[0] * 1103515245 + 12345) & 0x7fffffff;
-	else {
-		*fptr += *rptr;
-		i = (*fptr >> 1) & 0x7fffffff;	/* chucking least random bit */
-		if (++fptr >= end_ptr) {
-			fptr = state;
-			++rptr;
-		} else if (++rptr >= end_ptr)
-			rptr = state;
-	}
-	return(i);
 }
