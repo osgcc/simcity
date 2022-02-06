@@ -72,6 +72,57 @@
 #include "w_tk.h"
 #include "w_x.h"
 
+
+#include <array>
+
+/*
+std::array<int, 19> toolColors =
+{
+    COLOR_LIGHTGREEN | (COLOR_LIGHTGREEN * 256), // residentialState
+    COLOR_LIGHTBLUE | (COLOR_LIGHTBLUE * 256),   // commercialState
+    COLOR_YELLOW | (COLOR_YELLOW * 256),         // industrialState
+    COLOR_LIGHTGREEN | (COLOR_RED * 256),        // fireState
+    COLOR_ORANGE | (COLOR_ORANGE * 256),         // queryState
+    COLOR_LIGHTGREEN | (COLOR_LIGHTBLUE * 256),  // policeState
+    COLOR_DARKGRAY | (COLOR_YELLOW * 256),       // wireState
+    COLOR_LIGHTBROWN | (COLOR_LIGHTBROWN * 256), // dozeState
+    COLOR_DARKGRAY | (COLOR_OLIVE * 256),        // rrState
+    COLOR_DARKGRAY | (COLOR_WHITE * 256),        // roadState
+    COLOR_LIGHTGRAY | (COLOR_LIGHTGRAY * 256),   // chalkState
+    COLOR_DARKGRAY | (COLOR_DARKGRAY * 256),     // eraserState
+    COLOR_LIGHTGRAY | (COLOR_LIGHTGREEN * 256), // stadiumState
+    COLOR_LIGHTBROWN | (COLOR_LIGHTGREEN * 256), // parkState
+    COLOR_LIGHTGRAY | (COLOR_LIGHTBLUE * 256),   // seaportState
+    COLOR_LIGHTGRAY | (COLOR_YELLOW * 256),      // powerState
+    COLOR_LIGHTGRAY | (COLOR_YELLOW * 256),      // nuclearState
+    COLOR_LIGHTGRAY | (COLOR_LIGHTBROWN * 256),  // airportState
+    COLOR_LIGHTGRAY | (COLOR_RED * 256)          // networkState
+};
+*/
+
+std::array<int, 19> toolColors =
+{
+    0X00000808,
+    0X00000606,
+    0X00000101,
+    0X00000308,
+    0X00000202,
+    0X00000608,
+    0X0000010E,
+    0X00000B0B,
+    0X00000A0E,
+    0X0000000E,
+    0X00000C0C,
+    0X00000E0E,
+    0X0000080C,
+    0X0000080B,
+    0X0000060C,
+    0X0000010C,
+    0X0000010C,
+    0X00000B0C,
+    0X0000030C
+};
+
 /*
 Tcl_HashTable EditorCmds;
 int DoOverlay = 2;

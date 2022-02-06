@@ -116,29 +116,6 @@ int toolOffset[] = {
 };
 
 
-int toolColors[] = {
- COLOR_LIGHTGREEN | (COLOR_LIGHTGREEN << 8),	/* residentialState */
- COLOR_LIGHTBLUE | (COLOR_LIGHTBLUE << 8),	/* commercialState */
- COLOR_YELLOW | (COLOR_YELLOW << 8),		/* industrialState */
- COLOR_LIGHTGREEN | (COLOR_RED << 8),		/* fireState */
- COLOR_ORANGE | (COLOR_ORANGE << 8),		/* queryState */
- COLOR_LIGHTGREEN | (COLOR_LIGHTBLUE << 8),	/* policeState */
- COLOR_DARKGRAY | (COLOR_YELLOW << 8),		/* wireState */
- COLOR_LIGHTBROWN | (COLOR_LIGHTBROWN << 8),	/* dozeState */
- COLOR_DARKGRAY | (COLOR_OLIVE << 8),		/* rrState */
- COLOR_DARKGRAY | (COLOR_WHITE << 8),		/* roadState */
- COLOR_LIGHTGRAY | (COLOR_LIGHTGRAY << 8),	/* chalkState */
- COLOR_DARKGRAY | (COLOR_DARKGRAY << 8),	/* eraserState */
- COLOR_LIGHTGRAY | (COLOR_LIGHTGREEN << 8),	/* stadiumState */
- COLOR_LIGHTBROWN | (COLOR_LIGHTGREEN << 8),	/* parkState */
- COLOR_LIGHTGRAY | (COLOR_LIGHTBLUE << 8),	/* seaportState */
- COLOR_LIGHTGRAY | (COLOR_YELLOW << 8),		/* powerState */
- COLOR_LIGHTGRAY | (COLOR_YELLOW << 8),		/* nuclearState */
- COLOR_LIGHTGRAY | (COLOR_LIGHTBROWN << 8),	/* airportState */
- COLOR_LIGHTGRAY | (COLOR_RED << 8),		/* networkState */
-};
-
-
 Ink *NewInk();
 
 
