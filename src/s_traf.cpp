@@ -277,7 +277,7 @@ bool TryDrive()
 
 
 /* comefrom: DoIndustrial DoCommercial DoResidential */
-bool MakeTraf(int Zt)
+int MakeTraf(int Zt)
 {
   int xtem, ytem;
 
@@ -291,11 +291,11 @@ bool MakeTraf(int Zt)
       SetTrafMem();		/* if sucessful, inc trafdensity */
       SMapX = xtem;
       SMapY = ytem;
-      return true;		/* traffic passed */
+      return 1;		/* traffic passed */
     }
     SMapX = xtem;
     SMapY = ytem;
-    return false;		/* traffic failed */
+    return 0;		/* traffic failed */
   }
-  else return (-1);		/* no road found */
+  else return -1;		/* no road found */
 }

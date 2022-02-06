@@ -78,6 +78,7 @@
 #include <array>
 #include <cmath>
 #include <string>
+#include <stdexcept>
 
 int specialBase = CHURCH;
 int OverRide = 0;
@@ -737,29 +738,36 @@ int getDensityStr(int catNo, int mapH, int mapV)
     z = z >> 6;
     z = z & 3;
     return (z);
+  
   case 1:
     z = LandValueMem[mapH >>1][mapV >>1];
     if (z < 30) return (4);
     if (z < 80) return (5);
     if (z < 150) return (6);
     return (7);
+  
   case 2:
     z = CrimeMem[mapH >>1][mapV >>1];
     z = z >> 6;
     z = z & 3;
     return (z + 8);
+ 
   case 3:
     z = PollutionMem[mapH >>1][mapV >>1];
     if ((z < 64) && (z > 0)) return (13);
     z = z >> 6;
     z = z & 3;
     return (z + 12);
+  
   case 4:
     z = RateOGMem[mapH >>3][mapV >>3];
     if (z < 0) return (16);
     if  (z == 0) return (17);
     if  (z > 100) return (19);
     return (18);
+  
+  default:
+      throw std::runtime_error("");
   }
 }
 
@@ -1613,8 +1621,6 @@ void ToolDrag(SimView* view, int px, int py)
     lx = view->last_x >> 4;
     ly = view->last_y >> 4;
 
-reset:
-
     dx = x - lx;
     dy = y - ly;
 
@@ -1627,15 +1633,15 @@ reset:
 
     if (adx > ady)
     {
-        step = .3 / adx;
+        step = 0.3f / adx;
     }
     else
     {
-        step = .3 / ady;
+        step = 0.3f / ady;
     }
 
-    rx = (dx < 0 ? 1 : 0);
-    ry = (dy < 0 ? 1 : 0);
+    rx = (dx < 0 ? 1.0f : 0.0f);
+    ry = (dy < 0 ? 1.0f : 0.0f);
 
     if (dist == 1)
     {

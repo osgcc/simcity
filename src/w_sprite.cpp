@@ -1173,15 +1173,9 @@ void DoBusSprite(SimSprite* sprite)
     static int Dx[5] = { 0,   1,   0,  -1,   0 };
     static int Dy[5] = { -1,   0,   1,   0,   0 };
     static int Dir2Frame[4] = { 1, 2, 1, 2 };
-    int dir, dir2;
-    int c, dx, dy, crossed, tx, ty, otx, oty;
+    int dx, dy, tx, ty, otx, oty;
     int turned = 0;
     int speed, z;
-
-#ifdef DEBUGBUS
-    printf("Bus dir %d turn %d frame %d\n",
-        sprite->dir, sprite->turn, sprite->frame);
-#endif
 
     if (sprite->turn) {
         if (sprite->turn < 0) { /* ccw */
@@ -1252,9 +1246,6 @@ void DoBusSprite(SimSprite* sprite)
             speed = sprite->speed;
 
         if (turned) {
-#ifdef DEBUGBUS
-            printf("turned\n");
-#endif
             if (speed > 1) speed = 1;
             dx = Dx[sprite->dir] * speed;
             dy = Dy[sprite->dir] * speed;
@@ -1272,40 +1263,25 @@ void DoBusSprite(SimSprite* sprite)
                 z = ((tx << 4) + 4) - (sprite->x + sprite->x_hot);
                 if (z < 0) dx = -1;
                 else if (z > 0) dx = 1;
-#ifdef DEBUGBUS
-                printf("moving up x %x z %d dx %d\n", sprite->x + sprite->x_hot, z, dx);
-#endif
                 break;
             case 1: /* right */
                 z = ((ty << 4) + 4) - (sprite->y + sprite->y_hot);
                 if (z < 0) dy = -1;
                 else if (z > 0) dy = 1;
-#ifdef DEBUGBUS
-                printf("moving right y %x z %d dy %d\n", sprite->y + sprite->y_hot, z, dy);
-#endif
                 break;
             case 2: /* down */
                 z = ((tx << 4)) - (sprite->x + sprite->x_hot);
                 if (z < 0) dx = -1;
                 else if (z > 0) dx = 1;
-#ifdef DEBUGBUS
-                printf("moving down x %x z %d dx %d\n", sprite->x + sprite->x_hot, z, dx);
-#endif
                 break;
             case 3: /* left */
                 z = ((ty << 4)) - (sprite->y + sprite->y_hot);
                 if (z < 0) dy = -1;
                 else if (z > 0) dy = 1;
-#ifdef DEBUGBUS
-                printf("moving left y %x z %d dy %d\n", sprite->y + sprite->y_hot, z, dy);
-#endif
                 break;
             }
             }
         }
-#ifdef DEBUGBUS
-    printf("speed dx %d dy %d\n", dx, dy);
-#endif
 
 #define AHEAD 8
 
@@ -1320,10 +1296,6 @@ void DoBusSprite(SimSprite* sprite)
     if (ty < 0) ty = 0; else if (ty >= SimHeight) ty = SimHeight - 1;
 
     if ((tx != otx) || (ty != oty)) {
-#ifdef DEBUGBUS
-        printf("drive from tile %d %d to %d %d\n",
-            otx, oty, tx, ty);
-#endif
         z = CanDriveOn(tx, ty);
         if (z == 0)
         {
@@ -1543,8 +1515,6 @@ void MonsterHere(int x, int y)
 
 void MakeMonster()
 {
-    int x, y;
-
     bool done = false;
 
     SimSprite* sprite;

@@ -1,4 +1,4 @@
 #pragma once
 
 bool FindPRoad();
-bool MakeTraf(int Zt);
+int MakeTraf(int Zt);

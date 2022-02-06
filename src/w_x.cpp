@@ -369,7 +369,7 @@ SimView* InitNewView(SimView* view, char* title, int _class, int w, int h)
 
 void DestroyView(SimView *view)
 {
-  SimView **vp;
+  //SimView **vp;
 
   CancelRedrawView(view);
 
@@ -1249,7 +1249,6 @@ void AddInk(Ink *ink, int x, int y)
     ink->points[ink->length].y = dy;
     ink->length++;
 
-  ADJUST:
     if (x < ink->left)
       ink->left = x;
     if (x > ink->right)

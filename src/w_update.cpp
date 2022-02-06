@@ -116,9 +116,9 @@ void drawValve()
   if ((r != LastR) ||
       (c != LastC) ||
       (i != LastI)) {
-    LastR = r;
-    LastC = c;
-    LastI = i;
+    LastR = static_cast<int>(r);
+    LastC = static_cast<int>(c);
+    LastI = static_cast<int>(i);
     SetDemand(r, c, i);
   }
 }
@@ -137,7 +137,6 @@ void updateDate()
 {	
   int y;
   int m;
-  char str[256], buf[256];
   int megalinium = 1000000;
 
   LastCityTime = CityTime >> 2;
@@ -217,24 +216,17 @@ void doTimeStuff()
 
 void ReallyUpdateFunds()
 {
-  char localStr[256], dollarStr[256], buf[256];
+    if (!MustUpdateFunds) return;
 
-  if (!MustUpdateFunds) return;
+    MustUpdateFunds = 0;
 
-  MustUpdateFunds = 0;
+    if (TotalFunds < 0) TotalFunds = 0;
 
-  if (TotalFunds < 0) TotalFunds = 0;
-
-  if (TotalFunds != LastFunds) {
-    LastFunds = TotalFunds;
-    //sprintf(localStr, "%d", TotalFunds);
-    //makeDollarDecimalStr(localStr, dollarStr);
-
-    //sprintf(localStr, "Funds: %s", dollarStr);
-
-    //sprintf(buf, "UISetFunds {%s}", localStr);
-    //Eval(buf);
-  }
+    if (TotalFunds != LastFunds)
+    {
+        LastFunds = TotalFunds;
+        Eval("UISetFunds {" + NumberToDollarDecimal(TotalFunds) + "}");
+    }
 }
 
 

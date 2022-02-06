@@ -1156,7 +1156,7 @@ void HandleAutoGoto(SimView* view)
     else if (view->auto_goto && view->auto_going && (view->tool_mode == 0))
     {
         int dx, dy;
-        int panx, pany, speed;
+        int speed;
         double dist, sloth;
 
         speed = view->auto_speed;
@@ -1200,7 +1200,7 @@ void HandleAutoGoto(SimView* view)
             vy = si * static_cast<double>(speed);
 
             vx *= sloth; vy *= sloth;
-            speed *= sloth;
+            speed *= static_cast<int>(sloth);
 
             vx += 0.5; vy += 0.5;
 

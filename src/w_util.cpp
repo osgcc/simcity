@@ -85,7 +85,7 @@ std::string NumberToDollarDecimal(int value)
         return valueString;
     }
 
-    const int numOfCommas = (valueString.size() - 1) / 3;
+    const size_t numOfCommas = (valueString.size() - 1) / 3;
 
     for (size_t i = 1; i <= numOfCommas; ++i)
     {
@@ -93,65 +93,6 @@ std::string NumberToDollarDecimal(int value)
     }
 
     return valueString;
-}
-
-
-/* comefrom: drawTaxesCollected incBoxValue decBoxValue drawCurrentFunds 
-	     drawActualBox UpdateFunds updateCurrentCost */
-void makeDollarDecimalStr(char *numStr, char *dollarStr)
-{
-  int leftMostSet;
-  int numOfDigits;
-  int numOfChars;
-  int numOfCommas;
-  int dollarIndex = 0;
-  int numIndex = 0;
-  int x;
-
-  numOfDigits = strlen(numStr);
-
-  if (numOfDigits == 1) {
-    dollarStr[0] = '$';
-    dollarStr[1] = numStr[ 0 ];
-    dollarStr[2] = 0;
-    return;
-  } else if (numOfDigits == 2) {
-    dollarStr[0] = '$';
-    dollarStr[1] = numStr[0];
-    dollarStr[2] = numStr[1];
-    dollarStr[3] = 0;
-    return;
-  } else if (numOfDigits == 3) {
-    dollarStr[0] = '$';
-    dollarStr[1] = numStr[0];
-    dollarStr[2] = numStr[1];
-    dollarStr[3] = numStr[2];
-    dollarStr[4] = 0;
-  } else {
-    leftMostSet = numOfDigits % 3;
-    if (leftMostSet == 0)
-      leftMostSet = 3;
-    
-    numOfCommas = (numOfDigits - 1) / 3;
-    
-    /* add 1 for the dollar sign */
-    numOfChars = numOfDigits + numOfCommas + 1;
-    
-    dollarStr[numOfChars] = 0;
-    
-    dollarStr[dollarIndex++] = '$';
-    
-    for (x = 1; x <= leftMostSet; x++) {
-      dollarStr[dollarIndex++] = numStr[numIndex++];
-    }		
-
-    for (x = 1; x <= numOfCommas; x++) {
-      dollarStr[dollarIndex++] = ',';
-      dollarStr[dollarIndex++] = numStr[numIndex++];
-      dollarStr[dollarIndex++] = numStr[numIndex++];
-      dollarStr[dollarIndex++] = numStr[numIndex++];
-    }
-  }
 }
 
 
