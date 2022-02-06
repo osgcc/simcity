@@ -204,7 +204,7 @@ int AverageTrf()
         }
     }
 
-    TrafficAverage = (TrfTotal / count) * 2.4;
+    TrafficAverage = static_cast<int>((TrfTotal / count) * 2.4);
     return(TrafficAverage);
 }
 
@@ -224,7 +224,7 @@ int GetUnemployment()
         return 0;
     }
 
-    b = (r - 1) * 255;
+    b = static_cast<int>((r - 1) * 255);
     if (b > 255)
     {
         b = 255;
@@ -278,15 +278,15 @@ void GetScore()
         z = 0;
     }
 
-    if (ResCap) { z = z * .85; }
-    if (ComCap) { z = z * .85; }
-    if (IndCap) { z = z * .85; }
+    if (ResCap) { z = static_cast<int>(z * .85); }
+    if (ComCap) { z = static_cast<int>(z * .85); }
+    if (IndCap) { z = static_cast<int>(z * .85); }
     if (RoadEffect < 32) { z = z - (32 - RoadEffect); }
-    if (PoliceEffect < 1000) { z = z * (.9 + (PoliceEffect / 10000.1)); }
-    if (FireEffect < 1000) { z = z * (.9 + (FireEffect / 10000.1)); }
-    if (RValve < -1000) { z = z * .85; }
-    if (CValve < -1000) { z = z * .85; }
-    if (IValve < -1000) { z = z * .85; }
+    if (PoliceEffect < 1000) { z = static_cast<int>(z * (.9 + (PoliceEffect / 10000.1))); }
+    if (FireEffect < 1000) { z = static_cast<int>(z * (.9 + (FireEffect / 10000.1))); }
+    if (RValve < -1000) { z = static_cast<int>(z * .85); }
+    if (CValve < -1000) { z = static_cast<int>(z * .85); }
+    if (IValve < -1000) { z = static_cast<int>(z * .85); }
 
     SM = 1.0;
     if ((CityPop == 0) || (deltaCityPop == 0))
@@ -299,20 +299,20 @@ void GetScore()
     }
     else if (deltaCityPop > 0)
     {
-        SM = ((float)deltaCityPop / CityPop) + 1.0;
+        SM = ((float)deltaCityPop / CityPop) + 1.0f;
     }
     else if (deltaCityPop < 0)
     {
-        SM = .95 + ((float)deltaCityPop / (CityPop - deltaCityPop));
+        SM = .95f + ((float)deltaCityPop / (CityPop - deltaCityPop));
     }
-    z = z * SM;
+    z = static_cast<int>(z * SM);
     z = z - GetFire();		/* dec score for fires */
     z = z - (CityTax);
 
-    TM = unPwrdZCnt + PwrdZCnt;	/* dec score for unpowered zones */
+    TM = static_cast<float>(unPwrdZCnt + PwrdZCnt);	/* dec score for unpowered zones */
     if (TM) { SM = PwrdZCnt / TM; }
     else { SM = 1.0; }
-    z = z * SM;
+    z = static_cast<int>(z * SM);
 
     if (z > 1000) { z = 1000; }
     if (z < 0) { z = 0; }
@@ -353,13 +353,13 @@ void DoProblems()
         ProblemTable[z] = 0;
     }
 
-    ProblemTable[0] = CrimeAverage;		/* Crime */
-    ProblemTable[1] = PolluteAverage;		/* Pollution */
-    ProblemTable[2] = LVAverage * .7;		/* Housing */
-    ProblemTable[3] = CityTax * 10;		/* Taxes */
-    ProblemTable[4] = AverageTrf();		/* Traffic */
-    ProblemTable[5] = GetUnemployment();		/* Unemployment */
-    ProblemTable[6] = GetFire();			/* Fire */
+    ProblemTable[0] = CrimeAverage; /* Crime */
+    ProblemTable[1] = PolluteAverage; /* Pollution */
+    ProblemTable[2] = static_cast<int>(LVAverage * .7); /* Housing */
+    ProblemTable[3] = CityTax * 10; /* Taxes */
+    ProblemTable[4] = AverageTrf(); /* Traffic */
+    ProblemTable[5] = GetUnemployment(); /* Unemployment */
+    ProblemTable[6] = GetFire(); /* Fire */
 
     VoteProblems();
     
