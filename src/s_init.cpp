@@ -103,9 +103,9 @@ void InitWillStuff()
     DisasterEvent = 0;
     TaxFlag = 0;
 
-    for (int x = 0; x < HWLDX; x++)
+    for (int x = 0; x < HalfWorldWidth; x++)
     {
-        for (int y = 0; y < HWLDY; y++)
+        for (int y = 0; y < HalfWorldHeight; y++)
         {
             PopDensity[x][y] = 0;
             TrfDensity[x][y] = 0;
@@ -115,9 +115,9 @@ void InitWillStuff()
         }
     }
 
-    for (int x = 0; x < QWX; x++)
+    for (int x = 0; x < QuarterWorldWidth; x++)
     {
-        for (int y = 0; y < QWY; y++)
+        for (int y = 0; y < QuarterWorldHeight; y++)
         {
             TerrainMem[x][y] = 0;
         }

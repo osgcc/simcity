@@ -88,20 +88,20 @@
 constexpr auto SimWidth = 120;
 constexpr auto SimHeight = 100;
 
-constexpr auto WORLD_X = SimWidth;
-constexpr auto WORLD_Y = SimHeight;
+constexpr auto HalfWorldWidth = SimWidth / 2;
+constexpr auto HalfWorldHeight = SimHeight / 2;
 
-#define HWLDX		(SimWidth >>1)
-#define HWLDY		(SimHeight >>1)
-#define QWX		(SimWidth >>2)
-#define QWY		(SimHeight >>2)
-#define SmX		(SimWidth >>3)
-#define SmY		((SimHeight + 7) >>3)
+constexpr auto QuarterWorldWidth = SimWidth / 4;
+constexpr auto QuarterWorldHeight = SimHeight / 4;
 
-#define EDITOR_W (WORLD_X * 16)
-#define EDITOR_H (WORLD_Y * 16)
-#define MAP_W (WORLD_X * 3)
-#define MAP_H (WORLD_Y * 3)
+#define SmX (SimWidth >>3)
+#define SmY ((SimHeight + 7) >>3)
+
+#define EDITOR_W (SimWidth * 16)
+#define EDITOR_H (SimHeight * 16)
+
+#define MAP_W (SimWidth * 3)
+#define MAP_H (SimHeight * 3)
 
 #define NIL		0
 #define HORIZ		1
@@ -109,13 +109,13 @@ constexpr auto WORLD_Y = SimHeight;
 
 #define PROBNUM 10
 
-#define HISTLEN		480
-#define MISCHISTLEN	240
+#define HISTLEN 480
+#define MISCHISTLEN 240
 
-#define POWERMAPROW		((WORLD_X + 15) / 16)
+#define POWERMAPROW		((SimWidth + 15) / 16)
 
 #ifdef MEGA
-#define POWERMAPLEN		((int)(2 * POWERMAPROW * WORLD_Y))
+#define POWERMAPLEN		((int)(2 * POWERMAPROW * SimHeight))
 #define POWERWORD(x, y)		((((int)(x)) >>4) + (((int)(y)) * POWERMAPROW))
 #else
 #define POWERMAPLEN		1700 /* ??? PWRMAPSIZE */
@@ -123,8 +123,8 @@ constexpr auto WORLD_Y = SimHeight;
 #endif
 
 #define SETPOWERBIT(x, y)	PowerMap[POWERWORD((x), (y))] |= 1 << ((x) & 15)
-#define PWRMAPSIZE		(POWERMAPROW * WORLD_Y)
-#define PWRSTKSIZE		((WORLD_X * WORLD_Y) / 4)
+#define PWRMAPSIZE		(POWERMAPROW * SimHeight)
+#define PWRSTKSIZE		((SimWidth * SimHeight) / 4)
 
 #define ALMAP 0 /* all */
 #define REMAP 1 /* residential */

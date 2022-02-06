@@ -110,9 +110,9 @@ bool IsTree(int cell)
 
 void ClearMap()
 {
-    for (int x = 0; x < WORLD_X; x++)
+    for (int x = 0; x < SimWidth; x++)
     {
-        for (int y = 0; y < WORLD_Y; y++)
+        for (int y = 0; y < SimHeight; y++)
         {
             Map[x][y] = DIRT;
         }
@@ -122,9 +122,9 @@ void ClearMap()
 
 void ClearUnnatural()
 {
-    for (int x = 0; x < WORLD_X; x++)
+    for (int x = 0; x < SimWidth; x++)
     {
-        for (int y = 0; y < WORLD_Y; y++)
+        for (int y = 0; y < SimHeight; y++)
         {
             if (Map[x][y] > WOODS)
             {
@@ -158,7 +158,7 @@ void PutOnMap(int Mchar, int Xoff, int Yoff)
     int Xloc = MapX + Xoff;
     int Yloc = MapY + Yoff;
 
-    if (!TestBounds(Xloc, Yloc, WORLD_X, WORLD_Y))
+    if (!TestBounds(Xloc, Yloc, SimWidth, SimHeight))
     {
         return;
     }
@@ -197,9 +197,9 @@ void SmoothTrees()
         30, 31, 29, 37
     };
 
-    for (int MapX = 0; MapX < WORLD_X; MapX++)
+    for (int MapX = 0; MapX < SimWidth; MapX++)
     {
-        for (int MapY = 0; MapY < WORLD_Y; MapY++)
+        for (int MapY = 0; MapY < SimHeight; MapY++)
         {
             if (IsTree(Map[MapX][MapY]))
             {
@@ -211,7 +211,7 @@ void SmoothTrees()
                     int Xtem = MapX + DX[z];
                     int Ytem = MapY + DY[z];
 
-                    if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) && IsTree(Map[Xtem][Ytem]))
+                    if (TestBounds(Xtem, Ytem, SimWidth, SimHeight) && IsTree(Map[Xtem][Ytem]))
                     {
                         bitindex++;
                     }
@@ -253,9 +253,9 @@ void SmoothRiver()
         7 + BULLBIT, 9 + BULLBIT, 5 + BULLBIT, 2
     };
 
-    for (int MapX = 0; MapX < WORLD_X; MapX++)
+    for (int MapX = 0; MapX < SimWidth; MapX++)
     {
-        for (int MapY = 0; MapY < WORLD_Y; MapY++)
+        for (int MapY = 0; MapY < SimHeight; MapY++)
         {
             if (Map[MapX][MapY] == REDGE)
             {
@@ -266,7 +266,7 @@ void SmoothRiver()
                     bitindex = bitindex << 1;
                     int Xtem = MapX + DX[z];
                     int Ytem = MapY + DY[z];
-                    if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y) &&
+                    if (TestBounds(Xtem, Ytem, SimWidth, SimHeight) &&
                         ((Map[Xtem][Ytem] & LOMASK) != DIRT) &&
                         (((Map[Xtem][Ytem] & LOMASK) < WOODS_LOW) ||
                             ((Map[Xtem][Ytem] & LOMASK) > WOODS_HIGH)))
@@ -304,7 +304,7 @@ void TreeSplash(int xloc, int yloc)
 
         MoveMap(dir);
 
-        if (!(TestBounds(MapX, MapY, WORLD_X, WORLD_Y)))
+        if (!(TestBounds(MapX, MapY, SimWidth, SimHeight)))
         {
             return;
         }
@@ -331,8 +331,8 @@ void DoTrees()
     }
     for (x = 0; x < Amount; x++)
     {
-        xloc = Rand(WORLD_X - 1);
-        yloc = Rand(WORLD_Y - 1);
+        xloc = Rand(SimWidth - 1);
+        yloc = Rand(SimHeight - 1);
         TreeSplash(xloc, yloc);
     }
     SmoothTrees();
@@ -402,7 +402,7 @@ void DoBRiv()
         r2 = CurveLevel + 100;
     }
 
-    while (TestBounds(MapX + 4, MapY + 4, WORLD_X, WORLD_Y))
+    while (TestBounds(MapX + 4, MapY + 4, SimWidth, SimHeight))
     {
         BRivPlop();
         if (Rand(r1) < 10)
@@ -434,7 +434,7 @@ void DoSRiv()
         r2 = CurveLevel + 100;
     }
 
-    while (TestBounds(MapX + 3, MapY + 3, WORLD_X, WORLD_Y))
+    while (TestBounds(MapX + 3, MapY + 3, SimWidth, SimHeight))
     {
         SRivPlop();
         if (Rand(r1) < 10)
@@ -472,39 +472,39 @@ void MakeNakedIsland()
 {
     int x, y;
 
-    for (x = 0; x < WORLD_X; x++)
+    for (x = 0; x < SimWidth; x++)
     {
-        for (y = 0; y < WORLD_Y; y++)
+        for (y = 0; y < SimHeight; y++)
         {
             Map[x][y] = RIVER;
-            for (x = 5; x < WORLD_X - 5; x++)
+            for (x = 5; x < SimWidth - 5; x++)
             {
-                for (y = 5; y < WORLD_Y - 5; y++)
+                for (y = 5; y < SimHeight - 5; y++)
                 {
                     Map[x][y] = DIRT;
-                    for (x = 0; x < WORLD_X - 5; x += 2)
+                    for (x = 0; x < SimWidth - 5; x += 2)
                     {
                         MapX = x;
                         MapY = ERand(RADIUS);
                         BRivPlop();
-                        MapY = (WORLD_Y - 10) - ERand(RADIUS);
+                        MapY = (SimHeight - 10) - ERand(RADIUS);
                         BRivPlop();
                         MapY = 0;
                         SRivPlop();
-                        MapY = (WORLD_Y - 6);
+                        MapY = (SimHeight - 6);
                         SRivPlop();
                     }
                 }
-                for (y = 0; y < WORLD_Y - 5; y += 2)
+                for (y = 0; y < SimHeight - 5; y += 2)
                 {
                     MapY = y;
                     MapX = ERand(RADIUS);
                     BRivPlop();
-                    MapX = (WORLD_X - 10) - ERand(RADIUS);
+                    MapX = (SimWidth - 10) - ERand(RADIUS);
                     BRivPlop();
                     MapX = 0;
                     SRivPlop();
-                    MapX = (WORLD_X - 6);
+                    MapX = (SimWidth - 6);
                     SRivPlop();
                 }
             }
@@ -537,8 +537,8 @@ void MakeLakes()
 
     for (int t = 0; t < Lim1; t++)
     {
-        int  x = Rand(WORLD_X - 21) + 10;
-        int y = Rand(WORLD_Y - 20) + 10;
+        int  x = Rand(SimWidth - 21) + 10;
+        int y = Rand(SimHeight - 20) + 10;
 
         Lim2 = Rand(12) + 2;
 
@@ -562,8 +562,8 @@ void MakeLakes()
 
 void GetRandStart()
 {
-    XStart = 40 + Rand(WORLD_X - 80);
-    YStart = 33 + Rand(WORLD_Y - 67);
+    XStart = 40 + Rand(SimWidth - 80);
+    YStart = 33 + Rand(SimHeight - 67);
     MapX = XStart;
     MapY = YStart;
 }
@@ -571,9 +571,9 @@ void GetRandStart()
 
 void SmoothWater()
 {
-    for (int x = 0; x < WORLD_X; x++)
+    for (int x = 0; x < SimWidth; x++)
     {
-        for (int y = 0; y < WORLD_Y; y++)
+        for (int y = 0; y < SimHeight; y++)
         {
             /* If water: */
             if (((Map[x][y] & LOMASK) >= WATER_LOW) && ((Map[x][y] & LOMASK) <= WATER_HIGH))
@@ -586,7 +586,7 @@ void SmoothWater()
                         goto edge;
                     }
                 }
-                if (x < (WORLD_X - 1))
+                if (x < (SimWidth - 1))
                 {
                     /* If nearest object is not water: */
                     if (((Map[x + 1][y] & LOMASK) < WATER_LOW) || ((Map[x + 1][y] & LOMASK) > WATER_HIGH))
@@ -602,7 +602,7 @@ void SmoothWater()
                         goto edge;
                     }
                 }
-                if (y < (WORLD_Y - 1))
+                if (y < (SimHeight - 1))
                 {
                     /* If nearest object is not water: */
                     if (((Map[x][y + 1] & LOMASK) < WATER_LOW) || ((Map[x][y + 1] & LOMASK) > WATER_HIGH))
@@ -616,9 +616,9 @@ void SmoothWater()
         }
     }
 
-    for (int x = 0; x < WORLD_X; x++)
+    for (int x = 0; x < SimWidth; x++)
     {
-        for (int y = 0; y < WORLD_Y; y++)
+        for (int y = 0; y < SimHeight; y++)
         {
             /* If water which is not a channel: */
             if (((Map[x][y] & LOMASK) != CHANNEL) && ((Map[x][y] & LOMASK) >= WATER_LOW) && ((Map[x][y] & LOMASK) <= WATER_HIGH))
@@ -631,7 +631,7 @@ void SmoothWater()
                         continue;
                     }
                 }
-                if (x < (WORLD_X - 1))
+                if (x < (SimWidth - 1))
                 {
                     /* If nearest object is not water: */
                     if (((Map[x + 1][y] & LOMASK) < WATER_LOW) || ((Map[x + 1][y] & LOMASK) > WATER_HIGH))
@@ -647,7 +647,7 @@ void SmoothWater()
                         continue;
                     }
                 }
-                if (y < (WORLD_Y - 1))
+                if (y < (SimHeight - 1))
                 {
                     /* If nearest object is not water: */
                     if (((Map[x][y + 1] & LOMASK) < WATER_LOW) || ((Map[x][y + 1] & LOMASK) > WATER_HIGH))
@@ -660,9 +660,9 @@ void SmoothWater()
         }
     }
 
-    for (int x = 0; x < WORLD_X; x++)
+    for (int x = 0; x < SimWidth; x++)
     {
-        for (int y = 0; y < WORLD_Y; y++)
+        for (int y = 0; y < SimHeight; y++)
         {
             /* If woods: */
             if (((Map[x][y] & LOMASK) >= WOODS_LOW) && ((Map[x][y] & LOMASK) <= WOODS_HIGH))
@@ -676,7 +676,7 @@ void SmoothWater()
                         continue;
                     }
                 }
-                if (x < (WORLD_X - 1))
+                if (x < (SimWidth - 1))
                 {
                     /* If nearest object is water: */
                     if ((Map[x + 1][y] == RIVER) || (Map[x + 1][y] == CHANNEL))
@@ -694,7 +694,7 @@ void SmoothWater()
                         continue;
                     }
                 }
-                if (y < (WORLD_Y - 1))
+                if (y < (SimHeight - 1))
                 {
                     /* If nearest object is water; */
                     if ((Map[x][y + 1] == RIVER) || (Map[x][y + 1] == CHANNEL))

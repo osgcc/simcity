@@ -83,7 +83,7 @@ int CrimeAverage, PolluteAverage, LVAverage;
 int CityTime;
 int StartingYear;
 
-int* Map[WORLD_X];
+int* Map[SimWidth];
 
 int ResHisMax, Res2HisMax;
 int ComHisMax, Com2HisMax;
@@ -100,15 +100,15 @@ int TaxFund;
 int CityTax, TaxFlag;
 unsigned char tileSynch = 0x01;
 
-Byte* PopDensity[HWLDX];
-Byte* TrfDensity[HWLDX];
-Byte* PollutionMem[HWLDX];
-Byte* LandValueMem[HWLDX];
-Byte* CrimeMem[HWLDX];
-Byte* tem[HWLDX];
-Byte* tem2[HWLDX];
-Byte* TerrainMem[QWX];
-Byte* Qtem[QWX];
+Byte* PopDensity[HalfWorldWidth];
+Byte* TrfDensity[HalfWorldWidth];
+Byte* PollutionMem[HalfWorldWidth];
+Byte* LandValueMem[HalfWorldWidth];
+Byte* CrimeMem[HalfWorldWidth];
+Byte* tem[HalfWorldWidth];
+Byte* tem2[HalfWorldWidth];
+Byte* TerrainMem[QuarterWorldWidth];
+Byte* Qtem[QuarterWorldWidth];
 
 int RateOGMem[SmX][SmY];
 int FireStMap[SmX][SmY];
@@ -152,25 +152,25 @@ void initMapArrays()
 {
     if (!mapPtr)
     {
-        mapPtr = (unsigned int*)NewPtr(sizeof(unsigned int) * WORLD_X * WORLD_Y);
+        mapPtr = (unsigned int*)NewPtr(sizeof(unsigned int) * SimWidth * SimHeight);
     }
 
    auto auxPtr = mapPtr;
 
-    for (int i = 0; i < WORLD_X; i++)
+    for (int i = 0; i < SimWidth; i++)
     {
-        auto temp1 = auxPtr + i * WORLD_Y;
+        auto temp1 = auxPtr + i * SimHeight;
         Map[i] = (int*)temp1;
     }
 
-    popPtr = NewPtr(HWLDX * HWLDY);
-    trfPtr = NewPtr(HWLDX * HWLDY);
-    polPtr = NewPtr(HWLDX * HWLDY);
-    landPtr = NewPtr(HWLDX * HWLDY);
-    crimePtr = NewPtr(HWLDX * HWLDY);
+    popPtr = NewPtr(HalfWorldWidth * HalfWorldHeight);
+    trfPtr = NewPtr(HalfWorldWidth * HalfWorldHeight);
+    polPtr = NewPtr(HalfWorldWidth * HalfWorldHeight);
+    landPtr = NewPtr(HalfWorldWidth * HalfWorldHeight);
+    crimePtr = NewPtr(HalfWorldWidth * HalfWorldHeight);
 
-    tem1Base = NewPtr(HWLDX * HWLDY);
-    tem2Base = NewPtr(HWLDX * HWLDY);
+    tem1Base = NewPtr(HalfWorldWidth * HalfWorldHeight);
+    tem2Base = NewPtr(HalfWorldWidth * HalfWorldHeight);
 
     auxPopPtr = popPtr;
     auxTrfPtr = trfPtr;
@@ -178,27 +178,27 @@ void initMapArrays()
     auxLandPtr = landPtr;
     auxCrimePtr = crimePtr;
 
-    for (int i = 0; i < HWLDX; i++)
+    for (int i = 0; i < HalfWorldWidth; i++)
     {
-        PopDensity[i] = (Byte*)auxPopPtr + (i * HWLDY);
-        TrfDensity[i] = (Byte*)auxTrfPtr + (i * HWLDY);
-        PollutionMem[i] = (Byte*)auxPolPtr + (i * HWLDY);
-        LandValueMem[i] = (Byte*)auxLandPtr + (i * HWLDY);
-        CrimeMem[i] = (Byte*)auxCrimePtr + (i * HWLDY);
+        PopDensity[i] = (Byte*)auxPopPtr + (i * HalfWorldHeight);
+        TrfDensity[i] = (Byte*)auxTrfPtr + (i * HalfWorldHeight);
+        PollutionMem[i] = (Byte*)auxPolPtr + (i * HalfWorldHeight);
+        LandValueMem[i] = (Byte*)auxLandPtr + (i * HalfWorldHeight);
+        CrimeMem[i] = (Byte*)auxCrimePtr + (i * HalfWorldHeight);
 
-        tem[i] = (Byte*)tem1Base + (i * HWLDY);
-        tem2[i] = (Byte*)tem2Base + (i * HWLDY);
+        tem[i] = (Byte*)tem1Base + (i * HalfWorldHeight);
+        tem2[i] = (Byte*)tem2Base + (i * HalfWorldHeight);
     }
 
     brettPtr = (Ptr)&PopDensity[0][0];
 
-    terrainBase = NewPtr(QWX * QWY);
-    qTemBase = NewPtr(QWX * QWY);
+    terrainBase = NewPtr(QuarterWorldWidth * QuarterWorldHeight);
+    qTemBase = NewPtr(QuarterWorldWidth * QuarterWorldHeight);
 
-    for (int i = 0; i < QWX; i++)
+    for (int i = 0; i < QuarterWorldWidth; i++)
     {
-        TerrainMem[i] = (Byte*)terrainBase + (i * QWY);
-        Qtem[i] = (Byte*)qTemBase + (i * QWY);
+        TerrainMem[i] = (Byte*)terrainBase + (i * QuarterWorldHeight);
+        Qtem[i] = (Byte*)qTemBase + (i * QuarterWorldHeight);
     }
 
     ResHis = (int*)NewPtr(HISTLEN);

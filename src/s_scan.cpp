@@ -119,8 +119,8 @@ void ClrTemArray()
   register int x, y, z;
 
   z = 0;
-  for (x = 0; x < HWLDX; x++)
-    for (y = 0; y < HWLDY; y++)
+  for (x = 0; x < HalfWorldWidth; x++)
+    for (y = 0; y < HalfWorldHeight; y++)
       tem[x][y] = z;
 }
 
@@ -156,21 +156,21 @@ void DoSmooth ()        /* smooths data in tem[x][y] into tem2[x][y]  */
   if (DonDither & 2) {
     register int x, y = 0, z = 0, dir = 1;
 
-    for (x = 0; x < HWLDX; x++) {
-      for (; y != HWLDY && y != -1; y += dir) {
+    for (x = 0; x < HalfWorldWidth; x++) {
+      for (; y != HalfWorldHeight && y != -1; y += dir) {
 /*
 	z += tem[(x == 0) ? x : (x - 1)][y] +
-	     tem[(x == (HWLDX - 1)) ? x : (x + 1)][y] +
+	     tem[(x == (HalfWorldWidth - 1)) ? x : (x + 1)][y] +
 	     tem[x][(y == 0) ? (0) : (y - 1)] +
-	     tem[x][(y == (HWLDY - 1)) ? y : (y + 1)] +
+	     tem[x][(y == (HalfWorldHeight - 1)) ? y : (y + 1)] +
 	     tem[x][y];
 	tem2[x][y] = (unsigned char)(((unsigned int)z) >>2);
 	z &= 0x3;
 */
 	z += tem[(x == 0) ? x : (x - 1)][y] +
-	     tem[(x == (HWLDX - 1)) ? x : (x + 1)][y] +
+	     tem[(x == (HalfWorldWidth - 1)) ? x : (x + 1)][y] +
 	     tem[x][(y == 0) ? (0) : (y - 1)] +
-	     tem[x][(y == (HWLDY - 1)) ? y : (y + 1)] +
+	     tem[x][(y == (HalfWorldHeight - 1)) ? y : (y + 1)] +
 	     tem[x][y];
 	tem2[x][y] = (unsigned char)(((unsigned int)z) >>2);
 	z &= 3;
@@ -181,13 +181,13 @@ void DoSmooth ()        /* smooths data in tem[x][y] into tem2[x][y]  */
   } else {
     register int x,y,z;
 
-    for (x = 0; x < HWLDX; x++) {
-      for (y = 0; y < HWLDY; y++) {
+    for (x = 0; x < HalfWorldWidth; x++) {
+      for (y = 0; y < HalfWorldHeight; y++) {
 	z = 0;
 	if (x > 0) z += tem[x - 1][y];
-	if (x < (HWLDX - 1)) z += tem[x + 1][y];
+	if (x < (HalfWorldWidth - 1)) z += tem[x + 1][y];
 	if (y > 0) z += tem[x][y - 1];
-	if (y < (HWLDY - 1)) z += tem[x][y + 1];
+	if (y < (HalfWorldHeight - 1)) z += tem[x][y + 1];
 	z = (z + tem[x][y]) >>2;
 	if (z > 255) z = 255;
 	tem2[x][y] = (unsigned char)z;
@@ -203,21 +203,21 @@ void DoSmooth2 ()        /* smooths data in tem2[x][y] into tem[x][y]  */
   if (DonDither & 4) {
     register int x, y = 0, z = 0, dir = 1;
 
-    for (x = 0; x < HWLDX; x++) {
-      for (; y != HWLDY && y != -1; y += dir) {
+    for (x = 0; x < HalfWorldWidth; x++) {
+      for (; y != HalfWorldHeight && y != -1; y += dir) {
 /*
 	z += tem2[(x == 0) ? x : (x - 1)][y] +
-	     tem2[(x == (HWLDX - 1)) ? x : (x + 1)][y] +
+	     tem2[(x == (HalfWorldWidth - 1)) ? x : (x + 1)][y] +
 	     tem2[x][(y == 0) ? (0) : (y - 1)] +
-	     tem2[x][(y == (HWLDY - 1)) ? y : (y + 1)] +
+	     tem2[x][(y == (HalfWorldHeight - 1)) ? y : (y + 1)] +
 	     tem2[x][y];
 	tem[x][y] = (unsigned char)(z >>2);
 	z &= 0x3;
 */
 	z += tem2[(x == 0) ? x : (x - 1)][y] +
-	    tem2[(x == (HWLDX - 1)) ? x : (x + 1)][y] +
+	    tem2[(x == (HalfWorldWidth - 1)) ? x : (x + 1)][y] +
 	    tem2[x][(y == 0) ? (0) : (y - 1)] +
-	    tem2[x][(y == (HWLDY - 1)) ? y : (y + 1)] +
+	    tem2[x][(y == (HalfWorldHeight - 1)) ? y : (y + 1)] +
 	    tem2[x][y];
 	tem[x][y] = (unsigned char)(((unsigned char)z) >>2);
 	z &= 3;
@@ -228,13 +228,13 @@ void DoSmooth2 ()        /* smooths data in tem2[x][y] into tem[x][y]  */
   } else {
     register int x,y,z;
 
-    for (x = 0; x < HWLDX; x++) {
-      for (y = 0; y < HWLDY; y++) {
+    for (x = 0; x < HalfWorldWidth; x++) {
+      for (y = 0; y < HalfWorldHeight; y++) {
 	z = 0;
 	if (x > 0) z += tem2[x - 1][y];
-	if (x < (HWLDX - 1)) z += tem2[x + 1][y];
+	if (x < (HalfWorldWidth - 1)) z += tem2[x + 1][y];
 	if (y > 0) z += tem2[x][y - 1];
-	if (y < (HWLDY - 1)) z += tem2[x][y + 1];
+	if (y < (HalfWorldHeight - 1)) z += tem2[x][y + 1];
 	z = (z + tem2[x][y]) >>2;
 	if (z > 255) z = 255;
 	tem[x][y] = (unsigned char)z;
@@ -312,8 +312,8 @@ void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
   Xtot = 0;
   Ytot = 0;
   Ztot = 0;
-  for (x = 0; x < WORLD_X; x++)
-    for (y = 0; y < WORLD_Y; y++) {
+  for (x = 0; x < SimWidth; x++)
+    for (y = 0; y < SimHeight; y++) {
       z = Map[x][y];
       if (z & ZONEBIT) {
 	z = z & LOMASK;
@@ -332,8 +332,8 @@ void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
   DoSmooth2();			/* T2 -> T1 */
   DoSmooth();			/* T1 -> T2 */
 
-  for (x = 0; x < HWLDX; x++)
-    for (y = 0; y < HWLDY; y++)
+  for (x = 0; x < HalfWorldWidth; x++)
+    for (y = 0; y < HalfWorldHeight; y++)
       PopDensity[x][y] = tem2[x][y] <<1;
 
   DistIntMarket();		/* set ComRate w/ (/ComMap) */
@@ -342,8 +342,8 @@ void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
     CCx = Xtot / Ztot;
     CCy = Ytot / Ztot;
   } else {
-    CCx = HWLDX;		/* if pop=0 center of Map is CC */
-    CCy = HWLDY;
+    CCx = HalfWorldWidth;		/* if pop=0 center of Map is CC */
+    CCy = HalfWorldHeight;
   }
   CCx2 = CCx >>1;
   CCy2 = CCy >>1;
@@ -357,12 +357,12 @@ void SmoothTerrain()
   if (DonDither & 1) {
     register int x, y = 0, z = 0, dir = 1;
 
-    for (x = 0; x < QWX; x++) {
-      for (; y != QWY && y != -1; y += dir) {
+    for (x = 0; x < QuarterWorldWidth; x++) {
+      for (; y != QuarterWorldHeight && y != -1; y += dir) {
 	z += Qtem[(x == 0) ? x : (x - 1)][y] +
-	     Qtem[(x == (QWX - 1)) ? x : (x + 1)][y] +
+	     Qtem[(x == (QuarterWorldWidth - 1)) ? x : (x + 1)][y] +
 	     Qtem[x][(y == 0) ? (0) : (y - 1)] +
-	     Qtem[x][(y == (QWY - 1)) ? y : (y + 1)] +
+	     Qtem[x][(y == (QuarterWorldHeight - 1)) ? y : (y + 1)] +
 	     (Qtem[x][y] <<2);
 	TerrainMem[x][y] = (unsigned char)(((unsigned)z) >>3);
 	z &= 0x7;
@@ -373,13 +373,13 @@ void SmoothTerrain()
   } else {
     register int x,y,z;
 
-    for (x = 0; x < QWX; x++)
-      for (y = 0; y < QWY; y++) {
+    for (x = 0; x < QuarterWorldWidth; x++)
+      for (y = 0; y < QuarterWorldHeight; y++) {
 	z = 0;
 	if (x > 0) z += Qtem[x - 1][y];
-	if (x < (QWX - 1)) z += Qtem[x + 1][y];
+	if (x < (QuarterWorldWidth - 1)) z += Qtem[x + 1][y];
 	if (y > 0) z += Qtem[x][y - 1];
-	if (y < (QWY - 1)) z += Qtem[x][y + 1];
+	if (y < (QuarterWorldHeight - 1)) z += Qtem[x][y + 1];
 	TerrainMem[x][y] = (unsigned char)((z >>2) + Qtem[x][y]) >>1;
       }
   }
@@ -414,13 +414,13 @@ void PTLScan()   	/* Does pollution, terrain, land value   */
   register int x, y, z, dis;
   int Plevel, LVflag, loc, zx, zy, Mx, My, pnum, LVnum, pmax;
 
-  for (x = 0; x < QWX; x++)
-    for (y = 0; y < QWY; y++)
+  for (x = 0; x < QuarterWorldWidth; x++)
+    for (y = 0; y < QuarterWorldHeight; y++)
       Qtem[x][y] = 0;
   LVtot = 0;
   LVnum = 0;
-  for (x = 0; x < HWLDX; x++)
-    for (y = 0; y < HWLDY; y++) {
+  for (x = 0; x < HalfWorldWidth; x++)
+    for (y = 0; y < HalfWorldHeight; y++) {
       Plevel = 0;
       LVflag = 0;
       zx = x <<1;
@@ -469,8 +469,8 @@ void PTLScan()   	/* Does pollution, terrain, land value   */
   pmax = 0;
   pnum = 0;
   ptot = 0;
-  for (x = 0; x < HWLDX; x++) {
-    for (y = 0; y < HWLDY; y++)  {
+  for (x = 0; x < HalfWorldWidth; x++) {
+    for (y = 0; y < HalfWorldHeight; y++)  {
       z = tem[x][y];
       PollutionMem[x][y] = z;
       if (z) {				/*  get pollute average  */
@@ -511,8 +511,8 @@ void CrimeScan()
   totz = 0;
   numz = 0;
   cmax = 0;
-  for (x = 0; x < HWLDX; x++)
-    for (y = 0; y < HWLDY; y++) {
+  for (x = 0; x < HalfWorldWidth; x++)
+    for (y = 0; y < HalfWorldHeight; y++) {
       if (z = LandValueMem[x][y]) {
 	++numz;
 	z = 128 - z;

@@ -104,7 +104,7 @@ void SetTrafMem()
 
   for (x = PosStackN; x > 0; x--) {
     PullPos();
-    if (TestBounds(SMapX, SMapY, WORLD_X, WORLD_Y)) {
+    if (TestBounds(SMapX, SMapY, SimWidth, SimHeight)) {
       z = Map[SMapX][SMapY] & LOMASK;
       if ((z >= ROADBASE) && (z < POWERBASE)) {
 	SimSprite *sprite;
@@ -154,7 +154,7 @@ bool FindPRoad()		/* look for road on edges of zone   */
   for (z = 0; z < 12; z++) {
 	  tx = SMapX + PerimX[z];
 	  ty = SMapY + PerimY[z];
-	  if (TestBounds(tx, ty, WORLD_X, WORLD_Y)) {
+	  if (TestBounds(tx, ty, SimWidth, SimHeight)) {
 		  if (RoadTest(Map[tx][ty])) {
 			  SMapX = tx;
 			  SMapY = ty;
@@ -175,7 +175,7 @@ bool FindPTele()		/* look for telecommunication on edges of zone */
   for (z = 0; z < 12; z++) {
 	  tx = SMapX + PerimX[z];
 	  ty = SMapY + PerimY[z];
-	  if (TestBounds(tx, ty, WORLD_X, WORLD_Y)) {
+	  if (TestBounds(tx, ty, SimWidth, SimHeight)) {
 	  	  tile = Map[tx][ty] & LOMASK;
 		  if ((tile >= TELEBASE) && (tile <= TELELAST)) {
 			  return true;
@@ -195,11 +195,11 @@ bool GetFromMap(int x)
       return (Map[SMapX][SMapY - 1] & LOMASK);
     return false;
   case 1:
-    if (SMapX < (WORLD_X - 1))
+    if (SMapX < (SimWidth - 1))
       return (Map[SMapX + 1][SMapY] & LOMASK);
     return false;
   case 2:
-    if (SMapY < (WORLD_Y - 1))
+    if (SMapY < (SimHeight - 1))
       return (Map[SMapX][SMapY + 1] & LOMASK);
     return false;
   case 3:

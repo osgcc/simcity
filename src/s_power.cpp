@@ -89,26 +89,26 @@ bool MoveMapSim(int MDir)
         return false;
 
     case 1:
-        if (SMapX < (WORLD_X - 1))
+        if (SMapX < (SimWidth - 1))
         {
             SMapX++;
             return true;
         }
-        if (SMapX > (WORLD_X - 1))
+        if (SMapX > (SimWidth - 1))
         {
-            SMapX = WORLD_X - 1;
+            SMapX = SimWidth - 1;
         }
         return false;
 
     case 2:
-        if (SMapY < (WORLD_Y - 1))
+        if (SMapY < (SimHeight - 1))
         {
             SMapY++;
             return true;
         }
-        if (SMapY > (WORLD_Y - 1))
+        if (SMapY > (SimHeight - 1))
         {
-            SMapY = WORLD_Y - 1;
+            SMapY = SimHeight - 1;
         }
         return false;
 

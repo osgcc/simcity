@@ -114,7 +114,7 @@ void DoFire()
     if (!(Rand16() & 7)) {
       Xtem = SMapX + DX[z];
       Ytem = SMapY + DY[z];
-      if (TestBounds(Xtem, Ytem, WORLD_X, WORLD_Y)) {
+      if (TestBounds(Xtem, Ytem, SimWidth, SimHeight)) {
 	c = Map[Xtem][Ytem];
 	if (c & BURNBIT) {
 	  if (c & ZONEBIT) {
@@ -171,8 +171,8 @@ void DoMeltdown(int SX, int SY)
   for (z = 0; z < 200; z++)  {
     x = SX - 20 + Rand(40);
     y = SY - 15 + Rand(30);
-    if ((x < 0) || (x >= WORLD_X) ||
-	(y < 0) || (y >= WORLD_Y))
+    if ((x < 0) || (x >= SimWidth) ||
+	(y < 0) || (y >= SimHeight))
       continue;
     t = Map[x][y];
     if (t & ZONEBIT)
@@ -260,7 +260,7 @@ bool DoBridge()
       for (z = 0; z < 7; z++) { /* Close  */
 	x = SMapX + VDx[z];
 	y = SMapY + VDy[z];
-	if (TestBounds(x, y, WORLD_X, WORLD_Y))
+	if (TestBounds(x, y, SimWidth, SimHeight))
 	  if ((Map[x][y] & LOMASK) == (VBRTAB[z] & LOMASK))
 	    Map[x][y] = VBRTAB2[z];
       }
@@ -272,7 +272,7 @@ bool DoBridge()
       for (z = 0; z < 7; z++) { /* Close  */
 	x = SMapX + HDx[z];
 	y = SMapY + HDy[z];
-	if (TestBounds(x, y, WORLD_X, WORLD_Y))
+	if (TestBounds(x, y, SimWidth, SimHeight))
 	  if ((Map[x][y] & LOMASK) == (HBRTAB[z] & LOMASK))
 	    Map[x][y] = HBRTAB2[z];
       }
@@ -281,12 +281,12 @@ bool DoBridge()
 
   if ((GetBoatDis() < 300) || (!(Rand16() & 7))) {
     if (CChr9 & 1) {
-      if (SMapX < (WORLD_X - 1))
+      if (SMapX < (SimWidth - 1))
 	if (Map[SMapX + 1][SMapY] == CHANNEL) { /* Vertical open */
 	  for (z = 0; z < 7; z++) {
 	    x = SMapX + VDx[z];
 	    y = SMapY + VDy[z];
-	    if (TestBounds(x, y, WORLD_X, WORLD_Y))  {
+	    if (TestBounds(x, y, SimWidth, SimHeight))  {
 	      MPtem = Map[x][y];
 	      if ((MPtem == CHANNEL) ||
 		  ((MPtem & 15) == (VBRTAB2[z] & 15)))
@@ -302,7 +302,7 @@ bool DoBridge()
 	  for (z = 0; z < 7; z++) {
 	    x = SMapX + HDx[z];
 	    y = SMapY + HDy[z];
-	    if (TestBounds(x, y, WORLD_X, WORLD_Y)) {
+	    if (TestBounds(x, y, SimWidth, SimHeight)) {
 	      MPtem = Map[x][y];
 	      if (((MPtem & 15) == (HBRTAB2[z] & 15)) ||
 		  (MPtem == CHANNEL))
@@ -372,7 +372,7 @@ void RepairZone(int ZCent, int zsize)
       int xx = SMapX + x;
       int yy = SMapY + y;
       cnt++;
-      if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+      if (TestBounds(xx, yy, SimWidth, SimHeight)) {
 	ThCh = Map[xx][yy];
 	if (ThCh & ZONEBIT) continue;
 	if (ThCh & ANIMBIT) continue;
@@ -524,7 +524,7 @@ void MapScan(int x1, int x2)
   register int x, y;
 
   for (x = x1; x < x2; x++)  {
-    for (y = 0; y < WORLD_Y; y++) {
+    for (y = 0; y < SimHeight; y++) {
       if (CChr = Map[x][y]) {
 	CChr9 = CChr & LOMASK;	/* Mask off status bits  */
 	if (CChr9 >= FLOOD) {
@@ -908,8 +908,8 @@ void DoNilPower()
 {
   register int x, y, z;
 
-  for (x = 0; x < WORLD_X; x++)
-    for (y = 0; y < WORLD_Y; y++) {
+  for (x = 0; x < SimWidth; x++)
+    for (y = 0; y < SimHeight; y++) {
       z = Map[x][y];
       if (z & ZONEBIT) {
 	SMapX = x;
@@ -926,8 +926,8 @@ void DecTrafficMem()		/* tends to empty TrfDensity   */
 {
   register int x, y, z;
 
-  for (x = 0; x < HWLDX; x++)
-    for (y = 0; y < HWLDY; y++)
+  for (x = 0; x < HalfWorldWidth; x++)
+    for (y = 0; y < HalfWorldHeight; y++)
       if (z = TrfDensity[x][y]) {
 	if (z > 24) {
 	  if (z > 200) TrfDensity[x][y] = z - 34;
@@ -1030,28 +1030,28 @@ void Simulate(int mod16)
         ClearCensus();
         break;
     case 1:
-        MapScan(0, 1 * WORLD_X / 8);
+        MapScan(0, 1 * SimWidth / 8);
         break;
     case 2:
-        MapScan(1 * WORLD_X / 8, 2 * WORLD_X / 8);
+        MapScan(1 * SimWidth / 8, 2 * SimWidth / 8);
         break;
     case 3:
-        MapScan(2 * WORLD_X / 8, 3 * WORLD_X / 8);
+        MapScan(2 * SimWidth / 8, 3 * SimWidth / 8);
         break;
     case 4:
-        MapScan(3 * WORLD_X / 8, 4 * WORLD_X / 8);
+        MapScan(3 * SimWidth / 8, 4 * SimWidth / 8);
         break;
     case 5:
-        MapScan(4 * WORLD_X / 8, 5 * WORLD_X / 8);
+        MapScan(4 * SimWidth / 8, 5 * SimWidth / 8);
         break;
     case 6:
-        MapScan(5 * WORLD_X / 8, 6 * WORLD_X / 8);
+        MapScan(5 * SimWidth / 8, 6 * SimWidth / 8);
         break;
     case 7:
-        MapScan(6 * WORLD_X / 8, 7 * WORLD_X / 8);
+        MapScan(6 * SimWidth / 8, 7 * SimWidth / 8);
         break;
     case 8:
-        MapScan(7 * WORLD_X / 8, WORLD_X);
+        MapScan(7 * SimWidth / 8, SimWidth);
         break;
     case 9:
         if (!(CityTime % CENSUSRATE)) TakeCensus();
@@ -1138,7 +1138,7 @@ void DoSimInit()
 
     SetValves();
     ClearCensus();
-    MapScan(0, WORLD_X); /* XXX are you sure ??? */
+    MapScan(0, SimWidth); /* XXX are you sure ??? */
     DoPowerScan();
     NewPower = 1;		/* post rel */
     PTLScan();
@@ -1198,8 +1198,8 @@ void FireZone(int Xloc, int Yloc, int ch)
     for (y = -1; y < XYmax; y++) {
       Xtem = Xloc + x;
       Ytem = Yloc + y;
-      if ((Xtem < 0) || (Xtem > (WORLD_X - 1)) ||
-	  (Ytem < 0) || (Ytem > (WORLD_Y - 1)))
+      if ((Xtem < 0) || (Xtem > (SimWidth - 1)) ||
+	  (Ytem < 0) || (Ytem > (SimHeight - 1)))
 	continue;
       if ((int)(Map[Xtem][Ytem] & LOMASK) >= ROADBASE) /* post release */
 	Map[Xtem][Ytem] |= BULLBIT;

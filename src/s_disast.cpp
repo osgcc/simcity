@@ -93,9 +93,9 @@ void DoEarthQuake();
 
 void MakeMeltdown()
 {
-    for (int x = 0; x < (WORLD_X - 1); x++)
+    for (int x = 0; x < (SimWidth - 1); x++)
     {
-        for (int y = 0; y < (WORLD_Y - 1); y++)
+        for (int y = 0; y < (SimHeight - 1); y++)
         {
             /* TILE_IS_NUCLEAR(Map[x][y]) */
             if ((Map[x][y] & LOMASK) == NUCLEAR)
@@ -110,8 +110,8 @@ void MakeMeltdown()
 
 void FireBomb()
 {
-    CrashX = Rand(WORLD_X - 1);
-    CrashY = Rand(WORLD_Y - 1);
+    CrashX = Rand(SimWidth - 1);
+    CrashY = Rand(SimHeight - 1);
     MakeExplosion(CrashX, CrashY);
     ClearMes();
     SendMesAt(-30, CrashX, CrashY);
@@ -134,9 +134,9 @@ void MakeEarthquake()
 
     for (int z = 0; z < time; z++)
     {
-        int x = Rand(WORLD_X - 1);
-        int y = Rand(WORLD_Y - 1);
-        if ((x < 0) || (x > (WORLD_X - 1)) || (y < 0) || (y > (WORLD_Y - 1)))
+        int x = Rand(SimWidth - 1);
+        int y = Rand(SimHeight - 1);
+        if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
         {
             continue;
         }
@@ -158,8 +158,8 @@ void MakeEarthquake()
 
 void SetFire()
 {
-    int x = Rand(WORLD_X - 1);
-    int y = Rand(WORLD_Y - 1);
+    int x = Rand(SimWidth - 1);
+    int y = Rand(SimHeight - 1);
     int z = Map[x][y];
 
     /* TILE_IS_ARSONABLE(z) */
@@ -181,8 +181,8 @@ void MakeFire()
 {
     for (int t = 0; t < 40; t++)
     {
-        int x = Rand(WORLD_X - 1);
-        int y = Rand(WORLD_Y - 1);
+        int x = Rand(SimWidth - 1);
+        int y = Rand(SimHeight - 1);
         int z = Map[x][y];
         /* !(z & BURNBIT) && TILE_IS_ARSONABLE(z) */
         if ((!(z & ZONEBIT)) && (z & BURNBIT))
@@ -206,8 +206,8 @@ void MakeFlood()
 
     for (int z = 0; z < 300; z++)
     {
-        int x = Rand(WORLD_X - 1);
-        int y = Rand(WORLD_Y - 1);
+        int x = Rand(SimWidth - 1);
+        int y = Rand(SimHeight - 1);
         int cell = Map[x][y] & LOMASK; /* XXX: & LOMASK */
 
         /* TILE_IS_RIVER_EDGE(c) */
@@ -217,7 +217,7 @@ void MakeFlood()
             {
                 int xx = x + Dx[t];
                 int yy = y + Dy[t];
-                if (TestBounds(xx, yy, WORLD_X, WORLD_Y))
+                if (TestBounds(xx, yy, SimWidth, SimHeight))
                 {
                     cell = Map[xx][yy];
                     /* TILE_IS_FLOODABLE(c) */
@@ -250,7 +250,7 @@ void DoFlood()
             {
                 int xx = SMapX + Dx[z];
                 int yy = SMapY + Dy[z];
-                if (TestBounds(xx, yy, WORLD_X, WORLD_Y))
+                if (TestBounds(xx, yy, SimWidth, SimHeight))
                 {
                     int cell = Map[xx][yy];
                     int terrain = cell & LOMASK;

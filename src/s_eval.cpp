@@ -192,9 +192,9 @@ int AverageTrf()
 
     TrfTotal = 0;
     count = 1;
-    for (x = 0; x < HWLDX; x++)
+    for (x = 0; x < HalfWorldWidth; x++)
     {
-        for (y = 0; y < HWLDY; y++)
+        for (y = 0; y < HalfWorldHeight; y++)
         {
             if (LandValueMem[x][y])
             {

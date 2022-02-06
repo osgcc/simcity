@@ -130,8 +130,8 @@ void doKeyDown(SimView *view, int charCode)
     int i, j;
     MakeSound("city", "Explosion-High");
     MakeSound("city", "Explosion-Low");
-    for (i = 0; i < WORLD_X; i++) {
-      for (j = 0; j < WORLD_Y; j++) {
+    for (i = 0; i < SimWidth; i++) {
+      for (j = 0; j < SimHeight; j++) {
 	int tile = Map[i][j] & LOMASK;
 	if ((tile >= RUBBLE) &&
 	    ((tile < CHURCH - 4) ||
@@ -162,10 +162,10 @@ void doKeyDown(SimView *view, int charCode)
     int i;
     int n = 500;
     for (i = 0; i < n; i++) {
-      int x1 = Rand(WORLD_X - 1);
-      int y1 = Rand(WORLD_Y - 1);
-      int x2 = Rand(WORLD_X - 1);
-      int y2 = Rand(WORLD_Y - 1);
+      int x1 = Rand(SimWidth - 1);
+      int y1 = Rand(SimHeight - 1);
+      int x2 = Rand(SimWidth - 1);
+      int y2 = Rand(SimHeight - 1);
       int temp =
 	Map[x1][y1];
       Map[x1][y1] =

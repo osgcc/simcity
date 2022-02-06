@@ -105,11 +105,11 @@ void ViewToTileCoords(SimView* view, int x, int y, int& outx, int& outy)
     x = (view->pan_x - ((view->w_width >> 1) - x)) >> 4;
     y = (view->pan_y - ((view->w_height >> 1) - y)) >> 4;
 
-    x = std::clamp(x, 0, WORLD_X);
-    y = std::clamp(y, 0, WORLD_Y);
+    x = std::clamp(x, 0, SimWidth);
+    y = std::clamp(y, 0, SimHeight);
 
-    if (x >= WORLD_X) { x = WORLD_X - 1; }
-    if (y >= WORLD_Y) { y = WORLD_Y - 1; }
+    if (x >= SimWidth) { x = SimWidth - 1; }
+    if (y >= SimHeight) { y = SimHeight - 1; }
 
 
     if (x < view->tile_x)
@@ -149,9 +149,9 @@ void ViewToPixelCoords(SimView *view, int x, int y, int& outx, int& outy)
   y = view->pan_y - ((view->w_height >>1) - y);
 
   if (x < 0) x = 0;
-  if (x >= (WORLD_X <<4)) x = (WORLD_X <<4) - 1;
+  if (x >= (SimWidth <<4)) x = (SimWidth <<4) - 1;
   if (y < 0) y = 0;
-  if (y >= (WORLD_Y <<4)) y = (WORLD_Y <<4) - 1;
+  if (y >= (SimHeight <<4)) y = (SimHeight <<4) - 1;
 
   if (x < (view->tile_x <<4))
     x = (view->tile_x <<4);

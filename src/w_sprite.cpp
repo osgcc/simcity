@@ -132,9 +132,9 @@ void InitSprite(SimSprite* sprite, int x, int y)
         sprite->x_offset = 32; sprite->y_offset = -16;
         sprite->x_hot = 48; sprite->y_hot = 0;
         if (x < (4 << 4)) sprite->frame = 3;
-        else if (x >= ((WORLD_X - 4) << 4)) sprite->frame = 7;
+        else if (x >= ((SimWidth - 4) << 4)) sprite->frame = 7;
         else if (y < (4 << 4)) sprite->frame = 5;
-        else if (y >= ((WORLD_Y - 4) << 4)) sprite->frame = 1;
+        else if (y >= ((SimHeight - 4) << 4)) sprite->frame = 1;
         else sprite->frame = 3;
         sprite->new_dir = sprite->frame;
         sprite->dir = 10;
@@ -145,11 +145,11 @@ void InitSprite(SimSprite* sprite, int x, int y)
         sprite->width = sprite->height = 48;
         sprite->x_offset = 24; sprite->y_offset = 0;
         sprite->x_hot = 40; sprite->y_hot = 16;
-        if (x > ((WORLD_X << 4) / 2)) {
-            if (y > ((WORLD_Y << 4) / 2)) sprite->frame = 10;
+        if (x > ((SimWidth << 4) / 2)) {
+            if (y > ((SimHeight << 4) / 2)) sprite->frame = 10;
             else sprite->frame = 7;
         }
-        else if (y > ((WORLD_Y << 4) / 2)) sprite->frame = 1;
+        else if (y > ((SimHeight << 4) / 2)) sprite->frame = 1;
         else sprite->frame = 4;
         sprite->count = 1000;
         sprite->dest_x = PolMaxX << 4;
@@ -164,8 +164,8 @@ void InitSprite(SimSprite* sprite, int x, int y)
         sprite->x_hot = 40; sprite->y_hot = -8;
         sprite->frame = 5;
         sprite->count = 1500;
-        sprite->dest_x = Rand((WORLD_X << 4) - 1);
-        sprite->dest_y = Rand((WORLD_Y << 4) - 1);
+        sprite->dest_x = Rand((SimWidth << 4) - 1);
+        sprite->dest_y = Rand((SimHeight << 4) - 1);
         sprite->orig_x = x - 30;
         sprite->orig_y = y;
         break;
@@ -174,7 +174,7 @@ void InitSprite(SimSprite* sprite, int x, int y)
         sprite->width = sprite->height = 48;
         sprite->x_offset = 24; sprite->y_offset = 0;
         sprite->x_hot = 48; sprite->y_hot = 16;
-        if (x > ((WORLD_X - 20) << 4)) {
+        if (x > ((SimWidth - 20) << 4)) {
             sprite->x -= 100 + 48;
             sprite->dest_x = sprite->x - 200;
             sprite->frame = 7;
@@ -372,7 +372,7 @@ int GetChar(int x, int y)
 {
   x >>= 4;
   y >>= 4;
-  if (!TestBounds(x, y, WORLD_X, WORLD_Y))
+  if (!TestBounds(x, y, SimWidth, SimHeight))
     return(-1);
   else
     return(Map[x][y] & LOMASK);
@@ -424,8 +424,8 @@ int SpriteNotInBounds(SimSprite *sprite)
   int y = sprite->y + sprite->y_hot;
 
   if ((x < 0) || (y < 0) ||
-      (x >= (WORLD_X <<4)) ||
-      (y >= (WORLD_Y <<4))) {
+      (x >= (SimWidth <<4)) ||
+      (y >= (SimHeight <<4))) {
     return (1);
   }
   return (0);
@@ -489,7 +489,7 @@ int CanDriveOn(int x, int y)
 {
     int tile;
 
-    if (!TestBounds(x, y, WORLD_X, WORLD_Y))
+    if (!TestBounds(x, y, SimWidth, SimHeight))
     {
         return 0;
     }
@@ -576,7 +576,7 @@ void StartFire(int x, int y)
     // egad, modifying parameters
     x >>= 4;
     y >>= 4;
-    if ((x >= WORLD_X) || (y >= WORLD_Y) || (x < 0) || (y < 0))
+    if ((x >= SimWidth) || (y >= SimHeight) || (x < 0) || (y < 0))
     {
         return;
     }
@@ -603,7 +603,7 @@ void Destroy(int ox, int oy)
     int x = ox >> 4; // ox == offset? Origin?
     int y = oy >> 4;
 
-    if (!TestBounds(x, y, WORLD_X, WORLD_Y))
+    if (!TestBounds(x, y, SimWidth, SimHeight))
     {
         return;
     }
@@ -795,9 +795,9 @@ void DoCopterSprite(SimSprite* sprite)
         x = (sprite->x + 48) >> 5;
         y = sprite->y >> 5;
         if ((x >= 0) &&
-            (x < (WORLD_X >> 1)) &&
+            (x < (SimWidth >> 1)) &&
             (y >= 0) &&
-            (y < (WORLD_Y >> 1))) {
+            (y < (SimHeight >> 1))) {
             /* Don changed from 160 to 170 to shut the #$%#$% thing up! */
             if ((TrfDensity[x][y] > 170) && ((Rand16() & 7) == 0)) {
                 SendMesAt(-41, (x << 1) + 1, (y << 1) + 1);
@@ -841,8 +841,8 @@ void DoAirplaneSprite(SimSprite* sprite)
     }
 
     if (absDist < 50) { /* at destination  */
-        sprite->dest_x = Rand((WORLD_X * 16) + 100) - 50;
-        sprite->dest_y = Rand((WORLD_Y * 16) + 100) - 50;
+        sprite->dest_x = Rand((SimWidth * 16) + 100) - 50;
+        sprite->dest_y = Rand((SimHeight * 16) + 100) - 50;
     }
 
     /* deh added test for !Disasters */
@@ -909,7 +909,7 @@ void DoShipSprite(SimSprite* sprite)
             if (z == sprite->dir) continue;
             x = ((sprite->x + (48 - 1)) >> 4) + BDx[z];
             y = (sprite->y >> 4) + BDy[z];
-            if (TestBounds(x, y, WORLD_X, WORLD_Y)) {
+            if (TestBounds(x, y, SimWidth, SimHeight)) {
                 t = Map[x][y] & LOMASK;
                 if ((t == CHANNEL) || (t == BRWH) || (t == BRWV) ||
                     TryOther(t, sprite->dir, z)) {
@@ -1226,9 +1226,9 @@ void DoBusSprite(SimSprite* sprite)
         tx = (sprite->x + sprite->x_hot) >> 5;
         ty = (sprite->y + sprite->y_hot) >> 5;
         if ((tx >= 0) &&
-            (tx < (WORLD_X >> 1)) &&
+            (tx < (SimWidth >> 1)) &&
             (ty >= 0) &&
-            (ty < (WORLD_Y >> 1)))
+            (ty < (SimHeight >> 1)))
         {
             z = TrfDensity[tx][ty] >> 6;
             if (z > 1) z--;
@@ -1311,13 +1311,13 @@ void DoBusSprite(SimSprite* sprite)
 
     otx = (sprite->x + sprite->x_hot + (Dx[sprite->dir] * AHEAD)) >> 4;
     oty = (sprite->y + sprite->y_hot + (Dy[sprite->dir] * AHEAD)) >> 4;
-    if (otx < 0) otx = 0; else if (otx >= WORLD_X) otx = WORLD_X - 1;
-    if (oty < 0) oty = 0; else if (oty >= WORLD_Y) oty = WORLD_Y - 1;
+    if (otx < 0) otx = 0; else if (otx >= SimWidth) otx = SimWidth - 1;
+    if (oty < 0) oty = 0; else if (oty >= SimHeight) oty = SimHeight - 1;
 
     tx = (sprite->x + sprite->x_hot + dx + (Dx[sprite->dir] * AHEAD)) >> 4;
     ty = (sprite->y + sprite->y_hot + dy + (Dy[sprite->dir] * AHEAD)) >> 4;
-    if (tx < 0) tx = 0; else if (tx >= WORLD_X) tx = WORLD_X - 1;
-    if (ty < 0) ty = 0; else if (ty >= WORLD_Y) ty = WORLD_Y - 1;
+    if (tx < 0) tx = 0; else if (tx >= SimWidth) tx = SimWidth - 1;
+    if (ty < 0) ty = 0; else if (ty >= SimHeight) ty = SimHeight - 1;
 
     if ((tx != otx) || (ty != oty)) {
 #ifdef DEBUGBUS
@@ -1485,7 +1485,7 @@ void GenerateShip()
 {
     if (!(Rand16() & 3))
     {
-        for (int x = 4; x < WORLD_X - 2; x++)
+        for (int x = 4; x < SimWidth - 2; x++)
         {
             if (Map[x][0] == CHANNEL)
             {
@@ -1497,7 +1497,7 @@ void GenerateShip()
 
     if (!(Rand16() & 3))
     {
-        for (int y = 1; y < WORLD_Y - 2; y++)
+        for (int y = 1; y < SimHeight - 2; y++)
         {
             if (Map[0][y] == CHANNEL)
             {
@@ -1509,11 +1509,11 @@ void GenerateShip()
 
     if (!(Rand16() & 3))
     {
-        for (int x = 4; x < WORLD_X - 2; x++)
+        for (int x = 4; x < SimWidth - 2; x++)
         {
-            if (Map[x][WORLD_Y - 1] == CHANNEL)
+            if (Map[x][SimHeight - 1] == CHANNEL)
             {
-                MakeShipHere(x, WORLD_Y - 1, 0);
+                MakeShipHere(x, SimHeight - 1, 0);
                 return;
             }
         }
@@ -1521,11 +1521,11 @@ void GenerateShip()
 
     if (!(Rand16() & 3))
     {
-        for (int y = 1; y < WORLD_Y - 2; y++)
+        for (int y = 1; y < SimHeight - 2; y++)
         {
-            if (Map[WORLD_X - 1][y] == CHANNEL)
+            if (Map[SimWidth - 1][y] == CHANNEL)
             {
-                MakeShipHere(WORLD_X - 1, y, 0);
+                MakeShipHere(SimWidth - 1, y, 0);
                 return;
             }
         }
@@ -1560,8 +1560,8 @@ void MakeMonster()
 
     for (int z = 0; z < 300; z++)
     {
-        const int x = Rand(WORLD_X - 20) + 10;
-        const int y = Rand(WORLD_Y - 10) + 5;
+        const int x = Rand(SimWidth - 20) + 10;
+        const int y = Rand(SimHeight - 10) + 5;
         if ((Map[x][y] == RIVER) || (Map[x][y] == RIVER + BULLBIT))
         {
             MonsterHere(x, y);
@@ -1609,8 +1609,8 @@ void MakeTornado()
         return;
     }
 
-    x = Rand((WORLD_X << 4) - 800) + 400;
-    y = Rand((WORLD_Y << 4) - 200) + 100;
+    x = Rand((SimWidth << 4) - 800) + 400;
+    y = Rand((SimHeight << 4) - 200) + 100;
 
     MakeSprite(TOR, x, y);
 
@@ -1627,7 +1627,7 @@ void MakeExplosionAt(int x, int y)
 
 void MakeExplosion(int x, int y)
 {
-    if ((x >= 0) && (x < WORLD_X) && (y >= 0) && (y < WORLD_Y))
+    if ((x >= 0) && (x < SimWidth) && (y >= 0) && (y < SimHeight))
     {
         MakeExplosionAt((x << 4) + 8, (y << 4) + 8);
     }

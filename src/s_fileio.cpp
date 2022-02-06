@@ -128,7 +128,7 @@ static int _load_file(std::string filename, char* dir)
       (_load_short(PollutionHis, HISTLEN / 2, f) == 0) ||
       (_load_short(MoneyHis, HISTLEN / 2, f) == 0) ||
       (_load_short(MiscHis, MISCHISTLEN / 2, f) == 0) ||
-      (_load_short((&Map[0][0]), WORLD_X * WORLD_Y, f) < 0)) {
+      (_load_short((&Map[0][0]), SimWidth * SimHeight, f) < 0)) {
 
     /* TODO:  report error
     fclose(f);
@@ -257,7 +257,7 @@ int saveFile(const std::string& filename)
       (_save_short(PollutionHis, HISTLEN / 2, f) == 0) ||
       (_save_short(MoneyHis, HISTLEN / 2, f) == 0) ||
       (_save_short(MiscHis, MISCHISTLEN / 2, f) == 0) ||
-      (_save_short((&Map[0][0]), WORLD_X * WORLD_Y, f) < 0)) {
+      (_save_short((&Map[0][0]), SimWidth * SimHeight, f) < 0)) {
 
     /* TODO:  report error
     fclose(f);

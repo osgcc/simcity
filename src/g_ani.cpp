@@ -74,7 +74,7 @@ void animateTiles()
     /* Animate whole world */
     tMapPtr = (unsigned int*)&(Map[0][0]);
 
-    for (i = WORLD_X * WORLD_Y; i > 0; i--)
+    for (i = SimWidth * SimHeight; i > 0; i--)
     {
         tilevalue = (*tMapPtr);
         if (tilevalue & ANIMBIT)

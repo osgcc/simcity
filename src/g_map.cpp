@@ -136,9 +136,9 @@ int GetColorIndex(int x)
 void drawPopDensity(SimView* view)
 {
 	drawAll(view);
-	for (int x = 0; x < HWLDX; x++)
+	for (int x = 0; x < HalfWorldWidth; x++)
 	{
-		for (int y = 0; y < HWLDY; y++)
+		for (int y = 0; y < HalfWorldHeight; y++)
 		{
 			maybeDrawRect(view, GetColorIndex(PopDensity[x][y]), x * 6, y * 6, 6, 6);
 		}
@@ -194,9 +194,9 @@ void drawTrafficMap(SimView* view)
 {
 	drawLilTransMap(view);
 
-	for (int x = 0; x < HWLDX; x++)
+	for (int x = 0; x < HalfWorldWidth; x++)
 	{
-		for (int y = 0; y < HWLDY; y++)
+		for (int y = 0; y < HalfWorldHeight; y++)
 		{
 			maybeDrawRect(view, GetColorIndex(TrfDensity[x][y]), x * 6, y * 6, 6, 6);
 		}
@@ -208,9 +208,9 @@ void drawPollutionMap(SimView* view)
 {
 	drawAll(view);
 
-	for (int x = 0; x < HWLDX; x++)
+	for (int x = 0; x < HalfWorldWidth; x++)
 	{
-		for (int y = 0; y < HWLDY; y++)
+		for (int y = 0; y < HalfWorldHeight; y++)
 		{
 			maybeDrawRect(view, GetColorIndex(10 + PollutionMem[x][y]), x * 6, y * 6, 6, 6);
 		}
@@ -222,9 +222,9 @@ void drawCrimeMap(SimView* view)
 {
 	drawAll(view);
 
-	for (int x = 0; x < HWLDX; x++)
+	for (int x = 0; x < HalfWorldWidth; x++)
 	{
-		for (int y = 0; y < HWLDY; y++)
+		for (int y = 0; y < HalfWorldHeight; y++)
 		{
 			maybeDrawRect(view, GetColorIndex(CrimeMem[x][y]), x * 6, y * 6, 6, 6);
 		}
@@ -236,9 +236,9 @@ void drawLandMap(SimView* view)
 {
 	drawAll(view);
 
-	for (int x = 0; x < HWLDX; x++)
+	for (int x = 0; x < HalfWorldWidth; x++)
 	{
-		for (int y = 0; y < HWLDY; y++)
+		for (int y = 0; y < HalfWorldHeight; y++)
 		{
 			maybeDrawRect(view, GetColorIndex(LandValueMem[x][y]), x * 6, y * 6, 6, 6);
 		}

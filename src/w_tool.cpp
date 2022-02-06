@@ -378,8 +378,8 @@ check3x3(SimView *view, int mapH, int mapV, int base, int tool)
   int flag;
 
   mapH--; mapV--;
-  if ((mapH < 0) || (mapH > (WORLD_X - 3)) ||
-      (mapV < 0) || (mapV > (WORLD_Y - 3))) {
+  if ((mapH < 0) || (mapH > (SimWidth - 3)) ||
+      (mapV < 0) || (mapV > (SimHeight - 3))) {
     return -1;
   }
 
@@ -513,8 +513,8 @@ check4x4(SimView *view, int mapH, int mapV,
   int cost = 0;
 
   mapH--; mapV--;
-  if ((mapH < 0) || (mapH > (WORLD_X - 4)) ||
-      (mapV < 0) || (mapV > (WORLD_Y - 4))) {
+  if ((mapH < 0) || (mapH > (SimWidth - 4)) ||
+      (mapV < 0) || (mapV > (SimHeight - 4))) {
     return -1;
   }
 
@@ -642,8 +642,8 @@ check6x6(SimView *view, int mapH, int mapV, int base, int tool)
   int cost = 0;
 
   mapH--; mapV--;
-  if ((mapH < 0) || (mapH > (WORLD_X - 6)) ||
-      (mapV < 0) || (mapV > (WORLD_Y - 6)))
+  if ((mapH < 0) || (mapH > (SimWidth - 6)) ||
+      (mapV < 0) || (mapV > (SimHeight - 6)))
     return -1;
 
   h = xMap = holdMapH = mapH;
@@ -874,7 +874,7 @@ void put3x3Rubble(int x, int y)
 	
   for (xx = x - 1; xx < x + 2; xx++) {
     for (yy = y - 1; yy < y + 2; yy++)  {
-      if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+      if (TestBounds(xx, yy, SimWidth, SimHeight)) {
 	zz = Map[xx][yy] & LOMASK;
 	if ((zz != RADTILE) && (zz != 0)) {
 	  Map[xx][yy] =
@@ -896,7 +896,7 @@ void put4x4Rubble(int x, int y)
 	
   for (xx = x - 1; xx < x + 3; xx++) {
     for (yy = y - 1; yy < y + 3; yy++) {
-      if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+      if (TestBounds(xx, yy, SimWidth, SimHeight)) {
 	zz = Map[xx][yy] & LOMASK;
 	if ((zz != RADTILE) && (zz != 0)) {
 	  Map[xx][yy] =
@@ -918,7 +918,7 @@ void put6x6Rubble(int x, int y)
 
   for (xx = x - 1; xx < x + 5; xx++) {
     for (yy = y - 1; yy < y + 5; yy++)  {
-      if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+      if (TestBounds(xx, yy, SimWidth, SimHeight)) {
 	zz = Map[xx][yy] & LOMASK;
 	if ((zz != RADTILE) && (zz != 0)) {
 	  Map[xx][yy] =
@@ -940,8 +940,8 @@ void put6x6Rubble(int x, int y)
 int
 query_tool(SimView *view, int x, int y)
 {
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -957,7 +957,7 @@ int bulldozer_tool(SimView* view, int x, int y)
     int zoneSize, deltaH, deltaV;
     int result = 1;
 
-    if ((x < 0) || (x > (WORLD_X - 1)) || (y < 0) || (y > (WORLD_Y - 1)))
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
     {
         return -1;
     }
@@ -1053,8 +1053,8 @@ road_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1072,8 +1072,8 @@ rail_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1091,8 +1091,8 @@ wire_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1110,8 +1110,8 @@ park_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1)))
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1)))
     return -1;
 
   result = putDownPark(view, x, y);
@@ -1127,8 +1127,8 @@ residential_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1145,8 +1145,8 @@ commercial_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1163,8 +1163,8 @@ industrial_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1181,8 +1181,8 @@ police_dept_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1199,8 +1199,8 @@ fire_dept_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1217,8 +1217,8 @@ stadium_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1235,8 +1235,8 @@ coal_power_plant_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1253,8 +1253,8 @@ nuclear_power_plant_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1271,8 +1271,8 @@ seaport_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1289,8 +1289,8 @@ airport_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 
@@ -1307,8 +1307,8 @@ network_tool(SimView *view, int x, int y)
 {
   int result;
 
-  if ((x < 0) || (x > (WORLD_X - 1)) ||
-      (y < 0) || (y > (WORLD_Y - 1))) {
+  if ((x < 0) || (x > (SimWidth - 1)) ||
+      (y < 0) || (y > (SimHeight - 1))) {
     return -1;
   }
 

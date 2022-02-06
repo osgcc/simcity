@@ -75,10 +75,10 @@ void drawAll(SimView * view)
     int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
-    for (int col = 0; col < WORLD_X; col++)
+    for (int col = 0; col < SimWidth; col++)
     {
         unsigned char* image = imageBase + (3 * pixelBytes * col);
-        for (int row = 0; row < WORLD_Y; row++)
+        for (int row = 0; row < SimHeight; row++)
         {
 
             unsigned int tile = *(mp++) & LOMASK;
@@ -109,10 +109,10 @@ void drawRes(SimView* view)
     int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
-    for (int col = 0; col < WORLD_X; col++)
+    for (int col = 0; col < SimWidth; col++)
     {
         unsigned char* image = imageBase + (3 * pixelBytes * col);
-        for (int row = 0; row < WORLD_Y; row++)
+        for (int row = 0; row < SimHeight; row++)
         {
 
             unsigned int tile = *(mp++) & LOMASK;
@@ -150,10 +150,10 @@ void drawCom(SimView* view)
     int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
-    for (int col = 0; col < WORLD_X; col++)
+    for (int col = 0; col < SimWidth; col++)
     {
         unsigned char* image = imageBase + (3 * pixelBytes * col);
-        for (int row = 0; row < WORLD_Y; row++)
+        for (int row = 0; row < SimHeight; row++)
         {
 
             unsigned int tile = *(mp++) & LOMASK;
@@ -191,10 +191,10 @@ void drawInd(SimView* view)
     int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
-    for (int col = 0; col < WORLD_X; col++)
+    for (int col = 0; col < SimWidth; col++)
     {
         unsigned char* image = imageBase + (3 * pixelBytes * col);
-        for (int row = 0; row < WORLD_Y; row++)
+        for (int row = 0; row < SimHeight; row++)
         {
 
             unsigned int tile = *(mp++) & LOMASK;
@@ -235,10 +235,10 @@ void drawLilTransMap(SimView* view)
     int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
-    for (int col = 0; col < WORLD_X; col++)
+    for (int col = 0; col < SimWidth; col++)
     {
         unsigned char* image = imageBase + (3 * pixelBytes * col);
-        for (int row = 0; row < WORLD_Y; row++)
+        for (int row = 0; row < SimHeight; row++)
         {
 
             unsigned int tile = *(mp++) & LOMASK;
@@ -290,10 +290,10 @@ void drawPower(SimView* view)
     int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
-    for (int col = 0; col < WORLD_X; col++)
+    for (int col = 0; col < SimWidth; col++)
     {
         unsigned char* image = imageBase + (3 * pixelBytes * col);
-        for (int row = 0; row < WORLD_Y; row++)
+        for (int row = 0; row < SimHeight; row++)
         {
             unsigned int tile = *(mp++);
 
@@ -407,10 +407,10 @@ void drawDynamic(SimView* view)
     int* mp = &Map[0][0];
     unsigned char* imageBase = view->data;
 
-    for (int col = 0; col < WORLD_X; col++)
+    for (int col = 0; col < SimWidth; col++)
     {
         unsigned char* image = imageBase + (3 * pixelBytes * col);
-        for (int row = 0; row < WORLD_Y; row++)
+        for (int row = 0; row < SimHeight; row++)
         {
 
             unsigned int tile = *(mp++) & LOMASK;

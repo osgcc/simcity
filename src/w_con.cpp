@@ -170,8 +170,8 @@ _LayRoad(int x, int y, int *TileAdrPtr)
 
     cost = 50;
 
-    if (x < (WORLD_X - 1)) {
-      Tile = TileAdrPtr[WORLD_Y];
+    if (x < (SimWidth - 1)) {
+      Tile = TileAdrPtr[SimHeight];
       NeutralizeRoad(Tile);
       if ((Tile == VRAILROAD) ||
 	  (Tile == HBRIDGE) ||
@@ -183,7 +183,7 @@ _LayRoad(int x, int y, int *TileAdrPtr)
     }
 
     if (x > 0) {
-      Tile = TileAdrPtr[-WORLD_Y];
+      Tile = TileAdrPtr[-SimHeight];
       NeutralizeRoad(Tile);
       if ((Tile == VRAILROAD) ||
 	  (Tile == HBRIDGE) ||
@@ -194,7 +194,7 @@ _LayRoad(int x, int y, int *TileAdrPtr)
       }
     }
 
-    if (y < (WORLD_Y - 1)) {
+    if (y < (SimHeight - 1)) {
       Tile = TileAdrPtr[1];
       NeutralizeRoad(Tile);
       if ((Tile == HRAILROAD) ||
@@ -275,8 +275,8 @@ _LayRail(int x, int y, int *TileAdrPtr)
     }
     cost = 100;
 
-    if (x < (WORLD_X - 1)) {
-      Tile = TileAdrPtr[WORLD_Y];
+    if (x < (SimWidth - 1)) {
+      Tile = TileAdrPtr[SimHeight];
       NeutralizeRoad(Tile);
       if ((Tile == 221) || (Tile == 224) || ((Tile >= 226) && (Tile <= 237))) {
 	(*TileAdrPtr) = 224 | BULLBIT;
@@ -285,7 +285,7 @@ _LayRail(int x, int y, int *TileAdrPtr)
     }
     
     if (x > 0) {
-      Tile = TileAdrPtr[-WORLD_Y];
+      Tile = TileAdrPtr[-SimHeight];
       NeutralizeRoad(Tile);
       if ((Tile == 221) || (Tile == 224) || ((Tile > 225) && (Tile < 238))) {
 	(*TileAdrPtr) = 224 | BULLBIT;
@@ -293,7 +293,7 @@ _LayRail(int x, int y, int *TileAdrPtr)
       }
     }
 
-    if (y < (WORLD_Y - 1)) {
+    if (y < (SimHeight - 1)) {
       Tile = TileAdrPtr[1];
       NeutralizeRoad(Tile);
       if ((Tile == 222) || (Tile == 238) || ((Tile > 224) && (Tile < 237))) {
@@ -365,8 +365,8 @@ _LayWire(int x, int y, int *TileAdrPtr)
       return -2;
     cost = 25;
 
-    if (x < (WORLD_X - 1)) {
-      Tile = TileAdrPtr[WORLD_Y];
+    if (x < (SimWidth - 1)) {
+      Tile = TileAdrPtr[SimHeight];
       if (Tile & CONDBIT) {
 	NeutralizeRoad(Tile);
 	if ((Tile != 77) && (Tile != 221) && (Tile != 208)) {
@@ -377,7 +377,7 @@ _LayWire(int x, int y, int *TileAdrPtr)
     }
 
     if (x > 0) {
-      Tile = TileAdrPtr[-WORLD_Y];
+      Tile = TileAdrPtr[-SimHeight];
       if (Tile & CONDBIT) {
 	NeutralizeRoad(Tile);		
 	if ((Tile != 77) && (Tile != 221) && (Tile != 208)) {
@@ -387,7 +387,7 @@ _LayWire(int x, int y, int *TileAdrPtr)
       }
     }
 
-    if (y < (WORLD_Y - 1)) {
+    if (y < (SimHeight - 1)) {
       Tile = TileAdrPtr[1];
       if (Tile & CONDBIT) {
 	NeutralizeRoad(Tile);		
@@ -455,15 +455,15 @@ void _FixSingle(int x, int y, int *TileAdrPtr)
 	adjTile |= 0x0001;
     }
 
-    if (x < (WORLD_X - 1)) {
-      Tile = TileAdrPtr[WORLD_Y];
+    if (x < (SimWidth - 1)) {
+      Tile = TileAdrPtr[SimHeight];
       NeutralizeRoad(Tile);
       if (((Tile == 238) || ((Tile >= 64) && (Tile <= 78))) &&
 	  (Tile != 78) && (Tile != 237) && (Tile != 65))
 	adjTile |= 0x0002;
     }
 
-    if (y < (WORLD_Y - 1)) {
+    if (y < (SimHeight - 1)) {
       Tile = TileAdrPtr[1];
       NeutralizeRoad(Tile);
       if (((Tile == 237) || ((Tile >= 64) && (Tile <= 78))) &&
@@ -472,7 +472,7 @@ void _FixSingle(int x, int y, int *TileAdrPtr)
     }
 
     if (x > 0) {
-      Tile = TileAdrPtr[-WORLD_Y];
+      Tile = TileAdrPtr[-SimHeight];
       NeutralizeRoad(Tile);
       if (((Tile == 238) || ((Tile >= 64) && (Tile <= 78))) &&
 	  (Tile != 78) && (Tile != 237) && (Tile != 65))
@@ -493,15 +493,15 @@ void _FixSingle(int x, int y, int *TileAdrPtr)
 	adjTile |= 0x0001;
     }
 
-    if (x < (WORLD_X - 1)) {
-      Tile = TileAdrPtr[WORLD_Y];
+    if (x < (SimWidth - 1)) {
+      Tile = TileAdrPtr[SimHeight];
       NeutralizeRoad(Tile);
       if ((Tile >= 221) && (Tile <= 238) &&
 	  (Tile != 222) && (Tile != 238) && (Tile != 225))
 	adjTile |= 0x0002;
     }
 
-    if (y < (WORLD_Y - 1)) {
+    if (y < (SimHeight - 1)) {
       Tile = TileAdrPtr[1];
       NeutralizeRoad(Tile);
       if ((Tile >= 221) && (Tile <= 238) &&
@@ -510,7 +510,7 @@ void _FixSingle(int x, int y, int *TileAdrPtr)
     }
 
     if (x > 0) {
-      Tile = TileAdrPtr[-WORLD_Y];
+      Tile = TileAdrPtr[-SimHeight];
       NeutralizeRoad(Tile);
       if ((Tile >= 221) && (Tile <= 238) &&
 	  (Tile != 222) && (Tile != 238) && (Tile != 225))
@@ -532,8 +532,8 @@ void _FixSingle(int x, int y, int *TileAdrPtr)
       }
     }
 
-    if (x < (WORLD_X - 1)) {
-      Tile = TileAdrPtr[WORLD_Y];
+    if (x < (SimWidth - 1)) {
+      Tile = TileAdrPtr[SimHeight];
       if (Tile & CONDBIT) {
 	NeutralizeRoad(Tile);
 	if ((Tile != 208) && (Tile != 77) && (Tile != 221))
@@ -541,7 +541,7 @@ void _FixSingle(int x, int y, int *TileAdrPtr)
       }
     }
 
-    if (y < (WORLD_Y - 1)) {
+    if (y < (SimHeight - 1)) {
       Tile = TileAdrPtr[1];
       if (Tile & CONDBIT) {
 	NeutralizeRoad(Tile);
@@ -551,7 +551,7 @@ void _FixSingle(int x, int y, int *TileAdrPtr)
     }
 
     if (x > 0) {
-      Tile = TileAdrPtr[-WORLD_Y];
+      Tile = TileAdrPtr[-SimHeight];
       if (Tile & CONDBIT) {
 	NeutralizeRoad(Tile);
 	if ((Tile != 208) && (Tile != 77) && (Tile != 221))
@@ -573,16 +573,16 @@ void _FixZone(int x, int y, int *TileAdrPtr)
     _FixSingle(x, y-1, &TileAdrPtr[-1]);
   }
 
-  if (x < (WORLD_X - 1)) {
-    _FixSingle(x+1, y, &TileAdrPtr[WORLD_Y]);
+  if (x < (SimWidth - 1)) {
+    _FixSingle(x+1, y, &TileAdrPtr[SimHeight]);
   }
 
-  if (y < (WORLD_Y - 1)) {
+  if (y < (SimHeight - 1)) {
     _FixSingle(x, y+1, &TileAdrPtr[1]);
   }
 
   if (x > 0) {
-    _FixSingle(x-1, y, &TileAdrPtr[-WORLD_Y]);
+    _FixSingle(x-1, y, &TileAdrPtr[-SimHeight]);
   }
 
 }
@@ -595,7 +595,7 @@ int ConnecTile(int x, int y, int* TileAdrPtr, int Command)
     int result = 1;
 
     /* make sure the array subscripts are in bounds */
-    if (!TestBounds(x, y, WORLD_X, WORLD_Y))
+    if (!TestBounds(x, y, SimWidth, SimHeight))
     {
         return (0);
     }

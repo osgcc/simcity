@@ -115,7 +115,7 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 	image = (unsigned int*)view->data;
 	ii = ((lineBytes * h * 16) - 16) / sizeof(unsigned int);
 	map = (unsigned int*)&Map[x][y];
-	mm = WORLD_Y - h;
+	mm = SimHeight - h;
 	have = view->tiles;
 
 	/*
@@ -187,7 +187,7 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 		image = (unsigned int*)view->data;
 		ii = ((lineBytes * h * 16) - 2) / sizeof(unsigned int);
 		map = (unsigned int*)&Map[x][y];
-		mm = WORLD_Y - h;
+		mm = SimHeight - h;
 		have = view->tiles;
 
 		for (int col = 0; col < w; col++)
@@ -275,7 +275,7 @@ void WireDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 	}
 
 	map = (unsigned int*)&Map[x][y];
-	mm = WORLD_Y - h;
+	mm = SimHeight - h;
 	have = view->tiles;
 
 	for (int col = 0; col < w; col++)

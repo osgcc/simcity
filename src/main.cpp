@@ -222,19 +222,19 @@ void sim_update_evaluations()
 int *CellSrc = nullptr;
 int *CellDst = nullptr;
 
-#define SRCCOL (WORLD_Y + 2)
-#define DSTCOL WORLD_Y
+#define SRCCOL (SimHeight + 2)
+#define DSTCOL SimHeight
 
 #define CLIPPER_LOOP_BODY(CODE) \
     src = CellSrc; dst = CellDst; \
-    for (int x = 0; x < WORLD_X;) { \
+    for (int x = 0; x < SimWidth;) { \
       int nw, n, ne, w, c, e, sw, s, se; \
       \
       src = CellSrc + (x * SRCCOL); dst = CellDst + (x * DSTCOL); \
       w = src[0]; c = src[SRCCOL]; e = src[2 * SRCCOL]; \
       sw = src[1]; s = src[SRCCOL + 1]; se = src[(2 * SRCCOL) + 1]; \
       \
-      for (int y = 0; y < WORLD_Y; y++) { \
+      for (int y = 0; y < SimHeight; y++) { \
         nw = w; w = sw; sw = src[2]; \
 	n = c; c = s; s = src[SRCCOL + 2]; \
 	ne = e; e = se; se = src[(2 * SRCCOL) + 2]; \
@@ -247,7 +247,7 @@ int *CellDst = nullptr;
       nw = src[1]; n = src[SRCCOL + 1]; ne = src[(2 * SRCCOL) + 1]; \
       w = src[2]; c = src[SRCCOL + 2]; e = src[(2 * SRCCOL) + 2]; \
       \
-      for (int y = WORLD_Y - 1; y >= 0; y--) { \
+      for (int y = SimHeight - 1; y >= 0; y--) { \
         sw = w; w = nw; nw = src[0]; \
         s = c; c = n; n = src[SRCCOL]; \
         se = e; e = ne; ne = src[2 * SRCCOL]; \
@@ -267,7 +267,7 @@ void sim_heat()
 
     if (CellSrc == nullptr)
     {
-        CellSrc = (int*)malloc((WORLD_X + 2) * (WORLD_Y + 2) * sizeof(int));
+        CellSrc = (int*)malloc((SimWidth + 2) * (SimHeight + 2) * sizeof(int));
         CellDst = &Map[0][0];
     }
 
@@ -300,50 +300,50 @@ void sim_heat()
     case 0:
         break;
     case 1:
-        for (int x = 0; x < WORLD_X; x++)
+        for (int x = 0; x < SimWidth; x++)
         {
-            memcpy(src, dst, WORLD_Y * sizeof(int));
+            memcpy(src, dst, SimHeight * sizeof(int));
             src += SRCCOL;
             dst += DSTCOL;
         }
         break;
     case 2:
-        for (int x = 0; x < WORLD_X; x++)
+        for (int x = 0; x < SimWidth; x++)
         {
-            src[-1] = src[WORLD_Y - 1];
-            src[WORLD_Y] = src[0];
+            src[-1] = src[SimHeight - 1];
+            src[SimHeight] = src[0];
             src += SRCCOL;
             dst += DSTCOL;
         }
-        memcpy(CellSrc, CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(int));
-        memcpy(CellSrc + SRCCOL * (WORLD_X + 1), CellSrc + SRCCOL, SRCCOL * sizeof(int));
+        memcpy(CellSrc, CellSrc + (SRCCOL * SimWidth), SRCCOL * sizeof(int));
+        memcpy(CellSrc + SRCCOL * (SimWidth + 1), CellSrc + SRCCOL, SRCCOL * sizeof(int));
         break;
     case 3:
-        for (int x = 0; x < WORLD_X; x++)
+        for (int x = 0; x < SimWidth; x++)
         {
-            memcpy(src, dst, WORLD_Y * sizeof(int));
-            src[-1] = src[WORLD_Y - 1];
-            src[WORLD_Y] = src[0];
+            memcpy(src, dst, SimHeight * sizeof(int));
+            src[-1] = src[SimHeight - 1];
+            src[SimHeight] = src[0];
             src += SRCCOL;
             dst += DSTCOL;
         }
-        memcpy(CellSrc, CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(int));
-        memcpy(CellSrc + SRCCOL * (WORLD_X + 1), CellSrc + SRCCOL, SRCCOL * sizeof(int));
+        memcpy(CellSrc, CellSrc + (SRCCOL * SimWidth), SRCCOL * sizeof(int));
+        memcpy(CellSrc + SRCCOL * (SimWidth + 1), CellSrc + SRCCOL, SRCCOL * sizeof(int));
         break;
     case 4:
         src[0] = dst[0];
-        src[1 + WORLD_Y] = dst[WORLD_Y - 1];
-        src[(1 + WORLD_X) * SRCCOL] = dst[(WORLD_X - 1) * DSTCOL];
-        src[((2 + WORLD_X) * SRCCOL) - 1] = dst[(WORLD_X * WORLD_Y) - 1];
-        for (int x = 0; x < WORLD_X; x++)
+        src[1 + SimHeight] = dst[SimHeight - 1];
+        src[(1 + SimWidth) * SRCCOL] = dst[(SimWidth - 1) * DSTCOL];
+        src[((2 + SimWidth) * SRCCOL) - 1] = dst[(SimWidth * SimHeight) - 1];
+        for (int x = 0; x < SimWidth; x++)
         {
-            memcpy(src, dst, WORLD_Y * sizeof(int));
+            memcpy(src, dst, SimHeight * sizeof(int));
             src[-1] = src[0];
-            src[WORLD_Y] = src[WORLD_Y - 1];
+            src[SimHeight] = src[SimHeight - 1];
             src += SRCCOL;
             dst += DSTCOL;
         }
-        memcpy(CellSrc + (SRCCOL * (WORLD_X + 1)), CellSrc + (SRCCOL * WORLD_X), SRCCOL * sizeof(int));
+        memcpy(CellSrc + (SRCCOL * (SimWidth + 1)), CellSrc + (SRCCOL * SimWidth), SRCCOL * sizeof(int));
         memcpy(CellSrc, CellSrc + SRCCOL, SRCCOL * sizeof(int));
         break;
     }

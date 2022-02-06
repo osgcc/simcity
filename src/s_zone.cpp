@@ -93,7 +93,7 @@ void ZonePlop (int base)
   for (z = 0; z < 9; z++) {		/* check for fire  */
     int xx = SMapX + Zx[z];
     int yy = SMapY + Zy[z];
-    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+    if (TestBounds(xx, yy, SimWidth, SimHeight)) {
       x = Map[xx][yy] & LOMASK;
       if ((x >= FLOOD) && (x < ROADBASE)) return;
     }
@@ -101,7 +101,7 @@ void ZonePlop (int base)
   for (z = 0; z < 9; z++) {
     int xx = SMapX + Zx[z];
     int yy = SMapY + Zy[z];
-    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+    if (TestBounds(xx, yy, SimWidth, SimHeight)) {
       Map[xx][yy] = base + BNCNBIT;
     }
   base++;
@@ -211,7 +211,7 @@ void SetSmoke(int ZonePower)
   if (AniThis[z]) {
     int xx = SMapX + DX1[z];
     int yy = SMapY + DY1[z];
-    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+    if (TestBounds(xx, yy, SimWidth, SimHeight)) {
       if (ZonePower) {
 	if ((Map[xx][yy] & LOMASK) == AniTabC[z]) {
 	  Map[xx][yy] =
@@ -274,7 +274,7 @@ int EvalLot (int x, int y)
   for (z = 0; z < 4; z++) {
     int xx = x + DX[z];
     int yy = y + DY[z];
-    if (TestBounds(xx, yy, WORLD_X, WORLD_Y) &&
+    if (TestBounds(xx, yy, SimWidth, SimHeight) &&
 	Map[xx][yy] &&
 	((Map[xx][yy] & LOMASK) <= LASTROAD)) {
       score++;		/* look for road */
@@ -331,7 +331,7 @@ void BuildHouse(int value)
   for (z = 1; z < 9; z++) {
     int xx = SMapX + ZeX[z];
     int yy = SMapY + ZeY[z];
-    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+    if (TestBounds(xx, yy, SimWidth, SimHeight)) {
       score = EvalLot(xx, yy);
       if (score != 0) {
 	if (score > hscore) {
@@ -346,7 +346,7 @@ void BuildHouse(int value)
   if (BestLoc) {
     int xx = SMapX + ZeX[BestLoc];
     int yy = SMapY + ZeY[BestLoc];
-    if (TestBounds(xx, yy, WORLD_X, WORLD_Y)) {
+    if (TestBounds(xx, yy, SimWidth, SimHeight)) {
       Map[xx][yy] = HOUSE + BLBNCNBIT + Rand(2) + (value * 3);
     }
   }
@@ -426,8 +426,8 @@ void DoResOut(int pop, int value)
     Map[SMapX][SMapY] = (FREEZ | BLBNCNBIT | ZONEBIT);
     for (x = SMapX - 1; x <= SMapX + 1; x++)
       for (y = SMapY - 1; y <= SMapY + 1; y++)
-	if (x >= 0 && x < WORLD_X &&
-	    y >= 0 && y < WORLD_Y) {
+	if (x >= 0 && x < SimWidth &&
+	    y >= 0 && y < SimHeight) {
 	  if ((Map[x][y] & LOMASK) != FREEZ)
 	    Map[x][y] = LHTHR + value +
 	      Rand(2) + BLBNCNBIT;
@@ -438,8 +438,8 @@ void DoResOut(int pop, int value)
     z = 0;
     for (x = SMapX - 1; x <= SMapX + 1; x++)
       for (y = SMapY - 1; y <= SMapY + 1; y++) {
-	if (x >= 0 && x < WORLD_X &&
-	    y >= 0 && y < WORLD_Y) {
+	if (x >= 0 && x < SimWidth &&
+	    y >= 0 && y < SimHeight) {
 	  loc = Map[x][y] & LOMASK;
 	  if ((loc >= LHTHR) && (loc <= HHTHR)) {
 	    Map[x][y] = Brdr[z] +
@@ -489,8 +489,8 @@ int DoFreePop ()
   count = 0;
   for (x = SMapX - 1; x <= SMapX + 1; x++)
     for (y = SMapY - 1; y <= SMapY + 1; y++) {
-      if (x >= 0 && x < WORLD_X &&
-	  y >= 0 && y < WORLD_Y) {
+      if (x >= 0 && x < SimWidth &&
+	  y >= 0 && y < SimHeight) {
 	loc = Map[x][y] & LOMASK;
 	if ((loc >= LHTHR) && (loc <= HHTHR))
 	  count++;
