@@ -79,6 +79,9 @@
 #include "w_sprite.h"
 #include "w_util.h"
 
+#include <algorithm>
+
+
 /* Simulation */
 
 
@@ -579,9 +582,8 @@ void SetValves()
   float Employment, Migration, Births, LaborBase, IntMarket;
   float Rratio, Cratio, Iratio, temp;
   float NormResPop, PjResPop, PjComPop, PjIndPop;
-  int z;
 
-  MiscHis[1] = (int)EMarket;
+  MiscHis[1] = static_cast<int>(EMarket);
   MiscHis[2] = ResPop;
   MiscHis[3] = ComPop;
   MiscHis[4] = IndPop;
@@ -597,39 +599,56 @@ void SetValves()
   MiscHis[16] = CityClass;
   MiscHis[17] = CityScore;
 
-  NormResPop = ResPop / 8;
+  NormResPop = static_cast<float>(ResPop / 8);
   LastTotalPop = TotalPop;
-  TotalPop = NormResPop + ComPop + IndPop;
+  TotalPop = static_cast<int>(NormResPop) + ComPop + IndPop;
 
   if (NormResPop) Employment = ((ComHis[1] + IndHis[1]) / NormResPop);
   else Employment = 1;
 
   Migration = NormResPop * (Employment - 1);
-  Births = NormResPop * (.02); 			/* Birth Rate  */
+  Births = NormResPop * 0.02f; 			/* Birth Rate  */
   PjResPop = NormResPop + Migration + Births;	/* Projected Res.Pop  */
 
-  if (temp = (ComHis[1] + IndHis[1])) LaborBase = (ResHis[1] / temp);
-  else LaborBase = 1;
-  if (LaborBase > 1.3) LaborBase = 1.3;
-  if (LaborBase < 0) LaborBase = 0;  /* LB > 1 - .1  */
+  if (float result = static_cast<float>(ComHis[1] + IndHis[1]))
+  {
+      LaborBase = (ResHis[1] / result);
+  }
+  else
+  {
+      LaborBase = 1.0f;
+  }
 
-  for (z = 0; z < 2; z++)
-    temp = ResHis[z] + ComHis[z] + IndHis[z];
-  IntMarket = (NormResPop + ComPop + IndPop) / 3.7;
+  if (LaborBase > 1.3f)
+  {
+      LaborBase = 1.3f;
+  }
+  if (LaborBase < 0.0f)
+  {
+      LaborBase = 0.0f;  /* LB > 1 - .1  */
+  }
+
+  // Point of this? It adds this all up then just ignores the result?
+  for (int z = 0; z < 2; z++)
+  {
+      temp = static_cast<float>(ResHis[z] + ComHis[z] + IndHis[z]);
+  }
+
+  IntMarket = (NormResPop + ComPop + IndPop) / 3.7f;
 
   PjComPop = IntMarket * LaborBase;			
 
-  z = GameLevel;			/* New ExtMarket */
   temp = 1;
-  switch (z)  {
+  switch (GameLevel)
+  {
   case 0:
-    temp = 1.2;
+    temp = 1.2f;
     break;
   case 1:
-    temp = 1.1;
+    temp = 1.1f;
     break;
   case 2:
-    temp = .98;
+    temp = 0.98f;
     break;
   }
 
@@ -637,7 +656,7 @@ void SetValves()
   if (PjIndPop < 5) PjIndPop = 5;
 
   if (NormResPop) Rratio = (PjResPop / NormResPop); /* projected -vs- actual */
-  else Rratio = 1.3;
+  else Rratio = 1.3f;
   if (ComPop) Cratio = (PjComPop / ComPop);
   else Cratio = PjComPop;
   if (IndPop) Iratio = (PjIndPop / IndPop);
@@ -647,24 +666,24 @@ void SetValves()
   if (Cratio > 2) Cratio = 2;
   if (Iratio > 2) Iratio = 2;
 
-  z = CityTax + GameLevel;
-  if (z > 20) z = 20;
-  Rratio = ((Rratio -1) * 600) + TaxTable[z]; /* global tax/Glevel effects */
-  Cratio = ((Cratio -1) * 600) + TaxTable[z];
-  Iratio = ((Iratio -1) * 600) + TaxTable[z];
+  int index = std::clamp(CityTax + GameLevel, 0, 20);
+
+  Rratio = ((Rratio -1) * 600) + TaxTable[index]; /* global tax/Glevel effects */
+  Cratio = ((Cratio -1) * 600) + TaxTable[index];
+  Iratio = ((Iratio -1) * 600) + TaxTable[index];
 
   if (Rratio > 0)		/* ratios are velocity changes to valves  */
-    if (RValve <  2000) RValve += Rratio;
+    if (RValve <  2000) RValve += static_cast<int>(Rratio);
   if (Rratio < 0)
-    if (RValve > -2000) RValve += Rratio;
+    if (RValve > -2000) RValve += static_cast<int>(Rratio);
   if (Cratio > 0)
-    if (CValve <  1500) CValve += Cratio;
+    if (CValve <  1500) CValve += static_cast<int>(Cratio);
   if (Cratio < 0)
-    if (CValve > -1500) CValve += Cratio;
+    if (CValve > -1500) CValve += static_cast<int>(Cratio);
   if (Iratio > 0)
-    if (IValve <  1500) IValve += Iratio;
+    if (IValve <  1500) IValve += static_cast<int>(Iratio);
   if (Iratio < 0)
-    if (IValve > -1500) IValve += Iratio;
+    if (IValve > -1500) IValve += static_cast<int>(Iratio);
 
   if (RValve >  2000) RValve =  2000;
   if (RValve < -2000) RValve = -2000;
@@ -800,8 +819,8 @@ void Take2Census()    /* Long Term Graphs */
 /* comefrom: Simulate */
 void CollectTax()
 {	
-  static float RLevels[3] = { 0.7, 0.9, 1.2 };
-  static float FLevels[3] = { 1.4, 1.2, 0.8 };
+  static float RLevels[3] = { 0.7f, 0.9f, 1.2f };
+  static float FLevels[3] = { 1.4f, 1.2f, 0.8f };
   int z;
 
   CashFlow = 0;
@@ -811,9 +830,8 @@ void CollectTax()
     AvCityTax = 0;			
     PoliceFund = PolicePop * 100;
     FireFund   = FireStPop * 100;
-    RoadFund   = (RoadTotal + (RailTotal * 2)) * RLevels[GameLevel];
-    TaxFund = (((int)TotalPop * LVAverage) / 120) *
-      	      CityTax * FLevels[GameLevel];
+    RoadFund   = static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel]);
+    TaxFund = static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * CityTax * FLevels[GameLevel]); //yuck
     if (TotalPop) {	/* if there are people to tax  */
       CashFlow = TaxFund - (PoliceFund + FireFund + RoadFund);
 
@@ -1102,8 +1120,6 @@ void Simulate(int mod16)
 
 void SimFrame()
 {
-    int i;
-
     if (SimSpeed == 0)
         return;
 
