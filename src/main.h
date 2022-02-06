@@ -539,7 +539,6 @@ extern int PunishCnt;
 extern int Dozing;
 extern int toolSize[];
 extern int toolOffset[];
-extern int toolColors[];
 extern std::string Displays;
 extern std::string FirstDisplay;
 extern const char *dateStr[12];
@@ -563,8 +562,3 @@ extern int FlushStyle;
 extern int GotXError;
 
 void sim_exit(int val);
-
-extern Sim* MakeNewSim();
-extern SimView* MakeNewView();
-extern SimSprite* MakeSprite();
-extern SimSprite* MakeNewSprite();
