@@ -67,6 +67,8 @@
 
 #include "w_util.h"
 
+#include "Sprite.h"
+
 
 /* Traffic Generation */
 

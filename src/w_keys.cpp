@@ -67,7 +67,7 @@
 #include "s_sim.h"
 
 #include "w_sound.h"
-#include "w_sprite.h"
+#include "Sprite.h"
 #include "w_stubs.h"
 #include "w_tk.h"
 #include "w_tool.h"

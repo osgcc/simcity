@@ -68,7 +68,7 @@
 
 #include "w_graph.h"
 #include "w_keys.h"
-#include "w_sprite.h"
+#include "Sprite.h"
 #include "w_update.h"
 #include "w_util.h"
 
@@ -144,18 +144,22 @@ void InitWillStuff()
 
 void ResetMapState()
 {
+    /*
     for (SimView* view = sim->map; view != NULL; view = view->next)
     {
         view->map_state = ALMAP;
     }
+    */
 }
 
 
 void ResetEditorState()
 {
+    /*
     for (SimView* view = sim->editor; view != NULL; view = view->next)
     {
         view->tool_state = dozeState;
         view->tool_state_save = -1;
     }
+    */
 }

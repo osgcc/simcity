@@ -62,8 +62,6 @@
 
 #pragma once
 
-#include "w_date.h"
-
 constexpr auto X_Mem_View = 1;
 constexpr auto X_Wire_View = 2;
 
@@ -75,9 +73,6 @@ constexpr auto Button_Move = 1;
 constexpr auto Button_Release = 2;
 
 constexpr auto VIEW_REDRAW_PENDING = 1;
-
-
-struct Graph;
 
 
 struct XPoint
@@ -212,27 +207,4 @@ struct SimView
 	int show_overlay;
 	int overlay_mode;
 	//struct timeval overlay_time;
-};
-
-
-struct Person
-{
-	int id{ 0 };
-	char* name{ nullptr };
-};
-
-
-struct Sim
-{
-	int editors{ 0 };
-	SimView* editor{ nullptr };
-	int maps{ 0 };
-	SimView* map{ nullptr };
-	int graphs{ 0 };
-	Graph* graph{ nullptr };
-	int dates{ 0 };
-	SimDate* date{ nullptr };
-	int sprites{ 0 };
-	SimSprite* sprite{ nullptr };
-	Ink* overlay{ nullptr };
 };

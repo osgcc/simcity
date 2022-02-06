@@ -68,13 +68,15 @@
 #include "s_init.h"
 #include "s_sim.h"
 
+#include "Simulation.h"
+#include "Sprite.h"
+
 #include "w_budget.h"
 #include "w_editor.h"
 #include "w_eval.h"
 #include "w_graph.h"
 #include "w_map.h"
 #include "w_sound.h"
-#include "w_sprite.h"
 #include "w_stubs.h"
 #include "w_tk.h"
 #include "w_update.h"
@@ -82,10 +84,15 @@
 #include "w_x.h"
 
 #include <iostream>
+#include <stdexcept>
 #include <string>
 
 
+#include <SDL2/SDL.h>
+
+
 const std::string MicropolisVersion = "4.0";
+
 
 std::string CityFileName;
 std::string StartupName;
@@ -93,14 +100,14 @@ std::string Displays;
 std::string FirstDisplay;
 
 
-Sim *sim = nullptr;
+Sim Simulation;
+
 int sim_loops = 0;
 int sim_delay = 50;
 int sim_skips = 0;
 int sim_skip = 0;
 int sim_paused = 0;
 int sim_paused_speed = 3;
-int sim_tty = 0;
 int heat_steps = 0;
 int heat_flow = -7;
 int heat_rule = 0;
@@ -136,6 +143,7 @@ void sim_really_exit(int val)
  */
 void env_init()
 {
+    // todo: set up search paths here
 }
 
 
@@ -146,20 +154,22 @@ void signal_init()
 
 void sim_update_editors()
 {
-    for (SimView* view = sim->editor; view != nullptr; view = view->next)
+    /*
+    for (SimView* view = Simulation.editor; view != nullptr; view = view->next)
     {
         CancelRedrawView(view);
         view->invalid = 1;
         DoUpdateEditor(view);
     }
-
+    */
     DoUpdateHeads();
 }
 
 
 void sim_update_maps()
 {
-    for (SimView* view = sim->map; view != nullptr; view = view->next)
+    /*
+    for (SimView* view = Simulation.map; view != nullptr; view = view->next)
     {
         bool mustUpdateMap = NewMapFlags[view->map_state] || NewMap || ShakeNow;
         if (mustUpdateMap)
@@ -180,6 +190,7 @@ void sim_update_maps()
             }
         }
     }
+    */
 
     NewMap = 0;
     for (int i = 0; i < NMAPS; i++)
@@ -510,6 +521,92 @@ void sim_init()
 }
 
 
+SDL_Window* MainWindow = nullptr;
+SDL_Renderer* MainWindowRenderer = nullptr;
+
+void startGame()
+{
+    MainWindow = SDL_CreateWindow("Micropolis", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
+    if (!MainWindow)
+    {
+        throw std::runtime_error("tk_main(): Unable to create primary window: " + std::string(SDL_GetError()));
+    }
+
+    MainWindowRenderer = SDL_CreateRenderer(MainWindow, -1, SDL_RENDERER_ACCELERATED);
+    if (!MainWindow)
+    {
+        throw std::runtime_error("tk_main(): Unable to create renderer: " + std::string(SDL_GetError()));
+    }
+
+    //sim_command_init();
+    //map_command_init();
+    //editor_command_init();
+    //graph_command_init();
+    //date_command_init();
+    //sprite_command_init();
+
+    //sim = MakeNewSim();
+
+    //sprintf(initCmd, "source %s/micropolis.tcl", ResourceDir);
+    if (Eval("source res/micropolis.tcl"))
+    {
+        sim_exit(1); // Just sets tkMustExit and ExitReturn
+        throw std::runtime_error("Eval fail");
+    }
+
+    //sim_init();
+
+    // tcl command buffer -- hmm
+    //buffer = Tcl_CreateCmdBuf();
+    /*
+
+    if (Eval(std::string("UIStartMicropolis {") + HomeDir + "} {" + ResourceDir + "} {" + HostName + "}"))
+    {
+        sim_exit(1); // Just sets tkMustExit and ExitReturn
+        return;
+    }
+    */
+
+    SDL_Texture* bitmapTex = NULL;
+    SDL_Surface* bitmapSurface = NULL;
+
+    SDL_Init(SDL_INIT_VIDEO);
+
+    bitmapSurface = SDL_LoadBMP("images/airport.bmp");
+    bitmapTex = SDL_CreateTextureFromSurface(MainWindowRenderer, bitmapSurface);
+    SDL_FreeSurface(bitmapSurface);
+
+    bool gameActive = true;
+    while (gameActive)
+    {
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+            case SDL_QUIT:
+                gameActive = false;
+                break;
+            }
+        }
+
+        SDL_RenderClear(MainWindowRenderer);
+        SDL_RenderCopy(MainWindowRenderer, bitmapTex, nullptr, nullptr);
+        SDL_RenderPresent(MainWindowRenderer);
+    }
+
+    SDL_DestroyTexture(bitmapTex);
+    SDL_DestroyRenderer(MainWindowRenderer);
+    SDL_DestroyWindow(MainWindow);
+
+    SDL_Quit();
+
+
+    sim_exit(0); // Just sets tkMustExit and ExitReturn
+}
+
+
+
 int main(int argc, char* argv[])
 {
     std::cout << "Starting Micropolis-SDL2 version " << MicropolisVersion << " originally by Will Wright and Don Hopkins." << std::endl;
@@ -517,8 +614,14 @@ int main(int argc, char* argv[])
     std::cout << "Modifications Copyright (C) 2022 by Leeor Dicker. Available under the terms of the GPL v3" << std::endl << std::endl;
     std::cout << "Micropolis-SDL2 is not afiliated with Electronic Arts." << std::endl;
 
-    env_init();
-    tk_main();
+    if (SDL_Init(SDL_INIT_EVERYTHING))
+    {
+        std::cout << "Unable to initialize SDL: " << SDL_GetError();
+        return 1;
+    }
 
-    exit(ExitReturn);
+    env_init();
+    startGame();
+
+    return 0;
 }

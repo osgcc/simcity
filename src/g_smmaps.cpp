@@ -63,6 +63,8 @@
 
 #include "s_alloc.h"
 
+#include "View.h"
+
 
 int DynamicData[32];
 

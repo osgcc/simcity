@@ -65,6 +65,8 @@
 #include "w_tk.h"
 #include "w_update.h"
 
+#include "View.h"
+
 #include <string>
 
 

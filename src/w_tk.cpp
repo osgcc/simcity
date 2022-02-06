@@ -116,13 +116,14 @@ void InvalidateMaps()
 {
     std::cout << "InvalidateMaps" << std::endl;
 
+    /*
     for (SimView* view = sim->map; view != NULL; view = view->next)
     {
         view->invalid = 1;
         view->skip = 0;
         EventuallyRedrawView(view);
     }
-
+    */
     sim_skip = 0;
 }
 
@@ -131,12 +132,14 @@ void InvalidateEditors()
 {
     std::cout << "InvalidateEditors" << std::endl;
 
+    /*
     for (SimView* view = sim->editor; view != NULL; view = view->next)
     {
         view->invalid = 1;
         view->skip = 0;
         EventuallyRedrawView(view);
     }
+    */
 
     sim_skip = 0;
 }
@@ -146,11 +149,13 @@ void RedrawMaps()
 {
     std::cout << "RedrawMaps" << std::endl;
 
+    /*
     for (SimView* view = sim->map; view != NULL; view = view->next)
     {
         view->skip = 0;
         EventuallyRedrawView(view);
     }
+    */
 
     sim_skip = 0;
 }
@@ -160,11 +165,14 @@ void RedrawEditors()
 {
     std::cout << "RedrawEditors" << std::endl;
 
+    /*
     for (SimView* view = sim->editor; view != NULL; view = view->next)
     {
         view->skip = 0;
         EventuallyRedrawView(view);
     }
+    */
+
     sim_skip = 0;
 }
 
@@ -573,98 +581,4 @@ void DoEarthQuake()
     }
     //Tk_CreateTimerHandler(earthquake_delay, (void (*)())StopEarthquake, (ClientData)0);
     earthquake_timer_set = 1;
-}
-
-
-void tk_main()
-{
-    /*
-    char* p, * msg;
-    char buf[20];
-    char initCmd[256];
-    //Tk_3DBorder border;
-
-    tk_mainInterp = Tcl_CreateExtendedInterp();
-
-    MainWindow = Tk_CreateMainWindow(tk_mainInterp, FirstDisplay, "Micropolis");
-    if (MainWindow == NULL)
-    {
-        fprintf(stderr, "%s\n", tk_mainInterp->result);
-        sim_really_exit(1); // Just sets tkMustExit and ExitReturn
-    }
-
-    Tk_SetClass(MainWindow, "Tk");
-    Tk_CreateEventHandler(MainWindow, StructureNotifyMask, StructureProc, (ClientData)NULL);
-
-    Tk_GeometryRequest(MainWindow, 256, 256);
-    border = Tk_Get3DBorder(tk_mainInterp, MainWindow, None, "gray75");
-    if (border == NULL)
-    {
-        Tcl_SetResult(tk_mainInterp, (char*)NULL, TCL_STATIC);
-        Tk_SetWindowBackground(MainWindow, WhitePixelOfScreen(Tk_Screen(MainWindow)));
-    }
-    else
-    {
-        Tk_SetBackgroundFromBorder(MainWindow, border);
-    }
-    XSetForeground(Tk_Display(MainWindow), DefaultGCOfScreen(Tk_Screen(MainWindow)), BlackPixelOfScreen(Tk_Screen(MainWindow)));
-
-    sim_command_init();
-    map_command_init();
-    editor_command_init();
-    graph_command_init();
-    date_command_init();
-    sprite_command_init();
-
-    Tcl_CreateCommand(tk_mainInterp, "piemenu", Tk_PieMenuCmd, (ClientData)MainWindow, (void (*)()) NULL);
-    Tcl_CreateCommand(tk_mainInterp, "interval", Tk_IntervalCmd, (ClientData)MainWindow, (void (*)()) NULL);
-
-    sim = MakeNewSim();
-
-    sprintf(initCmd, "source %s/micropolis.tcl", ResourceDir);
-    if (Eval(initCmd))
-    {
-        sim_exit(1); // Just sets tkMustExit and ExitReturn
-        goto bail;
-    }
-
-    sim_init();
-
-    buffer = Tcl_CreateCmdBuf();
-
-    if (sim_tty)
-    {
-        Tk_CreateFileHandler(0, TK_READABLE, StdinProc, (ClientData)0);
-    }
-
-    {
-        char buf[1024];
-
-        sprintf(buf, "UIStartMicropolis {%s} {%s} {%s}", HomeDir, ResourceDir, HostName);
-        if (Eval(buf) != TCL_OK)
-        {
-            sim_exit(1); // Just sets tkMustExit and ExitReturn
-            goto bail;
-        }
-    }
-
-    if (sim_tty)
-    {
-        printf("sim:\n");
-    }
-    fflush(stdout);
-
-    Tk_MainLoop();
-
-    sim_exit(0); // Just sets tkMustExit and ExitReturn
-
-bail:
-
-    if (buffer != NULL)
-    {
-        Tcl_DeleteCmdBuf(buffer);
-    }
-
-    Tcl_DeleteInterp(tk_mainInterp);
-    */
 }

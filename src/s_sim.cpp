@@ -76,7 +76,7 @@
 
 #include "w_budget.h"
 #include "w_graph.h"
-#include "w_sprite.h"
+#include "Sprite.h"
 #include "w_util.h"
 
 #include <algorithm>
@@ -216,23 +216,37 @@ void DoRadTile()
 
 int GetBoatDis()
 {
-  int dist, mx, my, dx, dy;
-  SimSprite *sprite;
+    int dist, mx, my, dx, dy;
+ 
+    dist = 99999;
+    mx = (SMapX << 4) + 8;
+    my = (SMapY << 4) + 8;
 
-  dist = 99999;
-  mx = (SMapX <<4) + 8;
-  my = (SMapY <<4) + 8;
+    /*
+    for (SimSprite* sprite = sim->sprite; sprite != NULL; sprite = sprite->next)
+    {
+        if ((sprite->type == SHI) && (sprite->frame != 0))
+        {
+            if ((dx = sprite->x + sprite->x_hot - mx) < 0)
+            {
+                dx = -dx;
+            }
+            if ((dy = sprite->y + sprite->y_hot - my) < 0)
+            {
+                dy = -dy;
+            }
 
-  for (sprite = sim->sprite; sprite != NULL; sprite = sprite->next) {
-    if ((sprite->type == SHI) &&
-	(sprite->frame != 0)) {
-      if ((dx = sprite->x + sprite->x_hot - mx) < 0) dx = -dx;
-      if ((dy = sprite->y + sprite->y_hot - my) < 0) dy = -dy;
-      dx += dy;
-      if (dx < dist) dist = dx;
+            dx += dy;
+
+            if (dx < dist)
+            {
+                dist = dx;
+            }
+        }
     }
-  }
-  return (dist);
+    */
+
+    return dist;
 }
 
 

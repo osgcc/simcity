@@ -381,10 +381,12 @@ void graphDoer()
 
     if (NewGraph)
     {
+        /*
         for (Graph* graph = sim->graph; graph != NULL; graph = graph->next)
         {
             EventuallyRedrawGraph(graph);
         }
+        */
         NewGraph = 0;
     }
 }
@@ -392,21 +394,23 @@ void graphDoer()
 
 void initGraphs()
 {
-  int i;
-  Graph *graph;
-
-  for (graph = sim->graph; graph != NULL; graph = graph->next) {
-    graph->range = 10;
-    graph->mask = ALL_HISTORIES;
-  }
-
-  if (!HistoryInitialized) {
-    HistoryInitialized = 1;
-    for (i = 0; i < HISTORIES; i++) {
-      History10[i] = (unsigned char *)malloc(120);
-      History120[i] = (unsigned char *)malloc(120);
+    /*
+    for (Graph* graph = sim->graph; graph != NULL; graph = graph->next)
+    {
+        graph->range = 10;
+        graph->mask = ALL_HISTORIES;
     }
-  }
+
+    if (!HistoryInitialized)
+    {
+        HistoryInitialized = 1;
+        for (int i = 0; i < HISTORIES; i++)
+        {
+            History10[i] = (unsigned char*)malloc(120);
+            History120[i] = (unsigned char*)malloc(120);
+        }
+    }
+    */
 }
 
 

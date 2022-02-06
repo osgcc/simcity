@@ -1,5 +1,6 @@
 #pragma once
 
+#include "View.h"
 
 struct Graph
 {

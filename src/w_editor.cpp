@@ -68,7 +68,7 @@
 
 #include "s_sim.h"
 
-#include "w_sprite.h"
+#include "Sprite.h"
 #include "w_tk.h"
 #include "w_x.h"
 
@@ -1024,6 +1024,7 @@ void DrawTheOverlay(SimView* view, void* /*GC*/ gc, Pixmap* pm, int color, int t
     //XSetForeground(view->x->dpy, gc, color);
     //XSetLineAttributes(view->x->dpy, gc, 3, LineSolid, CapButt, JoinBevel);
 
+    /*
     for (ink = sim->overlay; ink != NULL; ink = ink->next)
     {
         if ((ink->bottom >= top) && (ink->top <= bottom) && (ink->right >= left) && (ink->left <= right))
@@ -1040,6 +1041,7 @@ void DrawTheOverlay(SimView* view, void* /*GC*/ gc, Pixmap* pm, int color, int t
             }
         }
     }
+    */
 
     //XSetFillStyle(view->x->dpy, gc, FillSolid);
     //XSetLineAttributes(view->x->dpy, gc, 1, LineSolid, CapButt, JoinMiter);
@@ -1071,6 +1073,7 @@ void DrawOverlay(SimView* view)
     Ink* ink;
     //struct timeval start, finished, elapsed;
 
+    /*
     for (ink = sim->overlay; ink != NULL; ink = ink->next)
     {
         if ((ink->bottom >= top) && (ink->top <= bottom) && (ink->right >= left) && (ink->left <= right))
@@ -1079,6 +1082,7 @@ void DrawOverlay(SimView* view)
             break;
         }
     }
+    */
 
     if (!showing)
     {
@@ -1219,6 +1223,7 @@ void DrawCursor(SimView* view)
     int x, y, mode, size, offset, fg, bg, light, dark;
     SimView* v;
 
+    /*
     for (v = sim->editor; v != NULL; v = v->next)
     {
         mode = v->tool_mode;
@@ -1230,21 +1235,20 @@ void DrawCursor(SimView* view)
 
                 x += left; y += top;
 
-                /*
-                XSetLineAttributes(view->x->dpy, view->x->gc, 3, LineSolid, CapRound, JoinMiter);
-                XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_BLACK]);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y - 6, x + 6, y + 6);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y + 6, x + 6, y - 6);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x - 8, y, x + 8, y);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x, y + 8, x, y - 8);
-                XSetLineAttributes(view->x->dpy, view->x->gc, 1, LineSolid, CapRound, JoinMiter);
-                XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_WHITE]);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y - 6, x + 6, y + 6);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y + 6, x + 6, y - 6);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x - 8, y, x + 8, y);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x, y + 8, x, y - 8);
-                XSetLineAttributes(view->x->dpy, view->x->gc, 1, LineSolid, CapButt, JoinMiter);
-                */
+                //XSetLineAttributes(view->x->dpy, view->x->gc, 3, LineSolid, CapRound, JoinMiter);
+                //XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_BLACK]);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y - 6, x + 6, y + 6);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y + 6, x + 6, y - 6);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x - 8, y, x + 8, y);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x, y + 8, x, y - 8);
+                //XSetLineAttributes(view->x->dpy, view->x->gc, 1, LineSolid, CapRound, JoinMiter);
+                //XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_WHITE]);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y - 6, x + 6, y + 6);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y + 6, x + 6, y - 6);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x - 8, y, x + 8, y);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x, y + 8, x, y - 8);
+                //XSetLineAttributes(view->x->dpy, view->x->gc, 1, LineSolid, CapButt, JoinMiter);
+                
 
             }
             else
@@ -1271,17 +1275,16 @@ void DrawCursor(SimView* view)
                 size <<= 4;
                 x += left; y += top;
 
-                /*
-                XSetForeground(view->x->dpy, view->x->gc, view->pixels[dark]);
-                XDrawRectangle(view->x->dpy, pm, view->x->gc, x - 1, y - 1, size + 4, size + 4);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x - 3, y + size + 3, x - 1, y + size + 3);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 3, y - 3, x + size + 3, y - 1);
+                //XSetForeground(view->x->dpy, view->x->gc, view->pixels[dark]);
+                //XDrawRectangle(view->x->dpy, pm, view->x->gc, x - 1, y - 1, size + 4, size + 4);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x - 3, y + size + 3, x - 1, y + size + 3);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 3, y - 3, x + size + 3, y - 1);
 
-                XSetForeground(view->x->dpy, view->x->gc, view->pixels[light]);
-                XDrawRectangle(view->x->dpy, pm, view->x->gc, x - 4, y - 4, size + 4, size + 4);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x - 4, y + size + 1, x - 4, y + size + 3);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 1, y - 4, x + size + 3, y - 4);
-                */
+                //XSetForeground(view->x->dpy, view->x->gc, view->pixels[light]);
+                //XDrawRectangle(view->x->dpy, pm, view->x->gc, x - 4, y - 4, size + 4, size + 4);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x - 4, y + size + 1, x - 4, y + size + 3);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 1, y - 4, x + size + 3, y - 4);
+                
 
 
                 if (fg == bg)
@@ -1298,18 +1301,18 @@ void DrawCursor(SimView* view)
                     //XSetDashes(view->x->dpy, view->x->gc, 0, CursorDashes, 2);
                 }
 
-                /*
-                XDrawLine(view->x->dpy, pm, view->x->gc, x - 2, y - 1, x - 2, y + size + 3);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x - 1, y + size + 2, x + size + 3, y + size + 2);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 2, y + size + 1, x + size + 2, y - 3);
-                XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 1, y - 2, x - 3, y - 2);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x - 2, y - 1, x - 2, y + size + 3);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x - 1, y + size + 2, x + size + 3, y + size + 2);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 2, y + size + 1, x + size + 2, y - 3);
+                //XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 1, y - 2, x - 3, y - 2);
 
-                XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
-                XSetLineAttributes(view->x->dpy, view->x->gc, 1, LineSolid, CapButt, JoinMiter);
-                */
+                //XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
+                //XSetLineAttributes(view->x->dpy, view->x->gc, 1, LineSolid, CapButt, JoinMiter);
+                
             }
         }
     }
+    */
 }
 
 

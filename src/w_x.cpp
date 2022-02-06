@@ -214,21 +214,6 @@ void DoTimeoutListen()
 }
 
 
-Sim* MakeNewSim()
-{
-    Sim* sim;
-
-    sim = (Sim*)malloc(sizeof(Sim));
-    sim->editors = 0; sim->editor = nullptr;
-    sim->maps = 0; sim->map = nullptr;
-    sim->graphs = 0; sim->graph = nullptr;
-    sim->sprites = 0; sim->sprite = nullptr;
-    sim->overlay = nullptr;
-
-    return (sim);
-}
-
-
 /*
 XDisplay* FindXDisplay(Tk_Window tkwin)
 {
@@ -1216,13 +1201,14 @@ void StartInk(Ink *ink, int x, int y)
 }
 
 
+/*
 void AddInk(Ink *ink, int x, int y)
 {
   int dx = x - ink->last_x;
   int dy = y - ink->last_y;
 
   if ((dx != 0) || (dy != 0)) {
-/*
+
     if (ink->length > 1) {
       if ((dx == 0) &&
 	  (ink->points[ink->length - 1].x == 0) &&
@@ -1238,7 +1224,7 @@ void AddInk(Ink *ink, int x, int y)
 	goto ADJUST;
       }
     }
-*/
+
 
     if (ink->length >= ink->maxlength) {
       ink->maxlength += POINT_BATCH;
@@ -1275,7 +1261,7 @@ void AddInk(Ink *ink, int x, int y)
 	    (left <= vleft + view->w_width) &&
 	    (bottom >= (vtop = view->pan_y - (view->w_height / 2))) &&
 	    (top <= vtop + view->w_height)) {
-	  /* XXX: do studly incremental update instead */
+	  /* XXX: do studly incremental update instead
 	  view->overlay_mode = 0;
 	  EventuallyRedrawView(view);
 	}
@@ -1284,8 +1270,9 @@ void AddInk(Ink *ink, int x, int y)
     ink->last_x = x; ink->last_y = y;
   }
 }
+*/
 
-
+/*
 void EraseOverlay()
 {
   Ink *ink;
@@ -1296,3 +1283,4 @@ void EraseOverlay()
     FreeInk(ink);
   }
 }
+*/

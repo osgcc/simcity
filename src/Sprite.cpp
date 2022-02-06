@@ -60,10 +60,12 @@
  * NOT APPLY TO YOU.
  */
 
-#include "w_sprite.h"
+#include "Sprite.h"
 
 #include "main.h"
-#include "view.h"
+#include "View.h"
+
+#include "Simulation.h"
 
 #include "s_alloc.h"
 #include "s_msg.h"
@@ -232,7 +234,7 @@ SimSprite* NewSprite(const std::string& name, int type, int x, int y)
 
     InitSprite(sprite, x, y);
 
-    sim->sprites++; sprite->next = sim->sprite; sim->sprite = sprite;
+    //sim->sprites++; sprite->next = sim->sprite; sim->sprite = sprite;
 
     return sprite;
 }
@@ -240,17 +242,20 @@ SimSprite* NewSprite(const std::string& name, int type, int x, int y)
 
 void DestroyAllSprites()
 {
+    /*
     SimSprite* sprite;
 
     for (sprite = sim->sprite; sprite != NULL; sprite = sprite->next)
     {
         sprite->frame = 0;
     }
+    */
 }
 
 
 void DestroySprite(SimSprite* sprite)
 {
+    /*
     SimView* view;
     SimSprite** sp;
 
@@ -278,6 +283,7 @@ void DestroySprite(SimSprite* sprite)
 
     sprite->next = FreeSprites;
     FreeSprites = sprite;
+    */
 }
 
 
@@ -348,8 +354,6 @@ void DrawSprite(SimView* view, SimSprite* sprite)
 
 void DrawObjects(SimView* view)
 {
-    SimSprite* sprite;
-
     /* XXX: sort these by layer */
   /*
     if (z = Oframe[TRA]) DrawTrain(view, z);
@@ -361,10 +365,12 @@ void DrawObjects(SimView* view)
     if (z = Oframe[EXP]) DrawExp(view, z);
   */
 
-    for (sprite = sim->sprite; sprite != NULL; sprite = sprite->next)
+    /*
+    for (SimSprite* sprite = sim->sprite; sprite != NULL; sprite = sprite->next)
     {
         DrawSprite(view, sprite);
     }
+    */
 }
 
 
@@ -827,46 +833,57 @@ void DoAirplaneSprite(SimSprite* sprite)
 
     z = sprite->frame;
 
-    if (!(Cycle % 5)) {
-        if (z > 8) { /* TakeOff  */
+    if (!(Cycle % 5))
+    {
+        if (z > 8)  /* TakeOff  */
+        {
             z--;
             if (z < 9) z = 3;
             sprite->frame = z;
         }
-        else { /* goto destination */
+        else /* goto destination */
+        {
             d = GetDir(sprite->x, sprite->y, sprite->dest_x, sprite->dest_y);
             z = TurnTo(z, d);
             sprite->frame = z;
         }
     }
 
-    if (absDist < 50) { /* at destination  */
+    if (absDist < 50) /* at destination  */
+    {
         sprite->dest_x = Rand((SimWidth * 16) + 100) - 50;
         sprite->dest_y = Rand((SimHeight * 16) + 100) - 50;
     }
 
     /* deh added test for !Disasters */
-    if (!NoDisasters) {
-        SimSprite* s;
-        int explode = 0;
+    if (!NoDisasters)
+    {
+        bool explode = false;
 
-        for (s = sim->sprite; s != NULL; s = s->next) {
-            if ((s->frame != 0) &&
-                ((s->type == COP) ||
-                    ((sprite != s) &&
-                        (s->type == AIR))) &&
-                CheckSpriteCollision(sprite, s)) {
+        /*
+        for (SimSprite* s = sim->sprite; s != NULL; s = s->next)
+        {
+            if ((s->frame != 0) && ((s->type == COP) || ((sprite != s) && (s->type == AIR))) && CheckSpriteCollision(sprite, s))
+            {
                 ExplodeSprite(s);
                 explode = 1;
             }
         }
+        */
+
         if (explode)
+        {
             ExplodeSprite(sprite);
+        }
     }
 
     sprite->x += CDx[z];
     sprite->y += CDy[z];
-    if (SpriteNotInBounds(sprite)) sprite->frame = 0;
+
+    if (SpriteNotInBounds(sprite))
+    {
+        sprite->frame = 0;
+    }
 }
 
 
@@ -957,187 +974,297 @@ void DoMonsterSprite(SimSprite* sprite)
     static int nn2[4] = { 11,  2,  5,  8 };
     int d, z, c;
 
-    if (sprite->sound_count > 0) sprite->sound_count--;
+    if (sprite->sound_count > 0)
+    {
+        sprite->sound_count--;
+    }
 
-    if (sprite->control < 0) {
+    if (sprite->control < 0)
+    {
         /* business as usual */
 
-        if (sprite->control == -2) {
+        if (sprite->control == -2)
+        {
             d = (sprite->frame - 1) / 3;
             z = (sprite->frame - 1) % 3;
             if (z == 2) sprite->step = 0;
             if (z == 0) sprite->step = 1;
-            if (sprite->step) z++;
-            else z--;
+            if (sprite->step)
+            {
+                z++;
+            }
+            else
+            {
+                z--;
+            }
+
             c = GetDir(sprite->x, sprite->y, sprite->dest_x, sprite->dest_y);
-            if (absDist < 18) {
+
+            if (absDist < 18)
+            {
                 sprite->control = -1;
                 sprite->count = 1000;
                 sprite->flag = 1;
                 sprite->dest_x = sprite->orig_x;
                 sprite->dest_y = sprite->orig_y;
             }
-            else {
+            else
+            {
                 c = (c - 1) / 2;
-                if (((c != d) && (!Rand(5))) ||
-                    (!Rand(20))) {
+                if (((c != d) && (!Rand(5))) || (!Rand(20)))
+                {
                     int diff = (c - d) & 3;
-                    if ((diff == 1) || (diff == 3)) {
+
+                    if ((diff == 1) || (diff == 3))
+                    {
                         d = c;
                     }
-                    else {
+                    else
+                    {
                         if (Rand16() & 1) d++; else d--;
                         d &= 3;
                     }
                 }
-                else {
-                    if (!Rand(20)) {
-                        if (Rand16() & 1) d++; else d--;
+                else
+                {
+                    if (!Rand(20))
+                    {
+                        if (Rand16() & 1)
+                        {
+                            d++;
+                        }
+                        else
+                        {
+                            d--;
+                        }
                         d &= 3;
                     }
                 }
             }
         }
-        else {
+        else
+        {
 
             d = (sprite->frame - 1) / 3;
 
-            if (d < 4) { /* turn n s e w */
+            if (d < 4) /* turn n s e w */
+            {
                 z = (sprite->frame - 1) % 3;
-                if (z == 2) sprite->step = 0;
-                if (z == 0) sprite->step = 1;
-                if (sprite->step) z++;
-                else z--;
+
+                if (z == 2)
+                {
+                    sprite->step = 0;
+                }
+                if (z == 0)
+                {
+                    sprite->step = 1;
+                }
+                if (sprite->step)
+                {
+                    z++;
+                }
+                else
+                {
+                    z--;
+                }
+
                 GetDir(sprite->x, sprite->y, sprite->dest_x, sprite->dest_y);
-                if (absDist < 60) {
-                    if (sprite->flag == 0) {
+                if (absDist < 60)
+                {
+                    if (sprite->flag == 0)
+                    {
                         sprite->flag = 1;
                         sprite->dest_x = sprite->orig_x;
                         sprite->dest_y = sprite->orig_y;
                     }
-                    else {
+                    else
+                    {
                         sprite->frame = 0;
                         return;
                     }
                 }
+
                 c = GetDir(sprite->x, sprite->y, sprite->dest_x, sprite->dest_y);
                 c = (c - 1) / 2;
-                if ((c != d) && (!Rand(10))) {
-                    if (Rand16() & 1) z = ND1[d];
-                    else z = ND2[d];
+
+                if ((c != d) && (!Rand(10)))
+                {
+                    if (Rand16() & 1)
+                    {
+                        z = ND1[d];
+                    }
+                    else
+                    {
+                        z = ND2[d];
+                    }
+
                     d = 4;
-                    if (!sprite->sound_count) {
+                    if (!sprite->sound_count)
+                    {
                         MakeSound("city", "Monster -speed [MonsterSpeed]"); /* monster */
                         sprite->sound_count = 50 + Rand(100);
                     }
                 }
             }
-            else {
+            else
+            {
                 d = 4;
                 c = sprite->frame;
                 z = (c - 13) & 3;
-                if (!(Rand16() & 3)) {
-                    if (Rand16() & 1) z = nn1[z];
-                    else z = nn2[z];
+                if (!(Rand16() & 3))
+                {
+                    if (Rand16() & 1)
+                    {
+                        z = nn1[z];
+                    }
+                    else
+                    {
+                        z = nn2[z];
+                    }
                     d = (z - 1) / 3;
                     z = (z - 1) % 3;
                 }
             }
         }
     }
-    else {
-        /* somebody's taken control of the monster */
+    else
+    {
+        // somebody's taken control of the monster
 
         d = sprite->control;
         z = (sprite->frame - 1) % 3;
 
-        if (z == 2) sprite->step = 0;
-        if (z == 0) sprite->step = 1;
-        if (sprite->step) z++;
-        else z--;
+        if (z == 2)
+        {
+            sprite->step = 0;
+        }
+
+        if (z == 0)
+        {
+            sprite->step = 1;
+        }
+
+        if (sprite->step)
+        {
+            z++;
+        }
+
+        else
+        {
+            z--;
+        }
     }
 
     z = (((d * 3) + z) + 1);
-    if (z > 16) z = 16;
-    sprite->frame = z;
+    if (z > 16)
+    {
+        z = 16;
+    }
 
+    sprite->frame = z;
     sprite->x += Gx[d];
     sprite->y += Gy[d];
 
-    if (sprite->count > 0) sprite->count--;
+    if (sprite->count > 0)
+    {
+        sprite->count--;
+    }
     c = GetChar(sprite->x + sprite->x_hot, sprite->y + sprite->y_hot);
     if ((c == -1) ||
         ((c == RIVER) &&
             (sprite->count != 0) &&
-            (sprite->control == -1))) {
+            (sprite->control == -1)))
+    {
         sprite->frame = 0; /* kill zilla */
     }
 
-    { SimSprite* s;
-    for (s = sim->sprite; s != NULL; s = s->next) {
+
+    /*
+    for (SimSprite* s = sim->sprite; s != NULL; s = s->next)
+    {
         if ((s->frame != 0) &&
             ((s->type == AIR) ||
                 (s->type == COP) ||
                 (s->type == SHI) ||
                 (s->type == TRA)) &&
-            CheckSpriteCollision(sprite, s)) {
+            CheckSpriteCollision(sprite, s))
+        {
             ExplodeSprite(s);
         }
     }
-    }
+    */
 
     Destroy(sprite->x + 48, sprite->y + 16);
 }
 
 
-void DoTornadoSprite(SimSprite *sprite)
+void DoTornadoSprite(SimSprite* sprite)
 {
-  static int CDx[9] = {  2,  3,  2,  0, -2, -3 };
-  static int CDy[9] = { -2,  0,  2,  3,  2,  0 };
-  int z;
+    static int CDx[9] = { 2,  3,  2,  0, -2, -3 };
+    static int CDy[9] = { -2,  0,  2,  3,  2,  0 };
+    int z;
 
-  z = sprite->frame;
+    z = sprite->frame;
 
-  if (z == 2) /* cycle animation... post Rel */
-    if (sprite->flag)
-      z = 3;
+    if (z == 2) /* cycle animation... post Rel */
+    {
+        if (sprite->flag)
+        {
+            z = 3;
+        }
+        else
+        {
+            z = 1;
+        }
+    }
     else
-      z = 1;
-  else {
-    if (z == 1)
-      sprite->flag = 1;
-    else
-      sprite->flag = 0;
-    z = 2;
-  }
-
-  if (sprite->count > 0) sprite->count--;
-
-  sprite->frame = z;
-
-  { SimSprite *s;
-    for (s = sim->sprite; s != NULL; s = s->next) {
-      if ((s->frame != 0) &&
-	  ((s->type == AIR) ||
-	   (s->type == COP) ||
-	   (s->type == SHI) ||
-	   (s->type == TRA)) &&
-	  CheckSpriteCollision(sprite, s)) {
-	  ExplodeSprite(s);
-	}
-      }
+    {
+        if (z == 1)
+        {
+            sprite->flag = 1;
+        }
+        else
+        {
+            sprite->flag = 0;
+        }
+        z = 2;
     }
 
-  z = Rand(5);
-  sprite->x += CDx[z];
-  sprite->y += CDy[z];
-  if (SpriteNotInBounds(sprite)) sprite->frame = 0;
+    if (sprite->count > 0)
+    {
+        sprite->count--;
+    }
 
-  if ((sprite->count != 0) &&
-      (!Rand(500)))
-    sprite->frame = 0;
+    sprite->frame = z;
 
-  Destroy(sprite->x + 48, sprite->y + 40);
+
+    /*
+    for (SimSprite* s = sim->sprite; s != NULL; s = s->next)
+    {
+        if ((s->frame != 0) &&
+            ((s->type == AIR) ||
+                (s->type == COP) ||
+                (s->type == SHI) ||
+                (s->type == TRA)) &&
+            CheckSpriteCollision(sprite, s))
+        {
+            ExplodeSprite(s);
+        }
+    }
+    */
+
+
+    z = Rand(5);
+    sprite->x += CDx[z];
+    sprite->y += CDy[z];
+    if (SpriteNotInBounds(sprite)) sprite->frame = 0;
+
+    if ((sprite->count != 0) && (!Rand(500)))
+    {
+        sprite->frame = 0;
+    }
+
+    Destroy(sprite->x + 48, sprite->y + 40);
 }
 
 
@@ -1177,22 +1304,29 @@ void DoBusSprite(SimSprite* sprite)
     int turned = 0;
     int speed, z;
 
-    if (sprite->turn) {
-        if (sprite->turn < 0) { /* ccw */
-            if (sprite->dir & 1) { /* up or down */
+    if (sprite->turn)
+    {
+        if (sprite->turn < 0)/* ccw */
+        {
+            if (sprite->dir & 1) /* up or down */
+            {
                 sprite->frame = 4;
             }
-            else { /* left or right */
+            else /* left or right */
+            {
                 sprite->frame = 3;
             }
             sprite->turn++;
             sprite->dir = (sprite->dir - 1) & 3;
         }
-        else { /* cw */
-            if (sprite->dir & 1) { /* up or down */
+        else /* cw */
+        {
+            if (sprite->dir & 1) /* up or down */
+            {
                 sprite->frame = 3;
             }
-            else { /* left or right */
+            else /* left or right */
+            {
                 sprite->frame = 4;
             }
             sprite->turn--;
@@ -1215,7 +1349,8 @@ void DoBusSprite(SimSprite* sprite)
         /* brake */
         dx = 0; dy = 0;
     }
-    else { /* cruise at traffic speed */
+    else /* cruise at traffic speed */
+    {
 
         tx = (sprite->x + sprite->x_hot) >> 5;
         ty = (sprite->y + sprite->y_hot) >> 5;
@@ -1227,15 +1362,21 @@ void DoBusSprite(SimSprite* sprite)
             z = TrfDensity[tx][ty] >> 6;
             if (z > 1) z--;
         }
-        else z = 0;
+        else
+        {
+            z = 0;
+        }
 
-        switch (z) {
+        switch (z)
+        {
         case 0:
             speed = 8;
             break;
+
         case 1:
             speed = 4;
             break;
+
         case 2:
             speed = 1;
             break;
@@ -1243,14 +1384,21 @@ void DoBusSprite(SimSprite* sprite)
 
         /* govern speed */
         if (speed > sprite->speed)
+        {
             speed = sprite->speed;
+        }
 
-        if (turned) {
-            if (speed > 1) speed = 1;
+        if (turned)
+        {
+            if (speed > 1)
+            {
+                speed = 1;
+            }
             dx = Dx[sprite->dir] * speed;
             dy = Dy[sprite->dir] * speed;
         }
-        else {
+        else
+        {
             dx = Dx[sprite->dir] * speed;
             dy = Dy[sprite->dir] * speed;
 
@@ -1258,44 +1406,81 @@ void DoBusSprite(SimSprite* sprite)
             ty = (sprite->y + sprite->y_hot) >> 4;
 
             /* drift into the right lane */
-            switch (sprite->dir) {
+            switch (sprite->dir)
+            {
             case 0: /* up */
                 z = ((tx << 4) + 4) - (sprite->x + sprite->x_hot);
                 if (z < 0) dx = -1;
                 else if (z > 0) dx = 1;
                 break;
+
             case 1: /* right */
                 z = ((ty << 4) + 4) - (sprite->y + sprite->y_hot);
                 if (z < 0) dy = -1;
                 else if (z > 0) dy = 1;
                 break;
+
             case 2: /* down */
                 z = ((tx << 4)) - (sprite->x + sprite->x_hot);
                 if (z < 0) dx = -1;
                 else if (z > 0) dx = 1;
                 break;
+
             case 3: /* left */
                 z = ((ty << 4)) - (sprite->y + sprite->y_hot);
                 if (z < 0) dy = -1;
                 else if (z > 0) dy = 1;
                 break;
             }
-            }
         }
+    }
 
-#define AHEAD 8
+    constexpr auto AHEAD = 8;
 
     otx = (sprite->x + sprite->x_hot + (Dx[sprite->dir] * AHEAD)) >> 4;
     oty = (sprite->y + sprite->y_hot + (Dy[sprite->dir] * AHEAD)) >> 4;
-    if (otx < 0) otx = 0; else if (otx >= SimWidth) otx = SimWidth - 1;
-    if (oty < 0) oty = 0; else if (oty >= SimHeight) oty = SimHeight - 1;
+
+    if (otx < 0)
+    {
+        otx = 0;
+    }
+    else if (otx >= SimWidth)
+    {
+        otx = SimWidth - 1;
+    }
+
+    if (oty < 0)
+    {
+        oty = 0;
+    }
+    else if (oty >= SimHeight)
+    {
+        oty = SimHeight - 1;
+    }
 
     tx = (sprite->x + sprite->x_hot + dx + (Dx[sprite->dir] * AHEAD)) >> 4;
     ty = (sprite->y + sprite->y_hot + dy + (Dy[sprite->dir] * AHEAD)) >> 4;
-    if (tx < 0) tx = 0; else if (tx >= SimWidth) tx = SimWidth - 1;
-    if (ty < 0) ty = 0; else if (ty >= SimHeight) ty = SimHeight - 1;
 
-    if ((tx != otx) || (ty != oty)) {
+    if (tx < 0)
+    {
+        tx = 0;
+    }
+    else if (tx >= SimWidth)
+    {
+        tx = SimWidth - 1;
+    }
+
+    if (ty < 0)
+    {
+        ty = 0;
+    }
+    else if (ty >= SimHeight)
+    {
+        ty = SimHeight - 1;
+    }
+
+    if ((tx != otx) || (ty != oty))
+    {
         z = CanDriveOn(tx, ty);
         if (z == 0)
         {
@@ -1308,7 +1493,8 @@ void DoBusSprite(SimSprite* sprite)
             {
             }
         }
-        else {
+        else
+        {
             /* drive forward into a new tile */
             if (z > 0)
             {
@@ -1348,10 +1534,10 @@ void DoBusSprite(SimSprite* sprite)
 
     if (!NoDisasters)
     {
-        SimSprite* s;
-        int explode = 0;
+        bool explode = false;
 
-        for (s = sim->sprite; s != NULL; s = s->next)
+        /*
+        for (SimSprite* s = sim->sprite; s != NULL; s = s->next)
         {
             if ((sprite != s) &&
                 (s->frame != 0) &&
@@ -1361,13 +1547,16 @@ void DoBusSprite(SimSprite* sprite)
                 CheckSpriteCollision(sprite, s))
             {
                 ExplodeSprite(s);
-                explode = 1;
+                explode = true;
             }
         }
+        */
         if (explode)
+        {
             ExplodeSprite(sprite);
+        }
     }
-    }
+}
 
 
 void MoveObjects()
@@ -1379,6 +1568,7 @@ void MoveObjects()
 
     Cycle++;
 
+    /*
     for (SimSprite* sprite = sim->sprite; sprite != nullptr;)
     {
         if (sprite->frame)
@@ -1388,24 +1578,31 @@ void MoveObjects()
             case TRA:
                 DoTrainSprite(sprite);
                 break;
+
             case COP:
                 DoCopterSprite(sprite);
                 break;
+
             case AIR:
                 DoAirplaneSprite(sprite);
                 break;
+
             case SHI:
                 DoShipSprite(sprite);
                 break;
+
             case GOD:
                 DoMonsterSprite(sprite);
                 break;
+
             case TOR:
                 DoTornadoSprite(sprite);
                 break;
+
             case EXP:
                 DoExplosionSprite(sprite);
                 break;
+
             case BUS:
                 DoBusSprite(sprite);
                 break;
@@ -1426,6 +1623,7 @@ void MoveObjects()
             }
         }
     }
+    */
 }
 
 

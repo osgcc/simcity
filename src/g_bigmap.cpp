@@ -63,6 +63,7 @@
 
 #include "s_alloc.h"
 
+#include "Sprite.h"
 
 int dynamicFilter(int c, int r);
 

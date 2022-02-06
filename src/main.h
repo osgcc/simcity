@@ -75,12 +75,6 @@
 #include <time.h>
 #include <io.h>
 
-#include "view.h"
-#include "macros.h"
-
-#include "w_sprite.h"
-
-
 #include <string>
 
  /* Constants */
@@ -505,10 +499,10 @@ extern int StartupGameLevel;
 extern int PerformanceTiming;
 extern double FlushTime;
 
+
 extern char *optarg;
 extern int optind;
 //extern struct timeval now_time;
-extern Sim *sim;
 extern int WireMode;
 extern int MultiPlayerMode;
 extern int sim_delay;
@@ -516,7 +510,6 @@ extern int sim_skips;
 extern int sim_skip;
 extern int sim_paused;
 extern int sim_paused_speed;
-extern int sim_tty;
 extern int heat_steps;
 extern int heat_flow;
 extern int heat_rule;
@@ -554,9 +547,6 @@ extern int EvalChanged;
 extern int MeltX, MeltY;
 extern int NeedRest;
 extern int ExitReturn;
-
-//extern Tcl_Interp *tk_mainInterp;
-//extern Tk_Window MainWindow;
 
 extern int FlushStyle;
 extern int GotXError;

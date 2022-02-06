@@ -64,6 +64,8 @@
 #include "w_resrc.h"
 #include "w_stubs.h"
 
+#include "View.h"
+
 
 Pixmap* GetObjectXpms(void* /*XDisplay**/ xd, int id, int frames)
 {

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Date.cpp" />
     <ClCompile Include="src\g_ani.cpp" />
     <ClCompile Include="src\g_bigmap.cpp" />
     <ClCompile Include="src\g_map.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="src\g_smmaps.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\rand.cpp" />
+    <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\s_alloc.cpp" />
     <ClCompile Include="src\s_disast.cpp" />
     <ClCompile Include="src\s_eval.cpp" />
@@ -40,7 +42,6 @@
     <ClCompile Include="src\s_zone.cpp" />
     <ClCompile Include="src\w_budget.cpp" />
     <ClCompile Include="src\w_con.cpp" />
-    <ClCompile Include="src\w_date.cpp" />
     <ClCompile Include="src\w_editor.cpp" />
     <ClCompile Include="src\w_eval.cpp" />
     <ClCompile Include="src\w_graph.cpp" />
@@ -48,7 +49,6 @@
     <ClCompile Include="src\w_map.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
     <ClCompile Include="src\w_sound.cpp" />
-    <ClCompile Include="src\w_sprite.cpp" />
     <ClCompile Include="src\w_stubs.cpp" />
     <ClCompile Include="src\w_tk.cpp" />
     <ClCompile Include="src\w_tool.cpp" />
@@ -57,11 +57,14 @@
     <ClCompile Include="src\w_x.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Date.h" />
     <ClInclude Include="src\Graph.h" />
     <ClInclude Include="src\g_ani.h" />
     <ClInclude Include="src\g_bigmap.h" />
     <ClInclude Include="src\g_setup.h" />
     <ClInclude Include="src\rand.h" />
+    <ClInclude Include="src\Simulation.h" />
+    <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\s_disast.h" />
     <ClInclude Include="src\s_eval.h" />
     <ClInclude Include="src\s_fileio.h" />
@@ -73,23 +76,21 @@
     <ClInclude Include="src\s_sim.h" />
     <ClInclude Include="src\s_traf.h" />
     <ClInclude Include="src\s_zone.h" />
+    <ClInclude Include="src\View.h" />
     <ClInclude Include="src\w_budget.h" />
     <ClInclude Include="src\w_con.h" />
-    <ClInclude Include="src\w_date.h" />
     <ClInclude Include="src\w_graph.h" />
     <ClInclude Include="src\animtab.h" />
     <ClInclude Include="src\g_map.h" />
     <ClInclude Include="src\macros.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\s_alloc.h" />
-    <ClInclude Include="src\view.h" />
     <ClInclude Include="src\w_editor.h" />
     <ClInclude Include="src\w_eval.h" />
     <ClInclude Include="src\w_keys.h" />
     <ClInclude Include="src\w_map.h" />
     <ClInclude Include="src\w_resrc.h" />
     <ClInclude Include="src\w_sound.h" />
-    <ClInclude Include="src\w_sprite.h" />
     <ClInclude Include="src\w_stubs.h" />
     <ClInclude Include="src\w_tk.h" />
     <ClInclude Include="src\w_tool.h" />
@@ -203,6 +204,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>sdl2maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -214,12 +216,14 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>sdl2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

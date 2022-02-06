@@ -75,6 +75,8 @@
 #include "w_util.h"
 #include "w_x.h"
 
+#include "View.h"
+
 #include <array>
 #include <cmath>
 #include <string>
@@ -117,7 +119,7 @@ int toolOffset[] = {
 };
 
 
-Ink *NewInk();
+//Ink *NewInk();
 
 
 /*************************************************************************/

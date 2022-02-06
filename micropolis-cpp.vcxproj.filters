@@ -78,9 +78,6 @@
     <ClCompile Include="src\w_con.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_date.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\w_editor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -102,9 +99,6 @@
     <ClCompile Include="src\w_sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_sprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\w_stubs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -123,6 +117,12 @@
     <ClCompile Include="src\w_x.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Date.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\animtab.h">
@@ -135,9 +135,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\w_x.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\w_eval.h">
@@ -179,9 +176,6 @@
     <ClInclude Include="src\w_stubs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\w_sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\s_sim.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -218,9 +212,6 @@
     <ClInclude Include="src\s_traf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\w_date.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -240,6 +231,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\g_bigmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Simulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Date.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\View.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
