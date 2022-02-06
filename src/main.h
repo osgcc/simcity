@@ -85,9 +85,6 @@
 
  /* Constants */
 
-#define TRUE		 1
-#define FALSE		 0
-
 constexpr auto SimWidth = 120;
 constexpr auto SimHeight = 100;
 

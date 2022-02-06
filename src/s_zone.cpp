@@ -236,12 +236,12 @@ void MakeHosp()
 {
   if (NeedHosp > 0) {
     ZonePlop(HOSPITAL - 4);
-    NeedHosp = FALSE;
+    NeedHosp = false;
     return;
   }
   if (NeedChurch > 0) {
     ZonePlop(CHURCH - 4);
-    NeedChurch = FALSE;
+    NeedChurch = false;
     return;
   }
 }
@@ -509,7 +509,7 @@ void DoIndustrial(int ZonePwrFlg)
   tpop = IZPop(CChr9);
   IndPop += tpop;
   if (tpop > Rand(5)) TrfGood = MakeTraf(2);
-  else TrfGood = TRUE;
+  else TrfGood = true;
 
   if (TrfGood == -1) {
     DoIndOut(tpop, Rand16() & 1);
@@ -540,7 +540,7 @@ void DoCommercial(int ZonePwrFlg)
   tpop = CZPop(CChr9);
   ComPop += tpop;
   if (tpop > Rand(5)) TrfGood = MakeTraf(1);
-  else TrfGood = TRUE;
+  else TrfGood = true;
 
   if (TrfGood == -1) {
     value = GetCRVal();
@@ -579,7 +579,7 @@ void DoResidential(int ZonePwrFlg)
 
   ResPop += tpop;
   if (tpop > Rand(35)) TrfGood = MakeTraf(0);
-  else TrfGood = TRUE;
+  else TrfGood = true;
 
   if (TrfGood == -1) {
     value = GetCRVal();

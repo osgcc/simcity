@@ -264,7 +264,7 @@ bool DoBridge()
 	  if ((Map[x][y] & LOMASK) == (VBRTAB[z] & LOMASK))
 	    Map[x][y] = VBRTAB2[z];
       }
-    return (TRUE);
+    return true;
   }
   if (CChr9 == BRWH) { /*  Horizontal bridge close  */
     if ((!(Rand16() & 3)) &&
@@ -276,7 +276,7 @@ bool DoBridge()
 	  if ((Map[x][y] & LOMASK) == (HBRTAB[z] & LOMASK))
 	    Map[x][y] = HBRTAB2[z];
       }
-    return (TRUE);
+    return true;
   }
 
   if ((GetBoatDis() < 300) || (!(Rand16() & 7))) {
@@ -293,9 +293,9 @@ bool DoBridge()
 		Map[x][y] = VBRTAB[z];
 	    }
 	  }
-	  return (TRUE);
+	  return true;
 	}
-      return (FALSE);
+      return false;
     } else {
       if (SMapY > 0)
 	if (Map[SMapX][SMapY - 1] == CHANNEL) { /* Horizontal open  */
@@ -309,12 +309,12 @@ bool DoBridge()
 		Map[x][y] = HBRTAB[z];
 	    }
 	  }
-	  return (TRUE);
+	  return true;
 	}
-      return (FALSE);
+      return false;
     }
   }
-  return (FALSE);
+  return false;
 }
 
 
@@ -757,13 +757,13 @@ void TakeCensus()
 
   ChangeCensus(); /* XXX: if 10 year graph view */
 
-  if (HospPop < (ResPop >>8)) NeedHosp = TRUE;
+  if (HospPop < (ResPop >>8)) NeedHosp = true;
   if (HospPop > (ResPop >>8)) NeedHosp = -1;
-  if (HospPop == (ResPop >>8)) NeedHosp = FALSE;
+  if (HospPop == (ResPop >>8)) NeedHosp = false;
 
-  if (ChurchPop < (ResPop >>8)) NeedChurch = TRUE;
+  if (ChurchPop < (ResPop >>8)) NeedChurch = true;
   if (ChurchPop > (ResPop >>8)) NeedChurch = -1;
-  if (ChurchPop == (ResPop >>8)) NeedChurch = FALSE;
+  if (ChurchPop == (ResPop >>8)) NeedChurch = false;
 }
 
 

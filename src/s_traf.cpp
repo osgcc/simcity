@@ -135,12 +135,12 @@ bool RoadTest(int x)
 {
   x = x & LOMASK;
   if (x < ROADBASE)
-    return (FALSE);
+    return false;
   if (x > LASTRAIL)
-    return (FALSE);
+    return false;
   if ((x >= POWERBASE) && (x < RAILHPOWERV))
-    return (FALSE);
-  return (TRUE);
+    return false;
+  return true;
 }
 
 
@@ -158,11 +158,11 @@ bool FindPRoad()		/* look for road on edges of zone   */
 		  if (RoadTest(Map[tx][ty])) {
 			  SMapX = tx;
 			  SMapY = ty;
-			  return (TRUE);
+			  return true;
 		  }
 	  }
   }
-  return (FALSE);
+  return false;
 }
 
 
@@ -178,11 +178,11 @@ bool FindPTele()		/* look for telecommunication on edges of zone */
 	  if (TestBounds(tx, ty, WORLD_X, WORLD_Y)) {
 	  	  tile = Map[tx][ty] & LOMASK;
 		  if ((tile >= TELEBASE) && (tile <= TELELAST)) {
-			  return (TRUE);
+			  return true;
 		  }
 	  }
   }
-  return (FALSE);
+  return false;
 }
 
 
@@ -193,21 +193,21 @@ bool GetFromMap(int x)
   case 0:
     if (SMapY > 0)
       return (Map[SMapX][SMapY - 1] & LOMASK);
-    return (FALSE);
+    return false;
   case 1:
     if (SMapX < (WORLD_X - 1))
       return (Map[SMapX + 1][SMapY] & LOMASK);
-    return (FALSE);
+    return false;
   case 2:
     if (SMapY < (WORLD_Y - 1))
       return (Map[SMapX][SMapY + 1] & LOMASK);
-    return (FALSE);
+    return false;
   case 3:
     if (SMapX > 0)
       return (Map[SMapX - 1][SMapY] & LOMASK);
-    return (FALSE);
+    return false;
   default: 
-    return (FALSE);
+    return false;
   }
 }
 
@@ -227,10 +227,10 @@ bool TryGo(int z)
       LDir = (realdir + 2) & 3;
       if (z & 1)			/* save pos every other move */
 	PushPos();
-      return (TRUE);
+      return true;
     }
   }
-  return (FALSE);
+  return false;
 }
 
 
@@ -263,16 +263,16 @@ bool TryDrive()
   for (z = 0; z < MAXDIS; z++) {	/* Maximum distance to try */
     if (TryGo(z)) {			/* if it got a road */
       if (DriveDone())			/* if destination is reached */
-	return (TRUE);			/* pass */
+	return true;			/* pass */
     } else {
       if (PosStackN) {			/* deadend , backup */
 	PosStackN--;
 	z += 3;
       }
-      else return (FALSE);		/* give up at start  */	
+      else return false;		/* give up at start  */	
     }
   }
-  return (FALSE);			/* gone maxdis */
+  return false;			/* gone maxdis */
 }
 
 
@@ -291,11 +291,11 @@ bool MakeTraf(int Zt)
       SetTrafMem();		/* if sucessful, inc trafdensity */
       SMapX = xtem;
       SMapY = ytem;
-      return (TRUE);		/* traffic passed */
+      return true;		/* traffic passed */
     }
     SMapX = xtem;
     SMapY = ytem;
-    return (FALSE);		/* traffic failed */
+    return false;		/* traffic failed */
   }
   else return (-1);		/* no road found */
 }
