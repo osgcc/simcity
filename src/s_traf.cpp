@@ -65,6 +65,9 @@
 #include "s_power.h"
 #include "s_sim.h"
 
+#include "w_util.h"
+
+
 /* Traffic Generation */
 
 

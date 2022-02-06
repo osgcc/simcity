@@ -65,7 +65,7 @@
 #include "w_stubs.h"
 
 
-Pixmap* GetObjectXpms(XDisplay* xd, int id, int frames)
+Pixmap* GetObjectXpms(void* /*XDisplay**/ xd, int id, int frames)
 {
 	/*
 	Pixmap* pixmaps = (Pixmap*)malloc(2 * frames * sizeof(Pixmap));
@@ -94,7 +94,7 @@ Pixmap* GetObjectXpms(XDisplay* xd, int id, int frames)
 }
 
 
-void GetPixmaps(XDisplay* xd)
+void GetPixmaps(void* /*XDisplay**/ xd)
 {
 	/*
 	if (xd->gray25_stipple == None)

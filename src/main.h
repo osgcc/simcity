@@ -392,10 +392,6 @@ constexpr auto WORLD_Y = SimHeight;
 
 typedef unsigned char Byte;
 
-
-struct Pixmap
-{};
-
 extern int RateOGMem[SmX][SmY];
 extern int FireStMap[SmX][SmY];	/* 8X8 Maps  15 x 13 */
 extern int PoliceMap[SmX][SmY];

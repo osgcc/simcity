@@ -63,6 +63,15 @@
 #include "main.h"
 #include "view.h"
 
+#include "g_ani.h"
+#include "g_bigmap.h"
+
+#include "s_sim.h"
+
+#include "w_sprite.h"
+#include "w_tk.h"
+#include "w_x.h"
+
 /*
 Tcl_HashTable EditorCmds;
 int DoOverlay = 2;
@@ -830,183 +839,7 @@ DoNewEditor(SimView *view)
   sim->editors++; view->next = sim->editor; sim->editor = view;
   view->invalid = 1;
 }
-
-
-void DoUpdateEditor(SimView* view)
-{
-  int dx, dy, i;
-
-  view->updates++;
-
-  if (!view->visible) {
-    return;
-  }
-
-  if ((!ShakeNow) &&
-//      (!view->invalid) &&
-      (!view->update) &&
-      (sim_skips ||
-       view->skips)) {
-    if (sim_skips) {
-      if (sim_skip > 0) {
-	return 0;
-      }
-    } else {
-      if (view->skip > 0) {
-	--view->skip;
-	return 0;
-      } else {
-	view->skip = view->skips;
-      }
-    }
-  }
-
-  view->skips = 0;
-  view->update = 0;
-
-  HandleAutoGoto(view);
-
-  if (DoAnimation && SimSpeed && !heat_steps && !TilesAnimated) {
-    TilesAnimated = 1;
-    animateTiles();
-  }
-
-  if (view->invalid) {
-
-    switch (view->type) {
-
-    case X_Mem_View:
-      MemDrawBeegMapRect(view, view->tile_x, view->tile_y,
-			 view->tile_width, view->tile_height);
-      break;
-
-    case X_Wire_View:
-      WireDrawBeegMapRect(view, view->tile_x, view->tile_y,
-			  view->tile_width, view->tile_height);
-      break;
-
-    }
-
-    XCopyArea(view->x->dpy, view->pixmap, view->pixmap2, view->x->gc,
-	      0, 0, view->screen_width, view->screen_height,
-	      view->screen_x, view->screen_y);
-    DrawOutside(view);
-    if (PendingTool != -1) {
-      DrawPending(view);
-    }
-    DrawObjects(view);
-    if (view->show_overlay) {
-      DrawOverlay(view);
-    }
-  }
-
-  for (dx = dy = i = 0; i < ShakeNow; i++) {
-    dx += Rand(16) - 8;
-    dy += Rand(16) - 8;
-  }
-
-  XCopyArea(view->x->dpy, view->pixmap2,
-	    Tk_WindowId(view->tkwin), view->x->gc,
-	    0, 0, view->w_width, view->w_height, dx, dy);
-
-  DrawCursor(view);
-
-  view->invalid = 0;
-}
-
-
-HandleAutoGoto(SimView *view)
-{
-  if (view->follow != NULL) {
-    int x = view->follow->x + view->follow->x_hot,
-        y = view->follow->y + view->follow->y_hot;
-
-    if ((x != view->pan_x) ||
-	(y != view->pan_y)) {
-      DoPanTo(view, x, y);
-    }
-  } else if (view->auto_goto &&
-	     view->auto_going &&
-	     (view->tool_mode == 0)) {
-    int dx, dy;
-    int panx, pany, speed;
-    double dist, sloth;
-
-    speed = view->auto_speed;
-
-    if (view->auto_going < 5) {
-      sloth = ((double)view->auto_going) / 5.0;
-    } else {
-      sloth = 1.0;
-    }
-
-    dx = view->auto_x_goal - view->pan_x;
-    dy = view->auto_y_goal - view->pan_y;
-
-    dist = sqrt((double)((dx * dx) + (dy * dy)));
-
-    if (dist < (speed * sloth)) {
-      view->auto_going = 0;
-      if (view->auto_goto == -1)
-	view->auto_goto = 0;
-      DoPanTo(view, view->auto_x_goal, view->auto_y_goal);
-      NewMap = 1;
-      DidStopPan(view);
-    } else {
-      double atan2(), cos(), sin();
-      double direction, vx, vy;
-      double co, si;
-
-      direction = (double)atan2((double)dy, (double)dx);
-      co = (double)cos(direction);
-      si = (double)sin(direction);
-      vx = co * (double)speed;
-      vy = si * (double)speed;
-
-      vx *= sloth; vy *= sloth;
-      speed *= sloth;
-
-      vx += 0.5; vy += 0.5;
-
-      DoPanBy(view, (int)(vx), (int)(vy));
-      view->auto_going++;
-    }
-  }
-}
-
-DrawOutside(SimView *view)
-{
-  Pixmap pm = view->pixmap2;
-  int left = (view->w_width / 2) - view->pan_x;
-  int right = left + view->i_width;
-  int top = (view->w_height / 2) - view->pan_y;
-  int bottom = top + view->i_height;
-
-  if ((top > 0) || (bottom < view->w_height) ||
-      (left > 0) || (right < view->w_width)) {
-    if (view->x->color) {
-      XSetForeground(view->x->dpy, view->x->gc,
-		     view->pixels[COLOR_BLACK]);
-    } else {
-      XSetForeground(view->x->dpy, view->x->gc,
-		     view->pixels[COLOR_WHITE]);
-    }
-
-    if (top > 0)
-      XFillRectangle(view->x->dpy, pm, view->x->gc,
-		     0, 0, view->w_width, top);
-    if (bottom < view->w_height)
-      XFillRectangle(view->x->dpy, pm, view->x->gc,
-		     0, bottom, view->w_width,
-		     view->w_height - bottom);
-    if (left > 0)
-      XFillRectangle(view->x->dpy, pm, view->x->gc,
-		     0, top, left, bottom - top);
-    if (right < view->w_width)
-      XFillRectangle(view->x->dpy, pm, view->x->gc,
-		     right, top, view->w_width - right, bottom - top);
-  }
-}
+*/
 
 
 char CursorDashes[] = { 4, 4 };
@@ -1014,11 +847,11 @@ char CursorDashes[] = { 4, 4 };
 void DrawPending(SimView* view)
 {
     
-    Pixmap pm = view->pixmap2;
+    //Pixmap pm = view->pixmap2;
     int left = (view->w_width / 2) - view->pan_x;
     int top = (view->w_height / 2) - view->pan_y;
     int x, y, size;
-    char* iconname = NULL;
+    std::string iconname{};
 
     x = (PendingX - toolOffset[PendingTool]) << 4;
     y = (PendingY - toolOffset[PendingTool]) << 4;
@@ -1028,396 +861,497 @@ void DrawPending(SimView* view)
     x += left;
     y += top;
 
-    XSetStipple(view->x->dpy, view->x->gc, view->x->gray50_stipple);
-    XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
-    XSetForeground(view->x->dpy, view->x->gc, view->x->pixels[COLOR_BLACK]);
-    XSetFillStyle(view->x->dpy, view->x->gc, FillStippled);
-    XFillRectangle(view->x->dpy, pm, view->x->gc, x, y, size, size);
-    XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
+    //XSetStipple(view->x->dpy, view->x->gc, view->x->gray50_stipple);
+    //XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
+    //XSetForeground(view->x->dpy, view->x->gc, view->x->pixels[COLOR_BLACK]);
+    //XSetFillStyle(view->x->dpy, view->x->gc, FillStippled);
+    //XFillRectangle(view->x->dpy, pm, view->x->gc, x, y, size, size);
+    //XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
 
-    switch (PendingTool) {
+    switch (PendingTool)
+    {
     case residentialState:
         iconname = "@images/res.xpm";
         break;
+
     case commercialState:
         iconname = "@images/com.xpm";
         break;
+
     case industrialState:
         iconname = "@images/ind.xpm";
         break;
+
     case fireState:
         iconname = "@images/fire.xpm";
         break;
+
     case policeState:
         iconname = "@images/police.xpm";
         break;
+
     case stadiumState:
         iconname = "@images/stadium.xpm";
         break;
+
     case seaportState:
         iconname = "@images/seaport.xpm";
         break;
+
     case powerState:
         iconname = "@images/coal.xpm";
         break;
+
     case nuclearState:
         iconname = "@images/nuclear.xpm";
         break;
+
     case airportState:
         iconname = "@images/airport.xpm";
         break;
+
     default:
         break;
     }
 
-    if (iconname != NULL)
+    if (!iconname.empty())
     {
-        Pixmap icon = Tk_GetPixmap(view->interp, view->tkwin, iconname);
-        float f;
-        int i;
+        //Pixmap icon = Tk_GetPixmap(view->interp, view->tkwin, iconname);
+        //float f;
+       // int i;
+        //
+        //gettimeofday(&now_time, NULL);
+        //f = (2 * now_time.tv_usec / 1000000.0);
+        //if (f > 1.0) f = 2.0 - f;
+        //i = (int)(f * BobHeight * (Players - Votes));
 
-        gettimeofday(&now_time, NULL);
-        f = (2 * now_time.tv_usec / 1000000.0);
-        if (f > 1.0) f = 2.0 - f;
-        i = (int)(f * BobHeight * (Players - Votes));
+        //if (icon != None)
+        //{
+           // XCopyArea(view->x->dpy, icon, pm, view->x->gc, 0, 0, size, size, x + i, y - i);
+        //}
+    }   
+}
 
-        if (icon != None)
+
+void DrawOutside(SimView* view)
+{
+    Pixmap pm = view->pixmap2;
+    int left = (view->w_width / 2) - view->pan_x;
+    int right = left + view->i_width;
+    int top = (view->w_height / 2) - view->pan_y;
+    int bottom = top + view->i_height;
+
+    if ((top > 0) || (bottom < view->w_height) || (left > 0) || (right < view->w_width))
+    {
+        //XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_BLACK]);
+
+
+        if (top > 0)
         {
-            XCopyArea(view->x->dpy, icon, pm, view->x->gc, 0, 0, size, size, x + i, y - i);
+            //XFillRectangle(view->x->dpy, pm, view->x->gc, 0, 0, view->w_width, top);
+        }
+        if (bottom < view->w_height)
+        {
+            //XFillRectangle(view->x->dpy, pm, view->x->gc, 0, bottom, view->w_width, view->w_height - bottom);
+        }
+        if (left > 0)
+        {
+            //XFillRectangle(view->x->dpy, pm, view->x->gc, 0, top, left, bottom - top);
+        }
+        if (right < view->w_width)
+        {
+            //XFillRectangle(view->x->dpy, pm, view->x->gc, right, top, view->w_width - right, bottom - top);
         }
     }
-    
 }
 
 
-DrawCursor(SimView *view)
+void DrawTheOverlay(SimView* view, void* /*GC*/ gc, Pixmap* pm, int color, int top, int bottom, int left, int right, int onoverlay)
 {
-  Pixmap pm = Tk_WindowId(view->tkwin);
-  int left = (view->w_width / 2) - view->pan_x;
-  int top = (view->w_height / 2) - view->pan_y;
-  int x, y, mode, size, offset, fg, bg, light, dark;
-  SimView *v;
+    Ink* ink;
 
-  for (v = sim->editor; v != NULL; v = v->next) {
-    mode = v->tool_mode;
-    if ((v->show_me != 0) &&
-	((mode == -1) || v->tool_showing)) {
-      x = v->tool_x; y = v->tool_y;
-      if (mode == -1) { // pan cursor
+    //XSetForeground(view->x->dpy, gc, color);
+    //XSetLineAttributes(view->x->dpy, gc, 3, LineSolid, CapButt, JoinBevel);
 
-	x += left; y += top;
-
-	XSetLineAttributes(view->x->dpy, view->x->gc, 3,
-			   LineSolid, CapRound, JoinMiter);
-	XSetForeground(view->x->dpy, view->x->gc,
-		       view->pixels[COLOR_BLACK]);
-	XDrawLine(view->x->dpy, pm, view->x->gc,
-		  x - 6, y - 6, x + 6, y + 6);
-	XDrawLine(view->x->dpy, pm, view->x->gc,
-		  x - 6, y + 6, x + 6, y - 6);
-	XDrawLine(view->x->dpy, pm, view->x->gc,
-		  x - 8, y, x + 8, y);
-	XDrawLine(view->x->dpy, pm, view->x->gc,
-		  x, y + 8, x, y - 8);
-	XSetLineAttributes(view->x->dpy, view->x->gc, 1,
-			   LineSolid, CapRound, JoinMiter);
-	XSetForeground(view->x->dpy, view->x->gc,
-		       view->pixels[COLOR_WHITE]);
-	XDrawLine(view->x->dpy, pm, view->x->gc,
-		  x - 6, y - 6, x + 6, y + 6);
-	XDrawLine(view->x->dpy, pm, view->x->gc,
-		  x - 6, y + 6, x + 6, y - 6);
-	XDrawLine(view->x->dpy, pm, view->x->gc,
-		  x - 8, y, x + 8, y);
-	XDrawLine(view->x->dpy, pm, view->x->gc,
-		  x, y + 8, x, y - 8);
-	XSetLineAttributes(view->x->dpy, view->x->gc, 1,
-			   LineSolid, CapButt, JoinMiter);
-
-      } else { // edit cursor
-
-	size = toolSize[v->tool_state];
-	fg = toolColors[v->tool_state] & 0xff;
-	light = COLOR_WHITE;
-	dark = COLOR_BLACK;
-	if (mode == 1) {
-	  int temp = dark;
-	  dark = light;
-	  light = temp;
-	}
-	switch (v->tool_state) {
-
-	case chalkState:
-	  x += left; y += top;
-	  if (mode == 1) {
-	    offset = 2;
-	  } else {
-	    offset = 0;
-
-	    if (view->x->color) {
-	      XSetForeground(view->x->dpy, view->x->gc,
-			     view->pixels[COLOR_MEDIUMGRAY]);
-	      XFillArc(view->x->dpy, pm, view->x->gc,
-		       x - 8, y + 7, 7, 7, 0, 360 * 64);
-	    } else {
-	      XSetStipple(view->x->dpy, view->x->gc,
-			  view->x->gray50_stipple);
-	      XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
-	      XSetForeground(view->x->dpy, view->x->gc,
-			     view->x->pixels[COLOR_BLACK]);
-	      XSetBackground(view->x->dpy, view->x->gc,
-			     view->x->pixels[COLOR_WHITE]);
-	      XSetFillStyle(view->x->dpy, view->x->gc, FillOpaqueStippled);
-	      XFillArc(view->x->dpy, pm, view->x->gc,
-		       x - 8, y + 7, 7, 7, 0, 360 * 64);
-	      XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
-	    }
-	  }
-
-	  if (view->x->color) {
-	    XSetLineAttributes(view->x->dpy, view->x->gc, 3,
-			       LineSolid, CapRound, JoinMiter);
-	    XSetForeground(view->x->dpy, view->x->gc,
-			   view->pixels[COLOR_LIGHTGRAY]);
-	    XFillArc(view->x->dpy, pm, view->x->gc,
-		     x - 6 - offset, y + 5 + offset, 7, 7, 0, 360 * 64);
-	    XDrawLine(view->x->dpy, pm, view->x->gc,
-		      x + 13 - offset, y - 5 + offset,
-		      x - 1 - offset, y + 9 + offset);
-	    XSetForeground(view->x->dpy, view->x->gc,
-			   view->pixels[COLOR_WHITE]);
-	    XDrawLine(view->x->dpy, pm, view->x->gc,
-		      x + 11 - offset, y - 7 + offset,
-		      x - 3 - offset, y + 7 + offset);
-	    XFillArc(view->x->dpy, pm, view->x->gc,
-		     x + 8 - offset, y - 9 + offset, 7, 7, 0, 360 * 64);
-	    XSetLineAttributes(view->x->dpy, view->x->gc, 1,
-			       LineSolid, CapButt, JoinMiter);
-	  } else {
-	    XSetLineAttributes(view->x->dpy, view->x->gc, 3,
-			       LineSolid, CapRound, JoinMiter);
-	    XSetStipple(view->x->dpy, view->x->gc,
-			view->x->gray25_stipple);
-	    XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
-	    XSetForeground(view->x->dpy, view->x->gc,
-			   view->x->pixels[COLOR_BLACK]);
-	    XSetBackground(view->x->dpy, view->x->gc,
-			   view->x->pixels[COLOR_WHITE]);
-	    XSetFillStyle(view->x->dpy, view->x->gc, FillOpaqueStippled);
-	    XFillArc(view->x->dpy, pm, view->x->gc,
-		     x - 6 - offset, y + 5 + offset, 7, 7, 0, 360 * 64);
-	    XDrawLine(view->x->dpy, pm, view->x->gc,
-		      x + 13 - offset, y - 5 + offset,
-		      x - 1 - offset, y + 9 + offset);
-	    XSetStipple(view->x->dpy, view->x->gc,
-			view->x->gray75_stipple);
-	    XDrawLine(view->x->dpy, pm, view->x->gc,
-		      x + 11 - offset, y - 7 + offset,
-		      x - 3 - offset, y + 7 + offset);
-	    XFillArc(view->x->dpy, pm, view->x->gc,
-		     x + 8 - offset, y - 9 + offset, 7, 7, 0, 360 * 64);
-	    XSetLineAttributes(view->x->dpy, view->x->gc, 1,
-			       LineSolid, CapButt, JoinMiter);
-	    XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
-	  }
-
-	  break;
-
-	case eraserState:
-	  x += left; y += top;
-	  if (mode == 1) {
-	    offset = 0;
-	  } else {
-	    offset = 2;
-
-	    if (view->x->color) {
-	      XSetForeground(view->x->dpy, view->x->gc,
-			     view->pixels[COLOR_MEDIUMGRAY]);
-	      XFillRectangle(view->x->dpy, pm, view->x->gc,
-		       x - 8, y - 8, 16, 16);
-	    } else {
-	      XSetStipple(view->x->dpy, view->x->gc,
-			  view->x->gray50_stipple);
-	      XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
-	      XSetForeground(view->x->dpy, view->x->gc,
-			     view->x->pixels[COLOR_BLACK]);
-	      XSetBackground(view->x->dpy, view->x->gc,
-			     view->x->pixels[COLOR_WHITE]);
-	      XSetFillStyle(view->x->dpy, view->x->gc, FillOpaqueStippled);
-	      XFillRectangle(view->x->dpy, pm, view->x->gc,
-		       x - 8, y - 8, 16, 16);
-	      XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
-	    }
-	  }
-
-	  if (view->x->color) {
-	    XSetForeground(view->x->dpy, view->x->gc,
-			   view->pixels[COLOR_LIGHTGRAY]);
-	  } else {
-	    XSetStipple(view->x->dpy, view->x->gc,
-			view->x->gray75_stipple);
-	    XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
-	    XSetForeground(view->x->dpy, view->x->gc,
-			   view->x->pixels[COLOR_BLACK]);
-	    XSetBackground(view->x->dpy, view->x->gc,
-			   view->x->pixels[COLOR_WHITE]);
-	    XSetFillStyle(view->x->dpy, view->x->gc, FillOpaqueStippled);
-	  }
-
-	  //* top
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 8 + offset, y - 8 - offset,
-		    x + 8 + offset, y - 8 - offset);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 7 + offset, y - 7 - offset,
-		    x + 7 + offset, y - 7 - offset);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 6 + offset, y - 6 - offset,
-		    x + 6 + offset, y - 6 - offset);
-
-	  //* left
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 8 + offset, y - 8 - offset,
-		    x - 8 + offset, y + 8 - offset);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 7 + offset, y - 7 - offset,
-		    x - 7 + offset, y + 7 - offset);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 6 + offset, y - 6 - offset,
-		    x - 6 + offset, y + 6 - offset);
-
-	  if (view->x->color) {
-	    XSetForeground(view->x->dpy, view->x->gc,
-			   view->pixels[COLOR_BLACK]);
-	  } else {
-	    XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
-	  }
-
-	  //* bottom 
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 7 + offset, y + 7 - offset,
-		    x + 8 + offset, y + 7 - offset);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 6 + offset, y + 6 - offset,
-		    x + 7 + offset, y + 6 - offset);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 5 + offset, y + 5 - offset,
-		    x + 6 + offset, y + 5 - offset);
-
-	  //* right *
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x + 7 + offset, y + 8 - offset,
-		    x + 7 + offset, y - 7 - offset);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x + 6 + offset, y + 7 - offset,
-		    x + 6 + offset, y - 6 - offset);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x + 5 + offset, y + 6 - offset,
-		    x + 5 + offset, y - 5 - offset);
-
-	  if (view->x->color) {
-	    XSetForeground(view->x->dpy, view->x->gc,
-			   view->pixels[COLOR_DARKGRAY]);
-	    XFillRectangle(view->x->dpy, pm, view->x->gc,
-			   x - 5 + offset, y - 5 - offset, 10, 10);
-	  } else {
-	    XSetStipple(view->x->dpy, view->x->gc,
-			view->x->gray50_stipple);
-	    XSetForeground(view->x->dpy, view->x->gc,
-			   view->x->pixels[COLOR_BLACK]);
-	    XSetBackground(view->x->dpy, view->x->gc,
-			   view->x->pixels[COLOR_WHITE]);
-	    XSetFillStyle(view->x->dpy, view->x->gc, FillOpaqueStippled);
-	    XFillRectangle(view->x->dpy, pm, view->x->gc,
-			   x - 5 + offset, y - 5 - offset, 10, 10);
-	    XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
-	  }
-
-	  break;
-
-	default:
-	  offset = toolOffset[v->tool_state];
-
-	  bg = (toolColors[v->tool_state] >> 8) & 0xff;
-
-	  x = (x & ~15) - (offset <<4);
-	  y = (y & ~15) - (offset <<4);
-	  size <<= 4;
-	  x += left; y += top;
-
-	  XSetForeground(view->x->dpy, view->x->gc,
-			 view->pixels[dark]);
-	  XDrawRectangle(view->x->dpy, pm, view->x->gc,
-			 x - 1, y - 1, size + 4, size + 4);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 3, y + size + 3,
-		    x - 1, y + size + 3);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x + size + 3, y - 3,
-		    x + size + 3, y - 1);
-
-	  XSetForeground(view->x->dpy, view->x->gc,
-			 view->pixels[light]);
-	  XDrawRectangle(view->x->dpy, pm, view->x->gc,
-			 x - 4, y - 4, size + 4, size + 4);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 4, y + size + 1,
-		    x - 4, y + size + 3);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x + size + 1, y - 4,
-		    x + size + 3, y - 4);
-
-	  if (view->x->color) {
-	    if (fg == bg) {
-	      XSetForeground(view->x->dpy, view->x->gc,
-			     view->x->pixels[fg]);
-	      XSetLineAttributes(view->x->dpy, view->x->gc, 2,
-				 LineSolid, CapButt, JoinMiter);
-	    } else {
-	      XSetForeground(view->x->dpy, view->x->gc,
-			     view->x->pixels[fg]);
-	      XSetBackground(view->x->dpy, view->x->gc,
-			     view->pixels[bg]);
-
-	      XSetLineAttributes(view->x->dpy, view->x->gc, 2,
-				 LineDoubleDash, CapButt, JoinMiter);
-	      XSetDashes(view->x->dpy, view->x->gc, 0, CursorDashes, 2);
-	    }
-	  } else {
-	    XSetStipple(view->x->dpy, view->x->gc,
-			view->x->gray50_stipple);
-	    XSetForeground(view->x->dpy, view->x->gc,
-			   view->x->pixels[COLOR_BLACK]);
-	    XSetBackground(view->x->dpy, view->x->gc,
-			   view->x->pixels[COLOR_WHITE]);
-	    XSetFillStyle(view->x->dpy, view->x->gc, FillOpaqueStippled);
-	    XSetLineAttributes(view->x->dpy, view->x->gc, 2,
-			       LineSolid, CapButt, JoinMiter);
-	  }
-
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 2, y - 1, x - 2, y + size + 3);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x - 1, y + size + 2, x + size + 3, y + size + 2);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x + size + 2, y + size + 1, x + size + 2, y - 3);
-	  XDrawLine(view->x->dpy, pm, view->x->gc,
-		    x + size + 1, y - 2, x - 3, y - 2);
-
-	  if (!view->x->color) {
-	    XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
-	  }
-	  XSetLineAttributes(view->x->dpy, view->x->gc, 1,
-			     LineSolid, CapButt, JoinMiter);
-	  
-	  break;
-	}
-      }
+    for (ink = sim->overlay; ink != NULL; ink = ink->next)
+    {
+        if ((ink->bottom >= top) && (ink->top <= bottom) && (ink->right >= left) && (ink->left <= right))
+        {
+            if (ink->length <= 1)
+            {
+                //XFillArc(view->x->dpy, pm, gc, ink->x - 3, ink->y - 3, 6, 6, 0, 360 * 64);
+            }
+            else
+            {
+                ink->points[0].x = ink->x - left;
+                ink->points[0].y = ink->y - top;
+                //XDrawLines(view->x->dpy, pm, gc, ink->points, ink->length, CoordModePrevious);
+            }
+        }
     }
-  }
+
+    //XSetFillStyle(view->x->dpy, gc, FillSolid);
+    //XSetLineAttributes(view->x->dpy, gc, 1, LineSolid, CapButt, JoinMiter);
 }
 
 
+void ClipTheOverlay(SimView* view)
+{
+    /*
+    XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_WHITE]);
+    XSetFillStyle(view->x->dpy, view->x->gc, FillStippled);
+    XSetStipple(view->x->dpy, view->x->gc, view->overlay_pixmap);
+    XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
+    XFillRectangle(view->x->dpy, view->pixmap2, view->x->gc, 0, 0, view->w_width, view->w_height);
+    XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
+    */
+}
+
+
+void DrawOverlay(SimView* view)
+{
+    int width = view->w_width;
+    int height = view->w_height;
+    int left = view->pan_x - (width / 2);
+    int top = view->pan_y - (height / 2);
+    int right = left + width;
+    int bottom = top + height;
+    int showing = 0;
+    Ink* ink;
+    //struct timeval start, finished, elapsed;
+
+    for (ink = sim->overlay; ink != NULL; ink = ink->next)
+    {
+        if ((ink->bottom >= top) && (ink->top <= bottom) && (ink->right >= left) && (ink->left <= right))
+        {
+            showing = 1;
+            break;
+        }
+    }
+
+    if (!showing)
+    {
+        return;
+    }
+
+    /* overlay_mode state machine:
+       0 => overlay invalid:
+            draw lines to pm => 1
+       1 => overlay stable:
+            sync, time draw lines to pm => 2
+       2 => overlay stable:
+            draw lines to ol,
+            sync, time clip ol to pm,
+            lines faster? => 3,
+        clipping faster? => 4
+       3 => lines faster:
+            draw lines to pm => 3
+       4 => clipping faster:
+            clip ol to pm => 4
+    */
+
+    switch (view->overlay_mode)
+    {
+    case 0:
+        DrawTheOverlay(view, nullptr, &view->pixmap2, view->pixels[COLOR_WHITE], top, bottom, left, right, 0);
+        view->overlay_mode = 1;
+        break;
+
+    case 1:
+        //XSync(view->x->dpy, False);
+        //gettimeofday(&start, NULL);
+        DrawTheOverlay(view, nullptr, &view->pixmap2, view->pixels[COLOR_WHITE], top, bottom, left, right, 0);
+        //XSync(view->x->dpy, False);
+        //gettimeofday(&finished, NULL);
+        //TimeElapsed(&view->overlay_time, &start, &finished);
+        view->overlay_mode = 2;
+        break;
+
+    case 2:
+        //XSetForeground(view->x->dpy, view->x->overlay_gc, 0);
+        //XFillRectangle(view->x->dpy, view->overlay_pixmap, view->x->overlay_gc, 0, 0, view->m_width, view->m_height);
+        DrawTheOverlay(view, nullptr, &view->overlay_pixmap, 1, top, bottom, left, right, 1);
+        //XSync(view->x->dpy, False);
+        //gettimeofday(&start, NULL);
+        ClipTheOverlay(view);
+        //XSync(view->x->dpy, False);
+        //gettimeofday(&finished, NULL);
+        //TimeElapsed(&elapsed, &start, &finished);
+        break;
+
+    case 3:
+        DrawTheOverlay(view, nullptr, &view->pixmap2, view->pixels[COLOR_WHITE], top, bottom, left, right, 0);
+        break;
+
+    case 4:
+        ClipTheOverlay(view);
+        break;
+    }
+}
+
+
+void HandleAutoGoto(SimView* view)
+{
+    if (view->follow != NULL)
+    {
+        int x = view->follow->x + view->follow->x_hot;
+        int   y = view->follow->y + view->follow->y_hot;
+
+        if ((x != view->pan_x) || (y != view->pan_y))
+        {
+            DoPanTo(view, x, y);
+        }
+    }
+    else if (view->auto_goto && view->auto_going && (view->tool_mode == 0))
+    {
+        int dx, dy;
+        int panx, pany, speed;
+        double dist, sloth;
+
+        speed = view->auto_speed;
+
+        if (view->auto_going < 5)
+        {
+            sloth = ((double)view->auto_going) / 5.0;
+        }
+        else
+        {
+            sloth = 1.0;
+        }
+
+        dx = view->auto_x_goal - view->pan_x;
+        dy = view->auto_y_goal - view->pan_y;
+
+        dist = sqrt((double)((dx * dx) + (dy * dy)));
+
+        if (dist < (speed * sloth))
+        {
+            view->auto_going = 0;
+            if (view->auto_goto == -1)
+            {
+                view->auto_goto = 0;
+            }
+
+            DoPanTo(view, view->auto_x_goal, view->auto_y_goal);
+            NewMap = 1;
+            DidStopPan(view);
+        }
+        else
+        {
+            double direction, vx, vy;
+            double co, si;
+
+            direction = atan2((double)dy, (double)dx);
+            co = cos(direction);
+            si = sin(direction);
+
+            vx = co * static_cast<double>(speed);
+            vy = si * static_cast<double>(speed);
+
+            vx *= sloth; vy *= sloth;
+            speed *= sloth;
+
+            vx += 0.5; vy += 0.5;
+
+            DoPanBy(view, (int)(vx), (int)(vy));
+            view->auto_going++;
+        }
+    }
+}
+
+
+void DrawCursor(SimView* view)
+{
+    //Pixmap pm = Tk_WindowId(view->tkwin);
+    int left = (view->w_width / 2) - view->pan_x;
+    int top = (view->w_height / 2) - view->pan_y;
+    int x, y, mode, size, offset, fg, bg, light, dark;
+    SimView* v;
+
+    for (v = sim->editor; v != NULL; v = v->next)
+    {
+        mode = v->tool_mode;
+        if ((v->show_me != 0) && ((mode == -1) || v->tool_showing))
+        {
+            x = v->tool_x; y = v->tool_y;
+            if (mode == -1)
+            { // pan cursor
+
+                x += left; y += top;
+
+                /*
+                XSetLineAttributes(view->x->dpy, view->x->gc, 3, LineSolid, CapRound, JoinMiter);
+                XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_BLACK]);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y - 6, x + 6, y + 6);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y + 6, x + 6, y - 6);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x - 8, y, x + 8, y);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x, y + 8, x, y - 8);
+                XSetLineAttributes(view->x->dpy, view->x->gc, 1, LineSolid, CapRound, JoinMiter);
+                XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_WHITE]);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y - 6, x + 6, y + 6);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x - 6, y + 6, x + 6, y - 6);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x - 8, y, x + 8, y);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x, y + 8, x, y - 8);
+                XSetLineAttributes(view->x->dpy, view->x->gc, 1, LineSolid, CapButt, JoinMiter);
+                */
+
+            }
+            else
+            { // edit cursor
+
+                size = toolSize[v->tool_state];
+                fg = toolColors[v->tool_state] & 0xff;
+                light = COLOR_WHITE;
+                dark = COLOR_BLACK;
+                if (mode == 1)
+                {
+                    int temp = dark;
+                    dark = light;
+                    light = temp;
+                }
+
+
+                offset = toolOffset[v->tool_state];
+
+                bg = (toolColors[v->tool_state] >> 8) & 0xff;
+
+                x = (x & ~15) - (offset << 4);
+                y = (y & ~15) - (offset << 4);
+                size <<= 4;
+                x += left; y += top;
+
+                /*
+                XSetForeground(view->x->dpy, view->x->gc, view->pixels[dark]);
+                XDrawRectangle(view->x->dpy, pm, view->x->gc, x - 1, y - 1, size + 4, size + 4);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x - 3, y + size + 3, x - 1, y + size + 3);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 3, y - 3, x + size + 3, y - 1);
+
+                XSetForeground(view->x->dpy, view->x->gc, view->pixels[light]);
+                XDrawRectangle(view->x->dpy, pm, view->x->gc, x - 4, y - 4, size + 4, size + 4);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x - 4, y + size + 1, x - 4, y + size + 3);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 1, y - 4, x + size + 3, y - 4);
+                */
+
+
+                if (fg == bg)
+                {
+                    //XSetForeground(view->x->dpy, view->x->gc, view->x->pixels[fg]);
+                    //XSetLineAttributes(view->x->dpy, view->x->gc, 2, LineSolid, CapButt, JoinMiter);
+                }
+                else
+                {
+                    //XSetForeground(view->x->dpy, view->x->gc, view->x->pixels[fg]);
+                    //XSetBackground(view->x->dpy, view->x->gc, view->pixels[bg]);
+
+                    //XSetLineAttributes(view->x->dpy, view->x->gc, 2, LineDoubleDash, CapButt, JoinMiter);
+                    //XSetDashes(view->x->dpy, view->x->gc, 0, CursorDashes, 2);
+                }
+
+                /*
+                XDrawLine(view->x->dpy, pm, view->x->gc, x - 2, y - 1, x - 2, y + size + 3);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x - 1, y + size + 2, x + size + 3, y + size + 2);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 2, y + size + 1, x + size + 2, y - 3);
+                XDrawLine(view->x->dpy, pm, view->x->gc, x + size + 1, y - 2, x - 3, y - 2);
+
+                XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
+                XSetLineAttributes(view->x->dpy, view->x->gc, 1, LineSolid, CapButt, JoinMiter);
+                */
+            }
+        }
+    }
+}
+
+
+void DoUpdateEditor(SimView* view)
+{
+    int dx, dy, i;
+
+    view->updates++;
+
+    if (!view->visible)
+    {
+        return;
+    }
+
+    if ((!ShakeNow) && /*      (!view->invalid) &&*/ (!view->update) && (sim_skips || view->skips))
+    {
+        if (sim_skips)
+        {
+            if (sim_skip > 0)
+            {
+                return;
+            }
+        }
+        else
+        {
+            if (view->skip > 0)
+            {
+                --view->skip;
+                return;
+            }
+            else
+            {
+                view->skip = view->skips;
+            }
+        }
+    }
+
+    view->skips = 0;
+    view->update = 0;
+
+    HandleAutoGoto(view);
+
+    if (DoAnimation && SimSpeed && !heat_steps && !TilesAnimated)
+    {
+        TilesAnimated = 1;
+        animateTiles();
+    }
+
+    if (view->invalid)
+    {
+        switch (view->type)
+        {
+
+        case X_Mem_View:
+            MemDrawBeegMapRect(view, view->tile_x, view->tile_y, view->tile_width, view->tile_height);
+            break;
+
+        case X_Wire_View:
+            WireDrawBeegMapRect(view, view->tile_x, view->tile_y, view->tile_width, view->tile_height);
+            break;
+
+        }
+
+        //XCopyArea(view->x->dpy, view->pixmap, view->pixmap2, view->x->gc, 0, 0, view->screen_width, view->screen_height, view->screen_x, view->screen_y);
+        DrawOutside(view);
+
+        if (PendingTool != -1)
+        {
+            DrawPending(view);
+        }
+
+        DrawObjects(view);
+
+        if (view->show_overlay)
+        {
+            DrawOverlay(view);
+        }
+    }
+
+    for (dx = dy = i = 0; i < ShakeNow; i++)
+    {
+        dx += Rand(16) - 8;
+        dy += Rand(16) - 8;
+    }
+
+    //XCopyArea(view->x->dpy, view->pixmap2, Tk_WindowId(view->tkwin), view->x->gc, 0, 0, view->w_width, view->w_height, dx, dy);
+    DrawCursor(view);
+
+    view->invalid = 0;
+}
+
+
+/*
 TimeElapsed(struct timeval *elapsed,
 	    struct timeval *start,
 	    struct timeval *finish)
@@ -1431,167 +1365,6 @@ TimeElapsed(struct timeval *elapsed,
   }
   elapsed->tv_usec = usec;
   elapsed->tv_sec = sec;
-}
-
-
-
-DrawOverlay(SimView *view)
-{
-  int width = view->w_width;
-  int height = view->w_height;
-  int left = view->pan_x - (width / 2);
-  int top = view->pan_y - (height / 2);
-  int right = left + width;
-  int bottom = top + height;
-  int showing = 0;
-  Ink *ink;
-  struct timeval start, finished, elapsed;
-
-  for (ink = sim->overlay; ink != NULL; ink = ink->next) {
-    if ((ink->bottom >= top) && (ink->top <= bottom) &&
-	(ink->right >= left) && (ink->left <= right)) {
-      showing = 1;
-      break;
-    }
-  }
-
-  if (!showing) return;
-
-/* overlay_mode state machine:
-   0 => overlay invalid: 
-        draw lines to pm => 1
-   1 => overlay stable: 
-        sync, time draw lines to pm => 2
-   2 => overlay stable: 
-        draw lines to ol,
-        sync, time clip ol to pm,
-        lines faster? => 3,
-	clipping faster? => 4
-   3 => lines faster: 
-        draw lines to pm => 3
-   4 => clipping faster: 
-        clip ol to pm => 4
-
-
-  switch (view->overlay_mode) {
-  case 0:
-    DrawTheOverlay(view, view->x->gc,
-		   view->pixmap2, view->pixels[COLOR_WHITE],
-		   top, bottom, left, right, 0);
-    view->overlay_mode = 1;
-    break;
-  case 1:
-    XSync(view->x->dpy, False);
-    gettimeofday(&start, NULL);
-    DrawTheOverlay(view, view->x->gc,
-		   view->pixmap2, view->pixels[COLOR_WHITE],
-		   top, bottom, left, right, 0);
-    XSync(view->x->dpy, False);
-    gettimeofday(&finished, NULL);
-    TimeElapsed(&view->overlay_time, &start, &finished);
-    view->overlay_mode = 2;
-    break;
-  case 2:
-    XSetForeground(view->x->dpy, view->x->overlay_gc, 0);
-    XFillRectangle(view->x->dpy, view->overlay_pixmap, view->x->overlay_gc,
-		   0, 0, view->m_width, view->m_height);
-    DrawTheOverlay(view, view->x->overlay_gc,
-		   view->overlay_pixmap, 1,
-		   top, bottom, left, right, 1);
-    XSync(view->x->dpy, False);
-    gettimeofday(&start, NULL);
-    ClipTheOverlay(view);
-    XSync(view->x->dpy, False);
-    gettimeofday(&finished, NULL);
-    TimeElapsed(&elapsed, &start, &finished);
-    if ((elapsed.tv_sec > view->overlay_time.tv_sec) ||
-	((elapsed.tv_sec == view->overlay_time.tv_sec) &&
-	 ((elapsed.tv_usec > view->overlay_time.tv_usec)))) {
-      view->overlay_mode = 3;
-    } else {
-      view->overlay_mode = 4;
-    }
-    break;
-  case 3:
-    DrawTheOverlay(view, view->x->gc,
-		   view->pixmap2, view->pixels[COLOR_WHITE],
-		   top, bottom, left, right, 0);
-    break;
-  case 4:
-    ClipTheOverlay(view);
-    break;
-  }
-}
-
-
-DrawTheOverlay(SimView *view, GC gc, Pixmap pm, int color, 
-	       int top, int bottom, int left, int right,
-	       int onoverlay)
-{
-  Ink *ink;
-
-  if (view->x->color) {
-    XSetForeground(view->x->dpy, gc, color);
-    XSetLineAttributes(view->x->dpy, gc, 3,
-		       LineSolid, CapButt, JoinBevel);
-  } else {
-    if (!onoverlay) {
-      XSetStipple(view->x->dpy, gc, view->x->gray50_stipple);
-      XSetTSOrigin(view->x->dpy, gc, view->updates & 1, 0);
-      XSetBackground(view->x->dpy, gc, 0);
-      XSetFillStyle(view->x->dpy, gc, FillOpaqueStippled);
-    }
-    XSetForeground(view->x->dpy, gc, 1);
-    XSetLineAttributes(view->x->dpy, gc, 3,
-		       LineSolid, CapButt, JoinBevel);
-  }
-  for (ink = sim->overlay; ink != NULL; ink = ink->next) {
-    if ((ink->bottom >= top) && (ink->top <= bottom) &&
-	(ink->right >= left) && (ink->left <= right)) {
-      if (ink->length <= 1) {
-	XFillArc(view->x->dpy, pm, gc,
-		 ink->x - 3, ink->y - 3, 6, 6, 0, 360 * 64);
-      } else {
-	ink->points[0].x = ink->x - left;
-	ink->points[0].y = ink->y - top;
-	XDrawLines(view->x->dpy, pm, gc,
-		   ink->points, ink->length, CoordModePrevious);
-      }
-    }
-  }
-  if (!view->x->color) {
-    XSetFillStyle(view->x->dpy, gc, FillSolid);
-  }
-  XSetLineAttributes(view->x->dpy, gc, 1,
-		     LineSolid, CapButt, JoinMiter);
-}
-
-
-ClipTheOverlay(SimView *view)
-{
-  if (view->x->color) {
-    XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_WHITE]);
-    XSetFillStyle(view->x->dpy, view->x->gc, FillStippled);
-    XSetStipple(view->x->dpy, view->x->gc, view->overlay_pixmap);
-    XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
-    XFillRectangle(view->x->dpy, view->pixmap2, view->x->gc,
-		   0, 0, view->w_width, view->w_height);
-    XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
-  } else {
-    XSetStipple(view->x->dpy, view->x->gc, view->x->gray50_stipple);
-    XSetTSOrigin(view->x->dpy, view->x->gc, view->updates & 1, 0);
-    XSetForeground(view->x->dpy, view->x->gc, view->pixels[COLOR_WHITE]);
-    XSetBackground(view->x->dpy, view->x->gc, view->pixels[COLOR_BLACK]);
-    XSetFillStyle(view->x->dpy, view->x->gc, FillOpaqueStippled);
-    XSetLineAttributes(view->x->dpy, view->x->gc, 3,
-		       LineSolid, CapButt, JoinBevel);
-    XSetClipOrigin(view->x->dpy, view->x->gc, 0, 0);
-    XSetClipMask(view->x->dpy, view->x->gc, view->overlay_pixmap);
-    XFillRectangle(view->x->dpy, view->pixmap2, view->x->gc,
-		   0, 0, view->w_width, view->w_height);
-    XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
-    XSetClipMask(view->x->dpy, view->x->gc, None);
-  }
 }
 
 */

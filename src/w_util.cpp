@@ -67,6 +67,15 @@
 
 #include <string>
 
+
+ /* tile bounds */
+bool TestBounds(int x, int y, int width, int height)
+{
+    return (((x) >= 0) && ((x) < width) && ((y) >= 0) && ((y) < height));
+}
+
+
+
 std::string NumberToDollarDecimal(int value)
 {
     std::string valueString{ "$" + std::to_string(value)};

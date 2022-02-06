@@ -239,5 +239,11 @@
     <ClInclude Include="src\g_setup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\g_ani.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\g_bigmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

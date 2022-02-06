@@ -77,6 +77,7 @@
 #include "w_budget.h"
 #include "w_graph.h"
 #include "w_sprite.h"
+#include "w_util.h"
 
 /* Simulation */
 

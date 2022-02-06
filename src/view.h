@@ -100,38 +100,8 @@ struct Ink
 };
 
 
-/*
-typedef struct XDisplay
-{
-  struct XDisplay *next;
-  int references;
-  char *display;
-  TkDisplay *tkDisplay;
-  Display *dpy;
-  Screen *screen;
-  Window root;
-  Visual *visual;
-  int depth;
-  int color;
-  Colormap colormap;
-  int *pixels;
-  GC gc;
-  int shared;
-  unsigned int last_request_read;
-  unsigned int request;
-  XImage *big_tile_image;
-  XImage *small_tile_image;
-  Pixmap big_tile_pixmap;
-  Pixmap **objects;
-  GC overlay_gc;
-  Pixmap gray25_stipple;
-  Pixmap gray50_stipple;
-  Pixmap gray75_stipple;
-  Pixmap vert_stipple;
-  Pixmap horiz_stipple;
-  Pixmap diag_stipple;
-} XDisplay;
-*/
+struct Pixmap
+{};
 
 
 struct SimView
@@ -210,11 +180,11 @@ struct SimView
 
 	unsigned char* other_data;
 
-	//Pixmap pixmap;
-	//Pixmap pixmap2;
+	Pixmap pixmap;
+	Pixmap pixmap2;
 
-	//Pixmap overlay_pixmap;
-	//Pixmap overlay_valid;
+	Pixmap overlay_pixmap;
+	Pixmap overlay_valid;
 
 	//XFontStruct* fontPtr;
 

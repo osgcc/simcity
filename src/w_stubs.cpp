@@ -66,6 +66,7 @@
 #include "w_stubs.h"
 #include "w_tk.h"
 #include "w_update.h"
+#include "w_util.h"
 
 
 #include <SDL2/SDL.h>

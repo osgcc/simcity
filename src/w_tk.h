@@ -15,3 +15,4 @@ void StartMicropolisTimer();
 void StopMicropolisTimer();
 void EventuallyRedrawView(SimView* view);
 void RedrawMaps();
+void DidStopPan(SimView* view);

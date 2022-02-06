@@ -62,8 +62,9 @@
 #include "main.h"
 
 #include "s_alloc.h"
-
 #include "s_sim.h"
+
+#include "w_util.h"
 
 #include <algorithm>
 

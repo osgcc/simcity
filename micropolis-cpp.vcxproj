@@ -59,6 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graph.h" />
+    <ClInclude Include="src\g_ani.h" />
+    <ClInclude Include="src\g_bigmap.h" />
     <ClInclude Include="src\g_setup.h" />
     <ClInclude Include="src\rand.h" />
     <ClInclude Include="src\s_disast.h" />

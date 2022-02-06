@@ -62,6 +62,7 @@
 #include "main.h"
 
 #include "w_stubs.h"
+#include "w_util.h"
 
 
 int _RoadTable[16] = {

@@ -66,6 +66,8 @@
 #include "s_sim.h"
 #include "s_traf.h"
 
+#include "w_util.h"
+
 
 /* Zone Stuff */
 
