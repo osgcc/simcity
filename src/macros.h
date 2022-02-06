@@ -62,42 +62,10 @@
 
 #pragma once
 
+/*
 #define HASHED_CMD(scope, name) \
   { int new; \
     Tcl_CreateHashEntry(&scope##Cmds, #name, &new)->clientData = \
       (ClientData)scope##Cmd##name; \
   }
-
-
-/* For s_disasters.c */
-
-#define TILE_IS_NUCLEAR(tile) \
-	((tile & LOMASK) == NUCLEAR)
-
-#define TILE_IS_VULNERABLE(tile) \
-	(!(tile & ZONEBIT) && \
-	 ((tile & LOMASK) >= RBRDR) && \
-	 ((tile & LOMASK) <= LASTZONE))
-
-#define TILE_IS_ARSONABLE(tile) \
-	(!(tile & ZONEBIT) && \
-	 ((tile & LOMASK) >= RBRDR) && \
-	 ((tile & LOMASK) <= LASTZONE))
-
-#define TILE_IS_RIVER_EDGE(tile) \
-	(((tile & LOMASK) >= FIRSTRIVEDGE) && \
-	 ((tile & LOMASK) <= LASTRIVEDGE))
-
-#define TILE_IS_FLOODABLE(tile) \
-	((tile == DIRT) || \
-	 ((tile & BULLBIT) && \
-	  (tile & BURNBIT)))
-
-#define TILE_IS_RUBBLE(tile) \
-	 (((tile & LOMASK) >= RUBBLE) && \
-	  ((tile & LOMASK) <= LASTRUBBLE)))
-
-#define TILE_IS_FLOODABLE2(tile) \
-	((tile == 0) || \
-	 (tile & BURNBIT) || \
-         TILE_IS_RUBBLE(tile))
+*/
