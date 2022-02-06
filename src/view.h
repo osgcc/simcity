@@ -236,10 +236,3 @@ struct Sim
 	SimSprite* sprite{ nullptr };
 	Ink* overlay{ nullptr };
 };
-
-
-struct Cmd
-{
-	char* name{ nullptr };
-	int (*cmd)() { nullptr };
-};
