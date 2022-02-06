@@ -114,13 +114,8 @@ constexpr auto QuarterWorldHeight = SimHeight / 4;
 
 #define POWERMAPROW		((SimWidth + 15) / 16)
 
-#ifdef MEGA
-#define POWERMAPLEN		((int)(2 * POWERMAPROW * SimHeight))
-#define POWERWORD(x, y)		((((int)(x)) >>4) + (((int)(y)) * POWERMAPROW))
-#else
 #define POWERMAPLEN		1700 /* ??? PWRMAPSIZE */
 #define POWERWORD(x, y)		(((x) >>4) + ((y) <<3))
-#endif
 
 #define SETPOWERBIT(x, y)	PowerMap[POWERWORD((x), (y))] |= 1 << ((x) & 15)
 #define PWRMAPSIZE		(POWERMAPROW * SimHeight)
@@ -368,8 +363,8 @@ constexpr auto QuarterWorldHeight = SimHeight / 4;
 #define dozeState 7
 #define rrState 8
 #define roadState 9
-#define chalkState 10
-#define eraserState 11
+#define UNUSED_STATE_1 10
+#define UNUSED_STATE_2 11
 #define stadiumState 12
 #define parkState 13
 #define seaportState  14

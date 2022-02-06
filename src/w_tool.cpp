@@ -1517,12 +1517,6 @@ do_tool(SimView *view, int state, int x, int y, int first)
   case roadState:
     result = road_tool(view, x >>4, y >>4);
     break;
-  /*case chalkState:
-    result = ChalkTool(view, x - 5, y + 11, COLOR_WHITE, first);
-    break;
-  case eraserState:
-    result = EraserTool(view, x, y, first);
-    break;*/
   case stadiumState:
     result = stadium_tool(view, x >>4, y >>4);
     break;
@@ -1623,21 +1617,18 @@ void ToolDown(SimView *view, int x, int y)
 }
 
 
-void ToolDrag(SimView *view, int px, int py)
+void ToolDrag(SimView* view, int px, int py)
 {
-  int x, y, dx, dy, adx, ady, lx, ly, dist;
-  float i, step, tx, ty, dtx, dty, rx, ry;
+    int x, y, dx, dy, adx, ady, lx, ly, dist;
+    float i, step, tx, ty, dtx, dty, rx, ry;
 
-  ViewToPixelCoords(view, px, py, x, y);
-  view->tool_x = x; view->tool_y = y;
+    ViewToPixelCoords(view, px, py, x, y);
+    view->tool_x = x; view->tool_y = y;
 
-  if ((view->tool_state == chalkState) ||
-      (view->tool_state == eraserState)) {
 
     current_tool(view, x, y, 0);
     view->last_x = x; view->last_y = y;
 
-  } else {
 
     dist = toolSize[view->tool_state];
 
@@ -1645,64 +1636,78 @@ void ToolDrag(SimView *view, int px, int py)
     lx = view->last_x >> 4;
     ly = view->last_y >> 4;
 
-  reset:
+reset:
 
     dx = x - lx;
     dy = y - ly;
 
-    if (dx == 0 && dy == 0) {
-      return;
+    if (dx == 0 && dy == 0)
+    {
+        return;
     }
 
     adx = std::abs(dx); ady = std::abs(dy);
 
-    if (adx > ady) {
-      step = .3 / adx;
-    } else {
-      step = .3 / ady;
+    if (adx > ady)
+    {
+        step = .3 / adx;
+    }
+    else
+    {
+        step = .3 / ady;
     }
 
     rx = (dx < 0 ? 1 : 0);
     ry = (dy < 0 ? 1 : 0);
 
-    if (dist == 1) {
-      for (i = 0.0; i <= 1 + step; i += step) {
-	tx = (view->last_x >>4) + i * dx;
-	ty = (view->last_y >>4) + i * dy;
-	dtx = std::abs(tx - lx);
-	dty = std::abs(ty - ly);
-	if (dtx >= 1 || dty >= 1) {
-	  /* fill in corners */
-	  if ((dtx >= 1) && (dty >= 1)) {
-	    if (dtx > dty) {
-	      current_tool(view, ((int)(tx + rx)) <<4, ly <<4, 0);
-	    } else {
-	      current_tool(view, lx <<4, ((int)(ty + ry)) <<4, 0);
-	    }
-	  }
-	  lx = (int)(tx + rx);
-	  ly = (int)(ty + ry);
-	  current_tool(view, lx <<4, ly <<4, 0);
-	}
-      }
-    } else {
-      for (i = 0.0; i <= 1 + step; i += step) {
-	tx = (view->last_x >>4) + i * dx;
-	ty = (view->last_y >>4) + i * dy;
-	dtx = std::abs(tx - lx);
-	dty = std::abs(ty - ly);
-	lx = (int)(tx + rx);
-	ly = (int)(ty + ry);
-	current_tool(view, lx <<4, ly <<4, 0);
-      }
+    if (dist == 1)
+    {
+        for (i = 0.0; i <= 1 + step; i += step)
+        {
+            tx = (view->last_x >> 4) + i * dx;
+            ty = (view->last_y >> 4) + i * dy;
+            dtx = std::abs(tx - lx);
+            dty = std::abs(ty - ly);
+            if (dtx >= 1 || dty >= 1)
+            {
+                /* fill in corners */
+                if ((dtx >= 1) && (dty >= 1))
+                {
+                    if (dtx > dty)
+                    {
+                        current_tool(view, ((int)(tx + rx)) << 4, ly << 4, 0);
+                    }
+                    else
+                    {
+                        current_tool(view, lx << 4, ((int)(ty + ry)) << 4, 0);
+                    }
+                }
+                lx = (int)(tx + rx);
+                ly = (int)(ty + ry);
+                current_tool(view, lx << 4, ly << 4, 0);
+            }
+        }
+    }
+    else
+    {
+        for (i = 0.0; i <= 1 + step; i += step)
+        {
+            tx = (view->last_x >> 4) + i * dx;
+            ty = (view->last_y >> 4) + i * dy;
+            dtx = std::abs(tx - lx);
+            dty = std::abs(ty - ly);
+            lx = (int)(tx + rx);
+            ly = (int)(ty + ry);
+            current_tool(view, lx << 4, ly << 4, 0);
+        }
+
+        view->last_x = (lx << 4) + 8;
+        view->last_y = (ly << 4) + 8;
     }
 
-    view->last_x = (lx <<4) + 8;
-    view->last_y = (ly <<4) + 8;
-  }
-  sim_skip = 0; /* update editors overlapping this one */
-  view->skip = 0;
-  view->invalid = 1;
+    sim_skip = 0; /* update editors overlapping this one */
+    view->skip = 0;
+    view->invalid = 1;
 }
 
 
