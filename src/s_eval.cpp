@@ -84,7 +84,7 @@ int TrafficAverage;
 
 void EvalInit()
 {
-    register int x, z;
+    int x, z;
 
     z = 0;
     CityYes = z;
@@ -158,7 +158,7 @@ void DoPopNum()
 
 void VoteProblems()
 {
-    register int x, z, count;
+    int x, z, count;
 
     for (z = 0; z < PROBNUM; z++)
     {
@@ -188,7 +188,7 @@ void VoteProblems()
 int AverageTrf()
 {
     int TrfTotal;
-    register int x, y, count;
+    int x, y, count;
 
     TrfTotal = 0;
     count = 1;
@@ -251,7 +251,7 @@ int GetFire()
 
 void GetScore()
 {
-    register int x, z;
+    int x, z;
     int OldCityScore;
     float SM, TM;
 
@@ -325,7 +325,7 @@ void GetScore()
 
 void DoVotes()
 {
-    register int z;
+    int z;
 
     CityYes = 0;
     CityNo = 0;
@@ -345,7 +345,7 @@ void DoVotes()
 
 void DoProblems()
 {
-    register int x, z;
+    int x, z;
     int ThisProb, Max;
 
     for (z = 0; z < PROBNUM; z++)

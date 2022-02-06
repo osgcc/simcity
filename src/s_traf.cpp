@@ -100,7 +100,7 @@ void PullPos()
 /* comefrom: MakeTraf */
 void SetTrafMem()
 {
-  register int x, z;
+  int x, z;
 
   for (x = PosStackN; x > 0; x--) {
     PullPos();
@@ -149,7 +149,7 @@ bool FindPRoad()		/* look for road on edges of zone   */
 {
   static int PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
   static int PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};
-  register int tx, ty, z;
+  int tx, ty, z;
 
   for (z = 0; z < 12; z++) {
 	  tx = SMapX + PerimX[z];
@@ -170,7 +170,7 @@ bool FindPTele()		/* look for telecommunication on edges of zone */
 {
   static int PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
   static int PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};
-  register int tx, ty, z, tile;
+  int tx, ty, z, tile;
 
   for (z = 0; z < 12; z++) {
 	  tx = SMapX + PerimX[z];
@@ -239,7 +239,7 @@ bool DriveDone()
 {
     static int TARGL[3] = { COMBASE, LHTHR, LHTHR };
     static int TARGH[3] = { NUCLEAR, PORT, COMBASE };	/* for destinations */
-    //register int l, h;
+    //int l, h;
 
     for (int x = 0; x < 4; x++) /* R>C C>I I>R  */
     {

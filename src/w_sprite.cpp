@@ -700,7 +700,7 @@ void DoTrainSprite(SimSprite *sprite)
   static int Dx[5] = {   0,   4,   0,  -4,   0 };
   static int Dy[5] = {  -4,   0,   4,   0,   0 };
   static int TrainPic2[5] = { 1, 2, 1, 2, 5 };
-  register int z, dir, dir2;
+  int z, dir, dir2;
   int c;
 
   if ((sprite->frame == 3) || (sprite->frame == 4))
@@ -747,7 +747,7 @@ void DoCopterSprite(SimSprite* sprite)
 {
     static int CDx[9] = { 0,  0,  3,  5,  3,  0, -3, -5, -3 };
     static int CDy[9] = { 0, -5, -3,  0,  3,  5,  3,  0, -3 };
-    register int z, d, x, y;
+    int z, d, x, y;
 
     if (sprite->sound_count > 0) sprite->sound_count--;
 
@@ -823,7 +823,7 @@ void DoAirplaneSprite(SimSprite* sprite)
     static int CDx[12] = { 0,  0,  6,  8,  6,  0, -6, -8, -6,  8,  8,  8 };
     static int CDy[12] = { 0, -8, -6,  0,  6,  8,  6,  0, -6,  0,  0,  0 };
 
-    register int z, d;
+    int z, d;
 
     z = sprite->frame;
 
@@ -878,7 +878,7 @@ void DoShipSprite(SimSprite* sprite)
     static int BPy[9] = { 0, -2, -2,  0,  2,  2,  2,  0, -2 };
     static int BtClrTab[8] = { RIVER, CHANNEL, POWERBASE, POWERBASE + 1,
                      RAILBASE, RAILBASE + 1, BRWH, BRWV };
-    register int x, y, z, t = RIVER;
+    int x, y, z, t = RIVER;
     int tem, pem;
 
     if (sprite->sound_count > 0) sprite->sound_count--;
@@ -955,7 +955,7 @@ void DoMonsterSprite(SimSprite* sprite)
     static int ND2[4] = { 1,  2,  3,  0 };
     static int nn1[4] = { 2,  5,  8, 11 };
     static int nn2[4] = { 11,  2,  5,  8 };
-    register int d, z, c;
+    int d, z, c;
 
     if (sprite->sound_count > 0) sprite->sound_count--;
 
@@ -1094,7 +1094,7 @@ void DoTornadoSprite(SimSprite *sprite)
 {
   static int CDx[9] = {  2,  3,  2,  0, -2, -3 };
   static int CDy[9] = { -2,  0,  2,  3,  2,  0 };
-  register int z;
+  int z;
 
   z = sprite->frame;
 
@@ -1173,7 +1173,7 @@ void DoBusSprite(SimSprite* sprite)
     static int Dx[5] = { 0,   1,   0,  -1,   0 };
     static int Dy[5] = { -1,   0,   1,   0,   0 };
     static int Dir2Frame[4] = { 1, 2, 1, 2 };
-    register int dir, dir2;
+    int dir, dir2;
     int c, dx, dy, crossed, tx, ty, otx, oty;
     int turned = 0;
     int speed, z;

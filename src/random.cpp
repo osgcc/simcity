@@ -71,7 +71,7 @@
  * period of the generator is approximately deg*(2**deg - 1); thus doubling
  * the amount of state information has a vast influence on the period of the
  * generator.  Note: the deg*(2**deg - 1) is an approximation only good for
- * large deg, when the period of the shift register is the dominant factor.
+ * large deg, when the period of the shift is the dominant factor.
  * With deg equal to seven, the period is actually much longer than the
  * 7*(2**7 - 1) predicted by this formula.
  */
@@ -193,7 +193,7 @@ static int *end_ptr = &randtbl[DEG_3 + 1];
  */
 void sim_srandom(unsigned int x)
 {
-	register int i, j;
+	int i, j;
 
 	if (rand_type == TYPE_0)
 		state[0] = x;
@@ -231,7 +231,7 @@ void sim_srandom(unsigned int x)
  */
 char * sim_initstate(unsigned int seed, char *arg_state, int n)
 {
-	register char *ostate = (char *)(&state[-1]);
+	char *ostate = (char *)(&state[-1]);
 
 	if (rand_type == TYPE_0)
 		state[-1] = rand_type;
@@ -290,9 +290,9 @@ char * sim_initstate(unsigned int seed, char *arg_state, int n)
  */
 char *sim_setstate(char *arg_state)
 {
-	register int *new_state = (int *)arg_state;
-	register int type = new_state[0] % MAX_TYPES;
-	register int rear = new_state[0] / MAX_TYPES;
+	int *new_state = (int *)arg_state;
+	int type = new_state[0] % MAX_TYPES;
+	int rear = new_state[0] / MAX_TYPES;
 	char *ostate = (char *)(&state[-1]);
 
 	if (rand_type == TYPE_0)

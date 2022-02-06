@@ -79,7 +79,7 @@ int DonDither = 0;
 /* comefrom: FireAnalysis */
 void SmoothFSMap()
 {
-  register int x, y, edge;
+  int x, y, edge;
 
   for (x = 0; x < SmX; x++)
     for (y = 0; y < SmY; y++) {
@@ -100,7 +100,7 @@ void SmoothFSMap()
 /* comefrom: Simulate SpecialInit */
 void FireAnalysis()		/* Make firerate map from firestation map  */
 {
-  register int x,y;
+  int x,y;
 
   SmoothFSMap();
   SmoothFSMap();
@@ -116,7 +116,7 @@ void FireAnalysis()		/* Make firerate map from firestation map  */
 /* comefrom: PopDenScan */
 void ClrTemArray()
 {
-  register int x, y, z;
+  int x, y, z;
 
   z = 0;
   for (x = 0; x < HalfWorldWidth; x++)
@@ -128,7 +128,7 @@ void ClrTemArray()
 /* comefrom: PopDenScan */
 int GetPDen(int Ch9)
 {
-  register int pop;
+  int pop;
 
   if (Ch9 == FREEZ) {
     pop = DoFreePop(/*Ch9*/);
@@ -154,7 +154,7 @@ int GetPDen(int Ch9)
 void DoSmooth ()        /* smooths data in tem[x][y] into tem2[x][y]  */
 {
   if (DonDither & 2) {
-    register int x, y = 0, z = 0, dir = 1;
+    int x, y = 0, z = 0, dir = 1;
 
     for (x = 0; x < HalfWorldWidth; x++) {
       for (; y != HalfWorldHeight && y != -1; y += dir) {
@@ -179,7 +179,7 @@ void DoSmooth ()        /* smooths data in tem[x][y] into tem2[x][y]  */
       y += dir;
     }
   } else {
-    register int x,y,z;
+    int x,y,z;
 
     for (x = 0; x < HalfWorldWidth; x++) {
       for (y = 0; y < HalfWorldHeight; y++) {
@@ -201,7 +201,7 @@ void DoSmooth ()        /* smooths data in tem[x][y] into tem2[x][y]  */
 void DoSmooth2 ()        /* smooths data in tem2[x][y] into tem[x][y]  */
 {
   if (DonDither & 4) {
-    register int x, y = 0, z = 0, dir = 1;
+    int x, y = 0, z = 0, dir = 1;
 
     for (x = 0; x < HalfWorldWidth; x++) {
       for (; y != HalfWorldHeight && y != -1; y += dir) {
@@ -226,7 +226,7 @@ void DoSmooth2 ()        /* smooths data in tem2[x][y] into tem[x][y]  */
       y += dir;
     }
   } else {
-    register int x,y,z;
+    int x,y,z;
 
     for (x = 0; x < HalfWorldWidth; x++) {
       for (y = 0; y < HalfWorldHeight; y++) {
@@ -290,7 +290,7 @@ int GetDisCC(int x, int y)
 /* comefrom: PopDenScan */
 void DistIntMarket()
 {
-  register int x, y, z;
+  int x, y, z;
 
   for (x = 0; x < SmX; x++)
     for (y = 0; y < SmY; y++) {
@@ -306,7 +306,7 @@ void DistIntMarket()
 void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
 {
   int Xtot, Ytot, Ztot;
-  register int x, y, z;
+  int x, y, z;
 
   ClrTemArray();
   Xtot = 0;
@@ -355,7 +355,7 @@ void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
 void SmoothTerrain()
 {
   if (DonDither & 1) {
-    register int x, y = 0, z = 0, dir = 1;
+    int x, y = 0, z = 0, dir = 1;
 
     for (x = 0; x < QuarterWorldWidth; x++) {
       for (; y != QuarterWorldHeight && y != -1; y += dir) {
@@ -371,7 +371,7 @@ void SmoothTerrain()
       y += dir;
     }
   } else {
-    register int x,y,z;
+    int x,y,z;
 
     for (x = 0; x < QuarterWorldWidth; x++)
       for (y = 0; y < QuarterWorldHeight; y++) {
@@ -389,7 +389,7 @@ void SmoothTerrain()
 /* comefrom: CrimeScan */
 void SmoothPSMap()
 {
-  register int x, y, edge;
+  int x, y, edge;
 
   for (x = 0; x < SmX; x++)
     for (y = 0; y < SmY; y++) {
@@ -411,7 +411,7 @@ void SmoothPSMap()
 void PTLScan()   	/* Does pollution, terrain, land value   */
 {
   int ptot, LVtot;
-  register int x, y, z, dis;
+  int x, y, z, dis;
   int Plevel, LVflag, loc, zx, zy, Mx, My, pnum, LVnum, pmax;
 
   for (x = 0; x < QuarterWorldWidth; x++)
@@ -502,7 +502,7 @@ void CrimeScan()
 {
   int numz;
   int totz;
-  register int x, y, z;
+  int x, y, z;
   int cmax;
 
   SmoothPSMap();

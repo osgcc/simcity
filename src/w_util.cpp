@@ -100,13 +100,13 @@ std::string NumberToDollarDecimal(int value)
 	     drawActualBox UpdateFunds updateCurrentCost */
 void makeDollarDecimalStr(char *numStr, char *dollarStr)
 {
-  register int leftMostSet;
+  int leftMostSet;
   int numOfDigits;
   int numOfChars;
-  register int numOfCommas;
-  register int dollarIndex = 0;
-  register int numIndex = 0;
-  register int x;
+  int numOfCommas;
+  int dollarIndex = 0;
+  int numIndex = 0;
+  int x;
 
   numOfDigits = strlen(numStr);
 

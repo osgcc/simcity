@@ -108,7 +108,7 @@ void DoFire()
 {
   static int DX[4] = { -1,  0,  1,  0 };
   static int DY[4] = {  0, -1,  0,  1 };
-  register int z, Xtem, Ytem, Rate, c;
+  int z, Xtem, Ytem, Rate, c;
 
   for (z = 0; z < 4; z++) {
     if (!(Rand16() & 7)) {
@@ -155,7 +155,7 @@ void DoAirport()
 /* comefrom: DoSPZone MakeMeltdown */
 void DoMeltdown(int SX, int SY)
 {
-  register int x, y, z, t;
+  int x, y, z, t;
 
   MeltX = SX; MeltY = SY;
 
@@ -213,7 +213,7 @@ void DoRadTile()
 
 int GetBoatDis()
 {
-  register int dist, mx, my, dx, dy;
+  int dist, mx, my, dx, dy;
   SimSprite *sprite;
 
   dist = 99999;
@@ -252,7 +252,7 @@ bool DoBridge()
   static int VBRTAB2[7] = {
     VBRIDGE | BULLBIT, RIVER, VBRIDGE | BULLBIT, VBRIDGE | BULLBIT,
     VBRIDGE | BULLBIT, VBRIDGE | BULLBIT, RIVER };
-  register int z, x, y, MPtem;
+  int z, x, y, MPtem;
 
   if (CChr9 == BRWV) { /*  Vertical bridge close */
     if ((!(Rand16() & 3)) &&
@@ -321,7 +321,7 @@ bool DoBridge()
 /* comefrom: MapScan */
 void DoRoad()
 {
-  register int Density, tden, z;
+  int Density, tden, z;
   static int DenTab[3] = { ROADBASE, LTRFBASE, HTRFBASE };
 
   RoadTotal++;
@@ -363,7 +363,7 @@ void DoRoad()
 void RepairZone(int ZCent, int zsize)
 {
   int cnt;
-  register int x, y, ThCh;
+  int x, y, ThCh;
 
   zsize--;
   cnt = 0;
@@ -388,7 +388,7 @@ void RepairZone(int ZCent, int zsize)
 /* comefrom: DoSPZone */
 void DrawStadium(int z)
 {
-  register int x, y;
+  int x, y;
 
   z = z - 5;
   for (y = (SMapY - 1); y < (SMapY + 3); y++)
@@ -404,7 +404,7 @@ void CoalSmoke(int mx, int my)
   static int SmTb[4] = { COALSMOKE1, COALSMOKE2, COALSMOKE3, COALSMOKE4 };
   static int dx[4] = {  1,  2,  1,  2 };
   static int dy[4] = { -1, -1,  0,  0 };
-  register int x;
+  int x;
 
   for (x = 0; x < 4; x++)
     Map[mx + dx[x]][my + dy[x]] =
@@ -416,7 +416,7 @@ void CoalSmoke(int mx, int my)
 void DoSPZone(int PwrOn)
 {
   static int MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
-  register int z;
+  int z;
 
   switch (CChr9) {
 
@@ -521,7 +521,7 @@ void DoSPZone(int PwrOn)
 /* comefrom: Simulate DoSimInit */
 void MapScan(int x1, int x2)
 {
-  register int x, y;
+  int x, y;
 
   for (x = x1; x < x2; x++)  {
     for (y = 0; y < SimHeight; y++) {
@@ -579,7 +579,7 @@ void SetValves()
   float Employment, Migration, Births, LaborBase, IntMarket;
   float Rratio, Cratio, Iratio, temp;
   float NormResPop, PjResPop, PjComPop, PjIndPop;
-  register int z;
+  int z;
 
   MiscHis[1] = (int)EMarket;
   MiscHis[2] = ResPop;
@@ -683,7 +683,7 @@ void SetValves()
 /* comefrom: Simulate DoSimInit */
 void ClearCensus()
 {
-  register int x, y, z;
+  int x, y, z;
 
   z = 0;
   PwrdZCnt = z;
@@ -830,7 +830,7 @@ void CollectTax()
 /* comefrom: Simulate */
 void DecROGMem()			/* tends to empty RateOGMem   */
 {
-  register int x, y, z;
+  int x, y, z;
 
   for (x = 0; x < SmX; x++)
     for (y = 0; y < SmY; y++)	{
@@ -868,7 +868,7 @@ void SetCommonInits()
 /* comefrom: DoSimInit */
 void InitSimMemory()
 {	
-  register int x, z;
+  int x, z;
 
   z = 0;
   SetCommonInits();
@@ -906,7 +906,7 @@ void InitSimMemory()
 /* comefrom: SimLoadInit */
 void DoNilPower()
 {
-  register int x, y, z;
+  int x, y, z;
 
   for (x = 0; x < SimWidth; x++)
     for (y = 0; y < SimHeight; y++) {
@@ -924,7 +924,7 @@ void DoNilPower()
 /* comefrom: Simulate */
 void DecTrafficMem()		/* tends to empty TrfDensity   */
 {
-  register int x, y, z;
+  int x, y, z;
 
   for (x = 0; x < HalfWorldWidth; x++)
     for (y = 0; y < HalfWorldHeight; y++)
@@ -944,7 +944,7 @@ void SimLoadInit()
   static int DisTab[9] = { 0, 2, 10, 5, 20, 3, 5, 5, 2 * 48};
   static int ScoreWaitTab[9] = { 0, 30 * 48, 5 * 48, 5 * 48, 10 * 48,
 				   5 * 48, 10 * 48, 5 * 48, 10 * 48 };
-  register int z;
+  int z;
 
   z = 0;
   EMarket = (float)MiscHis[1];
@@ -1180,7 +1180,7 @@ void UpdateFundEffects()
 /* comefrom: DoFire MakeFlood */
 void FireZone(int Xloc, int Yloc, int ch)
 {
-  register int Xtem, Ytem;
+  int Xtem, Ytem;
   int x, y, XYmax;
 
   RateOGMem[Xloc >>3][Yloc >>3] -= 20;

@@ -347,8 +347,8 @@ check3x3border(int xMap, int yMap)
 int
 check3x3(SimView *view, int mapH, int mapV, int base, int tool)
 {
-  register int rowNum, columnNum;
-  register int holdMapH, holdMapV;
+  int rowNum, columnNum;
+  int holdMapH, holdMapV;
   int xPos, yPos;
   int cost = 0;
   int tileValue;
@@ -481,7 +481,7 @@ int
 check4x4(SimView *view, int mapH, int mapV,
 	 int base, int aniFlag, int tool)
 {
-  register int rowNum, columnNum;
+  int rowNum, columnNum;
   int h, v;
   int holdMapH;
   int xMap, yMap;
@@ -610,7 +610,7 @@ check6x6border(int xMap, int yMap)
 int
 check6x6(SimView *view, int mapH, int mapV, int base, int tool)
 {
-  register int rowNum, columnNum;
+  int rowNum, columnNum;
   int h, v;
   int holdMapH;
   int xMap, yMap;
@@ -891,7 +891,7 @@ void put4x4Rubble(int x, int y)
 /* comefrom: processWand */
 void put6x6Rubble(int x, int y)
 {
-  register int xx, yy, zz;
+  int xx, yy, zz;
 
   for (xx = x - 1; xx < x + 5; xx++) {
     for (yy = y - 1; yy < y + 5; yy++)  {

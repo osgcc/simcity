@@ -203,7 +203,7 @@ void SetSmoke(int ZonePower)
   static int AniTabB[8] = {    0,    0,   36,   44,    0,    0,   52,   60 };
   static int AniTabC[8] = { IND1,    0, IND2, IND4,    0,    0, IND6, IND8 };
   static int AniTabD[8] = { IND1,    0, IND3, IND5,    0,    0, IND7, IND9 };
-  register int z;
+  int z;
 
   if (CChr9 < IZB) return;
   z = (CChr9 - IZB) >>3;
@@ -249,7 +249,7 @@ void MakeHosp()
 
 int GetCRVal()
 {
-  register int LVal;
+  int LVal;
 
   LVal = LandValueMem[SMapX >>1][SMapY >>1];
   LVal -= PollutionMem[SMapX >>1][SMapY >>1];
@@ -286,7 +286,7 @@ int EvalLot (int x, int y)
 
 int EvalRes (int traf)
 {
-  register int Value;
+  int Value;
 
   if (traf < 0) return (-3000);
 
@@ -388,7 +388,7 @@ void DoResIn(int pop, int value)
 
 void DoComIn(int pop, int value)
 {
-  register int z;
+  int z;
 
   z = LandValueMem[SMapX >>1][SMapY >>1];
   z = z >>5;
@@ -413,7 +413,7 @@ void DoIndIn(int pop, int value)
 void DoResOut(int pop, int value)
 {
   static int Brdr[9] = {0,3,6,1,4,7,2,5,8};
-  register int x, y, loc, z;
+  int x, y, loc, z;
 
   if (!pop) return;
   if (pop > 16) {
@@ -484,7 +484,7 @@ void DoIndOut(int pop, int value)
 int DoFreePop ()
 {
   int count;
-  register int loc, x, y;
+  int loc, x, y;
 
   count = 0;
   for (x = SMapX - 1; x <= SMapX + 1; x++)
@@ -533,7 +533,7 @@ void DoIndustrial(int ZonePwrFlg)
 
 void DoCommercial(int ZonePwrFlg)
 {
-  register int tpop, TrfGood;
+  int tpop, TrfGood;
   int zscore, locvalve,value;
 
   ComZPop++;

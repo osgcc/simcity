@@ -159,8 +159,6 @@ void sim_update_editors()
 
 void sim_update_maps()
 {
-    int i;
-
     for (SimView* view = sim->map; view != nullptr; view = view->next)
     {
         bool mustUpdateMap = NewMapFlags[view->map_state] || NewMap || ShakeNow;
@@ -184,7 +182,7 @@ void sim_update_maps()
     }
 
     NewMap = 0;
-    for (i = 0; i < NMAPS; i++)
+    for (int i = 0; i < NMAPS; i++)
     {
         NewMapFlags[i] = 0;
     }
