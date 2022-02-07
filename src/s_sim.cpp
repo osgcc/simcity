@@ -63,7 +63,6 @@
 #include "s_sim.h"
 
 #include "main.h"
-#include "rand.h"
 
 #include "s_alloc.h"
 #include "s_disast.h"
@@ -80,6 +79,12 @@
 #include "w_util.h"
 
 #include <algorithm>
+
+#include <chrono>
+#include <random>
+
+
+#include <SDL2/SDL.h>
 
 
 /* Simulation */
@@ -138,7 +143,7 @@ void DoFire()
     if (z > 20) Rate = 2;
     if (z > 100) Rate = 1;
   }
-  if (!Rand(Rate))
+  if (!RandomRange(0, Rate))
     Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
 }
 
@@ -146,11 +151,11 @@ void DoFire()
 /* comefrom: DoSPZone */
 void DoAirport()
 {
-  if (!(Rand(5))) {
+  if (!(RandomRange(0, 5))) {
     GeneratePlane(SMapX, SMapY);
     return;
   }
-  if (!(Rand(12)))
+  if (!(RandomRange(0, 12)))
     GenerateCopter(SMapX, SMapY);
 }
 
@@ -172,8 +177,8 @@ void DoMeltdown(int SX, int SY)
       Map[x][y] = FIRE + (Rand16() & 3) + ANIMBIT;
 
   for (z = 0; z < 200; z++)  {
-    x = SX - 20 + Rand(40);
-    y = SY - 15 + Rand(30);
+    x = SX - 20 + RandomRange(0, 40);
+    y = SY - 15 + RandomRange(0, 30);
     if ((x < 0) || (x >= SimWidth) ||
 	(y < 0) || (y >= SimHeight))
       continue;
@@ -446,7 +451,7 @@ void DoSPZone(int PwrOn)
     return;
 
   case NUCLEAR:
-    if (!NoDisasters && !Rand(MltdwnTab[GameLevel])) {
+    if (!NoDisasters && !RandomRange(0, MltdwnTab[GameLevel])) {
       DoMeltdown(SMapX, SMapY);
       return;
     }
@@ -1237,53 +1242,24 @@ void FireZone(int Xloc, int Yloc, int ch)
 }
 
 
-#define RANDOM_RANGE 0xffff
+static std::random_device RandomDevice;
+static std::mt19937 PseudoRandomNumberGenerator(RandomDevice());
 
-int Rand(int range)
+
+int RandomRange(int min, int max)
 {
-    int maxMultiple, rnum;
+    std::uniform_int_distribution<std::mt19937::result_type> prngDistribution(min, max);
+    return prngDistribution(PseudoRandomNumberGenerator);
+}
 
-    range++;
 
-    maxMultiple = RANDOM_RANGE / range;
-    maxMultiple *= range;
-
-    while ((rnum = Rand16()) >= maxMultiple)
-        continue;
-
-    return (rnum % range);
+int Random()
+{
+    return RandomRange(0, std::mt19937::max());
 }
 
 
 int Rand16()
 {
-    return sim_rand();
-}
-
-
-int Rand16Signed()
-{
-  int i = sim_rand();
-
-  if (i > 32767) {
-    i = 32767 - i;
-  }
-  return (i);
-}
-
-
-void RandomlySeedRand()
-{
-    /*
-  struct timeval time;
-
-  gettimeofday(&time, NULL);
-  */
-  SeedRand(123456789);
-}
-
-
-void SeedRand(int seed)
-{
-    sim_srand(seed);
+    return RandomRange(0, 32767);
 }

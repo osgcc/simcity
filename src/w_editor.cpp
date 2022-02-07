@@ -1019,7 +1019,7 @@ void DrawOutside(SimView* view)
 
 void DrawTheOverlay(SimView* view, void* /*GC*/ gc, Pixmap* pm, int color, int top, int bottom, int left, int right, int onoverlay)
 {
-    Ink* ink;
+    //Ink* ink;
 
     //XSetForeground(view->x->dpy, gc, color);
     //XSetLineAttributes(view->x->dpy, gc, 3, LineSolid, CapButt, JoinBevel);
@@ -1070,7 +1070,7 @@ void DrawOverlay(SimView* view)
     int right = left + width;
     int bottom = top + height;
     int showing = 0;
-    Ink* ink;
+    //Ink* ink;
     //struct timeval start, finished, elapsed;
 
     /*
@@ -1394,8 +1394,8 @@ void DoUpdateEditor(SimView* view)
 
     for (dx = dy = i = 0; i < ShakeNow; i++)
     {
-        dx += Rand(16) - 8;
-        dy += Rand(16) - 8;
+        dx += RandomRange(0, 16) - 8;
+        dy += RandomRange(0, 16) - 8;
     }
 
     //XCopyArea(view->x->dpy, view->pixmap2, Tk_WindowId(view->tkwin), view->x->gc, 0, 0, view->w_width, view->w_height, dx, dy);

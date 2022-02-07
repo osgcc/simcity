@@ -66,10 +66,9 @@
 #include <array>
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
 
-
-char *HomeDir, *ResourceDir, *KeyDir, *HostName;
 
 std::array<std::string, 64> StringTable =
 {{

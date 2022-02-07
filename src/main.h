@@ -452,8 +452,6 @@ extern int RValve, CValve, IValve;
 extern int PwrdZCnt;
 extern int unPwrdZCnt;
 
-extern char *HomeDir, *ResourceDir, *HostName;
-
 extern int Graph10Max, Graph120Max;
 extern int Res2HisMax, Com2HisMax, Ind2HisMax;
 extern unsigned char *History10[HISTORIES], *History120[HISTORIES];

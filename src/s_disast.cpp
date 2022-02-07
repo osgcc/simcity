@@ -147,8 +147,8 @@ void MakeMeltdown()
 
 void FireBomb()
 {
-    CrashX = Rand(SimWidth - 1);
-    CrashY = Rand(SimHeight - 1);
+    CrashX = RandomRange(0, SimWidth - 1);
+    CrashY = RandomRange(0, SimHeight - 1);
     MakeExplosion(CrashX, CrashY);
     ClearMes();
     SendMesAt(-30, CrashX, CrashY);
@@ -167,12 +167,12 @@ void MakeEarthquake()
     DoEarthQuake();
     SendMesAt(-23, CCx, CCy);
 
-    int time = Rand(700) + 300;
+    int time = RandomRange(0, 700) + 300;
 
     for (int z = 0; z < time; z++)
     {
-        int x = Rand(SimWidth - 1);
-        int y = Rand(SimHeight - 1);
+        int x = RandomRange(0, SimWidth - 1);
+        int y = RandomRange(0, SimHeight - 1);
         if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
         {
             continue;
@@ -195,8 +195,8 @@ void MakeEarthquake()
 
 void SetFire()
 {
-    int x = Rand(SimWidth - 1);
-    int y = Rand(SimHeight - 1);
+    int x = RandomRange(0, SimWidth - 1);
+    int y = RandomRange(0, SimHeight - 1);
     int z = Map[x][y];
 
     /* TILE_IS_ARSONABLE(z) */
@@ -218,8 +218,8 @@ void MakeFire()
 {
     for (int t = 0; t < 40; t++)
     {
-        int x = Rand(SimWidth - 1);
-        int y = Rand(SimHeight - 1);
+        int x = RandomRange(0, SimWidth - 1);
+        int y = RandomRange(0, SimHeight - 1);
         int z = Map[x][y];
         /* !(z & BURNBIT) && TILE_IS_ARSONABLE(z) */
         if ((!(z & ZONEBIT)) && (z & BURNBIT))
@@ -243,8 +243,8 @@ void MakeFlood()
 
     for (int z = 0; z < 300; z++)
     {
-        int x = Rand(SimWidth - 1);
-        int y = Rand(SimHeight - 1);
+        int x = RandomRange(0, SimWidth - 1);
+        int y = RandomRange(0, SimHeight - 1);
         int cell = Map[x][y] & LOMASK; /* XXX: & LOMASK */
 
         /* TILE_IS_RIVER_EDGE(c) */
@@ -299,7 +299,7 @@ void DoFlood()
                         {
                             FireZone(xx, yy, cell);
                         }
-                        Map[xx][yy] = FLOOD + Rand(2);
+                        Map[xx][yy] = FLOOD + RandomRange(0, 2);
                     }
                 }
             }
@@ -388,7 +388,7 @@ void DoDisasters()
     int disasterChance = DisChance[std::clamp(GameLevel, 0, 2)];
     if (disasterChance == 0)
     {
-        int disasterType = Rand(8);
+        int disasterType = RandomRange(0, 8);
         switch (disasterType)
         {
         case 0:

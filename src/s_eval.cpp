@@ -170,7 +170,7 @@ void VoteProblems()
     count = 0;
     while ((z < 100) && (count < 600))
     {
-        if (Rand(300) < ProblemTable[x])
+        if (RandomRange(0, 300) < ProblemTable[x])
         {
             ProblemVotes[x]++;
             z++;
@@ -331,7 +331,7 @@ void DoVotes()
     CityNo = 0;
     for (z = 0; z < 100; z++)
     {
-        if (Rand(1000) < CityScore)
+        if (RandomRange(0, 1000) < CityScore)
         {
             CityYes++;
         }

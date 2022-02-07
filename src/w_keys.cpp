@@ -148,7 +148,7 @@ void doKeyDown(SimView *view, int charCode)
 	      (tile >= BRWXXX7 && tile <= BRWXXX7 + 2)) {
 	    Map[i][j] = RIVER;
 	  } else {
-	    Map[i][j] = TINYEXP + ANIMBIT + BULLBIT + Rand(2);
+	    Map[i][j] = TINYEXP + ANIMBIT + BULLBIT + RandomRange(0, 2);
 	  }
 	}
       }
@@ -162,10 +162,10 @@ void doKeyDown(SimView *view, int charCode)
     int i;
     int n = 500;
     for (i = 0; i < n; i++) {
-      int x1 = Rand(SimWidth - 1);
-      int y1 = Rand(SimHeight - 1);
-      int x2 = Rand(SimWidth - 1);
-      int y2 = Rand(SimHeight - 1);
+      int x1 = RandomRange(0, SimWidth - 1);
+      int y1 = RandomRange(0, SimHeight - 1);
+      int x2 = RandomRange(0, SimWidth - 1);
+      int y2 = RandomRange(0, SimHeight - 1);
       int temp =
 	Map[x1][y1];
       Map[x1][y1] =
@@ -200,13 +200,13 @@ void doKeyDown(SimView *view, int charCode)
     Kick();
   } else if (strcmp(LastKeys, "patb") == 0) {
     heat_steps = 1;
-    heat_flow = Rand(40) - 20;
+    heat_flow = RandomRange(0, 40) - 20;
     heat_rule = 0;
     LastKeys[0] = '\0';
     Kick();
   } else if (strcmp(LastKeys, "lucb") == 0) {
     heat_steps = 1;
-    heat_flow = Rand(1000) - 500;
+    heat_flow = (0, 1000) - 500;
     heat_rule = 0;
     LastKeys[0] = '\0';
     Kick();

@@ -473,15 +473,15 @@ void doMessage()
         switch ((MesNum < 0) ? -MesNum : MesNum)
         {
         case  12:
-            if (Rand(5) == 1)
+            if (RandomRange(0, 5) == 1)
             {
                 MakeSound("city", "HonkHonk-Med");
             }
-            else if (Rand(5) == 1)
+            else if (RandomRange(0, 5) == 1)
             {
                 MakeSound("city", "HonkHonk-Low");
             }
-            else if (Rand(5) == 1)
+            else if (RandomRange(0, 5) == 1)
             {
                 MakeSound("city", "HonkHonk-High");
             }

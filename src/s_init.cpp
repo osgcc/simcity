@@ -75,7 +75,7 @@
 
 void InitWillStuff()
 {
-    RandomlySeedRand();
+    //RandomlySeedRand();
     InitGraphMax();
     RoadEffect = 32;
     PoliceEffect = 1000;
@@ -115,11 +115,11 @@ void InitWillStuff()
         }
     }
 
-    for (int x = 0; x < QuarterWorldWidth; x++)
+    for (int row = 0; row < QuarterWorldWidth; ++row)
     {
-        for (int y = 0; y < QuarterWorldHeight; y++)
+        for (int col = 0; col < QuarterWorldHeight; ++col)
         {
-            TerrainMem[x][y] = 0;
+            TerrainMem[row][col] = 0;
         }
     }
 

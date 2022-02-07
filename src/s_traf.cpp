@@ -115,7 +115,7 @@ void SetTrafMem()
 	z = TrfDensity[SMapX >>1][SMapY >>1];
 	z += 50;
 	if ((z > 240) &&
-	    (!Rand(5))) {
+	    (!RandomRange(0, 5))) {
 	  z = 240;
 	  TrafMaxX = SMapX <<4;
 	  TrafMaxY = SMapY <<4;

@@ -70,6 +70,9 @@
 #include "w_util.h"
 
 
+#include <algorithm>
+
+
 /* Generate Map */
 
 
@@ -94,11 +97,10 @@ int ERand(int limit)
 {
   int x, z;
 
-  z = Rand(limit);
-  x = Rand(limit);
+  z = RandomRange(0, limit);
+  x = RandomRange(0, limit);
   
-  if (z < x) { return z; }
-  return x;
+  return std::min(x, z);
 }
 
 
@@ -278,7 +280,7 @@ void SmoothRiver()
 
                 int temp = REdTab[bitindex & 15];
 
-                if ((temp != RIVER) && (Rand(1)))
+                if ((temp != RIVER) && (RandomRange(0, 1)))
                 {
                     temp++;
                 }
@@ -293,14 +295,14 @@ void SmoothRiver()
 
 void TreeSplash(int xloc, int yloc)
 {
-    int dis = TreeLevel < 0 ? dis = Rand(150) + 50 : Rand(100 + (TreeLevel * 2)) + 50;
+    int dis = TreeLevel < 0 ? dis = RandomRange(0, 150) + 50 : RandomRange(0, 100 + (TreeLevel * 2)) + 50;
 
     MapX = xloc;
     MapY = yloc;
 
     for (int z = 0; z < dis; z++)
     {
-        int dir = Rand(7);
+        int dir = RandomRange(0, 7);
 
         MoveMap(dir);
 
@@ -323,7 +325,7 @@ void DoTrees()
 
     if (TreeLevel < 0)
     {
-        Amount = Rand(100) + 50;
+        Amount = RandomRange(0, 100) + 50;
     }
     else
     {
@@ -331,8 +333,8 @@ void DoTrees()
     }
     for (x = 0; x < Amount; x++)
     {
-        xloc = Rand(SimWidth - 1);
-        yloc = Rand(SimHeight - 1);
+        xloc = RandomRange(0, SimWidth - 1);
+        yloc = RandomRange(0, SimHeight - 1);
         TreeSplash(xloc, yloc);
     }
     SmoothTrees();
@@ -405,14 +407,14 @@ void DoBRiv()
     while (TestBounds(MapX + 4, MapY + 4, SimWidth, SimHeight))
     {
         BRivPlop();
-        if (Rand(r1) < 10)
+        if (RandomRange(0, r1) < 10)
         {
             Dir = LastDir;
         }
         else
         {
-            if (Rand(r2) > 90) Dir++;
-            if (Rand(r2) > 90) Dir--;
+            if (RandomRange(0, r2) > 90) Dir++;
+            if (RandomRange(0, r2) > 90) Dir--;
         }
         MoveMap(Dir);
     }
@@ -437,14 +439,14 @@ void DoSRiv()
     while (TestBounds(MapX + 3, MapY + 3, SimWidth, SimHeight))
     {
         SRivPlop();
-        if (Rand(r1) < 10)
+        if (RandomRange(0, r1) < 10)
         {
             Dir = LastDir;
         }
         else
         {
-            if (Rand(r2) > 90) Dir++;
-            if (Rand(r2) > 90) Dir--;
+            if (RandomRange(0, r2) > 90) Dir++;
+            if (RandomRange(0, r2) > 90) Dir--;
         }
         MoveMap(Dir);
     }
@@ -453,7 +455,7 @@ void DoSRiv()
 
 void DoRivers()
 {
-    LastDir = Rand(3);
+    LastDir = RandomRange(0, 3);
     Dir = LastDir;
     DoBRiv();
     MapX = XStart;
@@ -463,7 +465,7 @@ void DoRivers()
     DoBRiv();
     MapX = XStart;
     MapY = YStart;
-    LastDir = Rand(3);
+    LastDir = RandomRange(0, 3);
     DoSRiv();
 }
 
@@ -528,7 +530,7 @@ void MakeLakes()
 
     if (LakeLevel < 0)
     {
-        Lim1 = Rand(10);
+        Lim1 = RandomRange(0, 10);
     }
     else
     {
@@ -537,17 +539,17 @@ void MakeLakes()
 
     for (int t = 0; t < Lim1; t++)
     {
-        int  x = Rand(SimWidth - 21) + 10;
-        int y = Rand(SimHeight - 20) + 10;
+        int  x = RandomRange(0, SimWidth - 21) + 10;
+        int y = RandomRange(0, SimHeight - 20) + 10;
 
-        Lim2 = Rand(12) + 2;
+        Lim2 = RandomRange(0, 12) + 2;
 
         for (int z = 0; z < Lim2; z++)
         {
-            MapX = x - 6 + Rand(12);
-            MapY = y - 6 + Rand(12);
+            MapX = x - 6 + RandomRange(0, 12);
+            MapY = y - 6 + RandomRange(0, 12);
 
-            if (Rand(4))
+            if (RandomRange(0, 4))
             {
                 SRivPlop();
             }
@@ -562,8 +564,8 @@ void MakeLakes()
 
 void GetRandStart()
 {
-    XStart = 40 + Rand(SimWidth - 80);
-    YStart = 33 + Rand(SimHeight - 67);
+    XStart = 40 + RandomRange(0, SimWidth - 80);
+    YStart = 33 + RandomRange(0, SimHeight - 67);
     MapX = XStart;
     MapY = YStart;
 }
@@ -711,11 +713,9 @@ void SmoothWater()
 
 void GenerateMap(int r)
 {
-    SeedRand(r);
-
     if (CreateIsland < 0)
     {
-        if (Rand(100) < 10) // chance that island is generated
+        if (RandomRange(0, 100) < 10) // chance that island is generated
         {
             MakeIsland();
             return;
@@ -749,14 +749,12 @@ void GenerateMap(int r)
     {
         DoTrees();
     }
-
-    RandomlySeedRand();
 }
 
 
-void GenerateSomeCity(int r)
+void GenerateSomeCity(int seed)
 {
-    GenerateMap(r);
+    GenerateMap(seed);
     ScenarioID = 0;
     CityTime = 0;
     InitSimLoad = 2;

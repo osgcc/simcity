@@ -174,14 +174,14 @@ void DoHospChur()
     HospPop++;
     if (!(CityTime & 15)) RepairZone (HOSPITAL, 3); /*post*/
     if (NeedHosp == -1)
-      if (!Rand(20))
+      if (!RandomRange(0, 20))
 	ZonePlop(RESBASE);
   }
   if (CChr9 == CHURCH) {
     ChurchPop++;
     if (!(CityTime & 15)) RepairZone (CHURCH, 3); /*post*/
     if (NeedChurch == -1)
-      if (!Rand(20))
+      if (!RandomRange(0, 20))
 	ZonePlop(RESBASE);
   }
 }
@@ -347,7 +347,7 @@ void BuildHouse(int value)
     int xx = SMapX + ZeX[BestLoc];
     int yy = SMapY + ZeY[BestLoc];
     if (TestBounds(xx, yy, SimWidth, SimHeight)) {
-      Map[xx][yy] = HOUSE + BLBNCNBIT + Rand(2) + (value * 3);
+      Map[xx][yy] = HOUSE + BLBNCNBIT + RandomRange(0, 2) + (value * 3);
     }
   }
 }
@@ -430,7 +430,7 @@ void DoResOut(int pop, int value)
 	    y >= 0 && y < SimHeight) {
 	  if ((Map[x][y] & LOMASK) != FREEZ)
 	    Map[x][y] = LHTHR + value +
-	      Rand(2) + BLBNCNBIT;
+          RandomRange(0, 2) + BLBNCNBIT;
 	}
   }
   if (pop < 16) {
@@ -502,112 +502,162 @@ int DoFreePop ()
 
 void DoIndustrial(int ZonePwrFlg)
 {
-  int tpop, zscore, TrfGood;
+    int tpop, zscore, TrfGood;
 
-  IndZPop++;
-  SetSmoke(ZonePwrFlg);
-  tpop = IZPop(CChr9);
-  IndPop += tpop;
-  if (tpop > Rand(5)) TrfGood = MakeTraf(2);
-  else TrfGood = true;
+    IndZPop++;
 
-  if (TrfGood == -1) {
-    DoIndOut(tpop, Rand16() & 1);
-    return;
-  }
+    SetSmoke(ZonePwrFlg);
 
-  if (!(Rand16() & 7)) {
-    zscore = IValve + EvalInd(TrfGood);
-    if (!ZonePwrFlg) zscore = -500;
-    if ((zscore > -350) &&
-	(((int)(zscore - 26380)) > ((int)Rand16Signed()))) {
-      DoIndIn(tpop, Rand16() & 1);
-      return;
+    tpop = IZPop(CChr9);
+    IndPop += tpop;
+
+    if (tpop > RandomRange(0, 5))
+    {
+        TrfGood = MakeTraf(2);
     }
-    if ((zscore < 350) &&
-	(((int)(zscore + 26380)) < ((int)Rand16Signed())))
-      DoIndOut(tpop, Rand16() & 1);
-  }
+    else
+    {
+        TrfGood = true;
+    }
+
+    if (TrfGood == -1)
+    {
+        DoIndOut(tpop, Rand16() & 1);
+        return;
+    }
+
+    if (!(Rand16() & 7))
+    {
+        zscore = IValve + EvalInd(TrfGood);
+
+        if (!ZonePwrFlg)
+        {
+            zscore = -500;
+        }
+
+        if ((zscore > -350) && (zscore - 26380) > Rand16())
+        {
+            DoIndIn(tpop, Rand16() & 1);
+            return;
+        }
+
+        if ((zscore < 350) && (zscore + 26380) < Rand16())
+        {
+            DoIndOut(tpop, Rand16() & 1);
+        }
+    }
 }
 
 
 void DoCommercial(int ZonePwrFlg)
 {
-  int tpop, TrfGood;
-  int zscore, locvalve,value;
+    int TrfGood;
+    int zscore, locvalve, value;
 
-  ComZPop++;
-  tpop = CZPop(CChr9);
-  ComPop += tpop;
-  if (tpop > Rand(5)) TrfGood = MakeTraf(1);
-  else TrfGood = true;
+    ComZPop++;
 
-  if (TrfGood == -1) {
-    value = GetCRVal();
-    DoComOut(tpop, value);
-    return;
-  }
+    int tpop = CZPop(CChr9);
 
-  if (!(Rand16() & 7)) {
-    locvalve = EvalCom(TrfGood);
-    zscore = CValve + locvalve;
-    if (!ZonePwrFlg) zscore = -500;
-
-    if (TrfGood &&
-	(zscore > -350) &&
-	(((int)(zscore - 26380)) > ((int)Rand16Signed()))) {
-      value = GetCRVal();
-      DoComIn(tpop, value);
-      return;
+    ComPop += tpop;
+   
+    if (tpop > RandomRange(0, 5))
+    {
+        TrfGood = MakeTraf(1);
     }
-    if ((zscore < 350) &&
-	(((int)(zscore + 26380)) < ((int)Rand16Signed()))) {
-      value = GetCRVal();
-      DoComOut(tpop, value);
+    else
+    {
+        TrfGood = 1;
     }
-  }
+
+    if (TrfGood == -1)
+    {
+        value = GetCRVal();
+        DoComOut(tpop, value);
+        return;
+    }
+
+    if (!(Rand16() & 7))
+    {
+        locvalve = EvalCom(TrfGood);
+        zscore = CValve + locvalve;
+        
+        if (!ZonePwrFlg)
+        {
+            zscore = -500;
+        }
+
+        if (TrfGood && (zscore > -350) && zscore - 26380 > Rand16())
+        {
+            value = GetCRVal();
+            DoComIn(tpop, value);
+            return;
+        }
+        if (zscore < 350 && zscore + 26380 < Rand16())
+        {
+            value = GetCRVal();
+            DoComOut(tpop, value);
+        }
+    }
 }
 
 
 void DoResidential(int ZonePwrFlg)
 {
-  int tpop, zscore, locvalve, value, TrfGood;
+    int tpop, zscore, locvalve, value, TrfGood;
 
-  ResZPop++;
-  if (CChr9 == FREEZ) tpop = DoFreePop();
-  else tpop = RZPop(CChr9);
-
-  ResPop += tpop;
-  if (tpop > Rand(35)) TrfGood = MakeTraf(0);
-  else TrfGood = true;
-
-  if (TrfGood == -1) {
-    value = GetCRVal();
-    DoResOut(tpop, value);
-    return;
-  }
-
-  if ((CChr9 == FREEZ) || (!(Rand16() & 7))) {
-    locvalve = EvalRes(TrfGood);
-    zscore = RValve + locvalve;
-    if (!ZonePwrFlg) zscore = -500;
-
-    if ((zscore > -350) &&
-	(((int)(zscore - 26380)) > ((int)Rand16Signed()))) {
-      if ((!tpop) && (!(Rand16() & 3))) {
-	MakeHosp();
-	return;
-      }
-      value = GetCRVal();
-      DoResIn(tpop, value);
-      return;
+    ResZPop++;
+    if (CChr9 == FREEZ)
+    {
+        tpop = DoFreePop();
     }
-    if ((zscore < 350) &&
-	(((int)(zscore + 26380)) < ((int)Rand16Signed()))) {
-	    value = GetCRVal();
-	    DoResOut(tpop, value);
+    else
+    {
+        tpop = RZPop(CChr9);
     }
-  }
+
+    ResPop += tpop;
+    if (tpop > RandomRange(0, 35))
+    {
+        TrfGood = MakeTraf(0);
+    }
+    else
+    {
+        TrfGood = true;
+    }
+
+    if (TrfGood == -1)
+    {
+        value = GetCRVal();
+        DoResOut(tpop, value);
+        return;
+    }
+
+    if ((CChr9 == FREEZ) || (!(Rand16() & 7)))
+    {
+        locvalve = EvalRes(TrfGood);
+        zscore = RValve + locvalve;
+        if (!ZonePwrFlg)
+        {
+            zscore = -500;
+        }
+
+        if (zscore > -350 && zscore - 26380 > Rand16())
+        {
+            if ((!tpop) && (!(Rand16() & 3)))
+            {
+                MakeHosp();
+                return;
+            }
+            value = GetCRVal();
+            DoResIn(tpop, value);
+            return;
+        }
+        if ((zscore < 350) && zscore + 26380 < Rand16())
+        {
+            value = GetCRVal();
+            DoResOut(tpop, value);
+        }
+    }
 }
 
 

@@ -109,17 +109,9 @@ void SetFunds(int dollars)
 }
 
 
-/* Mac */
-
 int TickCount()
 {
     return static_cast<int>(SDL_GetTicks());
-}
-
-
-Ptr NewPtr(int size)
-{
-    return ((Ptr)calloc(size, sizeof(Byte)));
 }
 
 
@@ -174,7 +166,6 @@ void GameStarted()
             StartupName = "";
             break;
         }
-        StartupName = "";
 
     case -1:
         if (!StartupName.empty())

@@ -356,8 +356,8 @@ int DoUpdateMap(SimView* view)
     // XXX: don't do this stuff if just redrawing overlay
     for (dx = dy = i = 0; i < ShakeNow; i++)
     {
-        dx += Rand(16) - 8;
-        dy += Rand(16) - 8;
+        dx += RandomRange(0, 16) - 8;
+        dy += RandomRange(0, 16) - 8;
     }
 
     //XCopyArea(view->x->dpy, view->pixmap, view->pixmap2, view->x->gc, dx, dy, view->w_width, view->w_height, 0, 0);

@@ -162,7 +162,7 @@ putDownPark(SimView *view, int mapH, int mapV)
   int value, tile;
 
   if (TotalFunds - CostOf[parkState] >= 0) {
-    value = Rand(4);
+    value = RandomRange(0, 4);
 
     if (value == 4)
       tile = FOUNTAIN | BURNBIT | BULLBIT | ANIMBIT;
@@ -866,7 +866,7 @@ void put3x3Rubble(int x, int y)
 	if ((zz != RADTILE) && (zz != 0)) {
 	  Map[xx][yy] =
 	    (DoAnimation
-	     ? (TINYEXP + Rand(2))
+	     ? (TINYEXP + RandomRange(0, 2))
 	     : SOMETINYEXP)
 	    | ANIMBIT | BULLBIT;
 	}
@@ -888,7 +888,7 @@ void put4x4Rubble(int x, int y)
 	if ((zz != RADTILE) && (zz != 0)) {
 	  Map[xx][yy] =
 	    (DoAnimation
-	     ? (TINYEXP + Rand(2))
+	     ? (TINYEXP + RandomRange(0, 2))
 	     : SOMETINYEXP)
 	    | ANIMBIT | BULLBIT;
 	}
@@ -910,7 +910,7 @@ void put6x6Rubble(int x, int y)
 	if ((zz != RADTILE) && (zz != 0)) {
 	  Map[xx][yy] =
 	    (DoAnimation
-	     ? (TINYEXP + Rand(2))
+	     ? (TINYEXP + RandomRange(0, 2))
 	     : SOMETINYEXP)
 	    | ANIMBIT | BULLBIT;
 	}
