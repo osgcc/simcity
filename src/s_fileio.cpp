@@ -392,6 +392,19 @@ void SaveCity()
 }
 
 
+enum class ScenarioName
+{
+    Dullsville,
+    SanFransisco,
+    Hamburg,
+    Bern,
+    Tokyo,
+    Detroit,
+    Boston,
+    Rio
+};
+
+
 void LoadScenario(int s)
 {
     std::string name;
@@ -410,6 +423,7 @@ void LoadScenario(int s)
         CityTime = ((1900 - 1900) * 48) + 2;
         SetFunds(5000);
         break;
+
     case 2:
         name = "San Francisco";
         fname = "snro.222";
@@ -417,6 +431,7 @@ void LoadScenario(int s)
         CityTime = ((1906 - 1900) * 48) + 2;
         SetFunds(20000);
         break;
+
     case 3:
         name = "Hamburg";
         fname = "snro.333";
@@ -424,6 +439,7 @@ void LoadScenario(int s)
         CityTime = ((1944 - 1900) * 48) + 2;
         SetFunds(20000);
         break;
+
     case 4:
         name = "Bern";
         fname = "snro.444";
@@ -431,6 +447,7 @@ void LoadScenario(int s)
         CityTime = ((1965 - 1900) * 48) + 2;
         SetFunds(20000);
         break;
+
     case 5:
         name = "Tokyo";
         fname = "snro.555";
@@ -438,6 +455,7 @@ void LoadScenario(int s)
         CityTime = ((1957 - 1900) * 48) + 2;
         SetFunds(20000);
         break;
+
     case 6:
         name = "Detroit";
         fname = "snro.666";
@@ -445,6 +463,7 @@ void LoadScenario(int s)
         CityTime = ((1972 - 1900) * 48) + 2;
         SetFunds(20000);
         break;
+
     case 7:
         name = "Boston";
         fname = "snro.777";
@@ -452,6 +471,7 @@ void LoadScenario(int s)
         CityTime = ((2010 - 1900) * 48) + 2;
         SetFunds(20000);
         break;
+
     case 8:
         name = "Rio de Janeiro";
         fname = "snro.888";
