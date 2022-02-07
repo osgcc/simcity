@@ -754,9 +754,9 @@ void GenerateMap(int r)
 }
 
 
-void GenerateSomeCity(int r)
+void GenerateSomeCity(int seed)
 {
-    GenerateMap(r);
+    GenerateMap(seed);
     ScenarioID = 0;
     CityTime = 0;
     InitSimLoad = 2;

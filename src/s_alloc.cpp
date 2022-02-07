@@ -62,6 +62,9 @@
 #include "main.h"
 #include "w_stubs.h"
 
+#include <array>
+#include <vector>
+
 
 /* Allocate Stuff */
 
@@ -83,7 +86,9 @@ int CrimeAverage, PolluteAverage, LVAverage;
 int CityTime;
 int StartingYear;
 
-int* Map[SimWidth];
+
+std::array<std::array<int, SimHeight>, SimWidth> Map;
+
 
 int ResHisMax, Res2HisMax;
 int ComHisMax, Com2HisMax;
@@ -119,25 +124,11 @@ int FireRate[SmX][SmY];
 int ComRate[SmX][SmY];
 int STem[SmX][SmY];
 
-Ptr terrainBase;
-Ptr qTemBase;
-Ptr tem1Base;
-Ptr tem2Base;
+Byte* terrainBase;
+Byte* qTemBase;
+Byte* tem1Base;
+Byte* tem2Base;
 
-Ptr popPtr;
-Ptr trfPtr;
-Ptr polPtr;
-Ptr landPtr;
-Ptr crimePtr;
-	
-Ptr auxPopPtr;
-Ptr auxTrfPtr;
-Ptr auxPolPtr;
-Ptr auxLandPtr;
-Ptr auxCrimePtr;
-Ptr brettPtr;
-
-unsigned int *mapPtr;
 int *ResHis;
 int *ComHis;
 int *IndHis;
@@ -150,34 +141,16 @@ int *PowerMap;
 
 void initMapArrays()
 {
-    if (!mapPtr)
+
+    for(int row = 0; row < SimWidth; ++row)
     {
-        mapPtr = (unsigned int*)NewPtr(sizeof(unsigned int) * SimWidth * SimHeight);
+        for (int col = 0; col < SimHeight; ++col)
+        {
+            Map[row][col] = 0;
+        }
     }
 
-   auto auxPtr = mapPtr;
-
-    for (int i = 0; i < SimWidth; i++)
-    {
-        auto temp1 = auxPtr + i * SimHeight;
-        Map[i] = (int*)temp1;
-    }
-
-    popPtr = NewPtr(HalfWorldWidth * HalfWorldHeight);
-    trfPtr = NewPtr(HalfWorldWidth * HalfWorldHeight);
-    polPtr = NewPtr(HalfWorldWidth * HalfWorldHeight);
-    landPtr = NewPtr(HalfWorldWidth * HalfWorldHeight);
-    crimePtr = NewPtr(HalfWorldWidth * HalfWorldHeight);
-
-    tem1Base = NewPtr(HalfWorldWidth * HalfWorldHeight);
-    tem2Base = NewPtr(HalfWorldWidth * HalfWorldHeight);
-
-    auxPopPtr = popPtr;
-    auxTrfPtr = trfPtr;
-    auxPolPtr = polPtr;
-    auxLandPtr = landPtr;
-    auxCrimePtr = crimePtr;
-
+    /*
     for (int i = 0; i < HalfWorldWidth; i++)
     {
         PopDensity[i] = (Byte*)auxPopPtr + (i * HalfWorldHeight);
@@ -208,5 +181,6 @@ void initMapArrays()
     PollutionHis = (int*)NewPtr(HISTLEN);
     CrimeHis = (int*)NewPtr(HISTLEN);
     MiscHis = (int*)NewPtr(MISCHISTLEN);
-    PowerMap = (int*)NewPtr(POWERMAPLEN);		/* power alloc */
+    PowerMap = (int*)NewPtr(POWERMAPLEN); // power alloc
+    */
 }

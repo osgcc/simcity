@@ -76,6 +76,10 @@
 #include <string>
 
 
+std::string HomeDirectory;
+const std::string ResroucesDirectory;
+
+
 static bool _load_int(int& buf, size_t len, FILE* f)
 {
     return fread(&buf, sizeof(int), len, f) == len;
@@ -88,7 +92,7 @@ static bool _save_int(int& buf, size_t len, FILE* f)
 }
 
 
-static int _load_file(std::string filename, char* dir)
+static int _load_file(const std::string filename, const std::string& dir)
 {
     /*
   FILE *f;
@@ -488,7 +492,7 @@ void LoadScenario(int s)
     setSpeed(3);
     CityTax = 7;
 
-    _load_file(fname, ResourceDir);
+    _load_file(fname, ResroucesDirectory);
 
     InitWillStuff();
     InitFundingLevel();

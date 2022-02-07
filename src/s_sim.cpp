@@ -63,7 +63,6 @@
 #include "s_sim.h"
 
 #include "main.h"
-#include "rand.h"
 
 #include "s_alloc.h"
 #include "s_disast.h"
@@ -80,6 +79,12 @@
 #include "w_util.h"
 
 #include <algorithm>
+
+#include <chrono>
+#include <random>
+
+
+#include <SDL2/SDL.h>
 
 
 /* Simulation */
@@ -1237,53 +1242,22 @@ void FireZone(int Xloc, int Yloc, int ch)
 }
 
 
-#define RANDOM_RANGE 0xffff
+std::mt19937 PseudoRandomNumberGenerator(std::random_device());
 
-int Rand(int range)
+
+int RandomRange(int min, int max)
 {
-    int maxMultiple, rnum;
-
-    range++;
-
-    maxMultiple = RANDOM_RANGE / range;
-    maxMultiple *= range;
-
-    while ((rnum = Rand16()) >= maxMultiple)
-        continue;
-
-    return (rnum % range);
+    std::uniform_int_distribution<std::mt19937::result_type> prngDistribution(min, max);
+    return prngDistribution(PseudoRandomNumberGenerator);
 }
 
+
+int Random()
+{
+    return RandomRange(0, std::mt19937::max());
+}
 
 int Rand16()
 {
-    return sim_rand();
-}
-
-
-int Rand16Signed()
-{
-  int i = sim_rand();
-
-  if (i > 32767) {
-    i = 32767 - i;
-  }
-  return (i);
-}
-
-
-void RandomlySeedRand()
-{
-    /*
-  struct timeval time;
-
-  gettimeofday(&time, NULL);
-  */
-  SeedRand(123456789);
-}
-
-
-void SeedRand(int seed)
-{
-    sim_srand(seed);
+    return RandomRange(0, 32767);
 }

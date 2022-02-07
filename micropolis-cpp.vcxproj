@@ -26,7 +26,6 @@
     <ClCompile Include="src\g_setup.cpp" />
     <ClCompile Include="src\g_smmaps.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\rand.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\s_alloc.cpp" />
     <ClCompile Include="src\s_disast.cpp" />
@@ -62,7 +61,6 @@
     <ClInclude Include="src\g_ani.h" />
     <ClInclude Include="src\g_bigmap.h" />
     <ClInclude Include="src\g_setup.h" />
-    <ClInclude Include="src\rand.h" />
     <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\s_disast.h" />

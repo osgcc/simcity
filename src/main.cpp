@@ -542,16 +542,7 @@ void startGame()
 
     sim_init();
 
-    // tcl command buffer -- hmm
-    //buffer = Tcl_CreateCmdBuf();
-    /*
-
-    if (Eval(std::string("UIStartMicropolis {") + HomeDir + "} {" + ResourceDir + "} {" + HostName + "}"))
-    {
-        sim_exit(1); // Just sets tkMustExit and ExitReturn
-        return;
-    }
-    */
+    // set resource directories here
 
     SDL_Texture* bitmapTex = NULL;
     SDL_Surface* bitmapSurface = NULL;
@@ -593,7 +584,6 @@ void startGame()
     SDL_DestroyRenderer(MainWindowRenderer);
     SDL_DestroyWindow(MainWindow);
 }
-
 
 
 int main(int argc, char* argv[])

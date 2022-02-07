@@ -166,8 +166,8 @@ void InitSprite(SimSprite* sprite, int x, int y)
         sprite->x_hot = 40; sprite->y_hot = -8;
         sprite->frame = 5;
         sprite->count = 1500;
-        sprite->dest_x = Rand((SimWidth << 4) - 1);
-        sprite->dest_y = Rand((SimHeight << 4) - 1);
+        sprite->dest_x = RandomRange(0, SimWidth - 1);
+        sprite->dest_y = RandomRange(0, SimHeight - 1);
         sprite->orig_x = x - 30;
         sprite->orig_y = y;
         break;
@@ -851,8 +851,8 @@ void DoAirplaneSprite(SimSprite* sprite)
 
     if (absDist < 50) /* at destination  */
     {
-        sprite->dest_x = Rand((SimWidth * 16) + 100) - 50;
-        sprite->dest_y = Rand((SimHeight * 16) + 100) - 50;
+        sprite->dest_x = RandomRange(0, SimWidth) - 50;
+        sprite->dest_y = RandomRange(0, SimHeight) - 50;
     }
 
     /* deh added test for !Disasters */
@@ -902,7 +902,7 @@ void DoShipSprite(SimSprite* sprite)
     if (!sprite->sound_count) {
         if ((Rand16() & 3) == 1) {
             if ((ScenarioID == 2) && /* San Francisco */
-                (Rand(10) < 5)) {
+                (RandomRange(0, 10) < 5)) {
                 MakeSound("city", "HonkHonk-Low -speed 80");
             }
             else {
@@ -1011,7 +1011,7 @@ void DoMonsterSprite(SimSprite* sprite)
             else
             {
                 c = (c - 1) / 2;
-                if (((c != d) && (!Rand(5))) || (!Rand(20)))
+                if (((c != d) && (!RandomRange(0, 5))) || (!RandomRange(0, 20)))
                 {
                     int diff = (c - d) & 3;
 
@@ -1027,7 +1027,7 @@ void DoMonsterSprite(SimSprite* sprite)
                 }
                 else
                 {
-                    if (!Rand(20))
+                    if (!RandomRange(0, 20))
                     {
                         if (Rand16() & 1)
                         {
@@ -1087,7 +1087,7 @@ void DoMonsterSprite(SimSprite* sprite)
                 c = GetDir(sprite->x, sprite->y, sprite->dest_x, sprite->dest_y);
                 c = (c - 1) / 2;
 
-                if ((c != d) && (!Rand(10)))
+                if ((c != d) && (!RandomRange(0, 10)))
                 {
                     if (Rand16() & 1)
                     {
@@ -1102,7 +1102,7 @@ void DoMonsterSprite(SimSprite* sprite)
                     if (!sprite->sound_count)
                     {
                         MakeSound("city", "Monster -speed [MonsterSpeed]"); /* monster */
-                        sprite->sound_count = 50 + Rand(100);
+                        sprite->sound_count = 50 + RandomRange(0, 100);
                     }
                 }
             }
@@ -1254,12 +1254,12 @@ void DoTornadoSprite(SimSprite* sprite)
     */
 
 
-    z = Rand(5);
+    z = RandomRange(0, 5);
     sprite->x += CDx[z];
     sprite->y += CDy[z];
     if (SpriteNotInBounds(sprite)) sprite->frame = 0;
 
-    if ((sprite->count != 0) && (!Rand(500)))
+    if ((sprite->count != 0) && (!RandomRange(0, 500)))
     {
         sprite->frame = 0;
     }
@@ -1629,7 +1629,7 @@ void MoveObjects()
 
 void GenerateTrain(int x, int y)
 {
-    if ((TotalPop > 20) && (GetSprite(TRA) == NULL) && (!Rand(25)))
+    if ((TotalPop > 20) && (GetSprite(TRA) == NULL) && (!RandomRange(0, 25)))
     {
         MakeSprite(TRA, (x << 4) + TRA_GROOVE_X, (y << 4) + TRA_GROOVE_Y);
     }
@@ -1638,7 +1638,7 @@ void GenerateTrain(int x, int y)
 
 void GenerateBus(int x, int y)
 {
-    if ((GetSprite(BUS) == NULL) && (!Rand(25)))
+    if ((GetSprite(BUS) == NULL) && (!RandomRange(0, 25)))
     {
         MakeSprite(BUS, (x << 4) + BUS_GROOVE_X, (y << 4) + BUS_GROOVE_Y);
     }
@@ -1728,8 +1728,8 @@ void MakeMonster()
 
     for (int z = 0; z < 300; z++)
     {
-        const int x = Rand(SimWidth - 20) + 10;
-        const int y = Rand(SimHeight - 10) + 5;
+        const int x = RandomRange(0, SimWidth - 20) + 10;
+        const int y = RandomRange(0, SimHeight - 10) + 5;
         if ((Map[x][y] == RIVER) || (Map[x][y] == RIVER + BULLBIT))
         {
             MonsterHere(x, y);
@@ -1777,8 +1777,8 @@ void MakeTornado()
         return;
     }
 
-    x = Rand((SimWidth << 4) - 800) + 400;
-    y = Rand((SimHeight << 4) - 200) + 100;
+    x = RandomRange(0, SimWidth);
+    y = RandomRange(0, SimHeight);
 
     MakeSprite(TOR, x, y);
 
