@@ -88,8 +88,8 @@ constexpr auto HalfWorldHeight = SimHeight / 2;
 constexpr auto QuarterWorldWidth = SimWidth / 4;
 constexpr auto QuarterWorldHeight = SimHeight / 4;
 
-#define SmX (SimWidth >>3)
-#define SmY ((SimHeight + 7) >>3)
+constexpr auto SmX = SimWidth / 8;
+constexpr auto SmY = (SimHeight + 7) / 8;
 
 #define EDITOR_W (SimWidth * 16)
 #define EDITOR_H (SimHeight * 16)
@@ -103,8 +103,8 @@ constexpr auto QuarterWorldHeight = SimHeight / 4;
 
 #define PROBNUM 10
 
-#define HISTLEN 480
-#define MISCHISTLEN 240
+constexpr auto HistoryLength = 240;
+constexpr auto MISCHISTLEN = 240;
 
 #define POWERMAPROW		((SimWidth + 15) / 16)
 
@@ -378,13 +378,6 @@ constexpr auto QuarterWorldHeight = SimHeight / 4;
 
 typedef unsigned char Byte;
 
-extern int RateOGMem[SmX][SmY];
-extern int FireStMap[SmX][SmY];	/* 8X8 Maps  15 x 13 */
-extern int PoliceMap[SmX][SmY];
-extern int PoliceMapEffect[SmX][SmY];
-extern int ComRate[SmX][SmY];
-extern int FireRate[SmX][SmY];
-extern int STem[SmX][SmY];
 extern int SpriteXOffset[OBJN];
 extern int SpriteYOffset[OBJN];
 extern int SMapX, SMapY;
@@ -540,7 +533,6 @@ extern int NewGraph;
 extern int ValveFlag;
 extern int MustUpdateFunds;
 extern int MustUpdateOptions;
-extern int CensusChanged;
 extern int EvalChanged;
 extern int MeltX, MeltY;
 extern int NeedRest;
