@@ -106,13 +106,12 @@ constexpr auto SmY = (SimHeight + 7) / 8;
 constexpr auto HistoryLength = 240;
 constexpr auto MISCHISTLEN = 240;
 
-#define POWERMAPROW		((SimWidth + 15) / 16)
+constexpr auto POWERMAPROW = ((SimWidth + 15) / 16);
 
-#define POWERMAPLEN		1700 /* ??? PWRMAPSIZE */
 #define POWERWORD(x, y)		(((x) >>4) + ((y) <<3))
 
 #define SETPOWERBIT(x, y)	PowerMap[POWERWORD((x), (y))] |= 1 << ((x) & 15)
-#define PWRMAPSIZE		(POWERMAPROW * SimHeight)
+constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 #define PWRSTKSIZE		((SimWidth * SimHeight) / 4)
 
 #define ALMAP 0 /* all */

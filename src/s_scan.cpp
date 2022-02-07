@@ -76,6 +76,27 @@ int CrimeMaxX, CrimeMaxY;
 int DonDither = 0;
 
 
+namespace
+{
+    std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> tem;
+    std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> tem2;
+
+    void resetTempArrays()
+    {
+        for (int x = 0; x < HalfWorldWidth; x++)
+        {
+            for (int y = 0; y < HalfWorldHeight; y++)
+            {
+                tem[x][y] = 0;
+                tem2[x][y] = 0;
+            }
+        }
+    }
+};
+
+
+
+
 /* comefrom: FireAnalysis */
 void SmoothFSMap()
 {

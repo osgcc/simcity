@@ -59,6 +59,9 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
+
+#include "s_alloc.h"
+
 #include "main.h"
 #include "w_stubs.h"
 
@@ -93,7 +96,7 @@ std::array<std::array<int, SimHeight>, SimWidth> Map;
 int ResHisMax, Res2HisMax;
 int ComHisMax, Com2HisMax;
 int IndHisMax, Ind2HisMax;
-int CensusChanged;
+
 
 int MessagePort;
 int MesX, MesY;
@@ -105,15 +108,16 @@ int TaxFund;
 int CityTax, TaxFlag;
 unsigned char tileSynch = 0x01;
 
-Byte* PopDensity[HalfWorldWidth];
-Byte* TrfDensity[HalfWorldWidth];
-Byte* PollutionMem[HalfWorldWidth];
-Byte* LandValueMem[HalfWorldWidth];
-Byte* CrimeMem[HalfWorldWidth];
-Byte* tem[HalfWorldWidth];
-Byte* tem2[HalfWorldWidth];
-Byte* TerrainMem[QuarterWorldWidth];
-Byte* Qtem[QuarterWorldWidth];
+std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PopDensity{};
+std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> TrfDensity{};
+std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PollutionMem{};
+std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> LandValueMem{};
+std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> CrimeMem{};
+
+
+std::array<std::array<int, QuarterWorldWidth>, QuarterWorldWidth> TerrainMem{};
+std::array<std::array<int, QuarterWorldWidth>, QuarterWorldWidth> Qtem{};
+
 
 int RateOGMem[SmX][SmY];
 int FireStMap[SmX][SmY];
@@ -124,63 +128,82 @@ int FireRate[SmX][SmY];
 int ComRate[SmX][SmY];
 int STem[SmX][SmY];
 
-Byte* terrainBase;
-Byte* qTemBase;
-Byte* tem1Base;
-Byte* tem2Base;
+std::array<int, HistoryLength> ResHis{};
+std::array<int, HistoryLength> ComHis{};
+std::array<int, HistoryLength> IndHis{};
 
-int *ResHis;
-int *ComHis;
-int *IndHis;
-int *MoneyHis;
-int *PollutionHis;
-int *CrimeHis;
-int *MiscHis;
-int *PowerMap;
+std::array<int, HistoryLength> MoneyHis{};
+std::array<int, HistoryLength> PollutionHis{};
+std::array<int, HistoryLength> CrimeHis{};
+std::array<int, HistoryLength> MiscHis{};
+std::array<int, HistoryLength> PowerMap{};
+
+
+namespace
+{
+    void resetHalfArrays()
+    {
+        for (int x = 0; x < HalfWorldWidth; x++)
+        {
+            for (int y = 0; y < HalfWorldHeight; y++)
+            {
+                PopDensity[x][y] = 0;
+                TrfDensity[x][y] = 0;
+                PollutionMem[x][y] = 0;
+                LandValueMem[x][y] = 0;
+                CrimeMem[x][y] = 0;
+            }
+        }
+    }
+
+    void resetQuarterArrays()
+    {
+        for (int row = 0; row < QuarterWorldWidth; ++row)
+        {
+            for (int col = 0; col < QuarterWorldHeight; ++col)
+            {
+                TerrainMem[row][col] = 0;
+                Qtem[row][col] = 0;
+            }
+        }
+    }
+
+    void resetMapArray()
+    {
+        for (int x = 0; x < SimWidth; x++)
+        {
+            for (int y = 0; y < SimHeight; y++)
+            {
+                Map[x][y] = 0;
+            }
+        }
+    }
+
+    void resetHistoryArrays()
+    {
+        for (int i = 0; i < HistoryLength; ++i)
+        {
+            ResHis[i] = 0;
+            ComHis[i] = 0;
+            IndHis[i] = 0;
+            MoneyHis[i] = 0;
+            CrimeHis[i] = 0;
+            PollutionHis[i] = 0;
+        }
+    }
+};
 
 
 void initMapArrays()
 {
 
-    for(int row = 0; row < SimWidth; ++row)
-    {
-        for (int col = 0; col < SimHeight; ++col)
-        {
-            Map[row][col] = 0;
-        }
-    }
+    resetMapArray();
+    resetHalfArrays();
+    resetQuarterArrays();
+    resetHistoryArrays();
 
-    /*
-    for (int i = 0; i < HalfWorldWidth; i++)
-    {
-        PopDensity[i] = (Byte*)auxPopPtr + (i * HalfWorldHeight);
-        TrfDensity[i] = (Byte*)auxTrfPtr + (i * HalfWorldHeight);
-        PollutionMem[i] = (Byte*)auxPolPtr + (i * HalfWorldHeight);
-        LandValueMem[i] = (Byte*)auxLandPtr + (i * HalfWorldHeight);
-        CrimeMem[i] = (Byte*)auxCrimePtr + (i * HalfWorldHeight);
+    resetHistoryArrays();
 
-        tem[i] = (Byte*)tem1Base + (i * HalfWorldHeight);
-        tem2[i] = (Byte*)tem2Base + (i * HalfWorldHeight);
-    }
-
-    brettPtr = (Ptr)&PopDensity[0][0];
-
-    terrainBase = NewPtr(QuarterWorldWidth * QuarterWorldHeight);
-    qTemBase = NewPtr(QuarterWorldWidth * QuarterWorldHeight);
-
-    for (int i = 0; i < QuarterWorldWidth; i++)
-    {
-        TerrainMem[i] = (Byte*)terrainBase + (i * QuarterWorldHeight);
-        Qtem[i] = (Byte*)qTemBase + (i * QuarterWorldHeight);
-    }
-
-    ResHis = (int*)NewPtr(HISTLEN);
-    ComHis = (int*)NewPtr(HISTLEN);
-    IndHis = (int*)NewPtr(HISTLEN);
-    MoneyHis = (int*)NewPtr(HISTLEN);
-    PollutionHis = (int*)NewPtr(HISTLEN);
-    CrimeHis = (int*)NewPtr(HISTLEN);
-    MiscHis = (int*)NewPtr(MISCHISTLEN);
-    PowerMap = (int*)NewPtr(POWERMAPLEN); // power alloc
-    */
+    for (auto& idx : MiscHis) { idx = 0; }
+    for (auto& idx : PowerMap) { idx = 0; }
 }

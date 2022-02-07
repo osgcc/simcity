@@ -220,7 +220,7 @@ void DoRadTile()
 
 int GetBoatDis()
 {
-    int dist, mx, my, dx, dy;
+    int dist, mx, my;// , dx, dy;
  
     dist = 99999;
     mx = (SMapX << 4) + 8;
@@ -908,7 +908,7 @@ void InitSimMemory()
 
   z = 0;
   SetCommonInits();
-  for (x = 0; x < 240; x++)  {
+  for (x = 0; x < HistoryLength; x++)  {
     ResHis[x] = z;
     ComHis[x] = z;
     IndHis[x] = z;

@@ -125,12 +125,12 @@ static int _load_file(const std::string filename, const std::string& dir)
     return (0);
   }
 
-  if ((_load_short(ResHis, HISTLEN / 2, f) == 0) ||
-      (_load_short(ComHis, HISTLEN / 2, f) == 0) ||
-      (_load_short(IndHis, HISTLEN / 2, f) == 0) ||
-      (_load_short(CrimeHis, HISTLEN / 2, f) == 0) ||
-      (_load_short(PollutionHis, HISTLEN / 2, f) == 0) ||
-      (_load_short(MoneyHis, HISTLEN / 2, f) == 0) ||
+  if ((_load_short(ResHis, HistoryLength / 2, f) == 0) ||
+      (_load_short(ComHis, HistoryLength / 2, f) == 0) ||
+      (_load_short(IndHis, HistoryLength / 2, f) == 0) ||
+      (_load_short(CrimeHis, HistoryLength / 2, f) == 0) ||
+      (_load_short(PollutionHis, HistoryLength / 2, f) == 0) ||
+      (_load_short(MoneyHis, HistoryLength / 2, f) == 0) ||
       (_load_short(MiscHis, MISCHISTLEN / 2, f) == 0) ||
       (_load_short((&Map[0][0]), SimWidth * SimHeight, f) < 0)) {
 
@@ -254,12 +254,12 @@ int saveFile(const std::string& filename)
   l = (int)(roadPercent * 65536);
   (*(int *)(MiscHis + 62)) = l;
 
-  if ((_save_short(ResHis, HISTLEN / 2, f) == 0) ||
-      (_save_short(ComHis, HISTLEN / 2, f) == 0) ||
-      (_save_short(IndHis, HISTLEN / 2, f) == 0) ||
-      (_save_short(CrimeHis, HISTLEN / 2, f) == 0) ||
-      (_save_short(PollutionHis, HISTLEN / 2, f) == 0) ||
-      (_save_short(MoneyHis, HISTLEN / 2, f) == 0) ||
+  if ((_save_short(ResHis, HistoryLength / 2, f) == 0) ||
+      (_save_short(ComHis, HistoryLength / 2, f) == 0) ||
+      (_save_short(IndHis, HistoryLength / 2, f) == 0) ||
+      (_save_short(CrimeHis, HistoryLength / 2, f) == 0) ||
+      (_save_short(PollutionHis, HistoryLength / 2, f) == 0) ||
+      (_save_short(MoneyHis, HistoryLength / 2, f) == 0) ||
       (_save_short(MiscHis, MISCHISTLEN / 2, f) == 0) ||
       (_save_short((&Map[0][0]), SimWidth * SimHeight, f) < 0)) {
 

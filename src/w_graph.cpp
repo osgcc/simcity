@@ -63,8 +63,10 @@
 
 #include "Graph.h"
 
-
 #include "s_alloc.h"
+
+
+#include <algorithm>
 
 
 int NewGraph = 0;
@@ -311,14 +313,11 @@ void graph_command_init()
 }
 
 
-void drawMonth(int* hist, unsigned char* s, float scale)
+void drawMonth(const std::array<int, HistoryLength>& history, unsigned char* s, float scale)
 {
     for (int x = 0; x < 120; x++)
     {
-        int val = static_cast<int>(hist[x] * scale);
-        if (val < 0) val = 0;
-        if (val > 255) val = 255;
-        s[119 - x] = val;
+        s[119 - x] = std::clamp(static_cast<int>(history[x] * scale), 0, 255);
     }
 }
 
@@ -339,9 +338,9 @@ void doAllGraphs()
     drawMonth(ResHis, History10[RES_HIST], scaleValue);
     drawMonth(ComHis, History10[COM_HIST], scaleValue);
     drawMonth(IndHis, History10[IND_HIST], scaleValue);
-    drawMonth(MoneyHis, History10[MONEY_HIST], 1.0);
-    drawMonth(CrimeHis, History10[CRIME_HIST], 1.0);
-    drawMonth(PollutionHis, History10[POLLUTION_HIST], 1.0);
+    //drawMonth(MoneyHis, History10[MONEY_HIST], 1.0);
+    //drawMonth(CrimeHis, History10[CRIME_HIST], 1.0);
+    //drawMonth(PollutionHis, History10[POLLUTION_HIST], 1.0);
 
     AllMax = 0;
     if (Res2HisMax > AllMax) { AllMax = Res2HisMax; }
@@ -353,16 +352,16 @@ void doAllGraphs()
 
     // scaleValue = 0.5; // XXX
 
-    drawMonth(ResHis + 120, History120[RES_HIST], scaleValue);
-    drawMonth(ComHis + 120, History120[COM_HIST], scaleValue);
-    drawMonth(IndHis + 120, History120[IND_HIST], scaleValue);
-    drawMonth(MoneyHis + 120, History120[MONEY_HIST], 1.0);
-    drawMonth(CrimeHis + 120, History120[CRIME_HIST], 1.0);
-    drawMonth(PollutionHis + 120, History120[POLLUTION_HIST], 1.0);
+    //drawMonth(ResHis + 120, History120[RES_HIST], scaleValue);
+    //drawMonth(ComHis + 120, History120[COM_HIST], scaleValue);
+    //drawMonth(IndHis + 120, History120[IND_HIST], scaleValue);
+    //drawMonth(MoneyHis + 120, History120[MONEY_HIST], 1.0);
+    //drawMonth(CrimeHis + 120, History120[CRIME_HIST], 1.0);
+    //drawMonth(PollutionHis + 120, History120[POLLUTION_HIST], 1.0);
 }
 
 
-extern int CensusChanged;
+static int CensusChanged;
 
 void ChangeCensus()
 {

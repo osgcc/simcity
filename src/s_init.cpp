@@ -103,38 +103,7 @@ void InitWillStuff()
     DisasterEvent = 0;
     TaxFlag = 0;
 
-    for (int x = 0; x < HalfWorldWidth; x++)
-    {
-        for (int y = 0; y < HalfWorldHeight; y++)
-        {
-            PopDensity[x][y] = 0;
-            TrfDensity[x][y] = 0;
-            PollutionMem[x][y] = 0;
-            LandValueMem[x][y] = 0;
-            CrimeMem[x][y] = 0;
-        }
-    }
-
-    for (int row = 0; row < QuarterWorldWidth; ++row)
-    {
-        for (int col = 0; col < QuarterWorldHeight; ++col)
-        {
-            TerrainMem[row][col] = 0;
-        }
-    }
-
-    for (int x = 0; x < SmX; x++)
-    {
-        for (int y = 0; y < SmY; y++)
-        {
-            RateOGMem[x][y] = 0;
-            FireRate[x][y] = 0;
-            ComRate[x][y] = 0;
-            PoliceMap[x][y] = 0;
-            PoliceMapEffect[x][y] = 0;
-            FireRate[x][y] = 0;
-        }
-    }
+    initMapArrays();
 
     ResetLastKeys();
     DoNewGame();
