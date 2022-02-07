@@ -1217,13 +1217,13 @@ void HandleAutoGoto(SimView* view)
 
 void DrawCursor(SimView* view)
 {
+    /*
     //Pixmap pm = Tk_WindowId(view->tkwin);
     int left = (view->w_width / 2) - view->pan_x;
     int top = (view->w_height / 2) - view->pan_y;
     int x, y, mode, size, offset, fg, bg, light, dark;
     SimView* v;
-
-    /*
+    
     for (v = sim->editor; v != NULL; v = v->next)
     {
         mode = v->tool_mode;
