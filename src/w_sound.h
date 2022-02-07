@@ -13,3 +13,6 @@ void StopBulldozer();
 void SoundOff();
 void DoStartSound(const char* channel, const char* id);
 void DoStopSound(const char* id);
+
+bool userSoundOn();
+void userSoundOn(bool);

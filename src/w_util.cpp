@@ -67,7 +67,12 @@
 
 #include "View.h"
 
+#include <algorithm>
 #include <string>
+
+
+
+static int SimMetaSpeed;
 
 
  /* tile bounds */
@@ -100,29 +105,31 @@ std::string NumberToDollarDecimal(int value)
 
 void setSpeed(int speed)
 {
-  if (speed < 0) speed = 0;
-  else if (speed > 3) speed = 3;
+    speed = std::clamp(speed, 0, 3);
 
-  SimMetaSpeed = speed;
+    SimMetaSpeed = speed;
 
-  if (sim_paused) {
-    sim_paused_speed = SimMetaSpeed;
-    speed = 0;
-  }
+    if (sim_paused)
+    {
+        sim_paused_speed = SimMetaSpeed;
+        speed = 0;
+    }
 
-  SimSpeed = speed;
+    SimSpeed = speed;
 
-  if (speed == 0) {
-    StopMicropolisTimer();
-  } else {
-    StartMicropolisTimer();
-  }
+    if (speed == 0)
+    {
+        StopMicropolisTimer();
+    }
+    else
+    {
+        StartMicropolisTimer();
+    }
 
-  { /*char buf[256];
+    /*char buf[256];
     sprintf(buf, "UISetSpeed %d", sim_paused ? 0 : SimMetaSpeed);
     Eval(buf);
     */
-  }
 }
 
 

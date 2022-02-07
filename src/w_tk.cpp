@@ -95,7 +95,7 @@ void EventuallyRedrawView(SimView* view)
 }
 
 
-int Eval(const std::string& buf)
+bool Eval(const std::string& buf)
 {
     std::cout << buf << std::endl;
     /*
@@ -108,7 +108,7 @@ int Eval(const std::string& buf)
     }
     */
 
-    return 0;
+    return false;
 }
 
 

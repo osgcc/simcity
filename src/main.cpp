@@ -121,12 +121,12 @@ int TilesAnimated = 0;
 int DoAnimation = 1;
 int DoMessages = 1;
 int DoNotices = 1;
-int ExitReturn = 0;
+bool Exit = false;
 
 
-void sim_exit(int val)
+void sim_exit()
 {
-    ExitReturn = val;
+    Exit = true;
 }
 
 
@@ -463,21 +463,12 @@ void sim_loop(int doSim)
 }
 
 
-void sim_timeout_loop(int doSim)
-{
-    if (SimSpeed)
-    {
-        sim_loop(doSim);
-    }
-    DoTimeoutListen();
-}
-
-
 void sim_init()
 {
     signal_init();
 
-    UserSoundOn = 1;
+    userSoundOn(true);
+
     MustUpdateOptions = 1;
     HaveLastMessage = false;
     ScenarioID = 0;
@@ -502,7 +493,7 @@ void sim_init()
     sim_paused = 0;
     sim_loops = 0;
     InitSimLoad = 2;
-    ExitReturn = 0;
+    Exit = 0;
 
     InitializeSound();
     initMapArrays();
@@ -526,7 +517,7 @@ SDL_Renderer* MainWindowRenderer = nullptr;
 
 void startGame()
 {
-    MainWindow = SDL_CreateWindow("Micropolis", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
+    MainWindow = SDL_CreateWindow("Micropolis", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_RESIZABLE);// | SDL_WINDOW_MAXIMIZED);
     if (!MainWindow)
     {
         throw std::runtime_error("tk_main(): Unable to create primary window: " + std::string(SDL_GetError()));
@@ -538,23 +529,18 @@ void startGame()
         throw std::runtime_error("tk_main(): Unable to create renderer: " + std::string(SDL_GetError()));
     }
 
-    //sim_command_init();
     //map_command_init();
     //editor_command_init();
     //graph_command_init();
     //date_command_init();
     //sprite_command_init();
 
-    //sim = MakeNewSim();
-
-    //sprintf(initCmd, "source %s/micropolis.tcl", ResourceDir);
     if (Eval("source res/micropolis.tcl"))
     {
-        sim_exit(1); // Just sets tkMustExit and ExitReturn
         throw std::runtime_error("Eval fail");
     }
 
-    //sim_init();
+    sim_init();
 
     // tcl command buffer -- hmm
     //buffer = Tcl_CreateCmdBuf();
@@ -573,11 +559,19 @@ void startGame()
     SDL_Init(SDL_INIT_VIDEO);
 
     bitmapSurface = SDL_LoadBMP("images/airport.bmp");
+    if (!bitmapSurface)
+    {
+        std::cout << "Failed to load BMP: " << SDL_GetError() << std::endl;
+    }
+
     bitmapTex = SDL_CreateTextureFromSurface(MainWindowRenderer, bitmapSurface);
     SDL_FreeSurface(bitmapSurface);
 
-    bool gameActive = true;
-    while (gameActive)
+
+    InitGame();
+    GameStarted();
+
+    while (!Exit)
     {
         SDL_Event event;
         while (SDL_PollEvent(&event))
@@ -585,7 +579,7 @@ void startGame()
             switch (event.type)
             {
             case SDL_QUIT:
-                gameActive = false;
+                sim_exit();
                 break;
             }
         }
@@ -598,11 +592,6 @@ void startGame()
     SDL_DestroyTexture(bitmapTex);
     SDL_DestroyRenderer(MainWindowRenderer);
     SDL_DestroyWindow(MainWindow);
-
-    SDL_Quit();
-
-
-    sim_exit(0); // Just sets tkMustExit and ExitReturn
 }
 
 
@@ -622,6 +611,8 @@ int main(int argc, char* argv[])
 
     env_init();
     startGame();
+
+    SDL_Quit();
 
     return 0;
 }

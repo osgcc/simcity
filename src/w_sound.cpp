@@ -69,18 +69,28 @@
 /* Sound routines */
 
 
-int SoundInitialized = 0;
+static bool SoundInitialized = false;
+static bool UserSoundOn = true;
 int Dozing = 0;
+
+
+bool userSoundOn()
+{
+    return SoundInitialized;
+}
+
+void userSoundOn(bool val)
+{
+    SoundInitialized = val;
+}
+
 
 
 void InitializeSound()
 {
-    SoundInitialized = 1;
-    if (!UserSoundOn)
-    {
-        return;
-    }
-    Eval("UIInitializeSound");
+    SoundInitialized = true;
+
+    // load sound samples here
 }
 
 
@@ -88,8 +98,7 @@ void ShutDownSound()
 {
     if (SoundInitialized)
     {
-        SoundInitialized = 0;
-        Eval("UIShutDownSound");
+        // unload sound samples here
     }
 }
 

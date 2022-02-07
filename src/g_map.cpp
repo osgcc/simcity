@@ -107,9 +107,6 @@ void maybeDrawRect(SimView* view, int val, int x, int y, int w, int h);
 //int drawPoliceRadius(SimView *view);
 
 
-/**
- * What does 'CI' mean?
- */
 int GetColorIndex(int x)
 {
 	if (x < 50)

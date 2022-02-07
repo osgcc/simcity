@@ -84,8 +84,6 @@ int GameLevel;
 int InitSimLoad;
 int ScenarioID;
 int SimSpeed;
-int SimMetaSpeed;
-int UserSoundOn;
 std::string CityName;
 int NoDisasters;
 int MesNum;
@@ -162,18 +160,13 @@ void InitGame()
 }
 
 
-void ReallyQuit()
-{
-    sim_exit(0); // Just sets tkMustExit and ExitReturn
-}
-
-
 void GameStarted()
 {
     InvalidateMaps();
     InvalidateEditors();
 
-    switch (Startup) {
+    switch (Startup)
+    {
     case -2: /* Load a city */
         if (LoadCity(StartupName))
         {

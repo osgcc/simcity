@@ -65,6 +65,7 @@
 
 #include "w_eval.h"
 #include "w_graph.h"
+#include "w_sound.h"
 #include "w_stubs.h"
 #include "w_tk.h"
 #include "w_util.h"
@@ -187,16 +188,41 @@ void updateOptions()
 {
   int options;
 
-  if (MustUpdateOptions) {
+  if (MustUpdateOptions)
+  {
     options = 0;
-    if (autoBudget)	options |= 1;
-    if (autoGo)		options |= 2;
-    if (autoBulldoze)	options |= 4;
-    if (!NoDisasters)	options |= 8;
-    if (UserSoundOn)	options |= 16;
-    if (DoAnimation)	options |= 32;
-    if (DoMessages)	options |= 64;
-    if (DoNotices)	options |= 128;
+    if (autoBudget)
+    {
+        options |= 1;
+    }
+    if (autoGo)
+    {
+        options |= 2;
+    }
+    if (autoBulldoze)
+    {
+        options |= 4;
+    }
+    if (!NoDisasters)
+    {
+        options |= 8;
+    }
+    if (userSoundOn())
+    {
+        options |= 16;
+    }
+    if (DoAnimation)
+    {
+        options |= 32;
+    }
+    if (DoMessages)
+    {
+        options |= 64;
+    }
+    if (DoNotices)
+    {
+        options |= 128;
+    }
 
     MustUpdateOptions = 0;
     UpdateOptionsMenu(options);

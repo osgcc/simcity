@@ -439,12 +439,10 @@ extern int MesNum, MessagePort;
 extern int LastMesTime;
 
 extern int SimSpeed;
-extern int SimMetaSpeed;
 extern int NoDisasters;
 extern int autoBulldoze;
 extern int autoBudget;
 extern bool AutoGo;
-extern int UserSoundOn;
 
 extern int DisasterEvent;
 extern int DisasterWait;
@@ -529,11 +527,13 @@ extern int CurveLevel;
 extern int CreateIsland;
 extern int specialBase;
 extern int PunishCnt;
-extern int Dozing;
+
 extern int toolSize[];
 extern int toolOffset[];
+
 extern std::string Displays;
 extern std::string FirstDisplay;
+
 extern const char *dateStr[12];
 
 extern int NewMap;
@@ -546,9 +546,8 @@ extern int CensusChanged;
 extern int EvalChanged;
 extern int MeltX, MeltY;
 extern int NeedRest;
-extern int ExitReturn;
 
 extern int FlushStyle;
 extern int GotXError;
 
-void sim_exit(int val);
+void sim_exit();

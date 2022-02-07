@@ -207,13 +207,6 @@ void DoStopMicropolis()
 }
 
 
-void DoTimeoutListen()
-{
-    //while (Tk_DoOneEvent(TK_DONT_WAIT));
-    // Dispatch events here
-}
-
-
 /*
 XDisplay* FindXDisplay(Tk_Window tkwin)
 {
