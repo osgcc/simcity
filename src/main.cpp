@@ -61,6 +61,7 @@
  */
 #include "main.h"
 
+#include "BigMap.h"
 #include "g_map.h"
 
 #include "s_alloc.h"
@@ -83,6 +84,7 @@
 #include "w_util.h"
 #include "w_x.h"
 
+#include <algorithm>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -106,7 +108,7 @@ int sim_loops = 0;
 int sim_delay = 50;
 int sim_skips = 0;
 int sim_skip = 0;
-int sim_paused = 0;
+bool sim_paused = 0;
 int sim_paused_speed = 3;
 int heat_steps = 0;
 int heat_flow = -7;
@@ -515,11 +517,109 @@ void sim_init()
 SDL_Window* MainWindow = nullptr;
 SDL_Renderer* MainWindowRenderer = nullptr;
 
-
 SDL_Texture* TilesetTexture = nullptr;
 
-#include "BigMap.h"
-#include "w_sound.h"
+Vector<int> mouseDelta{};
+Point<int> mapRasterOrigin{};
+Point<int> mapTileOffset{};
+
+
+void windowResized(const Vector<int>& size)
+{
+
+}
+
+
+void pumpEvents()
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        switch (event.type)
+        {
+        case SDL_KEYDOWN:
+            switch (event.key.keysym.sym)
+            {
+            case SDLK_SPACE:
+                DoPlayNewCity();
+                break;
+
+            case SDLK_ESCAPE:
+                sim_exit();
+                break;
+
+            case SDLK_LEFT:
+                mapTileOffset =
+                {
+                    std::clamp(mapTileOffset.x - 1, 0, SimWidth),
+                    mapTileOffset.y
+                };
+                break;
+
+            case SDLK_RIGHT:
+                mapTileOffset =
+                {
+                    std::clamp(mapTileOffset.x + 1, 0, SimWidth - mapTileOffset.x),
+                    mapTileOffset.y
+                };
+                break;
+
+            case SDLK_UP:
+                mapTileOffset =
+                {
+                    mapTileOffset.x,
+                    std::clamp(mapTileOffset.y - 1, 0, SimHeight)
+                };
+                break;
+
+            case SDLK_DOWN:
+                mapTileOffset =
+                {
+                    mapTileOffset.x,
+                    std::clamp(mapTileOffset.y + 1, 0, SimHeight - mapTileOffset.y)
+                };
+                break;
+
+            case SDLK_1:
+                tileScale(1);
+                break;
+
+            case SDLK_2:
+                tileScale(2);
+                break;
+
+            case SDLK_3:
+                tileScale(3);
+                break;
+
+            default:
+                break;
+
+            }
+            break;
+
+        case SDL_MOUSEMOTION:
+            if ((SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON_RMASK) != 0)
+            {
+                mouseDelta = { event.motion.xrel, event.motion.yrel };
+                mapRasterOrigin += mouseDelta;
+            }
+            break;
+
+        case SDL_QUIT:
+            sim_exit();
+            break;
+
+        case SDL_WINDOWEVENT_RESIZED:
+            windowResized(Vector<int>{0, 0});
+            break;
+            
+        default:
+            break;
+        }
+    }
+}
+
 
 void startGame()
 {
@@ -565,42 +665,11 @@ void startGame()
 
     GameStarted();
 
-    SDL_Rect drawRect{ 0, 0, 64, 64 };
-    SDL_Rect tileRect{ 0, 0, 16, 16 };
-
-    Vector<int> mouseDelta{};
-    Point<int> mapRasterOrigin{};
-
-
     while (!Exit)
     {
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            switch (event.type)
-            {
-            case SDL_KEYDOWN:
-                if (event.key.keysym.sym == SDLK_SPACE)
-                {
-                    DoPlayNewCity();
-                }
-                else if (event.key.keysym.sym == SDLK_ESCAPE)
-                {
-                    sim_exit();
-                }
-                break;
-
-            case SDL_MOUSEMOTION:
-                mouseDelta = { event.motion.xrel, event.motion.yrel };
-                mapRasterOrigin += mouseDelta;
-
-            case SDL_QUIT:
-                sim_exit();
-                break;
-            }
-        }
+        pumpEvents();
         SDL_RenderClear(MainWindowRenderer);
-        DrawBigMap(mouseDelta.x, mouseDelta.y, SimWidth, SimHeight);
+        DrawBigMap(mapRasterOrigin, mapTileOffset, Vector<int>{ 50, 50 });
         SDL_RenderPresent(MainWindowRenderer);
     }
 

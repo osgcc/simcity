@@ -74,8 +74,27 @@ extern SDL_Renderer* MainWindowRenderer;;
 extern SDL_Texture* TilesetTexture;;
 
 
-SDL_Rect drawRect{ 0, 0, 16, 16 };
-SDL_Rect tileRect{ 0, 0, 16, 16 };
+
+namespace
+{
+	int TileScale = 1;
+
+	SDL_Rect drawRect{ 0, 0, 16 * TileScale, 16 * TileScale };
+	SDL_Rect tileRect{ 0, 0, 16, 16 };
+};
+
+
+void tileScale(const int scale)
+{
+	TileScale = scale;
+	drawRect =	{ 0, 0, 16 * TileScale, 16 * TileScale };
+}
+
+
+int tileScale()
+{
+	return TileScale;
+}
 
 
 unsigned int getRawTileValue(const int x, const int y)
@@ -86,7 +105,7 @@ unsigned int getRawTileValue(const int x, const int y)
 
 unsigned int getTileValue(const int x, const int y)
 {
-	return static_cast<unsigned int>(Map[x][y]) & LOMASK;
+	return getRawTileValue(x, y) & LOMASK;
 }
 
 
@@ -129,43 +148,24 @@ bool blink()
  * been used as a way to get view paramters from some sort of a GUI context
  * from Tcl/Tk. Since it's no longer used this paramter can be removed.
  */
-void DrawBigMap(int x, int y, int w, int h)
+void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Vector<int>& loops)
 {
-	for (int row = 0; row < w; row++)
+	unsigned int tile = 0;
+	
+	for (int row = 0; row < loops.x; row++)
 	{
-		for (int col = 0; col < h; col++)
+		for (int col = 0; col < loops.y; col++)
 		{
-			unsigned int tile = getRawTileValue(row, col);
-
-			/**
-			 * \fixme	This doesn't look like it should *ever* be the case --
-			 *			assuming this we can adjust the above function to return
-			 * 			tile value with mask applied and simplify below.
-			 */
-			if ((tile & LOMASK) >= TILE_COUNT)
-			{
-				tile -= TILE_COUNT;
-			}
+			tile = getTileValue(row + offset.x, col + offset.y);
 
 			// Blink lightning bolt in unpowered zone center
 			if (blink() && tileIsZoned(tile) && !tilePowered(tile))
 			{
 				tile = LIGHTNINGBOLT;
 			}
-			else
-			{
-				tile &= LOMASK;
-			}
 
-			/*
-			if ((tile > 63) && (view->dynamic_filter != 0) && (dynamicFilter(col + x, row + y) == 0))
-			{
-				tile = 0;
-			}
-			*/
-
-			drawRect.x = row * 16;
-			drawRect.y = col * 16;
+			drawRect.x = (row * drawRect.w) + drawOrigin.x;
+			drawRect.y = (col * drawRect.h) + drawOrigin.y;
 
 			tileRect.y = tile * 16;
 

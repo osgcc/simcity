@@ -1,3 +1,9 @@
 #pragma once
 
-void DrawBigMap(int x, int y, int w, int h);
+#include "Point.h"
+#include "Vector.h"
+
+int tileScale();
+void tileScale(const int scale);
+
+void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Vector<int>& loops);

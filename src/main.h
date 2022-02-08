@@ -496,7 +496,7 @@ extern int MultiPlayerMode;
 extern int sim_delay;
 extern int sim_skips;
 extern int sim_skip;
-extern int sim_paused;
+extern bool sim_paused;
 extern int sim_paused_speed;
 extern int heat_steps;
 extern int heat_flow;
