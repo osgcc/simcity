@@ -514,7 +514,6 @@ extern int PendingY;
 extern int TreeLevel;
 extern int LakeLevel;
 extern int CurveLevel;
-extern int CreateIsland;
 extern int specialBase;
 extern int PunishCnt;
 
