@@ -539,16 +539,6 @@ void ReallyStartMicropolisTimer(ClientData clientData)
 */
 
 
-/*
-static void DelayedUpdate(ClientData clientData)
-{
-    //fprintf(stderr, "DelayedUpdate\n");
-    UpdateDelayed = 0;
-    sim_skip = 0;
-    sim_update();
-}
-*/
-
 void Kick()
 {
     std::cout << "Kick" << std::endl;
