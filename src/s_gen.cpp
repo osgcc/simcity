@@ -477,36 +477,53 @@ void DoRivers()
 
 void MakeNakedIsland()
 {
-int x, y;
+    for (int x = 0; x < SimWidth; x++)
+    {
+        for (int y = 0; y < SimHeight; y++)
+        {
+            Map[x][y] = RIVER;
+        }
+    }
+    
+    for (int x = 5; x < SimWidth - 5; x++)
+    {
+        for (int y = 5; y < SimHeight - 5; y++)
+        {
+            Map[x][y] = DIRT;
+        }
+    }
+   
+    for (int x = 0; x < SimWidth - 5; x += 2)
+    {
+        MapX = x;
+        MapY = ERand(RADIUS);
+        BRivPlop();
 
-  for (x = 0; x < SimWidth; x++)
-    for (y = 0; y < SimHeight; y++)
-      Map[x][y] = RIVER;
-  for (x = 5; x < SimWidth - 5; x++)
-    for (y = 5; y < SimHeight - 5; y++)
-      Map[x][y] = DIRT;
-  for (x = 0; x < SimWidth - 5; x += 2) {
-    MapX = x ;
-    MapY = ERand(RADIUS);
-    BRivPlop();
-    MapY = (SimHeight - 10) - ERand(RADIUS);
-    BRivPlop();
-    MapY = 0;
-    SRivPlop();
-    MapY = (SimHeight - 6);
-    SRivPlop();
-  }
-  for (y = 0; y < SimHeight - 5; y += 2) {
-    MapY = y ;
-    MapX = ERand(RADIUS);
-    BRivPlop();
-    MapX = (SimWidth - 10) - ERand(RADIUS);
-    BRivPlop();
-    MapX = 0;
-    SRivPlop();
-    MapX = (SimWidth - 6);
-    SRivPlop();
-  }
+        MapY = (SimHeight - 10) - ERand(RADIUS);
+        BRivPlop();
+
+        MapY = 0;
+        SRivPlop();
+
+        MapY = (SimHeight - 6);
+        SRivPlop();
+    }
+
+    for (int y = 0; y < SimHeight - 5; y += 2)
+    {
+        MapY = y;
+        MapX = ERand(RADIUS);
+        BRivPlop();
+
+        MapX = (SimWidth - 10) - ERand(RADIUS);
+        BRivPlop();
+
+        MapX = 0;
+        SRivPlop();
+
+        MapX = (SimWidth - 6);
+        SRivPlop();
+    }
 }
 
 
