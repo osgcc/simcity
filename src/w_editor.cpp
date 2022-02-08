@@ -64,7 +64,7 @@
 #include "view.h"
 
 #include "g_ani.h"
-#include "g_bigmap.h"
+#include "BigMap.h"
 
 #include "s_sim.h"
 

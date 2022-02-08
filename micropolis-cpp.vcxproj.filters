@@ -18,9 +18,6 @@
     <ClCompile Include="src\g_ani.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_bigmap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\g_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -122,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="src\SmallMaps.h">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BigMap.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,9 +227,6 @@
     <ClInclude Include="src\g_ani.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\g_bigmap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Simulation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -240,6 +237,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\View.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BigMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

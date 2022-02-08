@@ -518,7 +518,7 @@ SDL_Renderer* MainWindowRenderer = nullptr;
 
 SDL_Texture* TilesetTexture = nullptr;
 
-#include "g_bigmap.h"
+#include "BigMap.h"
 #include "w_sound.h"
 
 void startGame()
