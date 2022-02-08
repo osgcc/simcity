@@ -1160,22 +1160,26 @@ Ink *OldInk = NULL;
 
 Ink* NewInk()
 {
-  Ink *ink;
+    /*   
+    Ink* ink;
 
-  if (OldInk) {
-    ink = OldInk;
-    OldInk = OldInk->next;
-  } else {
-    ink = (Ink *)malloc(sizeof(Ink));
-    ink->maxlength = POINT_BATCH;
-    ink->points = (XPoint *)malloc(POINT_BATCH * sizeof(XPoint));
-  }
-  ink->length = 0;
-  ink->color = COLOR_WHITE;
-  ink->next = NULL;
-  ink->left = ink->right = ink->top = ink->bottom =
-    ink->last_x = ink->last_y = -1;
-  return (ink);
+    if (OldInk) {
+        ink = OldInk;
+        OldInk = OldInk->next;
+    }
+    else {
+        ink = (Ink*)malloc(sizeof(Ink));
+        ink->maxlength = POINT_BATCH;
+        ink->points = (XPoint*)malloc(POINT_BATCH * sizeof(XPoint));
+    }
+    ink->length = 0;
+    ink->color = COLOR_WHITE;
+    ink->next = NULL;
+    ink->left = ink->right = ink->top = ink->bottom =
+        ink->last_x = ink->last_y = -1;
+    return (ink);
+    */
+        return nullptr;
 }
 
 
@@ -1188,9 +1192,9 @@ void FreeInk(Ink *ink)
 
 void StartInk(Ink *ink, int x, int y)
 {
-  ink->length = 1;
-  ink->left = ink->right = ink->last_x = ink->points[0].x = x;
-  ink->top = ink->bottom = ink->last_y = ink->points[0].y = y;
+  //ink->length = 1;
+  //ink->left = ink->right = ink->last_x = ink->points[0].x = x;
+  //ink->top = ink->bottom = ink->last_y = ink->points[0].y = y;
 }
 
 

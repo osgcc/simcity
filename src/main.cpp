@@ -568,6 +568,9 @@ void startGame()
     SDL_Rect drawRect{ 0, 0, 64, 64 };
     SDL_Rect tileRect{ 0, 0, 16, 16 };
 
+    Vector<int> mouseDelta{};
+    Point<int> mapRasterOrigin{};
+
 
     while (!Exit)
     {
@@ -587,13 +590,17 @@ void startGame()
                 }
                 break;
 
+            case SDL_MOUSEMOTION:
+                mouseDelta = { event.motion.xrel, event.motion.yrel };
+                mapRasterOrigin += mouseDelta;
+
             case SDL_QUIT:
                 sim_exit();
                 break;
             }
         }
         SDL_RenderClear(MainWindowRenderer);
-        DrawBigMap(nullptr, 0, 0, SimWidth, SimHeight);
+        DrawBigMap(mouseDelta.x, mouseDelta.y, SimWidth, SimHeight);
         SDL_RenderPresent(MainWindowRenderer);
     }
 

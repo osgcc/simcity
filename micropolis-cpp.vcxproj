@@ -62,6 +62,7 @@
     <ClInclude Include="src\Graph.h" />
     <ClInclude Include="src\g_ani.h" />
     <ClInclude Include="src\g_setup.h" />
+    <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\s_disast.h" />
@@ -75,6 +76,7 @@
     <ClInclude Include="src\s_sim.h" />
     <ClInclude Include="src\s_traf.h" />
     <ClInclude Include="src\s_zone.h" />
+    <ClInclude Include="src\Vector.h" />
     <ClInclude Include="src\View.h" />
     <ClInclude Include="src\w_budget.h" />
     <ClInclude Include="src\w_con.h" />

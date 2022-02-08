@@ -62,6 +62,8 @@
 
 #pragma once
 
+#include "Point.h"
+
 constexpr auto X_Mem_View = 1;
 constexpr auto X_Wire_View = 2;
 
@@ -74,14 +76,6 @@ constexpr auto Button_Release = 2;
 
 constexpr auto VIEW_REDRAW_PENDING = 1;
 
-
-struct XPoint
-{
-	int x{ 0 };
-	int y{ 0 };
-};
-
-
 struct Ink
 {
 	struct Ink* next{ nullptr };
@@ -89,7 +83,7 @@ struct Ink
 	int color{ 0 };
 	int length{ 0 };
 	int maxlength{ 0 };
-	XPoint* points{ nullptr };
+	//XPoint* points{ nullptr };
 	int left{ 0 }, top{ 0 }, right{ 0 }, bottom{ 0 };
 	int last_x{ 0 }, last_y{ 0 };
 };

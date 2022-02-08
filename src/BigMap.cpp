@@ -129,7 +129,7 @@ bool blink()
  * been used as a way to get view paramters from some sort of a GUI context
  * from Tcl/Tk. Since it's no longer used this paramter can be removed.
  */
-void DrawBigMap(SimView* view, int x, int y, int w, int h)
+void DrawBigMap(int x, int y, int w, int h)
 {
 	for (int row = 0; row < w; row++)
 	{
@@ -157,10 +157,12 @@ void DrawBigMap(SimView* view, int x, int y, int w, int h)
 				tile &= LOMASK;
 			}
 
+			/*
 			if ((tile > 63) && (view->dynamic_filter != 0) && (dynamicFilter(col + x, row + y) == 0))
 			{
 				tile = 0;
 			}
+			*/
 
 			drawRect.x = row * 16;
 			drawRect.y = col * 16;
