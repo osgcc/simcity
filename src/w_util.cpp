@@ -135,27 +135,29 @@ void setSpeed(int speed)
 
 void Pause()
 {
-  if (!sim_paused) {
-    sim_paused_speed = SimMetaSpeed;
-    setSpeed(0);
-    sim_paused = 1;
-  }
+    if (!sim_paused)
+    {
+        sim_paused_speed = SimMetaSpeed;
+        setSpeed(0);
+        sim_paused = true;
+    }
 }
 
 
 void Resume()
 {
-  if (sim_paused) {
-    sim_paused = 0;
-    setSpeed(sim_paused_speed);
-  }
+    if (sim_paused)
+    {
+        sim_paused = false;
+        setSpeed(sim_paused_speed);
+    }
 }
 
 
 void setSkips(int skips)
 {
-  sim_skips = skips;
-  sim_skip = 0;
+    sim_skips = skips;
+    sim_skip = 0;
 }
 
 

@@ -190,7 +190,8 @@ void DropFireBombs()
 
 void InitGame()
 {
-    sim_skips = sim_skip = sim_paused = sim_paused_speed = heat_steps = 0;
+    sim_skips = sim_skip = sim_paused_speed = heat_steps = 0;
+    sim_paused = false;
     setSpeed(0);
 }
 
