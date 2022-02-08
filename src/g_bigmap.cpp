@@ -78,33 +78,56 @@ extern SDL_Texture* TilesetTexture;;
 SDL_Rect drawRect{ 0, 0, 16, 16 };
 SDL_Rect tileRect{ 0, 0, 16, 16 };
 
+
+unsigned int getRawTileValue(const int x, const int y)
+{
+	return static_cast<unsigned int>(Map[x][y]);
+}
+
+
+unsigned int getTileValue(const int x, const int y)
+{
+	return static_cast<unsigned int>(Map[x][y]) & LOMASK;
+}
+
+
+bool tilePowered(const unsigned int tile)
+{
+	return tile & PWRBIT;
+}
+
+bool tileIsZoned(const unsigned int tile)
+{
+	return tile & ZONEBIT;
+}
+
+
+bool blink()
+{
+	return flagBlink <= 0;
+}
+
+
 void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 {
-	unsigned char blink = (flagBlink <= 0);
-
-	/*
-	 * Huge Berserk Rebel Warthog  <-- ?
-	 */
-	unsigned int tile = 0;
 	for (int row = 0; row < w; row++)
 	{
 		for (int col = 0; col < h; col++)
 		{
+			unsigned int tile = getRawTileValue(row, col);
 
-			tile = (unsigned int)Map[row][col];
-
-			if (tile != 0)
-			{
-				int x = tile;
-			}
-
+			/**
+			 * \fixme	This doesn't look like it should *ever* be the case --
+			 *			assuming this we can adjust the above function to return
+			 * 			tile value with mask applied and simplify below.
+			 */
 			if ((tile & LOMASK) >= TILE_COUNT)
 			{
 				tile -= TILE_COUNT;
 			}
 
-			/* Blink lightning bolt in unpowered zone center */
-			if (blink && (tile & ZONEBIT) && !(tile & PWRBIT))
+			// Blink lightning bolt in unpowered zone center
+			if (blink() && tileIsZoned(tile) && !tilePowered(tile))
 			{
 				tile = LIGHTNINGBOLT;
 			}
@@ -117,7 +140,6 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 			{
 				tile = 0;
 			}
-			
 
 			drawRect.x = row * 16;
 			drawRect.y = col * 16;
@@ -126,80 +148,5 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 
 			SDL_RenderCopy(MainWindowRenderer, TilesetTexture, &tileRect, &drawRect);
 		}
-	}
-}
-
-
-
-void WireDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
-{
-	unsigned int* map;
-	unsigned int tile;
-	unsigned char blink = (flagBlink <= 0);
-	int mm;
-	int** have, * ha;
-
-	if (x < view->tile_x)
-	{
-		if ((w -= (view->tile_x - x)) <= 0)
-		{
-			return;
-		}
-		x = view->tile_x;
-	}
-	if (y < view->tile_y)
-	{
-		if ((h -= (view->tile_y - y)) <= 0)
-		{
-			return;
-		}
-		y = view->tile_y;
-	}
-	if ((x + w) > (view->tile_x + view->tile_width))
-	{
-		if ((w -= ((x + w) - (view->tile_x + view->tile_width))) <= 0)
-		{
-			return;
-		}
-	}
-	if ((y + h) > (view->tile_y + view->tile_height))
-	{
-		if ((h -= ((y + h) - (view->tile_y + view->tile_height))) <= 0)
-		{
-			return;
-		}
-	}
-
-	map = (unsigned int*)&Map[x][y];
-	mm = SimHeight - h;
-	have = view->tiles;
-
-	for (int col = 0; col < w; col++)
-	{
-		ha = &have[col][0];
-		for (int row = 0; row < h; row++, ha++)
-		{
-			tile = *(map++);
-			if ((tile & LOMASK) >= TILE_COUNT) tile -= TILE_COUNT;
-
-			/* Blink lightning bolt in unpowered zone center */
-			if (blink && (tile & ZONEBIT) && !(tile & PWRBIT))
-			{
-				tile = LIGHTNINGBOLT;
-			}
-			else
-			{
-				tile &= LOMASK;
-			}
-
-			if (tile != *ha)
-			{
-				*ha = tile;
-				// blit
-				//XCopyArea(display, src, dest, gc, src_x, src_y, width, height,  dest_x, dest_y)
-				//XCopyArea(view->x->dpy, view->x->big_tile_pixmap, view->pixmap, view->x->gc, 0, tile * 16, 16, 16, col * 16, row * 16);
-			}
-		}
-		map += mm;
 	}
 }
