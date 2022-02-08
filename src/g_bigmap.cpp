@@ -61,18 +61,17 @@
  */
 #include "main.h"
 
+#include "SmallMaps.h"
+
 #include "s_alloc.h"
 
 #include "Sprite.h"
-
-int dynamicFilter(int c, int r);
 
 
 #include <SDL2/SDL.h>
 
 extern SDL_Renderer* MainWindowRenderer;;
 extern SDL_Texture* TilesetTexture;;
-
 
 
 SDL_Rect drawRect{ 0, 0, 16, 16 };
@@ -108,6 +107,28 @@ bool blink()
 }
 
 
+/**
+ * Draws the full sized map
+ * 
+ * Paramters currently don't really do much other than specify how much of the
+ * map to draw from origin (0, 0) up to (w, h). This function should take into
+ * account a draw offset (probably using (x, y)) though those coords are being
+ * used to reference \c dynamicFilter() (whatever that is, haven't exampled
+ * that function yet).
+ * 
+ * TODO:
+ * Have this function draw a map given a raster origin point and start reading
+ * from the map array given a tile origin (e.g., currently origin 0, 0, can be
+ * from any arbitrary point.
+ * 
+ * Additionally, checks should be put in place to ignore values outside of
+ * array boundaries so the checks don't need to be done code further up the
+ * chain.
+ * 
+ * Lastly, the \c SimView* parameter isn't currently used. This seems to have
+ * been used as a way to get view paramters from some sort of a GUI context
+ * from Tcl/Tk. Since it's no longer used this paramter can be removed.
+ */
 void DrawBigMap(SimView* view, int x, int y, int w, int h)
 {
 	for (int row = 0; row < w; row++)

@@ -26,6 +26,7 @@
     <ClCompile Include="src\g_setup.cpp" />
     <ClCompile Include="src\g_smmaps.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\SmallMaps.h" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\s_alloc.cpp" />
     <ClCompile Include="src\s_disast.cpp" />
