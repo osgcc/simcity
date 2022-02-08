@@ -136,7 +136,7 @@ std::array<int, HistoryLength> MoneyHis{};
 std::array<int, HistoryLength> PollutionHis{};
 std::array<int, HistoryLength> CrimeHis{};
 std::array<int, HistoryLength> MiscHis{};
-std::array<int, HistoryLength> PowerMap{};
+std::array<int, PWRMAPSIZE> PowerMap{};
 
 
 namespace

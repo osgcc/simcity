@@ -127,11 +127,10 @@ int DoMapCmd(ClientData clientData, Tcl_Interp* interp, int argc, char** argv)
 
 void DoNewMap(SimView* view)
 {
-    /*
-    sim->maps++; view->next = sim->map; sim->map = view;
-    //NewMap = 1;
+    
+    //sim->maps++; view->next = sim->map; sim->map = view;
+    NewMap = 1;
     view->invalid = 1;
-    */
 }
 
 

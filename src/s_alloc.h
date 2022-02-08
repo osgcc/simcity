@@ -37,7 +37,7 @@ extern std::array<int, HistoryLength> MoneyHis;
 extern std::array<int, HistoryLength> PollutionHis;
 extern std::array<int, HistoryLength> CrimeHis;
 extern std::array<int, HistoryLength> MiscHis;
-extern std::array<int, HistoryLength> PowerMap;
+extern std::array<int, PWRMAPSIZE> PowerMap;
 
 
 extern int ResHisMax;

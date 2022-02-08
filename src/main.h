@@ -526,11 +526,11 @@ extern std::string FirstDisplay;
 
 extern const char *dateStr[12];
 
-extern int NewMap;
+extern bool NewMap;
 extern int NewMapFlags[NMAPS];
 extern int NewGraph;
 extern int ValveFlag;
-extern int MustUpdateFunds;
+extern bool MustUpdateFunds;
 extern int MustUpdateOptions;
 extern int EvalChanged;
 extern int MeltX, MeltY;
@@ -540,3 +540,4 @@ extern int FlushStyle;
 extern int GotXError;
 
 void sim_exit();
+void sim_loop(bool doSim);

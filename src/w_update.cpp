@@ -71,7 +71,11 @@
 #include "w_util.h"
 
 
-int MustUpdateFunds;
+#include <algorithm>
+#include <limits>
+
+
+bool MustUpdateFunds = false;
 int MustUpdateOptions;
 int LastCityTime;
 int LastCityYear;
@@ -242,17 +246,16 @@ void doTimeStuff()
 
 void ReallyUpdateFunds()
 {
-    if (!MustUpdateFunds) return;
-
-    MustUpdateFunds = 0;
-
-    if (TotalFunds < 0) TotalFunds = 0;
-
-    if (TotalFunds != LastFunds)
+    if (!MustUpdateFunds)
     {
-        LastFunds = TotalFunds;
-        Eval("UISetFunds {" + NumberToDollarDecimal(TotalFunds) + "}");
+        return;
     }
+
+    MustUpdateFunds = false;
+
+    TotalFunds = std::clamp(TotalFunds, 0, std::numeric_limits<int>::max());
+
+    LastFunds = TotalFunds;
 }
 
 
@@ -292,13 +295,14 @@ void UpdateEvaluation()
 
 void UpdateHeads()
 {
-  MustUpdateFunds = ValveFlag = 1;
-  LastCityTime = LastCityYear = LastCityMonth = LastFunds = LastR = -999999;
-  DoUpdateHeads();
+    MustUpdateFunds = true;
+    ValveFlag = 1;
+    LastCityTime = LastCityYear = LastCityMonth = LastFunds = LastR = -999999;
+    DoUpdateHeads();
 }
 
 
 void UpdateFunds()
 {
-  MustUpdateFunds = 1;
+    MustUpdateFunds = true;
 }

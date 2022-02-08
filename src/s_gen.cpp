@@ -71,7 +71,8 @@
 
 
 #include <algorithm>
-
+#include <iostream>
+#include <limits>
 
 /* Generate Map */
 
@@ -331,12 +332,14 @@ void DoTrees()
     {
         Amount = TreeLevel + 3;
     }
+
     for (x = 0; x < Amount; x++)
     {
         xloc = RandomRange(0, SimWidth - 1);
         yloc = RandomRange(0, SimHeight - 1);
         TreeSplash(xloc, yloc);
     }
+
     SmoothTrees();
     SmoothTrees();
 }
@@ -456,13 +459,15 @@ void DoSRiv()
 void DoRivers()
 {
     LastDir = RandomRange(0, 3);
-    Dir = LastDir;
+    Dir = LastDir;   
     DoBRiv();
+    
     MapX = XStart;
     MapY = YStart;
     LastDir = LastDir ^ 4;
     Dir = LastDir;
     DoBRiv();
+
     MapX = XStart;
     MapY = YStart;
     LastDir = RandomRange(0, 3);
@@ -472,46 +477,36 @@ void DoRivers()
 
 void MakeNakedIsland()
 {
-    int x, y;
+int x, y;
 
-    for (x = 0; x < SimWidth; x++)
-    {
-        for (y = 0; y < SimHeight; y++)
-        {
-            Map[x][y] = RIVER;
-            for (x = 5; x < SimWidth - 5; x++)
-            {
-                for (y = 5; y < SimHeight - 5; y++)
-                {
-                    Map[x][y] = DIRT;
-                    for (x = 0; x < SimWidth - 5; x += 2)
-                    {
-                        MapX = x;
-                        MapY = ERand(RADIUS);
-                        BRivPlop();
-                        MapY = (SimHeight - 10) - ERand(RADIUS);
-                        BRivPlop();
-                        MapY = 0;
-                        SRivPlop();
-                        MapY = (SimHeight - 6);
-                        SRivPlop();
-                    }
-                }
-                for (y = 0; y < SimHeight - 5; y += 2)
-                {
-                    MapY = y;
-                    MapX = ERand(RADIUS);
-                    BRivPlop();
-                    MapX = (SimWidth - 10) - ERand(RADIUS);
-                    BRivPlop();
-                    MapX = 0;
-                    SRivPlop();
-                    MapX = (SimWidth - 6);
-                    SRivPlop();
-                }
-            }
-        }
-    }
+  for (x = 0; x < SimWidth; x++)
+    for (y = 0; y < SimHeight; y++)
+      Map[x][y] = RIVER;
+  for (x = 5; x < SimWidth - 5; x++)
+    for (y = 5; y < SimHeight - 5; y++)
+      Map[x][y] = DIRT;
+  for (x = 0; x < SimWidth - 5; x += 2) {
+    MapX = x ;
+    MapY = ERand(RADIUS);
+    BRivPlop();
+    MapY = (SimHeight - 10) - ERand(RADIUS);
+    BRivPlop();
+    MapY = 0;
+    SRivPlop();
+    MapY = (SimHeight - 6);
+    SRivPlop();
+  }
+  for (y = 0; y < SimHeight - 5; y += 2) {
+    MapY = y ;
+    MapX = ERand(RADIUS);
+    BRivPlop();
+    MapX = (SimWidth - 10) - ERand(RADIUS);
+    BRivPlop();
+    MapX = 0;
+    SRivPlop();
+    MapX = (SimWidth - 6);
+    SRivPlop();
+  }
 }
 
 
@@ -713,6 +708,7 @@ void SmoothWater()
 
 void GenerateMap(int r)
 {
+    
     if (CreateIsland < 0)
     {
         if (RandomRange(0, 100) < 10) // chance that island is generated
@@ -722,6 +718,7 @@ void GenerateMap(int r)
         }
     }
 
+    
     if (CreateIsland == 1)
     {
         MakeNakedIsland();
@@ -751,10 +748,11 @@ void GenerateMap(int r)
     }
 }
 
+#include <iostream>
+#include "s_alloc.h"
 
 void GenerateSomeCity(int seed)
 {
-    GenerateMap(seed);
     ScenarioID = 0;
     CityTime = 0;
     InitSimLoad = 2;
@@ -769,10 +767,12 @@ void GenerateSomeCity(int seed)
     DoSimInit();
     Eval("UIDidGenerateNewCity");
     Kick();
+
+    GenerateMap(seed);
 }
 
 
 void GenerateNewCity()
 {
-    GenerateSomeCity(Rand16());
+    GenerateSomeCity(RandomRange(0, std::numeric_limits<int>::max()));
 }

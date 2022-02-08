@@ -315,10 +315,12 @@ void graph_command_init()
 
 void drawMonth(const std::array<int, HistoryLength>& history, unsigned char* s, float scale)
 {
+    /*
     for (int x = 0; x < 120; x++)
     {
         s[119 - x] = std::clamp(static_cast<int>(history[x] * scale), 0, 255);
     }
+    */
 }
 
 

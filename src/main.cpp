@@ -192,7 +192,7 @@ void sim_update_maps()
     }
     */
 
-    NewMap = 0;
+    NewMap = false;
     for (int i = 0; i < NMAPS; i++)
     {
         NewMapFlags[i] = 0;
@@ -431,7 +431,7 @@ void sim_update()
 }
 
 
-void sim_loop(int doSim)
+void sim_loop(bool doSim)
 {
 
     if (heat_steps)
@@ -447,7 +447,7 @@ void sim_loop(int doSim)
         /*
               InvalidateMaps();
         */
-        NewMap = 1;
+        NewMap = true;
     }
     else
     {
@@ -515,6 +515,12 @@ void sim_init()
 SDL_Window* MainWindow = nullptr;
 SDL_Renderer* MainWindowRenderer = nullptr;
 
+
+SDL_Texture* TilesetTexture = nullptr;
+
+#include "g_bigmap.h"
+#include "w_sound.h"
+
 void startGame()
 {
     MainWindow = SDL_CreateWindow("Micropolis", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_RESIZABLE);// | SDL_WINDOW_MAXIMIZED);
@@ -527,17 +533,6 @@ void startGame()
     if (!MainWindow)
     {
         throw std::runtime_error("tk_main(): Unable to create renderer: " + std::string(SDL_GetError()));
-    }
-
-    //map_command_init();
-    //editor_command_init();
-    //graph_command_init();
-    //date_command_init();
-    //sprite_command_init();
-
-    if (Eval("source res/micropolis.tcl"))
-    {
-        throw std::runtime_error("Eval fail");
     }
 
     sim_init();
@@ -559,8 +554,20 @@ void startGame()
     SDL_FreeSurface(bitmapSurface);
 
 
+    bitmapSurface = SDL_LoadBMP("images/tiles.bmp");
+    TilesetTexture = SDL_CreateTextureFromSurface(MainWindowRenderer, bitmapSurface);
+    SDL_FreeSurface(bitmapSurface);
+
+
     InitGame();
+
+    Startup = -1;
+
     GameStarted();
+
+    SDL_Rect drawRect{ 0, 0, 64, 64 };
+    SDL_Rect tileRect{ 0, 0, 16, 16 };
+
 
     while (!Exit)
     {
@@ -569,14 +576,24 @@ void startGame()
         {
             switch (event.type)
             {
+            case SDL_KEYDOWN:
+                if (event.key.keysym.sym == SDLK_SPACE)
+                {
+                    DoPlayNewCity();
+                }
+                else if (event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    sim_exit();
+                }
+                break;
+
             case SDL_QUIT:
                 sim_exit();
                 break;
             }
         }
-
         SDL_RenderClear(MainWindowRenderer);
-        SDL_RenderCopy(MainWindowRenderer, bitmapTex, nullptr, nullptr);
+        MemDrawBeegMapRect(nullptr, 0, 0, SimWidth, SimHeight);
         SDL_RenderPresent(MainWindowRenderer);
     }
 

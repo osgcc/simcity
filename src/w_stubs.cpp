@@ -62,6 +62,8 @@
 #include "main.h"
 
 #include "s_fileio.h"
+#include "s_gen.h"
+#include "s_sim.h"
 
 #include "w_stubs.h"
 #include "w_tk.h"
@@ -114,16 +116,57 @@ int TickCount()
     return static_cast<int>(SDL_GetTicks());
 }
 
+#include <iostream>
+#include "s_alloc.h"
 
 void DoPlayNewCity()
 {
     Eval("UIPlayNewCity");
+
+    GameLevel = 0;
+    CityName = "NowHere"; 
+    if (GameLevel == -1) { GameLevel = 0; }
+    GenerateNewCity();
+
+    /*
+    proc UIPlayGame {}
+    {
+        global State
+        global Priority
+        set State play
+        sim Resume
+        sim Speed 3
+        sim AutoGoto 1
+        SetPriority $Priority
+
+    }
+    */
+
+    Resume();
+    setSpeed(3);
+    NeedRest = 10;
 }
 
 
 void DoReallyStartGame()
 {
     Eval("UIReallyStartGame");
+
+    /*
+    proc UIPickScenarioMode{}
+    {
+        global State
+            global CityLibDir
+            set State scenario
+            sim Pause
+            WithdrawAll
+            InitHistory
+            UIGenerateCityNow
+            InitScenarios
+            InitVotesForUseThisMap
+            ShowScenarios
+    }
+    */
 }
 
 

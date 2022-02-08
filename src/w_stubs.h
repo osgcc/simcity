@@ -9,3 +9,4 @@ int TickCount();
 
 void InitGame();
 void GameStarted();
+void DoPlayNewCity();

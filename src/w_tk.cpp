@@ -97,7 +97,7 @@ void EventuallyRedrawView(SimView* view)
 
 bool Eval(const std::string& buf)
 {
-    std::cout << buf << std::endl;
+    std::cout << "Eval: " << buf << std::endl;
     /*
     int result = Tcl_Eval(tk_mainInterp, buf, 0, (char**)NULL);
     if (result != TCL_OK)
@@ -439,10 +439,54 @@ void DidStopPan(SimView* view)
     */
 }
 
-/*
-static void MicropolisTimerProc(ClientData clientData)
+
+void StartMicropolisTimer()
 {
-    sim_timer_token = NULL;
+    std::cout << "StartMicropolisTimer" << std::endl;
+    /*
+    if (sim_timer_idle == 0) {
+        sim_timer_idle = 1;
+        Tk_DoWhenIdle(ReallyStartMicropolisTimer, NULL);
+    }
+    */
+}
+
+
+void StopMicropolisTimer()
+{
+    std::cout << "StopMicropolisTimer" << std::endl;
+    /*
+    if (sim_timer_idle != 0)
+    {
+        sim_timer_idle = 0;
+        Tk_CancelIdleCall(ReallyStartMicropolisTimer, NULL);
+    }
+
+    if (sim_timer_set)
+    {
+        if (sim_timer_token != 0)
+        {
+            Tk_DeleteTimerHandler(sim_timer_token);
+            sim_timer_token = 0;
+        }
+        sim_timer_set = 0;
+    }
+    */
+}
+
+
+void FixMicropolisTimer()
+{
+    if (sim_timer_set)
+    {
+        StartMicropolisTimer();
+    }
+}
+
+
+static void MicropolisTimerProc(/*ClientData clientData*/)
+{
+    //sim_timer_token = NULL;
     sim_timer_set = 0;
 
     if (NeedRest > 0)
@@ -452,7 +496,7 @@ static void MicropolisTimerProc(ClientData clientData)
 
     if (SimSpeed)
     {
-        sim_loop(1);
+        sim_loop(true);
         StartMicropolisTimer();
     }
     else
@@ -461,7 +505,7 @@ static void MicropolisTimerProc(ClientData clientData)
     }
 }
 
-
+/*
 void ReallyStartMicropolisTimer(ClientData clientData)
 {
     int delay = sim_delay;
@@ -495,48 +539,6 @@ void ReallyStartMicropolisTimer(ClientData clientData)
 */
 
 
-void StartMicropolisTimer()
-{
-    /*
-    if (sim_timer_idle == 0) {
-        sim_timer_idle = 1;
-        Tk_DoWhenIdle(ReallyStartMicropolisTimer, NULL);
-    }
-    */
-}
-
-
-void StopMicropolisTimer()
-{
-    /*
-    if (sim_timer_idle != 0)
-    {
-        sim_timer_idle = 0;
-        Tk_CancelIdleCall(ReallyStartMicropolisTimer, NULL);
-    }
-
-    if (sim_timer_set)
-    {
-        if (sim_timer_token != 0)
-        {
-            Tk_DeleteTimerHandler(sim_timer_token);
-            sim_timer_token = 0;
-        }
-        sim_timer_set = 0;
-    }
-    */
-}
-
-
-void FixMicropolisTimer()
-{
-    if (sim_timer_set)
-    {
-        StartMicropolisTimer();
-    }
-}
-
-
 /*
 static void DelayedUpdate(ClientData clientData)
 {
@@ -549,6 +551,7 @@ static void DelayedUpdate(ClientData clientData)
 
 void Kick()
 {
+    std::cout << "Kick" << std::endl;
     /*
     if (!UpdateDelayed)
     {
@@ -561,6 +564,7 @@ void Kick()
 
 void StopEarthquake()
 {
+    std::cout << "StopEarthquake" << std::endl;
     ShakeNow = 0;
     if (earthquake_timer_set)
     {
@@ -572,6 +576,7 @@ void StopEarthquake()
 
 void DoEarthQuake()
 {
+    std::cout << "DoEarthQuake" << std::endl;
     MakeSound("city", "Explosion-Low");
     Eval("UIEarthQuake");
     ShakeNow++;

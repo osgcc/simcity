@@ -186,27 +186,32 @@ int EditorCmdsize(SimView *view, Tcl_Interp *interp, int argc, char **argv)
   sprintf(interp->result, "%d %d", view->w_width, view->w_height);
   return TCL_OK;
 }
+*/
 
-
-int EditorCmdAutoGoto(SimView *view, Tcl_Interp *interp, int argc, char **argv)
+int EditorCmdAutoGoto(SimView* view, void* /*Tcl_Interp**/ interp, int argc, char** argv)
 {
-  if ((argc != 2) && (argc != 3)) {
-    return TCL_ERROR;
-  }
-  if (argc == 3) {
-    int val;
-
-    if (Tcl_GetInt(interp, argv[2], &val) != TCL_OK) {
-      return TCL_ERROR;
+    if ((argc != 2) && (argc != 3))
+    {
+        return 1;
     }
-    view->auto_goto = val;
-    view->auto_going = view->auto_x_goal = view->auto_y_goal = 0;
-  }
-  sprintf(interp->result, "%d", view->auto_goto);
-  return TCL_OK;
+    if (argc == 3)
+    {
+        int val = 0;
+
+        /*
+        if (Tcl_GetInt(interp, argv[2], &val) != TCL_OK)
+        {
+            return 1;
+        }
+        */
+        view->auto_goto = val;
+        view->auto_going = view->auto_x_goal = view->auto_y_goal = 0;
+    }
+    //sprintf(interp->result, "%d", view->auto_goto);
+    return 0;
 }
 
-
+/*
 int EditorCmdSound(SimView *view, Tcl_Interp *interp, int argc, char **argv)
 {
   if ((argc != 2) && (argc != 3)) {
@@ -822,6 +827,18 @@ editor_command_init()
   Tcl_InitHashTable(&EditorCmds, TCL_STRING_KEYS);
 
 #define EDITOR_CMD(name) HASHED_CMD(Editor, name)
+
+
+#define HASHED_CMD(scope, name) \
+  { int new; \
+    Tcl_CreateHashEntry(&scope##Cmds, #name, &new)->clientData = \
+      (ClientData)scope##Cmd##name; \
+  }
+
+
+  EditorAutoGotoCmds
+  EditorCmdAutoGoto
+
 
   EDITOR_CMD(configure);
   EDITOR_CMD(position);

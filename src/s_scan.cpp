@@ -68,7 +68,7 @@
 /* Map Updates */
 
 
-int NewMap;
+bool NewMap;
 int NewMapFlags[NMAPS];
 int CCx, CCy, CCx2, CCy2;
 int PolMaxX, PolMaxY;

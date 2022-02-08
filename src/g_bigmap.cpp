@@ -68,68 +68,36 @@
 int dynamicFilter(int c, int r);
 
 
+#include <SDL2/SDL.h>
+
+extern SDL_Renderer* MainWindowRenderer;;
+extern SDL_Texture* TilesetTexture;;
+
+
+
+SDL_Rect drawRect{ 0, 0, 16, 16 };
+SDL_Rect tileRect{ 0, 0, 16, 16 };
+
 void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 {
-	int lineBytes = view->line_bytes;
-	int pixelBytes = view->pixel_bytes;
-	int ii, mm;
-	unsigned int* map;
-	unsigned int tile;
-	unsigned char blink = (flagBlink <= 0), * bt = view->bigtiles;
-	int** have, * ha;
-
-	if (x < view->tile_x)
-	{
-		if ((w -= (view->tile_x - x)) <= 0)
-		{
-			return;
-		}
-		x = view->tile_x;
-	}
-	if (y < view->tile_y)
-	{
-		if ((h -= (view->tile_y - y)) <= 0)
-		{
-			return;
-		}
-		y = view->tile_y;
-	}
-	if ((x + w) > (view->tile_x + view->tile_width))
-	{
-		if ((w -= ((x + w) - (view->tile_x + view->tile_width))) <= 0)
-		{
-			return;
-		}
-	}
-	if ((y + h) > (view->tile_y + view->tile_height))
-	{
-		if ((h -= ((y + h) - (view->tile_y + view->tile_height))) <= 0)
-		{
-			return;
-		}
-	}
-
-	//if (view->x->color)
-	//{
-	unsigned int* image, * mem;
-
-	image = (unsigned int*)view->data;
-	ii = ((lineBytes * h * 16) - 16) / sizeof(unsigned int);
-	map = (unsigned int*)&Map[x][y];
-	mm = SimHeight - h;
-	have = view->tiles;
+	unsigned char blink = (flagBlink <= 0);
 
 	/*
 	 * Huge Berserk Rebel Warthog  <-- ?
 	 */
-
-	for (int col = 0; col < w; col++)
+	unsigned int tile = 0;
+	for (int row = 0; row < w; row++)
 	{
-		ha = &have[col][0];
-		image = (unsigned int*)(view->data + (col * 16 * pixelBytes));
-		for (int row = 0; row < h; row++, ha++)
+		for (int col = 0; col < h; col++)
 		{
-			tile = *(map++);
+
+			tile = (unsigned int)Map[row][col];
+
+			if (tile != 0)
+			{
+				int x = tile;
+			}
+
 			if ((tile & LOMASK) >= TILE_COUNT)
 			{
 				tile -= TILE_COUNT;
@@ -149,91 +117,18 @@ void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
 			{
 				tile = 0;
 			}
+			
 
-			if (tile == *ha)
-			{
-				image = (unsigned int*)(((unsigned char*)image) + (lineBytes * 16));
-			}
-			else
-			{
-				*ha = tile;
-				mem = (unsigned int*)&(bt[tile * 256 * pixelBytes]);
+			drawRect.x = row * 16;
+			drawRect.y = col * 16;
 
-				/* XXX: handle depth for big tiles */
+			tileRect.y = tile * 16;
 
-				/* Not so un-rolled loop. */
-
-
-				for (int i = 16; i > 0; i--)
-				{
-					image[0] = mem[0]; image[1] = mem[1];
-					image[2] = mem[2]; image[3] = mem[3];
-					image = (unsigned int*)(((unsigned char*)image) + lineBytes);
-					mem += 4;
-				}
-
-
-
-			}
-
-		}
-		image -= ii;
-		map += mm;
-	}
-	/*}
-	else
-	{
-		unsigned int* image, * mem;
-
-		image = (unsigned int*)view->data;
-		ii = ((lineBytes * h * 16) - 2) / sizeof(unsigned int);
-		map = (unsigned int*)&Map[x][y];
-		mm = SimHeight - h;
-		have = view->tiles;
-
-		for (int col = 0; col < w; col++)
-		{
-			ha = &have[col][0];
-			image = (unsigned int*)(view->data + (col * 2));
-			for (int row = 0; row < h; row++, ha++)
-			{
-				tile = *(map++);
-				if ((tile & LOMASK) >= TILE_COUNT) tile -= TILE_COUNT;
-
-				//* Blink lightning bolt in unpowered zone center
-				if (blink && (tile & ZONEBIT) && !(tile & PWRBIT))
-				{
-					tile = LIGHTNINGBOLT;
-				}
-				else
-				{
-					tile &= LOMASK;
-				}
-
-				if (tile == *ha)
-				{
-					image = (unsigned int*)(((unsigned char*)image) + (lineBytes * 16));
-				}
-				else
-				{
-					*ha = tile;
-					mem = (unsigned int*)&(bt[tile * 32]);
-
-					for (char i = 16; i > 0; i--)
-					{
-						*image = *mem;
-						image = (unsigned int*)(((unsigned char*)image) + lineBytes);
-						mem++;
-					}
-
-				}
-			}
-			image -= ii;
-			map += mm;
+			SDL_RenderCopy(MainWindowRenderer, TilesetTexture, &tileRect, &drawRect);
 		}
 	}
-	*/
 }
+
 
 
 void WireDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
