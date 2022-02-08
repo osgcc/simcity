@@ -593,7 +593,7 @@ void startGame()
             }
         }
         SDL_RenderClear(MainWindowRenderer);
-        MemDrawBeegMapRect(nullptr, 0, 0, SimWidth, SimHeight);
+        DrawBigMap(nullptr, 0, 0, SimWidth, SimHeight);
         SDL_RenderPresent(MainWindowRenderer);
     }
 

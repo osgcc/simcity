@@ -108,7 +108,7 @@ bool blink()
 }
 
 
-void MemDrawBeegMapRect(SimView* view, int x, int y, int w, int h)
+void DrawBigMap(SimView* view, int x, int y, int w, int h)
 {
 	for (int row = 0; row < w; row++)
 	{

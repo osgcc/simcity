@@ -1380,7 +1380,7 @@ void DoUpdateEditor(SimView* view)
 
     if (view->invalid)
     {
-        MemDrawBeegMapRect(view, view->tile_x, view->tile_y, view->tile_width, view->tile_height);
+        DrawBigMap(view, view->tile_x, view->tile_y, view->tile_width, view->tile_height);
 
         //XCopyArea(view->x->dpy, view->pixmap, view->pixmap2, view->x->gc, 0, 0, view->screen_width, view->screen_height, view->screen_x, view->screen_y);
         DrawOutside(view);
