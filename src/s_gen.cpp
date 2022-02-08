@@ -91,7 +91,7 @@ int Dir, LastDir;
 int TreeLevel = -1;		/* level for tree creation */
 int LakeLevel = -1;		/* level for lake creation */
 int CurveLevel = -1;		/* level for river curviness */
-int CreateIsland = -1;		/* -1 => 10%, 0 => never, 1 => always */
+bool CreateIsland = false;
 
 
 int ERand(int limit)
@@ -345,7 +345,7 @@ void DoTrees()
 }
 
 
-void BRivPlop()
+void PlopLargeRiver()
 {
     static int BRMatrix[9][9] =
     {
@@ -370,7 +370,7 @@ void BRivPlop()
 }
 
 
-void SRivPlop(void)
+void PlopSmallRiver(void)
 {
     static int SRMatrix[6][6] =
     {
@@ -392,7 +392,7 @@ void SRivPlop(void)
 }
 
 
-void DoBRiv()
+void DoLargeRiver()
 {
     int r1, r2;
 
@@ -409,7 +409,7 @@ void DoBRiv()
 
     while (TestBounds(MapX + 4, MapY + 4, SimWidth, SimHeight))
     {
-        BRivPlop();
+        PlopLargeRiver();
         if (RandomRange(0, r1) < 10)
         {
             Dir = LastDir;
@@ -424,7 +424,7 @@ void DoBRiv()
 }
 
 
-void DoSRiv()
+void DoSmallRiver()
 {
     int r1, r2;
 
@@ -441,7 +441,7 @@ void DoSRiv()
 
     while (TestBounds(MapX + 3, MapY + 3, SimWidth, SimHeight))
     {
-        SRivPlop();
+        PlopSmallRiver();
         if (RandomRange(0, r1) < 10)
         {
             Dir = LastDir;
@@ -460,18 +460,18 @@ void DoRivers()
 {
     LastDir = RandomRange(0, 3);
     Dir = LastDir;   
-    DoBRiv();
+    DoLargeRiver();
     
     MapX = XStart;
     MapY = YStart;
     LastDir = LastDir ^ 4;
     Dir = LastDir;
-    DoBRiv();
+    DoLargeRiver();
 
     MapX = XStart;
     MapY = YStart;
     LastDir = RandomRange(0, 3);
-    DoSRiv();
+    DoSmallRiver();
 }
 
 
@@ -497,32 +497,32 @@ void MakeNakedIsland()
     {
         MapX = x;
         MapY = ERand(RADIUS);
-        BRivPlop();
+        PlopLargeRiver();
 
         MapY = (SimHeight - 10) - ERand(RADIUS);
-        BRivPlop();
+        PlopLargeRiver();
 
-        MapY = 0;
-        SRivPlop();
+        MapY = ERand(RADIUS);
+        PlopSmallRiver();
 
-        MapY = (SimHeight - 6);
-        SRivPlop();
+        MapY = (SimHeight - 6) - ERand(RADIUS);
+        PlopSmallRiver();
     }
 
     for (int y = 0; y < SimHeight - 5; y += 2)
     {
         MapY = y;
         MapX = ERand(RADIUS);
-        BRivPlop();
+        PlopLargeRiver();
 
         MapX = (SimWidth - 10) - ERand(RADIUS);
-        BRivPlop();
+        PlopLargeRiver();
 
-        MapX = 0;
-        SRivPlop();
+        MapX = ERand(RADIUS);
+        PlopSmallRiver();
 
-        MapX = (SimWidth - 6);
-        SRivPlop();
+        MapX = (SimWidth - 6) - ERand(RADIUS);
+        PlopSmallRiver();
     }
 }
 
@@ -563,11 +563,11 @@ void MakeLakes()
 
             if (RandomRange(0, 4))
             {
-                SRivPlop();
+                PlopSmallRiver();
             }
             else
             {
-                BRivPlop();
+                PlopLargeRiver();
             }
         }
     }
@@ -583,166 +583,17 @@ void GetRandStart()
 }
 
 
-void SmoothWater()
-{
-    for (int x = 0; x < SimWidth; x++)
-    {
-        for (int y = 0; y < SimHeight; y++)
-        {
-            /* If water: */
-            if (((Map[x][y] & LOMASK) >= WATER_LOW) && ((Map[x][y] & LOMASK) <= WATER_HIGH))
-            {
-                if (x > 0)
-                {
-                    /* If nearest object is not water: */
-                    if (((Map[x - 1][y] & LOMASK) < WATER_LOW) || ((Map[x - 1][y] & LOMASK) > WATER_HIGH))
-                    {
-                        goto edge;
-                    }
-                }
-                if (x < (SimWidth - 1))
-                {
-                    /* If nearest object is not water: */
-                    if (((Map[x + 1][y] & LOMASK) < WATER_LOW) || ((Map[x + 1][y] & LOMASK) > WATER_HIGH))
-                    {
-                        goto edge;
-                    }
-                }
-                if (y > 0)
-                {
-                    /* If nearest object is not water: */
-                    if (((Map[x][y - 1] & LOMASK) < WATER_LOW) || ((Map[x][y - 1] & LOMASK) > WATER_HIGH))
-                    {
-                        goto edge;
-                    }
-                }
-                if (y < (SimHeight - 1))
-                {
-                    /* If nearest object is not water: */
-                    if (((Map[x][y + 1] & LOMASK) < WATER_LOW) || ((Map[x][y + 1] & LOMASK) > WATER_HIGH))
-                    {
-                    edge:
-                        Map[x][y] = REDGE; /* set river edge */
-                        continue;
-                    }
-                }
-            }
-        }
-    }
-
-    for (int x = 0; x < SimWidth; x++)
-    {
-        for (int y = 0; y < SimHeight; y++)
-        {
-            /* If water which is not a channel: */
-            if (((Map[x][y] & LOMASK) != CHANNEL) && ((Map[x][y] & LOMASK) >= WATER_LOW) && ((Map[x][y] & LOMASK) <= WATER_HIGH))
-            {
-                if (x > 0)
-                {
-                    /* If nearest object is not water; */
-                    if (((Map[x - 1][y] & LOMASK) < WATER_LOW) || ((Map[x - 1][y] & LOMASK) > WATER_HIGH))
-                    {
-                        continue;
-                    }
-                }
-                if (x < (SimWidth - 1))
-                {
-                    /* If nearest object is not water: */
-                    if (((Map[x + 1][y] & LOMASK) < WATER_LOW) || ((Map[x + 1][y] & LOMASK) > WATER_HIGH))
-                    {
-                        continue;
-                    }
-                }
-                if (y > 0)
-                {
-                    /* If nearest object is not water: */
-                    if (((Map[x][y - 1] & LOMASK) < WATER_LOW) || ((Map[x][y - 1] & LOMASK) > WATER_HIGH))
-                    {
-                        continue;
-                    }
-                }
-                if (y < (SimHeight - 1))
-                {
-                    /* If nearest object is not water: */
-                    if (((Map[x][y + 1] & LOMASK) < WATER_LOW) || ((Map[x][y + 1] & LOMASK) > WATER_HIGH))
-                    {
-                        continue;
-                    }
-                }
-                Map[x][y] = RIVER; /* make it a river */
-            }
-        }
-    }
-
-    for (int x = 0; x < SimWidth; x++)
-    {
-        for (int y = 0; y < SimHeight; y++)
-        {
-            /* If woods: */
-            if (((Map[x][y] & LOMASK) >= WOODS_LOW) && ((Map[x][y] & LOMASK) <= WOODS_HIGH))
-            {
-                if (x > 0)
-                {
-                    /* If nearest object is water: */
-                    if ((Map[x - 1][y] == RIVER) || (Map[x - 1][y] == CHANNEL))
-                    {
-                        Map[x][y] = REDGE; /* make it water's edge */
-                        continue;
-                    }
-                }
-                if (x < (SimWidth - 1))
-                {
-                    /* If nearest object is water: */
-                    if ((Map[x + 1][y] == RIVER) || (Map[x + 1][y] == CHANNEL))
-                    {
-                        Map[x][y] = REDGE; /* make it water's edge */
-                        continue;
-                    }
-                }
-                if (y > 0)
-                {
-                    /* If nearest object is water: */
-                    if ((Map[x][y - 1] == RIVER) || (Map[x][y - 1] == CHANNEL))
-                    {
-                        Map[x][y] = REDGE; /* make it water's edge */
-                        continue;
-                    }
-                }
-                if (y < (SimHeight - 1))
-                {
-                    /* If nearest object is water; */
-                    if ((Map[x][y + 1] == RIVER) || (Map[x][y + 1] == CHANNEL))
-                    {
-                        Map[x][y] = REDGE; /* make it water's edge */
-                        continue;
-                    }
-                }
-            }
-        }
-    }
-}
-
-
 void GenerateMap(int r)
 {
-    
-    if (CreateIsland < 0)
+    if (RandomRange(0, 100) < 10) // chance that island is generated
     {
-        if (RandomRange(0, 100) < 10) // chance that island is generated
-        {
-            MakeIsland();
-            return;
-        }
+        MakeIsland();
+        return;
     }
 
-    
-    if (CreateIsland == 1)
+    if (CreateIsland)
     {
         MakeNakedIsland();
-    }
-    else
-    {
-        ClearMap();
     }
 
     GetRandStart();
