@@ -79,24 +79,8 @@ extern Texture MainMapTexture;
 
 namespace
 {
-	int TileScale = 1;
-
-	SDL_Rect drawRect{ 0, 0, 16 * TileScale, 16 * TileScale };
 	SDL_Rect tileRect{ 0, 0, 16, 16 };
 };
-
-
-void tileScale(const int scale)
-{
-	TileScale = scale;
-	drawRect =	{ 0, 0, 16 * TileScale, 16 * TileScale };
-}
-
-
-int tileScale()
-{
-	return TileScale;
-}
 
 
 unsigned int getRawTileValue(const int x, const int y)
@@ -130,6 +114,7 @@ bool blink()
 
 void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Vector<int>& loops)
 {
+	SDL_Rect drawRect{ 0, 0, 16, 16 };
 	unsigned int tile = 0;
 
 	for (int row = 0; row < loops.x; row++)
@@ -181,8 +166,9 @@ void DrawBigMap()
 {
 	SDL_SetRenderTarget(MainWindowRenderer, MainMapTexture.texture);
 
+	SDL_Rect drawRect{ 0, 0, 16, 16 }; 
 	unsigned int tile = 0;
-	
+
 	for (int row = 0; row < SimWidth; row++)
 	{
 		for (int col = 0; col < SimHeight; col++)
