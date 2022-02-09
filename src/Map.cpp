@@ -61,6 +61,8 @@
  */
 #include "main.h"
 
+#include "Texture.h"
+
 #include "SmallMaps.h"
 
 #include "s_alloc.h"
@@ -71,9 +73,8 @@
 #include <SDL2/SDL.h>
 
 extern SDL_Renderer* MainWindowRenderer;;
-extern SDL_Texture* TilesetTexture;;
 
-
+extern Texture BigTileset;
 
 namespace
 {
@@ -169,7 +170,7 @@ void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Ve
 
 			tileRect.y = tile * 16;
 
-			SDL_RenderCopy(MainWindowRenderer, TilesetTexture, &tileRect, &drawRect);
+			SDL_RenderCopy(MainWindowRenderer, BigTileset.texture, &tileRect, &drawRect);
 		}
 	}
 }
