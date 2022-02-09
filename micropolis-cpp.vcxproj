@@ -19,13 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BigMap.cpp" />
     <ClCompile Include="src\Date.cpp" />
     <ClCompile Include="src\g_ani.cpp" />
     <ClCompile Include="src\g_map.cpp" />
     <ClCompile Include="src\g_setup.cpp" />
     <ClCompile Include="src\g_smmaps.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\SmallMaps.h" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\s_alloc.cpp" />
@@ -57,11 +57,11 @@
     <ClCompile Include="src\w_x.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\BigMap.h" />
     <ClInclude Include="src\Date.h" />
     <ClInclude Include="src\Graph.h" />
     <ClInclude Include="src\g_ani.h" />
     <ClInclude Include="src\g_setup.h" />
+    <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\Sprite.h" />

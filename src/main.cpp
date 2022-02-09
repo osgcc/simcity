@@ -61,7 +61,7 @@
  */
 #include "main.h"
 
-#include "BigMap.h"
+#include "Map.h"
 #include "g_map.h"
 
 #include "s_alloc.h"
@@ -89,8 +89,8 @@
 #include <stdexcept>
 #include <string>
 
-
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 
 const std::string MicropolisVersion = "4.0";
@@ -518,10 +518,43 @@ SDL_Window* MainWindow = nullptr;
 SDL_Renderer* MainWindowRenderer = nullptr;
 
 SDL_Texture* TilesetTexture = nullptr;
+SDL_Texture* SmallTilesetTexture = nullptr;
 
 Vector<int> mouseDelta{};
 Point<int> mapRasterOrigin{};
 Point<int> mapTileOffset{};
+
+
+struct Texture
+{
+    SDL_Texture* texture{ nullptr };
+    SDL_Rect area{};
+
+    Vector<int> dimensions{};
+};
+
+
+Texture BigTileset;
+Texture SmallTileset;
+Texture RCI_Indicator;
+
+
+Texture loadTexture(SDL_Renderer* renderer, const std::string& filename)
+{
+    SDL_Surface* temp = IMG_Load(filename.c_str());
+    SDL_Texture* out = SDL_CreateTextureFromSurface(renderer, temp);
+    SDL_FreeSurface(temp);
+
+    if (!out)
+    {
+        throw std::runtime_error(std::string("loadTexture(): ") + SDL_GetError());
+    }
+
+    int width = 0, height = 0;
+    SDL_QueryTexture(out, nullptr, nullptr, &width, &height);
+
+    return Texture{ out, SDL_Rect{ 0, 0, width, height }, { width, height } };
+}
 
 
 void windowResized(const Vector<int>& size)
@@ -639,25 +672,13 @@ void startGame()
 
     // set resource directories here
 
-    SDL_Texture* bitmapTex = NULL;
-    SDL_Surface* bitmapSurface = NULL;
-
     SDL_Init(SDL_INIT_VIDEO);
 
-    bitmapSurface = SDL_LoadBMP("images/airport.bmp");
-    if (!bitmapSurface)
-    {
-        std::cout << "Failed to load BMP: " << SDL_GetError() << std::endl;
-    }
+    BigTileset = loadTexture(MainWindowRenderer, "images/tiles.xpm");
+    SmallTileset = loadTexture(MainWindowRenderer, "images/tilessm.xmp");
+    RCI_Indicator = loadTexture(MainWindowRenderer, "images/demandg.xpm");
 
-    bitmapTex = SDL_CreateTextureFromSurface(MainWindowRenderer, bitmapSurface);
-    SDL_FreeSurface(bitmapSurface);
-
-
-    bitmapSurface = SDL_LoadBMP("images/tiles.bmp");
-    TilesetTexture = SDL_CreateTextureFromSurface(MainWindowRenderer, bitmapSurface);
-    SDL_FreeSurface(bitmapSurface);
-
+    TilesetTexture = BigTileset.texture;
 
     InitGame();
 
@@ -665,15 +686,23 @@ void startGame()
 
     GameStarted();
 
+
+    SDL_Rect rciDestination{ 20, 20, RCI_Indicator.dimensions.x, RCI_Indicator.dimensions.y };
+
     while (!Exit)
     {
         pumpEvents();
         SDL_RenderClear(MainWindowRenderer);
         DrawBigMap(mapRasterOrigin, mapTileOffset, Vector<int>{ 50, 50 });
+
+        SDL_RenderCopy(MainWindowRenderer, RCI_Indicator.texture, nullptr, &rciDestination);
+
         SDL_RenderPresent(MainWindowRenderer);
     }
 
-    SDL_DestroyTexture(bitmapTex);
+    SDL_DestroyTexture(TilesetTexture);
+    SDL_DestroyTexture(RCI_Indicator.texture);
+
     SDL_DestroyRenderer(MainWindowRenderer);
     SDL_DestroyWindow(MainWindow);
 }

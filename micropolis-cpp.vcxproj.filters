@@ -120,7 +120,7 @@
     <ClCompile Include="src\SmallMaps.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BigMap.cpp">
+    <ClCompile Include="src\Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -239,13 +239,13 @@
     <ClInclude Include="src\View.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\BigMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
