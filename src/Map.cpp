@@ -75,6 +75,7 @@
 extern SDL_Renderer* MainWindowRenderer;;
 
 extern Texture BigTileset;
+extern Texture MainMapTexture;
 
 namespace
 {
@@ -127,6 +128,33 @@ bool blink()
 }
 
 
+void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Vector<int>& loops)
+{
+	unsigned int tile = 0;
+
+	for (int row = 0; row < loops.x; row++)
+	{
+		for (int col = 0; col < loops.y; col++)
+		{
+			tile = getTileValue(row + offset.x, col + offset.y);
+
+			// Blink lightning bolt in unpowered zone center
+			if (blink() && tileIsZoned(tile) && !tilePowered(tile))
+			{
+				tile = LIGHTNINGBOLT;
+			}
+
+			drawRect.x = (row * drawRect.w) + drawOrigin.x;
+			drawRect.y = (col * drawRect.h) + drawOrigin.y;
+
+			tileRect.y = tile * 16;
+
+			SDL_RenderCopy(MainWindowRenderer, BigTileset.texture, &tileRect, &drawRect);
+		}
+	}
+}
+
+
 /**
  * Draws the full sized map
  * 
@@ -149,28 +177,32 @@ bool blink()
  * been used as a way to get view paramters from some sort of a GUI context
  * from Tcl/Tk. Since it's no longer used this paramter can be removed.
  */
-void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Vector<int>& loops)
+void DrawBigMap()
 {
+	SDL_SetRenderTarget(MainWindowRenderer, MainMapTexture.texture);
+
 	unsigned int tile = 0;
 	
-	for (int row = 0; row < loops.x; row++)
+	for (int row = 0; row < SimWidth; row++)
 	{
-		for (int col = 0; col < loops.y; col++)
+		for (int col = 0; col < SimHeight; col++)
 		{
-			tile = getTileValue(row + offset.x, col + offset.y);
+			tile = getTileValue(row, col);
 
 			// Blink lightning bolt in unpowered zone center
-			if (blink() && tileIsZoned(tile) && !tilePowered(tile))
-			{
-				tile = LIGHTNINGBOLT;
-			}
+			//if (blink() && tileIsZoned(tile) && !tilePowered(tile))
+			//{
+			//	tile = LIGHTNINGBOLT;
+			//}
 
-			drawRect.x = (row * drawRect.w) + drawOrigin.x;
-			drawRect.y = (col * drawRect.h) + drawOrigin.y;
 
-			tileRect.y = tile * 16;
+			drawRect = { row * drawRect.w, col * drawRect.h, drawRect.w, drawRect.h };
+			tileRect.y = getTileValue(row, col) * 16;
 
 			SDL_RenderCopy(MainWindowRenderer, BigTileset.texture, &tileRect, &drawRect);
 		}
 	}
+
+	SDL_RenderPresent(MainWindowRenderer);
+	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
