@@ -84,6 +84,8 @@
 #include "w_util.h"
 #include "w_x.h"
 
+#include "Texture.h"
+
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -515,23 +517,15 @@ void sim_init()
 
 
 SDL_Window* MainWindow = nullptr;
-SDL_Renderer* MainWindowRenderer = nullptr;
+SDL_Window* MiniMapWindow = nullptr;
 
-SDL_Texture* TilesetTexture = nullptr;
-SDL_Texture* SmallTilesetTexture = nullptr;
+SDL_Renderer* MainWindowRenderer = nullptr;
+SDL_Renderer* MiniMapWindowRenderer = nullptr;
+
 
 Vector<int> mouseDelta{};
 Point<int> mapRasterOrigin{};
 Point<int> mapTileOffset{};
-
-
-struct Texture
-{
-    SDL_Texture* texture{ nullptr };
-    SDL_Rect area{};
-
-    Vector<int> dimensions{};
-};
 
 
 Texture BigTileset;
@@ -539,21 +533,25 @@ Texture SmallTileset;
 Texture RCI_Indicator;
 
 
-Texture loadTexture(SDL_Renderer* renderer, const std::string& filename)
+namespace
 {
-    SDL_Surface* temp = IMG_Load(filename.c_str());
-    SDL_Texture* out = SDL_CreateTextureFromSurface(renderer, temp);
-    SDL_FreeSurface(temp);
+    SDL_Rect drawRect{ 0, 0, 3, 3 };
+    SDL_Rect tileRect{ 0, 0, 3, 3 };
+};
 
-    if (!out)
+
+
+void DrawMiniMap()
+{
+    for (int row = 0; row < SimWidth; row++)
     {
-        throw std::runtime_error(std::string("loadTexture(): ") + SDL_GetError());
+        for (int col = 0; col < SimHeight; col++)
+        {
+            drawRect = { row * 3, col * 3, drawRect.w,drawRect.h };
+            tileRect.y = getTileValue(row, col) * 3;
+            SDL_RenderCopy(MiniMapWindowRenderer, SmallTileset.texture, &tileRect, &drawRect);
+        }
     }
-
-    int width = 0, height = 0;
-    SDL_QueryTexture(out, nullptr, nullptr, &width, &height);
-
-    return Texture{ out, SDL_Rect{ 0, 0, width, height }, { width, height } };
 }
 
 
@@ -575,6 +573,9 @@ void pumpEvents()
             {
             case SDLK_SPACE:
                 DoPlayNewCity();
+                SDL_RenderClear(MiniMapWindowRenderer);
+                DrawMiniMap();
+                SDL_RenderPresent(MiniMapWindowRenderer);
                 break;
 
             case SDLK_ESCAPE:
@@ -659,26 +660,26 @@ void startGame()
     MainWindow = SDL_CreateWindow("Micropolis", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_RESIZABLE);// | SDL_WINDOW_MAXIMIZED);
     if (!MainWindow)
     {
-        throw std::runtime_error("tk_main(): Unable to create primary window: " + std::string(SDL_GetError()));
+        throw std::runtime_error("startGame(): Unable to create primary window: " + std::string(SDL_GetError()));
     }
 
     MainWindowRenderer = SDL_CreateRenderer(MainWindow, -1, SDL_RENDERER_ACCELERATED);
     if (!MainWindow)
     {
-        throw std::runtime_error("tk_main(): Unable to create renderer: " + std::string(SDL_GetError()));
+        throw std::runtime_error("startGame(): Unable to create renderer: " + std::string(SDL_GetError()));
     }
 
-    sim_init();
+    MiniMapWindow = SDL_CreateWindow("Minimap", 25, 25, SimWidth * 3, SimHeight * 3, SDL_WINDOW_ALWAYS_ON_TOP);
+    MiniMapWindowRenderer = SDL_CreateRenderer(MiniMapWindow, -1, SDL_RENDERER_ACCELERATED);
 
-    // set resource directories here
+    sim_init();
 
     SDL_Init(SDL_INIT_VIDEO);
 
     BigTileset = loadTexture(MainWindowRenderer, "images/tiles.xpm");
-    SmallTileset = loadTexture(MainWindowRenderer, "images/tilessm.xmp");
     RCI_Indicator = loadTexture(MainWindowRenderer, "images/demandg.xpm");
 
-    TilesetTexture = BigTileset.texture;
+    SmallTileset = loadTexture(MiniMapWindowRenderer, "images/tilessm.xpm");
 
     InitGame();
 
@@ -686,8 +687,13 @@ void startGame()
 
     GameStarted();
 
-
+    
     SDL_Rect rciDestination{ 20, 20, RCI_Indicator.dimensions.x, RCI_Indicator.dimensions.y };
+
+
+    SDL_RenderClear(MiniMapWindowRenderer);
+    DrawMiniMap();
+    SDL_RenderPresent(MiniMapWindowRenderer);
 
     while (!Exit)
     {
@@ -700,7 +706,7 @@ void startGame()
         SDL_RenderPresent(MainWindowRenderer);
     }
 
-    SDL_DestroyTexture(TilesetTexture);
+    SDL_DestroyTexture(BigTileset.texture);
     SDL_DestroyTexture(RCI_Indicator.texture);
 
     SDL_DestroyRenderer(MainWindowRenderer);
