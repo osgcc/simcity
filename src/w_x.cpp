@@ -64,6 +64,7 @@
 
 #include "g_setup.h"
 
+#include "w_util.h"
 #include "w_tk.h"
 
 #include <algorithm>
@@ -1016,7 +1017,7 @@ void DoAdjustPan(SimView* view)
 
     view->overlay_mode = 0;
     view->invalid = 1;
-    if (SimSpeed == 0)
+    if (Paused())
     {
         EventuallyRedrawView(view);
     }

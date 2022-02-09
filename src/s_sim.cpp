@@ -1039,59 +1039,86 @@ void SimLoadInit()
 }
 
 
+namespace
+{
+    int PowerScanFrequency[4] = { 1,  2,  4,  5 };
+    int PollutionScanFrequency[4] = { 1,  2,  7, 17 };
+    int CrimeScanFrequency[4] = { 1,  1,  8, 18 };
+    int PopulationDensityScanFrequency[4] = { 1,  1,  9, 19 };
+    int FireAnalysisFrequency[4] = { 1,  1, 10, 20 };
+};
+
+
 void Simulate(int mod16)
 {
-    static int SpdPwr[4] = { 1,  2,  4,  5 };
-    static int SpdPtl[4] = { 1,  2,  7, 17 };
-    static int SpdCri[4] = { 1,  1,  8, 18 };
-    static int SpdPop[4] = { 1,  1,  9, 19 };
-    static int SpdFir[4] = { 1,  1, 10, 20 };
-    int x;
-
-    x = SimSpeed;
-    if (x > 3) x = 3;
+    int speed = static_cast<int>(SimulationSpeed()); // ew, find a better way to do this
 
     switch (mod16)
     {
     case 0:
-        if (++Scycle > 1023) Scycle = 0;	/* this is cosmic */
+        if (++Scycle > 1023) // this is cosmic  // <- ?
+        {
+            Scycle = 0;
+        }
+        
         if (DoInitialEval)
         {
             DoInitialEval = 0;
             CityEvaluation();
         }
+        
         CityTime++;
-        AvCityTax += CityTax;		/* post */
-        if (!(Scycle & 1)) SetValves();
+        AvCityTax += CityTax; // post <-- ?
+        
+        if (!(Scycle & 1))
+        {
+            SetValves();
+        }
+        
         ClearCensus();
         break;
+
     case 1:
         MapScan(0, 1 * SimWidth / 8);
         break;
+
     case 2:
         MapScan(1 * SimWidth / 8, 2 * SimWidth / 8);
         break;
+
     case 3:
         MapScan(2 * SimWidth / 8, 3 * SimWidth / 8);
         break;
+
     case 4:
         MapScan(3 * SimWidth / 8, 4 * SimWidth / 8);
         break;
+
     case 5:
         MapScan(4 * SimWidth / 8, 5 * SimWidth / 8);
         break;
+
     case 6:
         MapScan(5 * SimWidth / 8, 6 * SimWidth / 8);
         break;
+
     case 7:
         MapScan(6 * SimWidth / 8, 7 * SimWidth / 8);
         break;
+
     case 8:
         MapScan(7 * SimWidth / 8, SimWidth);
         break;
+
     case 9:
-        if (!(CityTime % CENSUSRATE)) TakeCensus();
-        if (!(CityTime % (CENSUSRATE * 12))) Take2Census();
+        if (!(CityTime % CENSUSRATE))
+        {
+            TakeCensus();
+        }
+        if (!(CityTime % (CENSUSRATE * 12)))
+        {
+            Take2Census();
+        }
 
         if (!(CityTime % TAXFREQ))
         {
@@ -1099,8 +1126,12 @@ void Simulate(int mod16)
             CityEvaluation();
         }
         break;
+
     case 10:
-        if (!(Scycle % 5)) DecROGMem();
+        if (!(Scycle % 5))
+        {
+            DecROGMem();
+        }
         DecTrafficMem();
         NewMapFlags[TDMAP] = 1;
         NewMapFlags[RDMAP] = 1;
@@ -1111,25 +1142,42 @@ void Simulate(int mod16)
         NewMapFlags[DYMAP] = 1;
         SendMessages();
         break;
+
     case 11:
-        if (!(Scycle % SpdPwr[x]))
+        if (!(Scycle % PowerScanFrequency[speed]))
         {
             DoPowerScan();
             NewMapFlags[PRMAP] = 1;
             NewPower = 1; /* post-release change */
         }
         break;
+
     case 12:
-        if (!(Scycle % SpdPtl[x])) PTLScan();
+        if (!(Scycle % PollutionScanFrequency[speed]))
+        {
+            PTLScan();
+        }
         break;
+
     case 13:
-        if (!(Scycle % SpdCri[x])) CrimeScan();
+        if (!(Scycle % CrimeScanFrequency[speed]))
+        {
+            CrimeScan();
+        }
         break;
+
     case 14:
-        if (!(Scycle % SpdPop[x])) PopDenScan();
+        if (!(Scycle % PopulationDensityScanFrequency[speed]))
+        {
+            PopDenScan();
+        }
         break;
+
     case 15:
-        if (!(Scycle % SpdFir[x])) FireAnalysis();
+        if (!(Scycle % FireAnalysisFrequency[speed]))
+        {
+            FireAnalysis();
+        }
         DoDisasters();
         break;
     }
@@ -1138,20 +1186,32 @@ void Simulate(int mod16)
 
 void SimFrame()
 {
-    if (SimSpeed == 0)
+    if (SimSpeed() == SimulationSpeed::Paused)
+    {
         return;
+    }
 
     if (++Spdcycle > 1023)
+    {
         Spdcycle = 0;
+    }
 
-    if (SimSpeed == 1 && Spdcycle % 5)
+    if (SimSpeed() == SimulationSpeed::Slow && Spdcycle % 5)
+    {
         return;
+    }
 
-    if (SimSpeed == 2 && Spdcycle % 3)
+    if (SimSpeed() == SimulationSpeed::Normal && Spdcycle % 3)
+    {
         return;
+    }
 
-    if (++Fcycle > 1023) Fcycle = 0;
-    Simulate(Fcycle & 15);
+    if (++Fcycle > 1023)
+    {
+        Fcycle = 0;
+    }
+    
+    Simulate(Fcycle % 16);
 }
 
 

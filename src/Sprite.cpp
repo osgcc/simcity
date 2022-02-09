@@ -1561,7 +1561,7 @@ void DoBusSprite(SimSprite* sprite)
 
 void MoveObjects()
 {
-    if (!SimSpeed)
+    if (Paused())
     {
         return;
     }

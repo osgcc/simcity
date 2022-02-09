@@ -489,7 +489,7 @@ void LoadScenario(int s)
     //  sim_skips = sim_skip = 0;
     InvalidateMaps();
     InvalidateEditors();
-    setSpeed(3);
+    SimSpeed(SimulationSpeed::Normal);
     CityTax = 7;
 
     _load_file(fname, ResroucesDirectory);

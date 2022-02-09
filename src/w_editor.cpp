@@ -70,6 +70,7 @@
 
 #include "Sprite.h"
 #include "w_tk.h"
+#include "w_util.h"
 #include "w_x.h"
 
 
@@ -1372,7 +1373,7 @@ void DoUpdateEditor(SimView* view)
 
     HandleAutoGoto(view);
 
-    if (DoAnimation && SimSpeed && !heat_steps && !TilesAnimated)
+    if (DoAnimation && !Paused() && !heat_steps && !TilesAnimated)
     {
         TilesAnimated = 1;
         animateTiles();

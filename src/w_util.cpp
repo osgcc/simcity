@@ -59,6 +59,8 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
+#include "w_util.h"
+
 #include "main.h"
 
 #include "w_stubs.h"
@@ -71,8 +73,11 @@
 #include <string>
 
 
-
-static int SimMetaSpeed;
+namespace
+{
+    SimulationSpeed simulationSpeed;
+    SimulationSpeed previousSimulationSpeed;
+};
 
 
  /* tile bounds */
@@ -80,7 +85,6 @@ bool TestBounds(int x, int y, int width, int height)
 {
     return (((x) >= 0) && ((x) < width) && ((y) >= 0) && ((y) < height));
 }
-
 
 
 std::string NumberToDollarDecimal(int value)
@@ -103,54 +107,43 @@ std::string NumberToDollarDecimal(int value)
 }
 
 
-void setSpeed(int speed)
+void SimSpeed(SimulationSpeed speed)
 {
-    speed = std::clamp(speed, 0, 3);
-
-    SimMetaSpeed = speed;
-
-    if (sim_paused)
+    if (speed == SimulationSpeed::Paused)
     {
-        sim_paused_speed = SimMetaSpeed;
-        speed = 0;
-    }
-
-    SimSpeed = speed;
-
-    if (speed == 0)
-    {
+        previousSimulationSpeed = simulationSpeed;
+        simulationSpeed = speed;
         StopMicropolisTimer();
-    }
-    else
-    {
-        StartMicropolisTimer();
+        return;
     }
 
-    /*char buf[256];
-    sprintf(buf, "UISetSpeed %d", sim_paused ? 0 : SimMetaSpeed);
-    Eval(buf);
-    */
+    simulationSpeed = speed;
+    StartMicropolisTimer();
+}
+
+
+SimulationSpeed SimSpeed()
+{
+    return simulationSpeed;
 }
 
 
 void Pause()
 {
-    if (!sim_paused)
-    {
-        sim_paused_speed = SimMetaSpeed;
-        setSpeed(0);
-        sim_paused = true;
-    }
+    previousSimulationSpeed = simulationSpeed;
+    SimSpeed(SimulationSpeed::Paused);
 }
 
 
 void Resume()
 {
-    if (sim_paused)
-    {
-        sim_paused = false;
-        setSpeed(sim_paused_speed);
-    }
+    SimSpeed(previousSimulationSpeed);
+}
+
+
+bool Paused()
+{
+    return simulationSpeed == SimulationSpeed::Paused;
 }
 
 

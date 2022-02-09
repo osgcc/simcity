@@ -430,7 +430,6 @@ extern int MesX, MesY;
 extern int MesNum, MessagePort;
 extern int LastMesTime;
 
-extern int SimSpeed;
 extern int NoDisasters;
 extern int autoBulldoze;
 extern int autoBudget;
@@ -496,8 +495,7 @@ extern int MultiPlayerMode;
 extern int sim_delay;
 extern int sim_skips;
 extern int sim_skip;
-extern bool sim_paused;
-extern int sim_paused_speed;
+
 extern int heat_steps;
 extern int heat_flow;
 extern int heat_rule;

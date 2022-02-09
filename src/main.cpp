@@ -110,8 +110,7 @@ int sim_loops = 0;
 int sim_delay = 50;
 int sim_skips = 0;
 int sim_skip = 0;
-bool sim_paused = 0;
-int sim_paused_speed = 3;
+
 int heat_steps = 0;
 int heat_flow = -7;
 int heat_rule = 0;
@@ -419,7 +418,7 @@ void sim_update()
     flagBlink = (now_time.tv_usec < 500000) ? 1 : -1;
     */
 
-    if (SimSpeed && !heat_steps)
+    if (!Paused() && !heat_steps)
     {
         TilesAnimated = 0;
     }
@@ -489,12 +488,12 @@ void sim_init()
     MesNum = 0;
     LastMesTime = 0;
     flagBlink = 1;
-    SimSpeed = 3;
+    SimSpeed(SimulationSpeed::Normal);
     ChangeEval();
     MessagePort = 0;
     MesX = 0;
     MesY = 0;
-    sim_paused = 0;
+    
     sim_loops = 0;
     InitSimLoad = 2;
     Exit = 0;
@@ -511,7 +510,7 @@ void sim_init()
     InitWillStuff();
     SetFunds(5000);
     SetGameLevelFunds(StartupGameLevel);
-    setSpeed(0);
+    SimSpeed(SimulationSpeed::Paused);
     setSkips(0);
 }
 

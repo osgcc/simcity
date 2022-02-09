@@ -484,27 +484,6 @@ void FixMicropolisTimer()
 }
 
 
-static void MicropolisTimerProc(/*ClientData clientData*/)
-{
-    //sim_timer_token = NULL;
-    sim_timer_set = 0;
-
-    if (NeedRest > 0)
-    {
-        NeedRest--;
-    }
-
-    if (SimSpeed)
-    {
-        sim_loop(true);
-        StartMicropolisTimer();
-    }
-    else
-    {
-        StopMicropolisTimer();
-    }
-}
-
 /*
 void ReallyStartMicropolisTimer(ClientData clientData)
 {
