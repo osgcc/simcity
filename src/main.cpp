@@ -516,6 +516,12 @@ void sim_init()
 }
 
 
+constexpr SDL_Color ColorCommercial{ 79, 79, 255, 255 };
+constexpr SDL_Color ColorResidential{ 0, 165, 0, 255 };
+constexpr SDL_Color ColorIndustrial{ 255, 255, 0, 255 };
+
+
+
 SDL_Window* MainWindow = nullptr;
 SDL_Renderer* MainWindowRenderer = nullptr;
 
@@ -526,9 +532,9 @@ Texture RCI_Indicator;
 Texture MainMapTexture{};
 Texture MiniMapTexture{};
 
+
 namespace
 {
-    SDL_Rect MiniMapDrawRect{ 0, 0, 3, 3 };
     SDL_Rect MiniMapTileRect{ 0, 0, 3, 3 };
     SDL_Rect UiHeaderRect{ 10, 10, 0, 50 };
 
@@ -543,6 +549,11 @@ namespace
     Vector<int> WindowSize{};
 
     Point<int> MapViewOffset{};
+    Point<int> TilePointedAt{};
+    Point<int> MousePosition{};
+
+    SDL_Rect TileHighlight{ 0, 0, 16, 16 };
+    SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
 };
 
 
@@ -556,17 +567,18 @@ void loadGraphics()
 
 void DrawMiniMap()
 {
+    SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
+
     SDL_SetRenderTarget(MainWindowRenderer, MiniMapTexture.texture);
     for (int row = 0; row < SimWidth; row++)
     {
         for (int col = 0; col < SimHeight; col++)
         {
-            MiniMapDrawRect = { row * 3, col * 3, MiniMapDrawRect.w, MiniMapDrawRect.h };
+            miniMapDrawRect = { row * 3, col * 3, miniMapDrawRect.w, miniMapDrawRect.h };
             MiniMapTileRect.y = getTileValue(row, col) * 3;
-            SDL_RenderCopy(MainWindowRenderer, SmallTileset.texture, &MiniMapTileRect, &MiniMapDrawRect);
+            SDL_RenderCopy(MainWindowRenderer, SmallTileset.texture, &MiniMapTileRect, &miniMapDrawRect);
         }
     }
-
     SDL_RenderPresent(MainWindowRenderer);
     SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
@@ -618,24 +630,80 @@ void clampViewOffset()
 {
     MapViewOffset =
     {
-        std::clamp(MapViewOffset.x, 0, MainMapTexture.dimensions.x - WindowSize.x),
-        std::clamp(MapViewOffset.y, 0, MainMapTexture.dimensions.y - WindowSize.y)
+        std::clamp(MapViewOffset.x, 0, std::max(0, MainMapTexture.dimensions.x - WindowSize.x)),
+        std::clamp(MapViewOffset.y, 0, std::max(0, MainMapTexture.dimensions.y - WindowSize.y))
     };
+}
+
+
+void setMiniMapSelectorSize()
+{
+    MiniMapSelector.w = static_cast<int>(std::ceil(WindowSize.x / 16.0f) * 3);
+    MiniMapSelector.h = static_cast<int>(std::ceil(WindowSize.y / 16.0f) * 3);
 }
 
 
 void windowResized(const Vector<int>& size)
 {
     getWindowSize();
-    
     clampViewOffset();
 
-    MiniMapSelector.w = static_cast<int>(std::ceil(WindowSize.x / 16.0f) * 3);
-    MiniMapSelector.h = static_cast<int>(std::ceil(WindowSize.y / 16.0f) * 3);
+    setMiniMapSelectorSize();
 
     updateMapDrawParameters();
 
     UiHeaderRect.w = WindowSize.x - 20;
+}
+
+
+void calculateMouseToWorld()
+{
+    Point<int> screenCell =
+    {
+        (((MousePosition.x) + (MapViewOffset.x % 16)) / 16) % WindowSize.x,
+        (((MousePosition.y) + (MapViewOffset.y % 16)) / 16) % WindowSize.y
+    };
+    
+    TilePointedAt =
+    {
+       screenCell.x + (MapViewOffset.x / 16),
+       screenCell.y + (MapViewOffset.y / 16)
+    };
+
+    TileHighlight =
+    {
+        (screenCell.x * 16) - MapViewOffset.x % 16,
+        (screenCell.y * 16) - MapViewOffset.y % 16,
+        16, 16
+    };
+
+    TileMiniHighlight =
+    {
+        MiniMapDestination.x + TilePointedAt.x * 3,
+        MiniMapDestination.y + TilePointedAt.y * 3,
+        3, 3
+    };
+}
+
+
+void handleKeyEvent(SDL_Event& event)
+{
+    switch (event.key.keysym.sym)
+    {
+    case SDLK_SPACE:
+        DoPlayNewCity();
+        DrawMiniMap();
+        DrawBigMap();
+        break;
+
+    case SDLK_ESCAPE:
+        sim_exit();
+        break;
+
+    default:
+        break;
+
+    }
 }
 
 
@@ -647,43 +715,14 @@ void pumpEvents()
         switch (event.type)
         {
         case SDL_KEYDOWN:
-            switch (event.key.keysym.sym)
-            {
-            case SDLK_SPACE:
-                DoPlayNewCity();
-                DrawMiniMap();
-                DrawBigMap();
-                break;
-
-            case SDLK_ESCAPE:
-                sim_exit();
-                break;
-
-            case SDLK_LEFT:
-            case SDLK_RIGHT:
-            case SDLK_UP:
-            case SDLK_DOWN:
-                break;
-
-            case SDLK_1:
-                tileScale(1);
-                break;
-
-            case SDLK_2:
-                tileScale(2);
-                break;
-
-            case SDLK_3:
-                tileScale(3);
-                break;
-
-            default:
-                break;
-
-            }
+            handleKeyEvent(event);
             break;
 
         case SDL_MOUSEMOTION:
+            MousePosition = { event.motion.x, event.motion.y };
+
+            calculateMouseToWorld();
+
             if ((SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON_RMASK) != 0)
             {
                 MapViewOffset -= { event.motion.xrel, event.motion.yrel };
@@ -737,8 +776,7 @@ void initViewParamters()
 
     MainMapTexture.dimensions = { SimWidth * 16, SimHeight * 16 };
 
-    MiniMapSelector.w = (WindowSize.x / 16) * 3;
-    MiniMapSelector.h = (WindowSize.y / 16) * 3;
+    setMiniMapSelectorSize();
 
     UiHeaderRect.w = WindowSize.x - 20;
     UiHeaderRect.h = RCI_Indicator.dimensions.y + 10;
@@ -772,6 +810,7 @@ void drawMiniMapUi()
 
     SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 150);
     SDL_RenderDrawRect(MainWindowRenderer, &MiniMapSelector);
+    SDL_RenderDrawRect(MainWindowRenderer, &TileMiniHighlight);
 
     SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 255);
 }
@@ -779,7 +818,7 @@ void drawMiniMapUi()
 
 void startGame()
 {
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
     initRenderer();
 
@@ -809,6 +848,10 @@ void startGame()
 
         drawTopUi();
         drawMiniMapUi();
+
+
+        SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
+        SDL_RenderFillRect(MainWindowRenderer, &TileHighlight);
 
         SDL_RenderPresent(MainWindowRenderer);
     }
