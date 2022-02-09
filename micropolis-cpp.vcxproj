@@ -40,6 +40,7 @@
     <ClCompile Include="src\s_sim.cpp" />
     <ClCompile Include="src\s_traf.cpp" />
     <ClCompile Include="src\s_zone.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\w_budget.cpp" />
     <ClCompile Include="src\w_con.cpp" />
     <ClCompile Include="src\w_editor.cpp" />
@@ -76,6 +77,7 @@
     <ClInclude Include="src\s_sim.h" />
     <ClInclude Include="src\s_traf.h" />
     <ClInclude Include="src\s_zone.h" />
+    <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Vector.h" />
     <ClInclude Include="src\View.h" />
     <ClInclude Include="src\w_budget.h" />
