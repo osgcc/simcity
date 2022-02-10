@@ -72,7 +72,7 @@
 
 #include <SDL2/SDL.h>
 
-extern SDL_Renderer* MainWindowRenderer;;
+extern SDL_Renderer* MainWindowRenderer;
 
 extern Texture BigTileset;
 extern Texture MainMapTexture;
