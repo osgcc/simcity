@@ -105,7 +105,6 @@ int NewPower; /* post */
 int AvCityTax;
 int Scycle = 0;
 int Fcycle = 0;
-int Spdcycle = 0;
 int DoInitialEval = 0;
 int MeltX, MeltY;
 
@@ -1056,10 +1055,7 @@ void Simulate(int mod16)
     switch (mod16)
     {
     case 0:
-        if (++Scycle > 1023) // this is cosmic  // <- ?
-        {
-            Scycle = 0;
-        }
+        ++Scycle > 1023 ? Scycle = 0 : Scycle;
         
         if (DoInitialEval)
         {
@@ -1070,7 +1066,7 @@ void Simulate(int mod16)
         CityTime++;
         AvCityTax += CityTax; // post <-- ?
         
-        if (!(Scycle & 1))
+        if (!(Scycle % 2))
         {
             SetValves();
         }
@@ -1187,21 +1183,6 @@ void Simulate(int mod16)
 void SimFrame()
 {
     if (SimSpeed() == SimulationSpeed::Paused)
-    {
-        return;
-    }
-
-    if (++Spdcycle > 1023)
-    {
-        Spdcycle = 0;
-    }
-
-    if (SimSpeed() == SimulationSpeed::Slow && Spdcycle % 5)
-    {
-        return;
-    }
-
-    if (SimSpeed() == SimulationSpeed::Normal && Spdcycle % 3)
     {
         return;
     }

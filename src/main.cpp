@@ -875,7 +875,7 @@ void drawDebug()
 }
 
 
-std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 10, 16 };
+std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 20, 37 };
 
 unsigned int speedModifier()
 {
@@ -885,6 +885,24 @@ unsigned int speedModifier()
 unsigned int currentTick{};
 unsigned int lastTick{};
 unsigned int accumulator{};
+unsigned int accumulatorAdjust{};
+
+
+bool timerTick()
+{
+    lastTick = currentTick;
+    currentTick = SDL_GetTicks();
+
+    accumulatorAdjust = 40 - speedModifier();
+    accumulator += currentTick - lastTick;
+    if (accumulator > accumulatorAdjust)
+    {
+        accumulator -= accumulatorAdjust;
+        return true;
+    }
+
+    return false;
+}
 
 
 void startGame()
@@ -911,24 +929,9 @@ void startGame()
     DrawMiniMap();
     DrawBigMap();
 
-    bool nextTick{ false };
-
-    unsigned int accumulatorAdjust{};
-
     while (!Exit)
     {
-        lastTick = currentTick;
-        currentTick = SDL_GetTicks();
-
-        accumulatorAdjust = 20 - speedModifier();
-        accumulator += currentTick - lastTick;
-        if (accumulator > accumulatorAdjust)//* speedModifier())
-        {
-            accumulator -= accumulatorAdjust;
-            nextTick = true;
-        }
-        sim_loop(nextTick);
-        nextTick = false;
+        sim_loop(timerTick());
 
         pumpEvents();
 
