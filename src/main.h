@@ -537,4 +537,4 @@ extern int FlushStyle;
 extern int GotXError;
 
 void sim_exit();
-void sim_loop(bool doSim);
+void sim_update_editors();

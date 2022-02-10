@@ -106,7 +106,6 @@ std::string FirstDisplay;
 
 Sim Simulation;
 
-int sim_loops = 0;
 int sim_delay = 50;
 int sim_skips = 0;
 int sim_skip = 0;
@@ -157,15 +156,10 @@ void signal_init()
 
 void sim_update_editors()
 {
-    /*
-    for (SimView* view = Simulation.editor; view != nullptr; view = view->next)
-    {
-        CancelRedrawView(view);
-        view->invalid = 1;
-        DoUpdateEditor(view);
-    }
-    */
-    DoUpdateHeads();
+    showValves();
+    doTimeStuff();
+    ReallyUpdateFunds();
+    updateOptions();
 }
 
 
@@ -416,12 +410,13 @@ void sim_update()
     /* -- blink speed of 0.5 seconds
     gettimeofday(&now_time, nullptr);
     flagBlink = (now_time.tv_usec < 500000) ? 1 : -1;
-    */
+    
 
     if (!Paused() && !heat_steps)
     {
         TilesAnimated = 0;
     }
+    */
 
     sim_update_editors();
 
@@ -461,7 +456,6 @@ void sim_loop(bool doSim)
         MoveObjects();
     }
 
-    sim_loops++;
     sim_update();
 }
 
@@ -494,7 +488,6 @@ void sim_init()
     MesX = 0;
     MesY = 0;
     
-    sim_loops = 0;
     InitSimLoad = 2;
     Exit = 0;
 
@@ -839,7 +832,10 @@ void startGame()
 
     while (!Exit)
     {
+        sim_loop(true);
+
         pumpEvents();
+
         SDL_RenderClear(MainWindowRenderer);
 
         // Map
