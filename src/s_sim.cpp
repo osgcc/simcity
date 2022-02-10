@@ -1055,10 +1055,7 @@ void Simulate(int mod16)
     switch (mod16)
     {
     case 0:
-        if (++Scycle > 1023) // this is cosmic  // <- ?
-        {
-            Scycle = 0;
-        }
+        ++Scycle > 1023 ? Scycle = 0 : Scycle;
         
         if (DoInitialEval)
         {
@@ -1069,7 +1066,7 @@ void Simulate(int mod16)
         CityTime++;
         AvCityTax += CityTax; // post <-- ?
         
-        if (!(Scycle & 1))
+        if (!(Scycle % 2))
         {
             SetValves();
         }
