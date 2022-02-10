@@ -134,9 +134,8 @@ void sim_exit()
 
 void sim_really_exit(int val)
 {
-  DoStopMicropolis();
-
-  exit(val);
+    DoStopMicropolis();
+    exit(val);
 }
 
 
@@ -199,7 +198,7 @@ void sim_update_maps()
 
 void sim_update_graphs()
 {
-  graphDoer();
+    graphDoer();
 }
 
 
@@ -220,10 +219,8 @@ void sim_update_evaluations()
     {
         return;
     }
-
     scoreDoer();
 }
-
 
 int *CellSrc = nullptr;
 int *CellDst = nullptr;
@@ -513,17 +510,15 @@ constexpr SDL_Color ColorResidential{ 0, 165, 0, 255 };
 constexpr SDL_Color ColorIndustrial{ 255, 255, 0, 255 };
 
 
-
 SDL_Window* MainWindow = nullptr;
 SDL_Renderer* MainWindowRenderer = nullptr;
-
-Texture BigTileset;
-Texture SmallTileset;
-Texture RCI_Indicator;
 
 Texture MainMapTexture{};
 Texture MiniMapTexture{};
 
+Texture BigTileset{};
+Texture SmallTileset{};
+Texture RCI_Indicator{};
 
 Font* MainFont{ nullptr };
 
@@ -531,9 +526,7 @@ namespace
 {
     SDL_Rect MiniMapTileRect{ 0, 0, 3, 3 };
     SDL_Rect UiHeaderRect{ 10, 10, 0, 0 };
-
     SDL_Rect RciDestination{};
-
     SDL_Rect FullMapViewRect{};
     
     SDL_Rect MiniMapSelector{};
