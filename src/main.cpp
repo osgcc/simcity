@@ -870,7 +870,8 @@ void drawDebug()
 {
     drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 10, 100 }, { 255, 255, 255, 100 });
     drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 10, 100 + MainFont->height() }, { 255, 255, 255, 100 });
-    drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 10, 100 + MainFont->height() * 2 }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "Speed: " + SpeedString(SimSpeed()), {10, 100 + MainFont->height() * 3}, {255, 255, 255, 100});
+    drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 10, 100 + MainFont->height() * 4 }, { 255, 255, 255, 100 });
 }
 
 

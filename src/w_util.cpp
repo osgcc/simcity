@@ -70,6 +70,7 @@
 #include "View.h"
 
 #include <algorithm>
+#include <array>
 #include <string>
 
 
@@ -77,6 +78,11 @@ namespace
 {
     SimulationSpeed simulationSpeed;
     SimulationSpeed previousSimulationSpeed;
+
+    std::array<std::string, 4> speedStringTable
+    {
+        "Paused", "Slow", "Normal", "Fast"
+    };
 };
 
 
@@ -104,6 +110,12 @@ std::string NumberToDollarDecimal(int value)
     }
 
     return valueString;
+}
+
+
+const std::string& SpeedString(SimulationSpeed speed)
+{
+    return speedStringTable[static_cast<int>(speed)];
 }
 
 

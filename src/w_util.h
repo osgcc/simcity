@@ -10,6 +10,7 @@ enum class SimulationSpeed
 	Fast
 };
 
+const std::string& SpeedString(SimulationSpeed speed);
 
 void setAnyCityName(const char* name);
 void DoNewGame();
