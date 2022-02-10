@@ -59,6 +59,9 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
+
+#include "w_update.h"
+
 #include "main.h"
 
 #include "s_msg.h"
@@ -88,7 +91,7 @@ namespace
     int lastCityYear{};
     int lastCityMonth{};
 
-    const std::string MonthString[12] =
+    const std::string MonthTable[12] =
     {
       "Jan",
       "Feb",
@@ -103,6 +106,12 @@ namespace
       "Nov",
       "Dec"
     };
+}
+
+
+const std::string& MonthString(Month month)
+{
+    return MonthTable[static_cast<int>(month)];
 }
 
 
@@ -213,7 +222,7 @@ void updateDate()
         lastCityYear = y;
         lastCityMonth = m;
 
-        Eval(std::string("UISetDate ") + " " + MonthString[m] + " " + std::to_string(y));
+        Eval(std::string("UISetDate ") + " " + MonthTable[m] + " " + std::to_string(y));
     }
 }
 

@@ -727,6 +727,26 @@ void handleKeyEvent(SDL_Event& event)
         sim_exit();
         break;
 
+    case SDLK_0:
+    case SDLK_p:
+        Paused() ? Resume() : Pause();
+        break;
+
+    case SDLK_1:
+        if (Paused()) { Resume(); }
+        SimSpeed(SimulationSpeed::Slow);
+        break;
+
+    case SDLK_2:
+        if (Paused()) { Resume(); }
+        SimSpeed(SimulationSpeed::Normal);
+        break;
+
+    case SDLK_3:
+        if (Paused()) { Resume(); }
+        SimSpeed(SimulationSpeed::Fast);
+        break;
+
     default:
         break;
 
@@ -823,7 +843,8 @@ void drawTopUi()
     // RCI
     SDL_RenderCopy(MainWindowRenderer, RCI_Indicator.texture, nullptr, &RciDestination);
 
-    drawString(*MainFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 5, UiHeaderRect.y + 5 }, { 255, 255, 255, 255 });
+    drawString(*MainFont, MonthString(static_cast<Month>(LastCityMonth())), {UiHeaderRect.x + 5, UiHeaderRect.y + 5}, {255, 255, 255, 255});
+    drawString(*MainFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 30, UiHeaderRect.y + 5}, {255, 255, 255, 255});
 }
 
 
@@ -849,7 +870,20 @@ void drawDebug()
 {
     drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 10, 100 }, { 255, 255, 255, 100 });
     drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 10, 100 + MainFont->height() }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 10, 100 + MainFont->height() * 2 }, { 255, 255, 255, 100 });
 }
+
+
+std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 10, 16 };
+
+unsigned int speedModifier()
+{
+    return SpeedModifierTable[static_cast<unsigned int>(SimSpeed())];
+}
+
+unsigned int currentTick{};
+unsigned int lastTick{};
+unsigned int accumulator{};
 
 
 void startGame()
@@ -876,9 +910,24 @@ void startGame()
     DrawMiniMap();
     DrawBigMap();
 
+    bool nextTick{ false };
+
+    unsigned int accumulatorAdjust{};
+
     while (!Exit)
     {
-        sim_loop(true);
+        lastTick = currentTick;
+        currentTick = SDL_GetTicks();
+
+        accumulatorAdjust = 20 - speedModifier();
+        accumulator += currentTick - lastTick;
+        if (accumulator > accumulatorAdjust)//* speedModifier())
+        {
+            accumulator -= accumulatorAdjust;
+            nextTick = true;
+        }
+        sim_loop(nextTick);
+        nextTick = false;
 
         pumpEvents();
 

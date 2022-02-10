@@ -1,5 +1,24 @@
 #pragma once
 
+#include <string>
+
+enum class Month
+{
+	Jan,
+	Feb,
+	Mar,
+	Apr,
+	May,
+	Jun,
+	Jul,
+	Aug,
+	Sep,
+	Oct,
+	Nov,
+	Dec
+};
+
+
 void UpdateMaps();
 void UpdateGraphs();
 void UpdateEvaluation();
@@ -20,3 +39,5 @@ void LastCityMonth(int month);
 
 int LastCityYear();
 void LastCityYear(int year);
+
+const std::string& MonthString(Month month);
