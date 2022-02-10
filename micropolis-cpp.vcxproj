@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Date.cpp" />
+    <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\g_ani.cpp" />
     <ClCompile Include="src\g_map.cpp" />
     <ClCompile Include="src\g_setup.cpp" />
@@ -59,11 +60,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Date.h" />
+    <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Graph.h" />
     <ClInclude Include="src\g_ani.h" />
     <ClInclude Include="src\g_setup.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Point.h" />
+    <ClInclude Include="src\PointInRectangleRange.h" />
     <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\s_disast.h" />
@@ -79,6 +82,7 @@
     <ClInclude Include="src\s_zone.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Vector.h" />
+    <ClInclude Include="src\VectorSizeRange.h" />
     <ClInclude Include="src\View.h" />
     <ClInclude Include="src\w_budget.h" />
     <ClInclude Include="src\w_con.h" />
