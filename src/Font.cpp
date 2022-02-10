@@ -220,8 +220,7 @@ namespace {
 			SDL_Surface* characterSurface = TTF_RenderGlyph_Blended(font, static_cast<uint16_t>(glyph), white);
 			if (!characterSurface)
 			{
-				SDL_FreeSurface(fontSurface);
-				throw std::runtime_error("Font failed to generate surface for character : " + std::to_string(glyph) + " : " + std::string(TTF_GetError()));
+				continue;
 			}
 
 			SDL_SetSurfaceBlendMode(characterSurface, SDL_BLENDMODE_NONE);
