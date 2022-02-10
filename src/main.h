@@ -520,8 +520,6 @@ extern int toolOffset[];
 extern std::string Displays;
 extern std::string FirstDisplay;
 
-extern const char *dateStr[12];
-
 extern bool NewMap;
 extern int NewMapFlags[NMAPS];
 extern int NewGraph;

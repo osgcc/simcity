@@ -73,6 +73,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <string>
 
 
 bool MustUpdateFunds = false;
@@ -83,10 +84,20 @@ int LastCityMonth;
 int LastFunds;
 int LastR, LastC, LastI;
 
-const char *dateStr[12] =
+const std::string dateStr[12] =
 {
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec"
 };
 
 

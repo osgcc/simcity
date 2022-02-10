@@ -9,3 +9,5 @@ void doTimeStuff();
 void showValves();
 void ReallyUpdateFunds();
 void updateOptions();
+
+extern const std::string dateStr[12];
