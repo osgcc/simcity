@@ -71,17 +71,34 @@
 
 extern int ProblemVotes[PROBNUM];
 
-const char *cityClassStr[6] = {
-  "VILLAGE", "TOWN", "CITY", "CAPITAL", "METROPOLIS", "MEGALOPOLIS"
+const std::string cityClassStr[6] =
+{
+  "VILLAGE",
+  "TOWN",
+  "CITY",
+  "CAPITAL",
+  "METROPOLIS",
+  "MEGALOPOLIS"
 };
 
-const char *cityLevelStr[3] = {
-  "Easy", "Medium", "Hard"
+
+const std::string cityLevelStr[3] =
+{
+  "Easy",
+  "Medium",
+  "Hard"
 };
 
-const char *probStr[10] = {
-  "CRIME", "POLLUTION", "HOUSING COSTS", "TAXES",
-  "TRAFFIC", "UNEMPLOYMENT", "FIRES"
+
+const std::string probStr[10] =
+{
+  "CRIME",
+  "POLLUTION",
+  "HOUSING COSTS",
+  "TAXES",
+  "TRAFFIC",
+  "UNEMPLOYMENT",
+  "FIRES"
 };
 
 
