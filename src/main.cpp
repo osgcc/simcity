@@ -875,7 +875,7 @@ void drawDebug()
 }
 
 
-std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 10, 16 };
+std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 20, 37 };
 
 unsigned int speedModifier()
 {
@@ -920,7 +920,7 @@ void startGame()
         lastTick = currentTick;
         currentTick = SDL_GetTicks();
 
-        accumulatorAdjust = 20 - speedModifier();
+        accumulatorAdjust = 40 - speedModifier();
         accumulator += currentTick - lastTick;
         if (accumulator > accumulatorAdjust)
         {
