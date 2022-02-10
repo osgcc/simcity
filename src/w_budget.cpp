@@ -211,7 +211,7 @@ void DoBudgetNow(int fromMenu)
     }
     drawBudgetWindow();
     drawCurrPercents();
-    DoUpdateHeads();
+    sim_update_editors();
 
   } else { /* autoBudget & !fromMenu */
     if ((yumDuckets) > total) {
@@ -222,7 +222,7 @@ void DoBudgetNow(int fromMenu)
       RoadSpend = RoadFund;
       drawBudgetWindow();
       drawCurrPercents();
-      DoUpdateHeads();
+      sim_update_editors();
     } else {
       autoBudget = 0; /* XXX: force autobudget */
       MustUpdateOptions = 1;

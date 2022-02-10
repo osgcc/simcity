@@ -151,7 +151,7 @@ void DoSetWandState(SimView *view, int state)
 void setWandState(SimView* view, int state)
 {
     view->tool_state = state;
-    DoUpdateHeads();
+    sim_update_editors();
     DoSetWandState(view, state);
 }
 

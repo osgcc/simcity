@@ -107,7 +107,7 @@ void InitWillStuff()
 
     ResetLastKeys();
     DoNewGame();
-    DoUpdateHeads();
+    sim_update_editors();
 }
 
 

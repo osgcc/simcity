@@ -259,22 +259,6 @@ void ReallyUpdateFunds()
 }
 
 
-void DoUpdateHeads()
-{
-    showValves();
-    doTimeStuff();
-    ReallyUpdateFunds();
-    updateOptions();
-}
-
-
-void UpdateEditors()
-{
-    InvalidateEditors();
-    DoUpdateHeads();
-}
-
-
 void UpdateMaps()
 {
   InvalidateMaps();
@@ -298,7 +282,7 @@ void UpdateHeads()
     MustUpdateFunds = true;
     ValveFlag = 1;
     LastCityTime = LastCityYear = LastCityMonth = LastFunds = LastR = -999999;
-    DoUpdateHeads();
+    sim_update_editors();
 }
 
 
