@@ -78,27 +78,68 @@
 
 bool MustUpdateFunds = false;
 int MustUpdateOptions;
-int LastCityTime;
-int LastCityYear;
-int LastCityMonth;
 int LastFunds;
 int LastR, LastC, LastI;
 
-const std::string dateStr[12] =
+
+namespace
 {
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec"
-};
+    int lastCityTime{};
+    int lastCityYear{};
+    int lastCityMonth{};
+
+    const std::string MonthString[12] =
+    {
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    };
+}
+
+
+int LastCityTime()
+{
+    return lastCityTime;
+}
+
+
+void LastCityTime(int tick)
+{
+    lastCityTime = tick;
+}
+
+
+int LastCityMonth()
+{
+    return lastCityMonth;
+}
+
+
+void LastCityMonth(int month)
+{
+    lastCityMonth = month;
+}
+
+
+int LastCityYear()
+{
+    return lastCityYear;
+}
+
+
+void LastCityYear(int year)
+{
+    lastCityYear = year;
+}
 
 
 void SetDemand(double r, double c, double i)
@@ -153,7 +194,7 @@ void updateDate()
 {
     static int megalinium = 1000000;
 
-    LastCityTime = CityTime / 4;
+    lastCityTime = CityTime / 4;
 
     int y = (CityTime / 48) + StartingYear;
     int m = (CityTime % 48) / 4;
@@ -167,12 +208,12 @@ void updateDate()
 
     doMessage();
 
-    if ((LastCityYear != y) || (LastCityMonth != m))
+    if ((LastCityYear() != y) || (LastCityMonth() != m))
     {
-        LastCityYear = y;
-        LastCityMonth = m;
+        lastCityYear = y;
+        lastCityMonth = m;
 
-        Eval(std::string("UISetDate ") + " " + dateStr[m] + " " + std::to_string(y));
+        Eval(std::string("UISetDate ") + " " + MonthString[m] + " " + std::to_string(y));
     }
 }
 
@@ -284,7 +325,7 @@ void UpdateHeads()
 {
     MustUpdateFunds = true;
     ValveFlag = 1;
-    LastCityTime = LastCityYear = LastCityMonth = LastFunds = LastR = -999999;
+    lastCityTime = lastCityYear = lastCityMonth = LastFunds = LastR = -999999;
     sim_update_editors();
 }
 

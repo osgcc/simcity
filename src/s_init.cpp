@@ -82,9 +82,9 @@ void InitWillStuff()
     FireEffect = 1000;
     CityScore = 500;
     CityPop = -1;
-    LastCityTime = -1;
-    LastCityYear = -1;
-    LastCityMonth = -1;
+    LastCityTime(-1);
+    LastCityYear(1);
+    LastCityMonth(0);
     LastFunds = -1;
     LastR = LastC = LastI = -999999;
     OverRide = 0;
