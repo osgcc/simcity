@@ -242,7 +242,7 @@ void CheckGrowth()
     int ThisCityPop;
     int z;
 
-    if (!(CityTime & 3))
+    if (!(CityTime % 4))
     {
         z = 0;
         ThisCityPop = ((ResPop)+(ComPop * 8L) + (IndPop * 8L)) * 20L;
@@ -287,13 +287,13 @@ void SendMessages()
     TotalZPop = ResZPop + ComZPop + IndZPop;
     PowerPop = NuclearPop + CoalPop;
 
-    z = CityTime & 63;
+    z = CityTime % 64;
 
     switch (z)
     {
 
     case 1:
-        if ((TotalZPop >> 2) >= ResZPop) /* need Res */
+        if ((TotalZPop / 4) >= ResZPop) /* need Res */
         {
             SendMes(1);
         }

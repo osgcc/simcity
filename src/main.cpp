@@ -815,7 +815,7 @@ void initViewParamters()
     UiHeaderRect.w = WindowSize.x - 20;
     UiHeaderRect.h = RCI_Indicator.dimensions.y + 10 + MainFont->height() + 10;
 
-    RciDestination = { UiHeaderRect.x + 5, UiHeaderRect.y + 5, RCI_Indicator.dimensions.x, RCI_Indicator.dimensions.y };
+    RciDestination = { UiHeaderRect.x + 5, UiHeaderRect.y + MainFont->height() + 10, RCI_Indicator.dimensions.x, RCI_Indicator.dimensions.y };
 }
 
 
@@ -829,6 +829,8 @@ void drawTopUi()
 
     // RCI
     SDL_RenderCopy(MainWindowRenderer, RCI_Indicator.texture, nullptr, &RciDestination);
+
+    drawString(*MainFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 5, UiHeaderRect.y + 5 }, { 255, 255, 255, 255 });
 }
 
 

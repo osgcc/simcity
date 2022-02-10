@@ -150,38 +150,30 @@ void showValves()
 
 
 void updateDate()
-{	
-  int y;
-  int m;
-  int megalinium = 1000000;
+{
+    static int megalinium = 1000000;
 
-  LastCityTime = CityTime >> 2;
+    LastCityTime = CityTime / 4;
 
-  y = ((int)CityTime / 48) + (int)StartingYear;
-  m = ((int)CityTime % 48) >> 2;
+    int y = (CityTime / 48) + StartingYear;
+    int m = (CityTime % 48) / 4;
 
-  if (y >= megalinium) {
-    SetYear(StartingYear);
-    y = StartingYear;
-    SendMes(-40);
-  }
+    if (y >= megalinium)
+    {
+        SetYear(StartingYear);
+        y = StartingYear;
+        SendMes(-40);
+    }
 
-  doMessage();
+    doMessage();
 
-  if ((LastCityYear != y) ||
-      (LastCityMonth != m)) {
+    if ((LastCityYear != y) || (LastCityMonth != m))
+    {
+        LastCityYear = y;
+        LastCityMonth = m;
 
-    LastCityYear = y;
-    LastCityMonth = m;
-
-    /*sprintf(str, "%s %d", dateStr[m], y);
-
-    sprintf(buf,
-	    "UISetDate {%s} %d %d",
-	    str, m, y);
-    Eval(buf);
-    */
-  }
+        Eval(std::string("UISetDate ") + " " + dateStr[m] + " " + std::to_string(y));
+    }
 }
 
 
