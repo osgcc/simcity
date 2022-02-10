@@ -851,6 +851,12 @@ void drawString(Font& font, std::string_view text, Point<int> position, SDL_Colo
 }
 
 
+void drawDebug()
+{
+    drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 10, 100 }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 10, 100 + MainFont->height() }, { 255, 255, 255, 100 });
+}
+
 
 void startGame()
 {
@@ -892,7 +898,9 @@ void startGame()
 
         SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
         SDL_RenderFillRect(MainWindowRenderer, &TileHighlight);
-
+        
+        drawDebug();
+        
         SDL_RenderPresent(MainWindowRenderer);
     }
 
