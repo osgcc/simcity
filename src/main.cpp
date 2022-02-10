@@ -922,7 +922,7 @@ void startGame()
 
         accumulatorAdjust = 20 - speedModifier();
         accumulator += currentTick - lastTick;
-        if (accumulator > accumulatorAdjust)//* speedModifier())
+        if (accumulator > accumulatorAdjust)
         {
             accumulator -= accumulatorAdjust;
             nextTick = true;

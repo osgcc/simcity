@@ -105,7 +105,6 @@ int NewPower; /* post */
 int AvCityTax;
 int Scycle = 0;
 int Fcycle = 0;
-int Spdcycle = 0;
 int DoInitialEval = 0;
 int MeltX, MeltY;
 
@@ -1187,21 +1186,6 @@ void Simulate(int mod16)
 void SimFrame()
 {
     if (SimSpeed() == SimulationSpeed::Paused)
-    {
-        return;
-    }
-
-    if (++Spdcycle > 1023)
-    {
-        Spdcycle = 0;
-    }
-
-    if (SimSpeed() == SimulationSpeed::Slow && Spdcycle % 5)
-    {
-        return;
-    }
-
-    if (SimSpeed() == SimulationSpeed::Normal && Spdcycle % 3)
     {
         return;
     }
