@@ -61,6 +61,7 @@
  */
 #include "main.h"
 
+#include "Font.h"
 #include "Map.h"
 #include "g_map.h"
 
@@ -106,7 +107,6 @@ std::string FirstDisplay;
 
 Sim Simulation;
 
-int sim_delay = 50;
 int sim_skips = 0;
 int sim_skip = 0;
 
@@ -525,6 +525,8 @@ Texture MainMapTexture{};
 Texture MiniMapTexture{};
 
 
+Font* MainFont{ nullptr };
+
 namespace
 {
     SDL_Rect MiniMapTileRect{ 0, 0, 3, 3 };
@@ -808,6 +810,48 @@ void drawMiniMapUi()
 }
 
 
+
+void drawString(Font& font, std::string_view text, Point<int> position, SDL_Color color)
+{
+    if (text.empty()) { return; }
+
+    //SDL_SetRenderDrawColor(MainWindowRenderer, color.r, color.g, color.b, color.a);
+
+    SDL_SetTextureColorMod(font.texture(), color.r, color.g, color.b);
+
+    const auto& gml = font.metrics();
+    if (gml.empty()) { return; }
+
+    int offset = 0;
+    for (auto character : text)
+    {
+        const auto& gm = gml[std::clamp<std::size_t>((uint8_t)(character), 0, 255)];
+
+        const auto glyphCellSize = font.glyphCellSize().to<float>();
+        const auto adjustX = (gm.minX < 0) ? gm.minX : 0;
+
+        SDL_Rect srcRect{
+            static_cast<int>(gm.uvRect.x),
+            static_cast<int>(gm.uvRect.y),
+            static_cast<int>(glyphCellSize.x),
+            static_cast<int>(glyphCellSize.y)
+        };
+
+        SDL_Rect dstRect{
+            position.x + offset + adjustX,
+            position.y,
+            static_cast<int>(glyphCellSize.x),
+            static_cast<int>(glyphCellSize.y)
+        };
+
+        SDL_RenderCopy(MainWindowRenderer, font.texture(), &srcRect, &dstRect);
+
+        offset += gm.advance;
+    }
+}
+
+
+
 void startGame()
 {
     SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS);
@@ -815,6 +859,8 @@ void startGame()
     initRenderer();
 
     loadGraphics();
+
+    MainFont = new Font("res/open-sans-medium.ttf", 12);
 
     initViewParamters();
     updateMapDrawParameters();
@@ -844,7 +890,6 @@ void startGame()
         drawTopUi();
         drawMiniMapUi();
 
-
         SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
         SDL_RenderFillRect(MainWindowRenderer, &TileHighlight);
 
@@ -853,6 +898,8 @@ void startGame()
 
     SDL_DestroyTexture(BigTileset.texture);
     SDL_DestroyTexture(RCI_Indicator.texture);
+
+    delete MainFont;
 
     SDL_DestroyRenderer(MainWindowRenderer);
     SDL_DestroyWindow(MainWindow);

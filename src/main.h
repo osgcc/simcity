@@ -492,7 +492,6 @@ extern int optind;
 //extern struct timeval now_time;
 extern int WireMode;
 extern int MultiPlayerMode;
-extern int sim_delay;
 extern int sim_skips;
 extern int sim_skip;
 
