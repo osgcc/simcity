@@ -875,7 +875,7 @@ void drawValve()
 void drawTopUi()
 {
     // Background
-    SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 65);
+    SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 150);
     SDL_RenderFillRect(MainWindowRenderer, &UiHeaderRect);
     SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 255);
     SDL_RenderDrawRect(MainWindowRenderer, &UiHeaderRect);
@@ -887,6 +887,7 @@ void drawTopUi()
     drawString(*MainBigFont, MonthString(static_cast<Month>(LastCityMonth())), {UiHeaderRect.x + 5, UiHeaderRect.y + 5}, {255, 255, 255, 255});
     drawString(*MainBigFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 35, UiHeaderRect.y + 5}, {255, 255, 255, 255});
 
+    drawString(*MainBigFont, LastMessage(), {100, UiHeaderRect.y + 5}, {255, 255, 255, 255});
 }
 
 
