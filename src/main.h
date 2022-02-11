@@ -422,7 +422,6 @@ extern int DoMessages;
 extern int DoNotices;
 extern unsigned char ColorIntensities[];
 
-extern int MesX, MesY;
 extern int LastMesTime;
 
 extern int NoDisasters;

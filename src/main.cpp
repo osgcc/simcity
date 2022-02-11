@@ -482,8 +482,7 @@ void sim_init()
     SimSpeed(SimulationSpeed::Normal);
     ChangeEval();
     //MessagePort = 0;
-    MesX = 0;
-    MesY = 0;
+    MessageLocation({ 0, 0 });
     
     InitSimLoad = 2;
     Exit = 0;

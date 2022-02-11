@@ -69,6 +69,8 @@
 #include "w_tk.h"
 
 
+#include "Point.h"
+
 #include <algorithm>
 #include <string>
 
@@ -81,32 +83,42 @@ bool HaveLastMessage = false;
 std::string LastMessage;
 
 
-//int MesNum;// , MessagePort;
-
 namespace
 {
-    int msgId = 0;
+    int messageId{};
+    Point<int> messageLocation{};
 };
 
 
 int MessageId()
 {
-    return msgId;
+    return messageId;
 }
 
 
 void MessageId(int id)
 {
-    msgId = id;
+    messageId = id;
+}
+
+
+void MessageLocation(Point<int> location)
+{
+    messageLocation = location;
+}
+
+
+const Point<int>& MessageLocation()
+{
+    return messageLocation;
 }
 
 
 void ClearMes()
 {
     //MessagePort = 0;
-    msgId = 0;
-    MesX = 0;
-    MesY = 0;
+    MessageId(0);
+    MessageLocation({ 0, 0 });
     LastPicNum = 0;
 }
 
@@ -123,8 +135,7 @@ void SendMesAt(int Mnum, int x, int y)
 {
     if (SendMes(Mnum))
     {
-        MesX = x;
-        MesY = y;
+        MessageLocation({ x, y });
     }
 }
 
@@ -523,16 +534,15 @@ void doMessage()
             return;
         }
 
-        if (MesX || MesY)
+        if (MessageLocation() != Point<int>{0, 0})
         {
             // TODO: draw goto button
         }
 
-        if (AutoGo && (MesX || MesY))
+        if (AutoGo && (MessageLocation() != Point<int>{0, 0}))
         {
-            DoAutoGoto(MesX, MesY, GetIndString(301, MessageId()));
-            MesX = 0;
-            MesY = 0;
+            DoAutoGoto(MessageLocation().x, MessageLocation().y, GetIndString(301, MessageId()));
+            MessageLocation({ 0, 0 });
         }
         else
         {

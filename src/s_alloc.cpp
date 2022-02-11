@@ -92,14 +92,9 @@ int StartingYear;
 
 std::array<std::array<int, SimHeight>, SimWidth> Map;
 
-
 int ResHisMax, Res2HisMax;
 int ComHisMax, Com2HisMax;
 int IndHisMax, Ind2HisMax;
-
-
-int MessagePort;
-int MesX, MesY;
 
 int RoadSpend, PoliceSpend, FireSpend;
 int RoadFund, PoliceFund, FireFund;

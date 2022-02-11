@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Point.h"
+
 int SendMes(int);
 void SendMessages();
 void ClearMes();
@@ -8,3 +10,6 @@ void doMessage();
 
 int MessageId();
 void MessageId(int id);
+
+void MessageLocation(Point<int> location);
+const Point<int>& MessageLocation();
