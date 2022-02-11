@@ -82,7 +82,6 @@
 bool MustUpdateFunds = false;
 int MustUpdateOptions;
 int LastFunds;
-int LastR, LastC, LastI;
 
 
 namespace
@@ -148,54 +147,6 @@ int LastCityYear()
 void LastCityYear(int year)
 {
     lastCityYear = year;
-}
-
-
-void SetDemand(double r, double c, double i)
-{
-  /*
-  char buf[256];
-
-  sprintf(buf, "UISetDemand %d %d %d",
-	  (int)(r / 100), (int)(c / 100), (int)(i / 100));
-  Eval(buf);
-  */
-}
-
-
-void drawValve()
-{
-  double r, c, i;
-
-  r = RValve;
-  if (r < -1500) r = -1500;
-  if (r > 1500) r = 1500;
-
-  c = CValve;
-  if (c < -1500) c = -1500;
-  if (c > 1500) c = 1500;
-
-  i = IValve;
-  if (i < -1500) i = -1500;
-  if (i > 1500) i = 1500;
-
-  if ((r != LastR) ||
-      (c != LastC) ||
-      (i != LastI)) {
-    LastR = static_cast<int>(r);
-    LastC = static_cast<int>(c);
-    LastI = static_cast<int>(i);
-    SetDemand(r, c, i);
-  }
-}
-
-
-void showValves()
-{
-  if (ValveFlag) {
-    drawValve();
-    ValveFlag = 0;
-  }
 }
 
 
@@ -333,8 +284,7 @@ void UpdateEvaluation()
 void UpdateHeads()
 {
     MustUpdateFunds = true;
-    ValveFlag = 1;
-    lastCityTime = lastCityYear = lastCityMonth = LastFunds = LastR = -999999;
+    lastCityTime = lastCityYear = lastCityMonth = LastFunds = -999999;
     sim_update_editors();
 }
 

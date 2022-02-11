@@ -155,7 +155,6 @@ void signal_init()
 
 void sim_update_editors()
 {
-    showValves();
     doTimeStuff();
     ReallyUpdateFunds();
     updateOptions();
@@ -839,6 +838,21 @@ void initViewParamters()
 }
 
 
+SDL_Rect ResidentialValveRect{};
+SDL_Rect CommercialValveRect{};
+SDL_Rect IndustrialValveRect{};
+
+void drawValve()
+{
+    double r, c, i;
+
+    r = RValve;
+    c = CValve;
+    i = IValve;
+
+}
+
+
 void drawTopUi()
 {
     // Background
@@ -852,6 +866,8 @@ void drawTopUi()
 
     drawString(*MainFont, MonthString(static_cast<Month>(LastCityMonth())), {UiHeaderRect.x + 5, UiHeaderRect.y + 5}, {255, 255, 255, 255});
     drawString(*MainFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 30, UiHeaderRect.y + 5}, {255, 255, 255, 255});
+
+    drawValve();
 }
 
 

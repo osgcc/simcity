@@ -88,8 +88,6 @@
 
 /* Simulation */
 
-
-int ValveFlag;
 int CrimeRamp, PolluteRamp ;
 int RValve, CValve, IValve;
 int ResCap, ComCap, IndCap;
@@ -689,7 +687,6 @@ void MapScan(int x1, int x2)
 }
 
 
-/* comefrom: Simulate DoSimInit */
 void SetValves()
 {
     static int TaxTable[21] = {
@@ -855,7 +852,7 @@ void SetValves()
         }
     }
 
-    RValve = std::clamp(RValve, -2000, 2000);
+    RValve = std::clamp(RValve, -1500, 1500);
     CValve = std::clamp(CValve, -1500, 1500);
     IValve = std::clamp(IValve, -1500, 1500);
 
@@ -871,7 +868,6 @@ void SetValves()
     {
         IValve = 0;
     }
-    ValveFlag = 1;
 }
 
 
@@ -1442,7 +1438,7 @@ void SimFrame()
         return;
     }
 
-    if (++Fcycle > 1023)
+    if (++Fcycle > 1024)
     {
         Fcycle = 0;
     }

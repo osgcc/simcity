@@ -86,7 +86,6 @@ void InitWillStuff()
     LastCityYear(1);
     LastCityMonth(0);
     LastFunds = -1;
-    LastR = LastC = LastI = -999999;
     OverRide = 0;
     PendingTool = -1;
 
@@ -96,7 +95,6 @@ void InitWillStuff()
     PoliceFund = 0;
     FireFund = 0;
     UpdateDelayed = 0;
-    ValveFlag = 1;
 
     DestroyAllSprites();
 
