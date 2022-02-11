@@ -838,9 +838,9 @@ void initViewParamters()
     setMiniMapSelectorSize();
 
     UiHeaderRect.w = WindowSize.x - 20;
-    UiHeaderRect.h = RCI_Indicator.dimensions.y + 10 + MainFont->height() + 10;
+    UiHeaderRect.h = RCI_Indicator.dimensions.y + 10 + MainBigFont->height() + 10;
 
-    RciDestination = { UiHeaderRect.x + 5, UiHeaderRect.y + MainFont->height() + 10, RCI_Indicator.dimensions.x, RCI_Indicator.dimensions.y };
+    RciDestination = { UiHeaderRect.x + 5, UiHeaderRect.y + MainBigFont->height() + 10, RCI_Indicator.dimensions.x, RCI_Indicator.dimensions.y };
 
     ResidentialValveRect = { RciDestination.x + 9, RciDestination.y + 24, 4, 0 };
     CommercialValveRect = { RciDestination.x + 18, RciDestination.y + 24, 4, 0 };
@@ -886,8 +886,8 @@ void drawTopUi()
     SDL_RenderCopy(MainWindowRenderer, RCI_Indicator.texture, nullptr, &RciDestination);
     drawValve();
 
-    drawString(*MainFont, MonthString(static_cast<Month>(LastCityMonth())), {UiHeaderRect.x + 5, UiHeaderRect.y + 5}, {255, 255, 255, 255});
-    drawString(*MainFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 30, UiHeaderRect.y + 5}, {255, 255, 255, 255});
+    drawString(*MainBigFont, MonthString(static_cast<Month>(LastCityMonth())), {UiHeaderRect.x + 5, UiHeaderRect.y + 5}, {255, 255, 255, 255});
+    drawString(*MainBigFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 35, UiHeaderRect.y + 5}, {255, 255, 255, 255});
 
 }
 
@@ -913,7 +913,7 @@ void drawMiniMapUi()
 void drawDebug()
 {
     drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 10, 100 }, { 255, 255, 255, 100 });
-    drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 10, 100 + MainFont->height() }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 10, 100 + MainFont->height() }, { 255, 255, 255, 150 });
     
     drawString(*MainFont, "Speed: " + SpeedString(SimSpeed()), {10, 100 + MainFont->height() * 3}, {255, 255, 255, 100});
     drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 10, 100 + MainFont->height() * 4 }, { 255, 255, 255, 100 });
