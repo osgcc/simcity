@@ -214,7 +214,7 @@ void DoMeltdown(int SX, int SY)
     }
 
     ClearMes();
-    SendMesAt(-43, SX, SY);
+    SendMesAt(MessageEnumerator::NuclearMeltdownReported, SX, SY);
 }
 
 

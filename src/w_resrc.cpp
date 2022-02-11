@@ -117,7 +117,7 @@ std::map< MessageEnumerator, std::string> StringTable =
     { MessageEnumerator::NoMultiplayerLicense, "No Multi Player License !!" },
     { MessageEnumerator::NewCityStarted, "Started a New City." },
     { MessageEnumerator::CityRestored, "Restored a Saved City." },
-    { MessageEnumerator::MessageNone, "" }
+    { MessageEnumerator::None, "" }
 };
 
 

@@ -90,7 +90,7 @@ void InitWillStuff()
     OverRide = 0;
     PendingTool = -1;
 
-    MessageId(0);
+    MessageId(MessageEnumerator::None);
     //MessagePort = 0;
     RoadFund = 0;
     PoliceFund = 0;

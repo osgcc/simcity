@@ -1,15 +1,16 @@
 #pragma once
 
 #include "Point.h"
+#include "w_resrc.h"
 
-int SendMes(int);
+int SendMes(MessageEnumerator);
 void SendMessages();
 void ClearMes();
-void SendMesAt(int Mnum, int x, int y);
+void SendMesAt(MessageEnumerator, int x, int y);
 void doMessage();
 
-int MessageId();
-void MessageId(int id);
+MessageEnumerator MessageId();
+void MessageId(MessageEnumerator);
 
 void MessageLocation(Point<int> location);
 const Point<int>& MessageLocation();

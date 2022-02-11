@@ -64,6 +64,7 @@
 #include "s_alloc.h"
 #include "s_sim.h"
 
+#include "s_msg.h"
 #include "w_util.h"
 
 #include <algorithm>
@@ -120,10 +121,6 @@ void MakeMonster();
 void MakeTornado();
 void MakeExplosion(int, int);
 
-// forward declare from s_msg
-void ClearMes();
-void SendMesAt(int, int, int);
-
 // forward declare from w_tk
 void DoEarthQuake();
 
@@ -151,7 +148,7 @@ void FireBomb()
     CrashY = RandomRange(0, SimHeight - 1);
     MakeExplosion(CrashX, CrashY);
     ClearMes();
-    SendMesAt(-30, CrashX, CrashY);
+    SendMesAt(MessageEnumerator::FirebombingReported, CrashX, CrashY);
 }
 
 
@@ -165,7 +162,7 @@ bool Vulnerable(int tem)
 void MakeEarthquake()
 {
     DoEarthQuake();
-    SendMesAt(-23, CCx, CCy);
+    SendMesAt(MessageEnumerator::EarthquakeReported, CCx, CCy);
 
     int time = RandomRange(0, 700) + 300;
 
@@ -208,7 +205,7 @@ void SetFire()
             Map[x][y] = FIRE + ANIMBIT + (Rand16() & 7);
             CrashX = x;
             CrashY = y;
-            SendMesAt(-20, x, y);
+            SendMesAt(MessageEnumerator::FireReported, x, y);
         }
     }
 }
@@ -228,7 +225,7 @@ void MakeFire()
             if ((z > 21) && (z < LASTZONE))
             {
                 Map[x][y] = FIRE + ANIMBIT + (Rand16() & 7);
-                SendMesAt(20, x, y);
+                SendMesAt(MessageEnumerator::FireReported, x, y);
                 return;
             }
         }
@@ -262,7 +259,7 @@ void MakeFlood()
                     {
                         Map[xx][yy] = FLOOD;
                         FloodCount = 30;
-                        SendMesAt(-42, xx, yy);
+                        SendMesAt(MessageEnumerator::FloodingReported, xx, yy);
                         FloodX = xx;
                         FloodY = yy;
                         return;

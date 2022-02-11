@@ -4,7 +4,7 @@
 
 enum class MessageEnumerator
 {
-    MessageNone,
+    None,
     ResidentialNeeded,
     CommercialNeeded,
     IndustrialNeeded,

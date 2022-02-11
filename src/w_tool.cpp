@@ -838,7 +838,8 @@ void doZoneStatus(int mapH, int mapV)
         x = 28;
     }
 
-    localStr = GetIndString(219, x);
+    // \fixme yuck!
+    localStr = GetIndString(219, static_cast<MessageEnumerator>(x));
 
     for (x = 0; x < 5; x++)
     {
@@ -846,7 +847,9 @@ void doZoneStatus(int mapH, int mapV)
         id++;
         if (id <= 0) { id = 1; }
         if (id > 20) { id = 20; }
-        statusStr[x] = GetIndString(202, id);
+        
+        // \fixme yuck!
+        statusStr[x] = GetIndString(202, static_cast<MessageEnumerator>(id));
     }
 
     DoShowZoneStatus({ localStr, statusStr[0], statusStr[1],
@@ -1550,11 +1553,11 @@ void DoTool(SimView *view, int tool, int x, int y)
 
   if (result == -1) {
     ClearMes();
-    SendMes(34);
+    SendMes(MessageEnumerator::MustBulldoze);
     MakeSoundOn(view, "edit", "UhUh");
   } else if (result == -2) {
     ClearMes();
-    SendMes(33);
+    SendMes(MessageEnumerator::InsufficientFunds);
     MakeSoundOn(view, "edit", "Sorry");
   }
 
@@ -1588,11 +1591,11 @@ void ToolDown(SimView *view, int x, int y)
 
   if (result == -1) {
     ClearMes();
-    SendMes(34);
+    SendMes(MessageEnumerator::MustBulldoze);
     MakeSoundOn(view, "edit", "UhUh");
   } else if (result == -2) {
     ClearMes();
-    SendMes(33);
+    SendMes(MessageEnumerator::InsufficientFunds);
     MakeSoundOn(view, "edit", "Sorry");
   } else if (result == -3) {
     DoPendTool(view, view->tool_state, x >>4, y >>4);

@@ -475,12 +475,11 @@ void sim_init()
     PunishCnt = 0;
     autoBulldoze = 1;
     autoBudget = 1;
-    MessageId(0);
+    MessageId(MessageEnumerator::None);
     LastMesTime = 0;
     flagBlink = 1;
     SimSpeed(SimulationSpeed::Normal);
     ChangeEval();
-    //MessagePort = 0;
     MessageLocation({ 0, 0 });
     
     InitSimLoad = 2;

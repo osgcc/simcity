@@ -227,7 +227,7 @@ void DoBudgetNow(int fromMenu)
       autoBudget = 0; /* XXX: force autobudget */
       MustUpdateOptions = 1;
       ClearMes();
-      SendMes(29);
+      SendMes(MessageEnumerator::CoffersEmpty);
       goto noMoney;
     }
   }
