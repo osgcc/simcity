@@ -87,7 +87,23 @@ namespace
 
     Point<int> messageLocation{};
     std::string lastMessage;
+
+    constexpr auto DefaultMessageDisplayTime{ 3000 };
+
+    int messageDisplayTime{ DefaultMessageDisplayTime };
 };
+
+
+void MessageDisplayTime(int time)
+{
+    messageDisplayTime = time;
+}
+
+
+int MessageDisplayTime()
+{
+    return messageDisplayTime;
+}
 
 
 void AutoGotoMessageLocation(bool autogo)
@@ -144,12 +160,22 @@ void ClearMes()
     MessageId(MessageEnumerator::None);
     MessageLocation({ 0, 0 });
     LastPictureId = 0;
+    LastMesTime = 0;
+    LastMessage("");
 }
 
 
 int SendMes(MessageEnumerator id)
 {
     MessageId(id);
+
+    if (id == MessageEnumerator::None)
+    {
+        ClearMes();
+    }
+
+    LastMesTime = TickCount();
+
     return 0;
 }
 
@@ -501,14 +527,10 @@ void doMessage()
     {
         return;
     }
-    
-    if (MessageId() != MessageEnumerator::None)
+    else if (MessageId() != MessageEnumerator::None &&
+             TickCount() - LastMesTime > messageDisplayTime)
     {
-        LastMesTime = TickCount();
-    }
-    else if ((TickCount() - LastMesTime) > 1800)
-    {
-        MessageId(MessageEnumerator::None);
+        ClearMes();
         return;
     }
 

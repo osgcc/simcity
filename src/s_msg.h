@@ -17,3 +17,5 @@ const Point<int>& MessageLocation();
 void AutoGotoMessageLocation(bool autogo);
 bool AutoGotoMessageLocation();
 const std::string& LastMessage();
+void MessageDisplayTime(int time);
+int MessageDisplayTime();
