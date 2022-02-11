@@ -16,3 +16,4 @@ void MessageLocation(Point<int> location);
 const Point<int>& MessageLocation();
 void AutoGotoMessageLocation(bool autogo);
 bool AutoGotoMessageLocation();
+const std::string& LastMessage();
