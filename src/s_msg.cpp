@@ -79,14 +79,26 @@ int LastCityPop;
 int LastCategory;
 int LastPicNum;
 bool AutoGo = false;
-std::string LastMessage;
 
 
 namespace
 {
     int messageId{};
     Point<int> messageLocation{};
+    std::string lastMessage;
 };
+
+
+void LastMessage(const std::string& message)
+{
+    lastMessage = message;
+}
+
+
+const std::string& LastMessage()
+{
+    return lastMessage;
+}
 
 
 int MessageId()
@@ -141,9 +153,9 @@ void SendMesAt(int Mnum, int x, int y)
 
 void SetMessageField(const std::string& msg)
 {
-    if(LastMessage.empty() || LastMessage != msg)
+    if (LastMessage() != msg)
     {
-        LastMessage = msg;
+        LastMessage(msg);
         Eval(std::string("UISetMessage {" + msg + "}").c_str());
     }
 }
