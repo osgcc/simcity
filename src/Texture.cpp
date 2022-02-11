@@ -1,8 +1,7 @@
 #include "Texture.h"
 
-
 #include <SDL2/SDL_image.h>
-
+#include <iostream>
 
 Texture loadTexture(SDL_Renderer* renderer, const std::string& filename)
 {
@@ -12,6 +11,7 @@ Texture loadTexture(SDL_Renderer* renderer, const std::string& filename)
 
     if (!out)
     {
+        std::cout << SDL_GetError() << std::endl;
         throw std::runtime_error(std::string("loadTexture(): ") + SDL_GetError());
     }
 

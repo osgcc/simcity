@@ -594,9 +594,53 @@ void drawString(Font& font, std::string_view text, Point<int> position, SDL_Colo
 }
 
 
+void buildBigTileset()
+{
+    //BigTileset = loadTexture(MainWindowRenderer, "images/tiles.xpm");
+    SDL_Surface* srcSurface = IMG_Load("images/tiles.xpm");
+    SDL_Surface* dstSurface = SDL_CreateRGBSurface(srcSurface->flags,
+        512, 512, 32,
+        srcSurface->format->Rmask,
+        srcSurface->format->Gmask,
+        srcSurface->format->Bmask,
+        srcSurface->format->Amask);
+
+    SDL_Rect srcRect{ 0, 0, 16, 16 };
+    SDL_Rect dstRect{ 0, 0, 16, 16 };
+
+    for (int i = 0; i < TILE_COUNT; ++i)
+    {
+        srcRect.y = i * 16;
+        dstRect = { (i % 32) * 16, (i / 32) * 16, 16, 16 };
+
+        std::cout << dstRect.x << ", " << dstRect.y << std::endl;
+
+        SDL_BlitSurface(srcSurface, &srcRect, dstSurface, &dstRect);
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(MainWindowRenderer, dstSurface);
+
+    SDL_FreeSurface(srcSurface);
+    SDL_FreeSurface(dstSurface);
+
+
+    if (!texture)
+    {
+        std::cout << SDL_GetError() << std::endl;
+        throw std::runtime_error(std::string("loadTexture(): ") + SDL_GetError());
+    }
+
+    int width = 0, height = 0;
+    SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+
+    BigTileset = { texture, SDL_Rect{ 0, 0, width, height }, { width, height } };
+}
+
+
 void loadGraphics()
 {
-    BigTileset = loadTexture(MainWindowRenderer, "images/tiles.xpm");
+    //BigTileset = loadTexture(MainWindowRenderer, "images/tiles.xpm");
+    buildBigTileset();
     RCI_Indicator = loadTexture(MainWindowRenderer, "images/demandg.xpm");
     SmallTileset = loadTexture(MainWindowRenderer, "images/tilessm.xpm");
 }
@@ -797,6 +841,9 @@ void pumpEvents()
             {
             case SDL_WINDOWEVENT_RESIZED:
                 windowResized(Vector<int>{event.window.data1, event.window.data2});
+                break;
+
+            default:
                 break;
             }
             

@@ -132,7 +132,14 @@ void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Ve
 			drawRect.x = (row * drawRect.w) + drawOrigin.x;
 			drawRect.y = (col * drawRect.h) + drawOrigin.y;
 
-			tileRect.y = tile * 16;
+			//tileRect.y = tile * 16;
+
+			tileRect =
+			{
+				(static_cast<int>(tile) / 32) * 16,
+				(static_cast<int>(tile) % 32) * 16,
+				16, 16
+			};
 
 			SDL_RenderCopy(MainWindowRenderer, BigTileset.texture, &tileRect, &drawRect);
 		}
