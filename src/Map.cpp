@@ -112,6 +112,7 @@ bool blink()
 }
 
 
+/*
 void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Vector<int>& loops)
 {
 	SDL_Rect drawRect{ 0, 0, 16, 16 };
@@ -132,19 +133,13 @@ void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Ve
 			drawRect.x = (row * drawRect.w) + drawOrigin.x;
 			drawRect.y = (col * drawRect.h) + drawOrigin.y;
 
-			//tileRect.y = tile * 16;
-
-			tileRect =
-			{
-				(static_cast<int>(tile) / 32) * 16,
-				(static_cast<int>(tile) % 32) * 16,
-				16, 16
-			};
+			tileRect.y = tile * 16;
 
 			SDL_RenderCopy(MainWindowRenderer, BigTileset.texture, &tileRect, &drawRect);
 		}
 	}
 }
+*/
 
 
 /**
@@ -190,7 +185,15 @@ void DrawBigMap()
 
 
 			drawRect = { row * drawRect.w, col * drawRect.h, drawRect.w, drawRect.h };
-			tileRect.y = getTileValue(row, col) * 16;
+			//tileRect.y = getTileValue(row, col) * 16;
+
+
+			tileRect =
+			{
+				(static_cast<int>(tile) % 32) * 16,
+				(static_cast<int>(tile) / 32) * 16,
+				16, 16
+			};
 
 			SDL_RenderCopy(MainWindowRenderer, BigTileset.texture, &tileRect, &drawRect);
 		}
