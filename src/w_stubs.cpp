@@ -87,7 +87,6 @@ int InitSimLoad;
 int ScenarioID;
 std::string CityName;
 int NoDisasters;
-int MesNum;
 int EvalChanged;
 int flagBlink;
 

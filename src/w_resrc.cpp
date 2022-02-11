@@ -139,7 +139,8 @@ std::array<std::string, 64> StringTable =
 }};
 
 
+// \param num Array indedx -- base 1
 const std::string& GetIndString(int /*id*/, int num)
 {
-    return StringTable[num];
+    return StringTable[num - 1];
 }

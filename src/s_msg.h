@@ -5,3 +5,6 @@ void SendMessages();
 void ClearMes();
 void SendMesAt(int Mnum, int x, int y);
 void doMessage();
+
+int MessageId();
+void MessageId(int id);

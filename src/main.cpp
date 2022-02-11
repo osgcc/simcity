@@ -68,6 +68,7 @@
 #include "s_alloc.h"
 #include "s_gen.h"
 #include "s_init.h"
+#include "s_msg.h"
 #include "s_sim.h"
 
 #include "Simulation.h"
@@ -475,12 +476,12 @@ void sim_init()
     PunishCnt = 0;
     autoBulldoze = 1;
     autoBudget = 1;
-    MesNum = 0;
+    MessageId(0);
     LastMesTime = 0;
     flagBlink = 1;
     SimSpeed(SimulationSpeed::Normal);
     ChangeEval();
-    MessagePort = 0;
+    //MessagePort = 0;
     MesX = 0;
     MesY = 0;
     
@@ -921,6 +922,10 @@ void drawDebug()
     drawString(*MainFont, "RValve: " + std::to_string(RValve), { 10, 100 + MainFont->height() * 6 }, { 255, 255, 255, 100 });
     drawString(*MainFont, "CValve: " + std::to_string(CValve), { 10, 100 + MainFont->height() * 7 }, { 255, 255, 255, 100 });
     drawString(*MainFont, "IValve: " + std::to_string(IValve), { 10, 100 + MainFont->height() * 8 }, { 255, 255, 255, 100 });
+
+    drawString(*MainFont, "TotalPop: " + std::to_string(TotalPop), { 10, 100 + MainFont->height() * 10 }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "TotalZPop: " + std::to_string(TotalZPop), { 10, 100 + MainFont->height() * 11 }, { 255, 255, 255, 100 });
+
 }
 
 

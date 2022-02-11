@@ -81,9 +81,30 @@ bool HaveLastMessage = false;
 std::string LastMessage;
 
 
+//int MesNum;// , MessagePort;
+
+namespace
+{
+    int msgId = 0;
+};
+
+
+int MessageId()
+{
+    return msgId;
+}
+
+
+void MessageId(int id)
+{
+    msgId = id;
+}
+
+
 void ClearMes()
 {
-    MessagePort = 0;
+    //MessagePort = 0;
+    msgId = 0;
     MesX = 0;
     MesY = 0;
     LastPicNum = 0;
@@ -92,28 +113,8 @@ void ClearMes()
 
 int SendMes(int Mnum)
 {
-    if (Mnum < 0)
-    {
-        if (Mnum != LastPicNum)
-        {
-            MessagePort = Mnum;
-            MesX = 0;
-            MesY = 0;
-            LastPicNum = Mnum;
-            return 1;
-        }
-    }
-    else
-    {
-        if (!(MessagePort))
-        {
-            MessagePort = Mnum;
-            MesX = 0;
-            MesY = 0;
-            return 1;
-        }
-    }
 
+    MessageId(Mnum);
     return 0;
 }
 
@@ -300,14 +301,14 @@ void SendMessages()
         break;
 
     case 5:
-        if ((TotalZPop >> 3) >= ComZPop) /* need Com */
+        if ((TotalZPop / 8) >= ComZPop) /* need Com */
         {
             SendMes(2);
         }
         break;
 
     case 10:
-        if ((TotalZPop >> 3) >= IndZPop) /* need Ind */
+        if ((TotalZPop / 8) >= IndZPop) /* need Ind */
         {
             SendMes(3);
         }
@@ -440,37 +441,30 @@ void SendMessages()
     }
 }
 
+#include <iostream>
 
 void doMessage()
 {
-    bool firstTime;
-
-    if (MessagePort)
+    bool firstTime = false;
+    
+    if (MessageId() == 0)
     {
-        MesNum = MessagePort;
-        MessagePort = 0;
-        LastMesTime = TickCount();
-        firstTime = true;
+        return;
     }
-    else
+    
+    if (MessageId() > 0)
     {
-        firstTime = false;
-        if (MesNum == 0)  return;
-        if (MesNum < 0)
-        {
-            MesNum = -MesNum;
-            LastMesTime = TickCount();
-        }
-        else if ((TickCount() - LastMesTime) > (60 * 30))
-        {
-            MesNum = 0;
-            return;
-        }
+        LastMesTime = TickCount();
+    }
+    else if ((TickCount() - LastMesTime) > 1800)
+    {
+        MessageId(0);
+        return;
     }
 
     if (firstTime)
     {
-        switch ((MesNum < 0) ? -MesNum : MesNum)
+        switch (MessageId())
         {
         case  12:
             if (RandomRange(0, 5) == 1)
@@ -517,18 +511,15 @@ void doMessage()
             MakeSound("city", "Siren");
             break;
         }
+
+        firstTime = false;
     }
 
-    if (MesNum >= 0)
+    if (MessageId() > 0)
     {
-        if (MesNum == 0)
+        if (MessageId() > 60)
         {
-            return;
-        }
-
-        if (MesNum > 60)
-        {
-            MesNum = 0;
+            MessageId(0);
             return;
         }
 
@@ -539,17 +530,18 @@ void doMessage()
 
         if (AutoGo && (MesX || MesY))
         {
-            DoAutoGoto(MesX, MesY, GetIndString(301, MesNum));
+            DoAutoGoto(MesX, MesY, GetIndString(301, MessageId()));
             MesX = 0;
             MesY = 0;
         }
         else
         {
-            SetMessageField(GetIndString(301, MesNum));
+            SetMessageField(GetIndString(301, MessageId()));
         }
     }
     else
     {
+        /*
         // picture message
         int pictId = -(MesNum);
 
@@ -563,5 +555,6 @@ void doMessage()
             MesX = 0;
             MesY = 0;
         }
+        */
     }
 }

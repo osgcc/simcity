@@ -64,6 +64,7 @@
 #include "view.h"
 
 #include "s_alloc.h"
+#include "s_msg.h"
 #include "s_sim.h"
 
 #include "w_graph.h"
@@ -89,8 +90,8 @@ void InitWillStuff()
     OverRide = 0;
     PendingTool = -1;
 
-    MesNum = 0;
-    MessagePort = 0;
+    MessageId(0);
+    //MessagePort = 0;
     RoadFund = 0;
     PoliceFund = 0;
     FireFund = 0;
