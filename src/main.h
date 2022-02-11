@@ -427,7 +427,6 @@ extern int LastMesTime;
 extern int NoDisasters;
 extern int autoBulldoze;
 extern int autoBudget;
-extern bool AutoGo;
 
 extern int DisasterEvent;
 extern int DisasterWait;

@@ -75,9 +75,6 @@
 #include <string>
 
 
-bool AutoGo = false;
-
-
 namespace
 {
     int LastCityPop{};
@@ -86,9 +83,23 @@ namespace
 
     int messageId{};
 
+    bool AutoGotoLocation{ false };
+
     Point<int> messageLocation{};
     std::string lastMessage;
 };
+
+
+void AutoGotoMessageLocation(bool autogo)
+{
+    AutoGotoLocation = autogo;
+}
+
+
+bool AutoGotoMessageLocation()
+{
+    return AutoGotoLocation;
+}
 
 
 void LastMessage(const std::string& message)
@@ -566,7 +577,7 @@ void doMessage()
             // TODO: draw goto button
         }
 
-        if (AutoGo && (MessageLocation() != Point<int>{0, 0}))
+        if (AutoGotoMessageLocation() && (MessageLocation() != Point<int>{0, 0}))
         {
             DoAutoGoto(MessageLocation().x, MessageLocation().y, GetIndString(301, MessageId()));
             MessageLocation({ 0, 0 });

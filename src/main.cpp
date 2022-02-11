@@ -468,7 +468,7 @@ void sim_init()
     StartingYear = 1900;
     tileSynch = 0x01;
     sim_skips = sim_skip = 0;
-    AutoGo = true;
+    AutoGotoMessageLocation(true);
     CityTax = 7;
     CityTime = 50;
     NoDisasters = 0;
