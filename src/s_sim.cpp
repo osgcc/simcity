@@ -101,7 +101,7 @@ int ScoreType;
 int ScoreWait;
 int PwrdZCnt;
 int unPwrdZCnt;
-int NewPower; /* post */
+int NewPower; // post  <-- ?
 int AvCityTax;
 int Scycle = 0;
 int Fcycle = 0;
@@ -109,121 +109,161 @@ int DoInitialEval = 0;
 int MeltX, MeltY;
 
 
-/* comefrom: MapScan */
 void DoFire()
 {
-  static int DX[4] = { -1,  0,  1,  0 };
-  static int DY[4] = {  0, -1,  0,  1 };
-  int z, Xtem, Ytem, Rate, c;
+    static int DX[4] = { -1,  0,  1,  0 };
+    static int DY[4] = { 0, -1,  0,  1 };
 
-  for (z = 0; z < 4; z++) {
-    if (!(Rand16() & 7)) {
-      Xtem = SMapX + DX[z];
-      Ytem = SMapY + DY[z];
-      if (TestBounds(Xtem, Ytem, SimWidth, SimHeight)) {
-	c = Map[Xtem][Ytem];
-	if (c & BURNBIT) {
-	  if (c & ZONEBIT) {
-	    FireZone(Xtem, Ytem, c);
-	    if ((c & LOMASK) > IZB)  { /*  Explode  */
-	      MakeExplosionAt((Xtem <<4) + 8, (Ytem <<4) + 8);
-	    }
-	  }
-	  Map[Xtem][Ytem] = FIRE + (Rand16() & 3) + ANIMBIT;
-	}
-      }
+    for (int z = 0; z < 4; z++)
+    {
+        if (!(Rand16() & 7))
+        {
+            int Xtem = SMapX + DX[z];
+            int Ytem = SMapY + DY[z];
+            if (TestBounds(Xtem, Ytem, SimWidth, SimHeight))
+            {
+                int c = Map[Xtem][Ytem];
+                if (c & BURNBIT)
+                {
+                    if (c & ZONEBIT)
+                    {
+                        FireZone(Xtem, Ytem, c);
+                        if ((c & LOMASK) > IZB) //  Explode
+                        {
+                            MakeExplosionAt((Xtem << 4) + 8, (Ytem << 4) + 8);
+                        }
+                    }
+                    Map[Xtem][Ytem] = FIRE + (Rand16() & 3) + ANIMBIT;
+                }
+            }
+        }
     }
-  }
-  z = FireRate[SMapX >>3][SMapY >>3];
-  Rate = 10;
-  if (z) {
-    Rate = 3;
-    if (z > 20) Rate = 2;
-    if (z > 100) Rate = 1;
-  }
-  if (!RandomRange(0, Rate))
-    Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
+   
+    int z = FireRate[SMapX >> 3][SMapY >> 3];
+    
+    int Rate = 10;
+    if (z)
+    {
+        Rate = 3;
+        if (z > 20)
+        {
+            Rate = 2;
+        }
+        if (z > 100)
+        {
+            Rate = 1;
+        }
+    }
+    if (!RandomRange(0, Rate))
+    {
+        Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
+    }
 }
 
 
-/* comefrom: DoSPZone */
 void DoAirport()
 {
-  if (!(RandomRange(0, 5))) {
-    GeneratePlane(SMapX, SMapY);
-    return;
-  }
-  if (!(RandomRange(0, 12)))
-    GenerateCopter(SMapX, SMapY);
+    if (!(RandomRange(0, 5)))
+    {
+        GeneratePlane(SMapX, SMapY);
+        return;
+    }
+    if (!(RandomRange(0, 12)))
+    {
+        GenerateCopter(SMapX, SMapY);
+    }
 }
 
 
-/* comefrom: DoSPZone MakeMeltdown */
 void DoMeltdown(int SX, int SY)
 {
-  int x, y, z, t;
+    MeltX = SX; MeltY = SY;
 
-  MeltX = SX; MeltY = SY;
+    MakeExplosion(SX - 1, SY - 1);
+    MakeExplosion(SX - 1, SY + 2);
+    MakeExplosion(SX + 2, SY - 1);
+    MakeExplosion(SX + 2, SY + 2);
 
-  MakeExplosion(SX - 1, SY - 1);
-  MakeExplosion(SX - 1, SY + 2);
-  MakeExplosion(SX + 2, SY - 1);
-  MakeExplosion(SX + 2, SY + 2);
+    for (int x = (SX - 1); x < (SX + 3); x++)
+    {
+        for (int y = (SY - 1); y < (SY + 3); y++)
+        {
+            Map[x][y] = FIRE + (Rand16() & 3) + ANIMBIT;
+        }
+    }
 
-  for (x = (SX - 1); x < (SX + 3); x++)
-    for (y = (SY - 1); y < (SY + 3); y++)
-      Map[x][y] = FIRE + (Rand16() & 3) + ANIMBIT;
+    for (int i = 0; i < 200; ++i)
+    {
+        int x = SX - 20 + RandomRange(0, 40);
+        int y = SY - 15 + RandomRange(0, 30);
 
-  for (z = 0; z < 200; z++)  {
-    x = SX - 20 + RandomRange(0, 40);
-    y = SY - 15 + RandomRange(0, 30);
-    if ((x < 0) || (x >= SimWidth) ||
-	(y < 0) || (y >= SimHeight))
-      continue;
-    t = Map[x][y];
-    if (t & ZONEBIT)
-      continue;
-    if ((t & BURNBIT) || (t == 0))
-      Map[x][y] = RADTILE;
-  }
+        if ((x < 0) || (x >= SimWidth) || (y < 0) || (y >= SimHeight))
+        {
+            continue;
+        }
 
-  ClearMes();
-  SendMesAt(-43, SX, SY);
+        int t = Map[x][y];
+
+        if (t & ZONEBIT)
+        {
+            continue;
+        }
+
+        if ((t & BURNBIT) || (t == 0))
+        {
+            Map[x][y] = RADTILE;
+        }
+    }
+
+    ClearMes();
+    SendMesAt(-43, SX, SY);
 }
 
 
-/* comefrom: MapScan */
+
 void DoRail()
 {
-  RailTotal++;
-  GenerateTrain(SMapX, SMapY);
-  if (RoadEffect < 30) /* Deteriorating  Rail  */
-    if (!(Rand16() & 511))
-      if (!(CChr & CONDBIT))
-	if (RoadEffect < (Rand16() & 31)) {
-	  if (CChr9 < (RAILBASE + 2))
-	    Map[SMapX][SMapY] = RIVER;
-	  else
-	    Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
-	  return;
-	}
+    RailTotal++;
+    GenerateTrain(SMapX, SMapY);
+   
+    if (RoadEffect < 30) // Deteriorating  Rail
+    {
+        if (RandomRange(0, 511) == 0)
+        {
+            if (!(CChr & CONDBIT))
+            {
+                if (RoadEffect < RandomRange(0, 31))
+                {
+                    if (CChr9 < (RAILBASE + 2))
+                    {
+                        Map[SMapX][SMapY] = RIVER;
+                    }
+                    else
+                    {
+                        Map[SMapX][SMapY] = RUBBLE + RandomRange(0, 3) + BULLBIT;
+                    }
+                    return;
+                }
+            }
+        }
+    }
 }
 
 
-/* comefrom: MapScan */
 void DoRadTile()
 {
-  if (!(Rand16() & 4095)) Map[SMapX][SMapY] = 0; /* Radioactive decay */
+    if (RandomRange(0, 4095) == 0) // Radioactive decay
+    {
+        Map[SMapX][SMapY] = 0;
+    }
 }
 
 
 int GetBoatDis()
 {
-    int dist, mx, my;// , dx, dy;
- 
-    dist = 99999;
-    mx = (SMapX << 4) + 8;
-    my = (SMapY << 4) + 8;
+    int dist = 99999;
+    int mx = (SMapX * 16) + 8;
+    int my = (SMapY * 16) + 8;
 
     /*
     for (SimSprite* sprite = sim->sprite; sprite != NULL; sprite = sprite->next)
@@ -253,7 +293,6 @@ int GetBoatDis()
 }
 
 
-/* comefrom: MapScan */
 bool DoBridge()
 {
   static int HDx[7] = { -2,  2, -2, -1,  0,  1,  2 };
@@ -408,478 +447,659 @@ void RepairZone(int ZCent, int zsize)
 /* comefrom: DoSPZone */
 void DrawStadium(int z)
 {
-  int x, y;
-
-  z = z - 5;
-  for (y = (SMapY - 1); y < (SMapY + 3); y++)
-    for (x = (SMapX - 1); x < (SMapX + 3); x++)
-      Map[x][y] = (z++) | BNCNBIT;
-  Map[SMapX][SMapY] |= ZONEBIT | PWRBIT;
+    z = z - 5;
+    for (int y = (SMapY - 1); y < (SMapY + 3); y++)
+    {
+        for (int x = (SMapX - 1); x < (SMapX + 3); x++)
+        {
+            Map[x][y] = (z++) | BNCNBIT;
+        }
+    }
+ 
+    Map[SMapX][SMapY] |= ZONEBIT | PWRBIT;
 }
 
 
-/* comefrom: DoSPZone */
 void CoalSmoke(int mx, int my)
 {
-  static int SmTb[4] = { COALSMOKE1, COALSMOKE2, COALSMOKE3, COALSMOKE4 };
-  static int dx[4] = {  1,  2,  1,  2 };
-  static int dy[4] = { -1, -1,  0,  0 };
-  int x;
+    static int SmTb[4] = { COALSMOKE1, COALSMOKE2, COALSMOKE3, COALSMOKE4 };
+    static int dx[4] = { 1,  2,  1,  2 };
+    static int dy[4] = { -1, -1,  0,  0 };
+    int x;
 
-  for (x = 0; x < 4; x++)
-    Map[mx + dx[x]][my + dy[x]] =
-      SmTb[x] | ANIMBIT | CONDBIT | PWRBIT | BURNBIT;
+    for (x = 0; x < 4; x++)
+    {
+        Map[mx + dx[x]][my + dy[x]] = SmTb[x] | ANIMBIT | CONDBIT | PWRBIT | BURNBIT;
+    }
 }
 
 
-/* comefrom: DoZone */
 void DoSPZone(int PwrOn)
 {
-  static int MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
-  int z;
+    static int MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
+    int z;
 
-  switch (CChr9) {
+    switch (CChr9)
+    {
+    case POWERPLANT:
+        CoalPop++;
+        if (!(CityTime & 7)) /* post */
+        {
+            RepairZone(POWERPLANT, 4);
+        }
+        PushPowerStack();
+        CoalSmoke(SMapX, SMapY);
+        return;
 
-  case POWERPLANT:
-    CoalPop++;
-    if (!(CityTime & 7))
-      RepairZone(POWERPLANT, 4); /* post */
-    PushPowerStack();
-    CoalSmoke(SMapX, SMapY);
-    return;
+    case NUCLEAR:
+        if (!NoDisasters && !RandomRange(0, MltdwnTab[GameLevel]))
+        {
+            DoMeltdown(SMapX, SMapY);
+            return;
+        }
+        NuclearPop++;
+        if (!(CityTime & 7)) /* post */
+        {
+            RepairZone(NUCLEAR, 4);
+        }
+        PushPowerStack();
+        return;
 
-  case NUCLEAR:
-    if (!NoDisasters && !RandomRange(0, MltdwnTab[GameLevel])) {
-      DoMeltdown(SMapX, SMapY);
-      return;
+    case FIRESTATION:
+        FireStPop++;
+        if (!(CityTime & 7)) /* post */
+        {
+            RepairZone(FIRESTATION, 3);
+        }
+
+        if (PwrOn) /* if powered get effect  */
+        {
+            z = FireEffect;
+        }
+        else /* from the funding ratio  */
+        {
+            z = FireEffect >> 1;
+        }
+
+        if (!FindPRoad()) /* post FD's need roads  */
+        {
+            z = z / 2;
+        }
+
+        FireStMap[SMapX >> 3][SMapY >> 3] += z;
+        return;
+
+    case POLICESTATION:
+        PolicePop++;
+        if (!(CityTime & 7))
+        {
+            RepairZone(POLICESTATION, 3); /* post */
+        }
+
+        if (PwrOn)
+        {
+            z = PoliceEffect;
+        }
+        else
+        {
+            z = PoliceEffect / 2;
+        }
+
+        if (!FindPRoad())
+        {
+            z = z >> 1; /* post PD's need roads */
+        }
+
+        PoliceMap[SMapX >> 3][SMapY >> 3] += z;
+        return;
+
+    case STADIUM:
+        StadiumPop++;
+        if (!(CityTime & 15))
+        {
+            RepairZone(STADIUM, 4);
+        }
+        if (PwrOn)
+        {
+            if (!((CityTime + SMapX + SMapY) & 31)) // post release
+            {
+                DrawStadium(FULLSTADIUM);
+                Map[SMapX + 1][SMapY] = FOOTBALLGAME1 + ANIMBIT;
+                Map[SMapX + 1][SMapY + 1] = FOOTBALLGAME2 + ANIMBIT;
+            }
+        }
+        return;
+
+    case FULLSTADIUM:
+        StadiumPop++;
+        if (!((CityTime + SMapX + SMapY) & 7))	/* post release */
+        {
+            DrawStadium(STADIUM);
+        }
+        return;
+
+    case AIRPORT:
+        APortPop++;
+        
+        if (!(CityTime & 7))
+        {
+            RepairZone(AIRPORT, 6);
+        }
+
+        if (PwrOn) // post
+        { 
+            if ((Map[SMapX + 1][SMapY - 1] & LOMASK) == RADAR)
+            {
+                Map[SMapX + 1][SMapY - 1] = RADAR + ANIMBIT + CONDBIT + BURNBIT;
+            }
+        }
+        else
+        {
+            Map[SMapX + 1][SMapY - 1] = RADAR + CONDBIT + BURNBIT;
+        }
+
+        if (PwrOn)
+        {
+            DoAirport();
+        }
+        return;
+
+    case PORT:
+        PortPop++;
+        if ((CityTime & 15) == 0)
+        {
+            RepairZone(PORT, 4);
+        }
+        if (PwrOn &&
+            (GetSprite(SHI) == NULL))
+        {
+            GenerateShip();
+        }
+        return;
     }
-    NuclearPop++;
-    if (!(CityTime & 7))
-      RepairZone(NUCLEAR, 4); /* post */
-    PushPowerStack();
-    return;
-
-  case FIRESTATION:
-    FireStPop++;
-    if (!(CityTime & 7))
-      RepairZone(FIRESTATION, 3); /* post */
-
-    if (PwrOn)
-      z = FireEffect;			/* if powered get effect  */
-    else
-      z = FireEffect >>1;		/* from the funding ratio  */
-
-    if (!FindPRoad())
-      z = z >>1;			/* post FD's need roads  */
-
-    FireStMap[SMapX >>3][SMapY >>3] += z;
-    return;
-
-  case POLICESTATION:
-    PolicePop++;
-    if (!(CityTime & 7))
-      RepairZone(POLICESTATION, 3); /* post */
-
-    if (PwrOn)
-      z = PoliceEffect;
-    else
-      z = PoliceEffect >>1;
-
-    if (!FindPRoad())
-      z = z >>1; /* post PD's need roads */
-
-    PoliceMap[SMapX >>3][SMapY >>3] += z;
-    return;
-
-  case STADIUM:
-    StadiumPop++;
-    if (!(CityTime & 15))
-      RepairZone(STADIUM, 4);
-    if (PwrOn)
-      if (!((CityTime + SMapX + SMapY) & 31)) {	/* post release */
-	DrawStadium(FULLSTADIUM);
-	Map[SMapX + 1][SMapY] = FOOTBALLGAME1 + ANIMBIT;
-	Map[SMapX + 1][SMapY + 1] = FOOTBALLGAME2 + ANIMBIT;
-      }
-    return;
-
- case FULLSTADIUM:
-    StadiumPop++;
-    if (!((CityTime + SMapX + SMapY) & 7))	/* post release */
-      DrawStadium(STADIUM);
-    return;
-
- case AIRPORT:
-    APortPop++;
-    if (!(CityTime & 7))
-      RepairZone(AIRPORT, 6);
-
-    if (PwrOn) { /* post */
-      if ((Map[SMapX + 1][SMapY - 1] & LOMASK) == RADAR)
-	Map[SMapX + 1][SMapY - 1] = RADAR + ANIMBIT + CONDBIT + BURNBIT;
-    } else
-      Map[SMapX + 1][SMapY - 1] = RADAR + CONDBIT + BURNBIT;
-
-    if (PwrOn)
-      DoAirport();
-    return;
-
- case PORT:
-    PortPop++;
-    if ((CityTime & 15) == 0) {
-      RepairZone(PORT, 4);
-    }
-    if (PwrOn &&
-	(GetSprite(SHI) == NULL)) {
-      GenerateShip();
-    }
-    return;
-  }
 }
 
 
 /* comefrom: Simulate DoSimInit */
 void MapScan(int x1, int x2)
 {
-  int x, y;
+    for (int x = x1; x < x2; x++)
+    {
+        for (int y = 0; y < SimHeight; y++)
+        {
+            if (CChr = Map[x][y])
+            {
+                CChr9 = CChr & LOMASK;	// Mask off status bits
+                if (CChr9 >= FLOOD)
+                {
+                    SMapX = x;
+                    SMapY = y;
+                    if (CChr9 < ROADBASE)
+                    {
+                        if (CChr9 >= FIREBASE)
+                        {
+                            FirePop++;
+                            if (!(Rand16() & 3)) // 1 in 4 times
+                            {
+                                DoFire();
+                            }
+                            continue;
+                        }
+                        if (CChr9 < RADTILE)
+                        {
+                            DoFlood();
+                        }
+                        else
+                        {
+                            DoRadTile();
+                        }
+                        continue;
+                    }
 
-  for (x = x1; x < x2; x++)  {
-    for (y = 0; y < SimHeight; y++) {
-      if (CChr = Map[x][y]) {
-	CChr9 = CChr & LOMASK;	/* Mask off status bits  */
-	if (CChr9 >= FLOOD) {
-	  SMapX = x;
-	  SMapY = y;
-	  if (CChr9 < ROADBASE) {
-	    if (CChr9 >= FIREBASE) {
-	      FirePop++;
-	      if (!(Rand16() & 3)) DoFire();	/* 1 in 4 times */
-	      continue;
-	    }
-	    if (CChr9 < RADTILE)  DoFlood();
-	    else DoRadTile();
-	    continue;
-	  }
+                    if (NewPower && (CChr & CONDBIT))
+                    {
+                        SetZPower();
+                    }
 
-	  if (NewPower && (CChr & CONDBIT))
-	    SetZPower();
+                    if ((CChr9 >= ROADBASE) && (CChr9 < POWERBASE))
+                    {
+                        DoRoad();
+                        continue;
+                    }
 
-	  if ((CChr9 >= ROADBASE) &&
-	      (CChr9 < POWERBASE)) {
-	    DoRoad();
-	    continue;
-	  }
+                    if (CChr & ZONEBIT) // process Zones
+                    {
+                        DoZone();
+                        continue;
+                    }
 
-	  if (CChr & ZONEBIT) {	/* process Zones */
-	    DoZone();
-	    continue;
-	  }
-
-	  if ((CChr9 >= RAILBASE) &&
-	      (CChr9 < RESBASE)) {
-	    DoRail();
-	    continue;
-	  }
-	  if ((CChr9 >= SOMETINYEXP) &&
-	      (CChr9 <= LASTTINYEXP))  /* clear AniRubble */
-	    Map[x][y] = RUBBLE + (Rand16() & 3) + BULLBIT;
-	}
-      }
+                    if ((CChr9 >= RAILBASE) && (CChr9 < RESBASE))
+                    {
+                        DoRail();
+                        continue;
+                    }
+                    if ((CChr9 >= SOMETINYEXP) && (CChr9 <= LASTTINYEXP)) // clear AniRubble
+                    {
+                        Map[x][y] = RUBBLE + (Rand16() & 3) + BULLBIT;
+                    }
+                }
+            }
+        }
     }
-  }
 }
 
 
 /* comefrom: Simulate DoSimInit */
 void SetValves()
 {
-  static int TaxTable[21] = {
-    200, 150, 120, 100, 80, 50, 30, 0, -10, -40, -100,
-    -150, -200, -250, -300, -350, -400, -450, -500, -550, -600 };
-  float Employment, Migration, Births, LaborBase, IntMarket;
-  float Rratio, Cratio, Iratio, temp;
-  float NormResPop, PjResPop, PjComPop, PjIndPop;
+    static int TaxTable[21] = {
+      200, 150, 120, 100, 80, 50, 30, 0, -10, -40, -100,
+      -150, -200, -250, -300, -350, -400, -450, -500, -550, -600 };
 
-  MiscHis[1] = static_cast<int>(EMarket);
-  MiscHis[2] = ResPop;
-  MiscHis[3] = ComPop;
-  MiscHis[4] = IndPop;
-  MiscHis[5] = RValve;
-  MiscHis[6] = CValve;
-  MiscHis[7] = IValve;
-  MiscHis[10] = CrimeRamp;
-  MiscHis[11] = PolluteRamp;
-  MiscHis[12] = LVAverage;
-  MiscHis[13] = CrimeAverage;
-  MiscHis[14] = PolluteAverage;
-  MiscHis[15] = GameLevel;
-  MiscHis[16] = CityClass;
-  MiscHis[17] = CityScore;
+    float Employment, Migration, Births, LaborBase, IntMarket;
+    float Rratio, Cratio, Iratio, temp;
+    float NormResPop, PjResPop, PjComPop, PjIndPop;
 
-  NormResPop = static_cast<float>(ResPop / 8);
-  LastTotalPop = TotalPop;
-  TotalPop = static_cast<int>(NormResPop) + ComPop + IndPop;
+    MiscHis[1] = static_cast<int>(EMarket);
+    MiscHis[2] = ResPop;
+    MiscHis[3] = ComPop;
+    MiscHis[4] = IndPop;
+    MiscHis[5] = RValve;
+    MiscHis[6] = CValve;
+    MiscHis[7] = IValve;
+    MiscHis[10] = CrimeRamp;
+    MiscHis[11] = PolluteRamp;
+    MiscHis[12] = LVAverage;
+    MiscHis[13] = CrimeAverage;
+    MiscHis[14] = PolluteAverage;
+    MiscHis[15] = GameLevel;
+    MiscHis[16] = CityClass;
+    MiscHis[17] = CityScore;
 
-  if (NormResPop) Employment = ((ComHis[1] + IndHis[1]) / NormResPop);
-  else Employment = 1;
+    NormResPop = static_cast<float>(ResPop / 8);
+    LastTotalPop = TotalPop;
+    TotalPop = static_cast<int>(NormResPop) + ComPop + IndPop;
 
-  Migration = NormResPop * (Employment - 1);
-  Births = NormResPop * 0.02f; 			/* Birth Rate  */
-  PjResPop = NormResPop + Migration + Births;	/* Projected Res.Pop  */
+    if (NormResPop) Employment = ((ComHis[1] + IndHis[1]) / NormResPop);
+    else Employment = 1;
 
-  if (float result = static_cast<float>(ComHis[1] + IndHis[1]))
-  {
-      LaborBase = (ResHis[1] / result);
-  }
-  else
-  {
-      LaborBase = 1.0f;
-  }
+    Migration = NormResPop * (Employment - 1);
+    Births = NormResPop * 0.02f; 			/* Birth Rate  */
+    PjResPop = NormResPop + Migration + Births;	/* Projected Res.Pop  */
 
-  if (LaborBase > 1.3f)
-  {
-      LaborBase = 1.3f;
-  }
-  if (LaborBase < 0.0f)
-  {
-      LaborBase = 0.0f;  /* LB > 1 - .1  */
-  }
+    if (float result = static_cast<float>(ComHis[1] + IndHis[1]))
+    {
+        LaborBase = (ResHis[1] / result);
+    }
+    else
+    {
+        LaborBase = 1.0f;
+    }
 
-  // Point of this? It adds this all up then just ignores the result?
-  for (int z = 0; z < 2; z++)
-  {
-      temp = static_cast<float>(ResHis[z] + ComHis[z] + IndHis[z]);
-  }
+    if (LaborBase > 1.3f)
+    {
+        LaborBase = 1.3f;
+    }
+    if (LaborBase < 0.0f)
+    {
+        LaborBase = 0.0f;  /* LB > 1 - .1  */
+    }
 
-  IntMarket = (NormResPop + ComPop + IndPop) / 3.7f;
+    // Point of this? It adds this all up then just ignores the result?
+    for (int z = 0; z < 2; z++)
+    {
+        temp = static_cast<float>(ResHis[z] + ComHis[z] + IndHis[z]);
+    }
 
-  PjComPop = IntMarket * LaborBase;			
+    IntMarket = (NormResPop + ComPop + IndPop) / 3.7f;
 
-  temp = 1;
-  switch (GameLevel)
-  {
-  case 0:
-    temp = 1.2f;
-    break;
-  case 1:
-    temp = 1.1f;
-    break;
-  case 2:
-    temp = 0.98f;
-    break;
-  }
+    PjComPop = IntMarket * LaborBase;
 
-  PjIndPop = IndPop * LaborBase * temp;
-  if (PjIndPop < 5) PjIndPop = 5;
+    temp = 1;
+    switch (GameLevel)
+    {
+    case 0:
+        temp = 1.2f;
+        break;
 
-  if (NormResPop) Rratio = (PjResPop / NormResPop); /* projected -vs- actual */
-  else Rratio = 1.3f;
-  if (ComPop) Cratio = (PjComPop / ComPop);
-  else Cratio = PjComPop;
-  if (IndPop) Iratio = (PjIndPop / IndPop);
-  else Iratio = PjIndPop;
+    case 1:
+        temp = 1.1f;
+        break;
 
-  if (Rratio > 2) Rratio = 2;
-  if (Cratio > 2) Cratio = 2;
-  if (Iratio > 2) Iratio = 2;
+    case 2:
+        temp = 0.98f;
+        break;
+    }
 
-  int index = std::clamp(CityTax + GameLevel, 0, 20);
+    PjIndPop = IndPop * LaborBase * temp;
+    if (PjIndPop < 5)
+    {
+        PjIndPop = 5;
+    }
 
-  Rratio = ((Rratio -1) * 600) + TaxTable[index]; /* global tax/Glevel effects */
-  Cratio = ((Cratio -1) * 600) + TaxTable[index];
-  Iratio = ((Iratio -1) * 600) + TaxTable[index];
+    if (NormResPop)  /* projected -vs- actual */
+    {
+        Rratio = (PjResPop / NormResPop);
+    }
+    else
+    {
+        Rratio = 1.3f;
+    }
+    if (ComPop)
+    {
+        Cratio = (PjComPop / ComPop);
+    }
+    else
+    {
+        Cratio = PjComPop;
+    }
+    if (IndPop)
+    {
+        Iratio = (PjIndPop / IndPop);
+    }
+    else
+    {
+        Iratio = PjIndPop;
+    }
 
-  if (Rratio > 0)		/* ratios are velocity changes to valves  */
-    if (RValve <  2000) RValve += static_cast<int>(Rratio);
-  if (Rratio < 0)
-    if (RValve > -2000) RValve += static_cast<int>(Rratio);
-  if (Cratio > 0)
-    if (CValve <  1500) CValve += static_cast<int>(Cratio);
-  if (Cratio < 0)
-    if (CValve > -1500) CValve += static_cast<int>(Cratio);
-  if (Iratio > 0)
-    if (IValve <  1500) IValve += static_cast<int>(Iratio);
-  if (Iratio < 0)
-    if (IValve > -1500) IValve += static_cast<int>(Iratio);
+    if (Rratio > 2) { Rratio = 2; }
+    if (Cratio > 2) { Cratio = 2; }
+    if (Iratio > 2) { Iratio = 2; }
 
-  if (RValve >  2000) RValve =  2000;
-  if (RValve < -2000) RValve = -2000;
-  if (CValve >  1500) CValve =  1500;
-  if (CValve < -1500) CValve = -1500;
-  if (IValve >  1500) IValve =  1500;
-  if (IValve < -1500) IValve = -1500;
+    int index = std::clamp(CityTax + GameLevel, 0, 20);
 
-  if ((ResCap) && (RValve > 0)) RValve = 0;	/* Stad, Prt, Airprt  */
-  if ((ComCap) && (CValve > 0)) CValve = 0;
-  if ((IndCap) && (IValve > 0)) IValve = 0;
-  ValveFlag = 1;
+    Rratio = ((Rratio - 1) * 600) + TaxTable[index]; /* global tax/Glevel effects */
+    Cratio = ((Cratio - 1) * 600) + TaxTable[index];
+    Iratio = ((Iratio - 1) * 600) + TaxTable[index];
+
+    if (Rratio > 0)		/* ratios are velocity changes to valves  */
+    {
+        if (RValve < 2000)
+        {
+            RValve += static_cast<int>(Rratio);
+        }
+    }
+    if (Rratio < 0)
+    {
+        if (RValve > -2000)
+        {
+            RValve += static_cast<int>(Rratio);
+        }
+    }
+    if (Cratio > 0)
+    {
+        if (CValve < 1500)
+        {
+            CValve += static_cast<int>(Cratio);
+        }
+    }
+    if (Cratio < 0)
+    {
+        if (CValve > -1500)
+        {
+            CValve += static_cast<int>(Cratio);
+        }
+    }
+    if (Iratio > 0)
+    {
+        if (IValve < 1500)
+        {
+            IValve += static_cast<int>(Iratio);
+        }
+    }
+    if (Iratio < 0)
+    {
+        if (IValve > -1500)
+        {
+            IValve += static_cast<int>(Iratio);
+        }
+    }
+
+    RValve = std::clamp(RValve, -2000, 2000);
+    CValve = std::clamp(CValve, -1500, 1500);
+    IValve = std::clamp(IValve, -1500, 1500);
+
+    if ((ResCap) && (RValve > 0)) // Stad, Prt, Airprt
+    {
+        RValve = 0;
+    }
+    if ((ComCap) && (CValve > 0))
+    {
+        CValve = 0;
+    }
+    if ((IndCap) && (IValve > 0))
+    {
+        IValve = 0;
+    }
+    ValveFlag = 1;
 }
 
 
-/* comefrom: Simulate DoSimInit */
 void ClearCensus()
 {
-  int x, y, z;
+    PwrdZCnt = 0;
+    unPwrdZCnt = 0;
+    FirePop = 0;
+    RoadTotal = 0;
+    RailTotal = 0;
+    ResPop = 0;
+    ComPop = 0;
+    IndPop = 0;
+    ResZPop = 0;
+    ComZPop = 0;
+    IndZPop = 0;
+    HospPop = 0;
+    ChurchPop = 0;
+    PolicePop = 0;
+    FireStPop = 0;
+    StadiumPop = 0;
+    CoalPop = 0;
+    NuclearPop = 0;
+    PortPop = 0;
+    APortPop = 0;
+    PowerStackNum = 0; // Reset before Mapscan
 
-  z = 0;
-  PwrdZCnt = z;
-  unPwrdZCnt = z;
-  FirePop = z;
-  RoadTotal = z;
-  RailTotal = z;
-  ResPop = z;
-  ComPop = z;
-  IndPop = z;
-  ResZPop = z;
-  ComZPop = z;
-  IndZPop = z;
-  HospPop = z;
-  ChurchPop = z;
-  PolicePop = z;
-  FireStPop = z;
-  StadiumPop = z;
-  CoalPop = z;
-  NuclearPop = z;
-  PortPop = z;
-  APortPop = z;
-  PowerStackNum = z;		/* Reset before Mapscan */
-  for (x = 0; x < SmX; x++)
-    for (y = 0; y < SmY; y++) {
-      FireStMap[x][y] = z;
-      PoliceMap[x][y] = z;
+    for (int x = 0; x < SmX; x++)
+    {
+        for (int y = 0; y < SmY; y++)
+        {
+            FireStMap[x][y] = 0;
+            PoliceMap[x][y] = 0;
+        }
     }
 }
 
 
-/* comefrom: Simulate */
 void TakeCensus()
 {
-  int x;
-
-  /* put census#s in Historical Graphs and scroll data  */
-  ResHisMax = 0;
-  ComHisMax = 0;
-  IndHisMax = 0;
-  for (x = 118; x >= 0; x--)	{
-    if ((ResHis[x + 1] = ResHis[x]) > ResHisMax) ResHisMax = ResHis[x];
-    if ((ComHis[x + 1] = ComHis[x]) > ComHisMax) ComHisMax = ComHis[x];
-    if ((IndHis[x + 1] = IndHis[x]) > IndHisMax) IndHisMax = IndHis[x];
-    CrimeHis[x + 1] = CrimeHis[x];
-    PollutionHis[x + 1] = PollutionHis[x];
-    MoneyHis[x + 1] = MoneyHis[x];
-  }
-
-  Graph10Max = ResHisMax;
-  if (ComHisMax > Graph10Max) Graph10Max = ComHisMax;
-  if (IndHisMax > Graph10Max) Graph10Max = IndHisMax;
-
-  ResHis[0] = ResPop / 8;
-  ComHis[0] = ComPop;
-  IndHis[0] = IndPop;
-
-  CrimeRamp += (CrimeAverage - CrimeRamp) / 4;
-  CrimeHis[0] = CrimeRamp;
-
-  PolluteRamp += (PolluteAverage - PolluteRamp) / 4;
-  PollutionHis[0] = PolluteRamp;
-
-  x = (CashFlow / 20) + 128;	/* scale to 0..255  */
-  if (x < 0) x = 0;
-  if (x > 255) x = 255;
-
-  MoneyHis[0] = x;
-  if (CrimeHis[0] > 255) CrimeHis[0] = 255;
-  if (PollutionHis[0] > 255) PollutionHis[0] = 255;
-
-  ChangeCensus(); /* XXX: if 10 year graph view */
-
-  if (HospPop < (ResPop >>8)) NeedHosp = true;
-  if (HospPop > (ResPop >>8)) NeedHosp = -1;
-  if (HospPop == (ResPop >>8)) NeedHosp = false;
-
-  if (ChurchPop < (ResPop >>8)) NeedChurch = true;
-  if (ChurchPop > (ResPop >>8)) NeedChurch = -1;
-  if (ChurchPop == (ResPop >>8)) NeedChurch = false;
-}
-
-
-/* comefrom: Simulate */
-void Take2Census()    /* Long Term Graphs */
-{
-  int x;
-
-  Res2HisMax = 0;
-  Com2HisMax = 0;
-  Ind2HisMax = 0;
-  for (x = 238; x >= 120; x--)	{
-    if ((ResHis[x + 1] = ResHis[x]) > Res2HisMax) Res2HisMax = ResHis[x];
-    if ((ComHis[x + 1] = ComHis[x]) > Com2HisMax) Com2HisMax = ComHis[x];
-    if ((IndHis[x + 1] = IndHis[x]) > Ind2HisMax) Ind2HisMax = IndHis[x];
-    CrimeHis[x + 1] = CrimeHis[x];
-    PollutionHis[x + 1] = PollutionHis[x];
-    MoneyHis[x + 1] = MoneyHis[x];
-  }
-  Graph120Max = Res2HisMax;
-  if (Com2HisMax > Graph120Max) Graph120Max = Com2HisMax;
-  if (Ind2HisMax > Graph120Max) Graph120Max = Ind2HisMax;
-
-  ResHis[120] = ResPop / 8;
-  ComHis[120] = ComPop;
-  IndHis[120] = IndPop;
-  CrimeHis[120] = CrimeHis[0] ;
-  PollutionHis[120] = PollutionHis[0];
-  MoneyHis[120] = MoneyHis[0];
-  ChangeCensus(); /* XXX: if 120 year graph view */
-}
-
-
-/* comefrom: Simulate */
-void CollectTax()
-{	
-  static float RLevels[3] = { 0.7f, 0.9f, 1.2f };
-  static float FLevels[3] = { 1.4f, 1.2f, 0.8f };
-  int z;
-
-  CashFlow = 0;
-  if (!TaxFlag) { /* if the Tax Port is clear  */
-    /* XXX: do something with z */
-    z = AvCityTax / 48;  /* post */
-    AvCityTax = 0;			
-    PoliceFund = PolicePop * 100;
-    FireFund   = FireStPop * 100;
-    RoadFund   = static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel]);
-    TaxFund = static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * CityTax * FLevels[GameLevel]); //yuck
-    if (TotalPop) {	/* if there are people to tax  */
-      CashFlow = TaxFund - (PoliceFund + FireFund + RoadFund);
-
-      DoBudget();
-    } else {
-      RoadEffect = 32;
-      PoliceEffect = 1000;
-      FireEffect = 1000;
+    /* put census#s in Historical Graphs and scroll data  */
+    ResHisMax = 0;
+    ComHisMax = 0;
+    IndHisMax = 0;
+    for (int x = 118; x >= 0; x--)
+    {
+        if ((ResHis[x + 1] = ResHis[x]) > ResHisMax)
+        {
+            ResHisMax = ResHis[x];
+        }
+        if ((ComHis[x + 1] = ComHis[x]) > ComHisMax)
+        {
+            ComHisMax = ComHis[x];
+        }
+        if ((IndHis[x + 1] = IndHis[x]) > IndHisMax)
+        {
+            IndHisMax = IndHis[x];
+        }
+        CrimeHis[x + 1] = CrimeHis[x];
+        PollutionHis[x + 1] = PollutionHis[x];
+        MoneyHis[x + 1] = MoneyHis[x];
     }
-  }
+
+    Graph10Max = ResHisMax;
+    if (ComHisMax > Graph10Max)
+    {
+        Graph10Max = ComHisMax;
+    }
+    if (IndHisMax > Graph10Max)
+    {
+        Graph10Max = IndHisMax;
+    }
+
+    ResHis[0] = ResPop / 8;
+    ComHis[0] = ComPop;
+    IndHis[0] = IndPop;
+
+    CrimeRamp += (CrimeAverage - CrimeRamp) / 4;
+    CrimeHis[0] = CrimeRamp;
+
+    PolluteRamp += (PolluteAverage - PolluteRamp) / 4;
+    PollutionHis[0] = PolluteRamp;
+
+    //int x = std::clamp((CashFlow / 20) + 128, 0, 255);
+
+    MoneyHis[0] = std::clamp((CashFlow / 20) + 128, 0, 255); // scale to 0..255
+    CrimeHis[0] = std::clamp(CrimeHis[0], 0, 255);
+    PollutionHis[0] = std::clamp(PollutionHis[0], 0, 255);
+
+    ChangeCensus(); /* XXX: if 10 year graph view */
+
+    if (HospPop < (ResPop / 256))
+    {
+        NeedHosp = 1;
+    }
+    if (HospPop > (ResPop / 256))
+    {
+        NeedHosp = -1;
+    }
+    if (HospPop == (ResPop / 256))
+    {
+        NeedHosp = 0;
+    }
+
+    if (ChurchPop < (ResPop / 256))
+    {
+        NeedChurch = 1;
+    }
+    if (ChurchPop > (ResPop / 256))
+    {
+        NeedChurch = -1;
+    }
+    if (ChurchPop == (ResPop / 256))
+    {
+        NeedChurch = 0;
+    }
 }
 
 
-/* comefrom: Simulate */
-void DecROGMem()			/* tends to empty RateOGMem   */
+// Long Term Graphs
+void Take2Census()
 {
-  int x, y, z;
+    Res2HisMax = 0;
+    Com2HisMax = 0;
+    Ind2HisMax = 0;
+    for (int x = 238; x >= 120; x--)
+    {
+        if ((ResHis[x + 1] = ResHis[x]) > Res2HisMax)
+        {
+            Res2HisMax = ResHis[x];
+        }
+        if ((ComHis[x + 1] = ComHis[x]) > Com2HisMax)
+        {
+            Com2HisMax = ComHis[x];
+        }
+        if ((IndHis[x + 1] = IndHis[x]) > Ind2HisMax)
+        {
+            Ind2HisMax = IndHis[x];
+        }
 
-  for (x = 0; x < SmX; x++)
-    for (y = 0; y < SmY; y++)	{
-      z = RateOGMem[x][y];
-      if (z == 0) continue;
-      if (z > 0)  {
-	--RateOGMem[x][y];
-	if (z > 200) RateOGMem[x][y] = 200;    /* prevent overflow */
-	continue;
-      }
-      if (z < 0)  {
-	++RateOGMem[x][y];
-	if (z < -200) RateOGMem[x][y] = -200;
-      }
+        CrimeHis[x + 1] = CrimeHis[x];
+        PollutionHis[x + 1] = PollutionHis[x];
+        MoneyHis[x + 1] = MoneyHis[x];
+    }
+
+    Graph120Max = Res2HisMax;
+
+    if (Com2HisMax > Graph120Max)
+    {
+        Graph120Max = Com2HisMax;
+    }
+    if (Ind2HisMax > Graph120Max)
+    {
+        Graph120Max = Ind2HisMax;
+    }
+
+    ResHis[120] = ResPop / 8;
+    ComHis[120] = ComPop;
+    IndHis[120] = IndPop;
+    CrimeHis[120] = CrimeHis[0];
+    PollutionHis[120] = PollutionHis[0];
+    MoneyHis[120] = MoneyHis[0];
+    ChangeCensus(); /* XXX: if 120 year graph view */
+}
+
+
+
+void CollectTax()
+{
+    static float RLevels[3] = { 0.7f, 0.9f, 1.2f };
+    static float FLevels[3] = { 1.4f, 1.2f, 0.8f };
+
+    CashFlow = 0;
+    if (!TaxFlag) // if the Tax Port is clear
+    {
+        // XXX: do something with z
+        int z = AvCityTax / 48;  // post
+        AvCityTax = 0;
+        PoliceFund = PolicePop * 100;
+        FireFund = FireStPop * 100;
+        RoadFund = static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel]);
+        TaxFund = static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * CityTax * FLevels[GameLevel]); //yuck
+
+        if (TotalPop) // if there are people to tax
+        {
+            CashFlow = TaxFund - (PoliceFund + FireFund + RoadFund);
+            DoBudget();
+        }
+        else
+        {
+            RoadEffect = 32;
+            PoliceEffect = 1000;
+            FireEffect = 1000;
+        }
+    }
+}
+
+
+// tends to empty RateOGMem
+void DecROGMem()
+{
+    for (int x = 0; x < SmX; x++)
+    {
+        for (int y = 0; y < SmY; y++)
+        {
+            int z = RateOGMem[x][y];
+            if (z == 0)
+            {
+                continue;
+            }
+            if (z > 0)
+            {
+                --RateOGMem[x][y];
+                if (z > 200) // prevent overflow
+                {
+                    RateOGMem[x][y] = std::min(z, 200);
+                }
+                continue;
+            }
+            if (z < 0)
+            {
+                ++RateOGMem[x][y];
+                if (z < -200)
+                {
+                    RateOGMem[x][y] = -200;
+                }
+            }
+        }
     }
 }
 
@@ -887,154 +1107,189 @@ void DecROGMem()			/* tends to empty RateOGMem   */
 /* comefrom: InitSimMemory SimLoadInit */
 void SetCommonInits()
 {
-  EvalInit();
-  RoadEffect = 32;
-  PoliceEffect = 1000;
-  FireEffect = 1000;
-  TaxFlag = 0;
-  TaxFund = 0;
-/*
-  if ((GameLevel > 2) || (GameLevel < 0)) GameLevel = 0;
-  setGameLevel(GameLevel);
-*/
+    EvalInit();
+    RoadEffect = 32;
+    PoliceEffect = 1000;
+    FireEffect = 1000;
+    TaxFlag = 0;
+    TaxFund = 0;
+    /*
+      if ((GameLevel > 2) || (GameLevel < 0)) GameLevel = 0;
+      setGameLevel(GameLevel);
+    */
 }
 
 
-/* comefrom: DoSimInit */
 void InitSimMemory()
-{	
-  int x, z;
+{
+    SetCommonInits();
+    for (int x = 0; x < HistoryLength; x++)
+    {
+        ResHis[x] = 0;
+        ComHis[x] = 0;
+        IndHis[x] = 0;
+        MoneyHis[x] = 128;
+        CrimeHis[x] = 0;
+        PollutionHis[x] = 0;
+    }
 
-  z = 0;
-  SetCommonInits();
-  for (x = 0; x < HistoryLength; x++)  {
-    ResHis[x] = z;
-    ComHis[x] = z;
-    IndHis[x] = z;
-    MoneyHis[x] = 128;
-    CrimeHis[x] = z;
-    PollutionHis[x] = z;
-  }
-  CrimeRamp = z;
-  PolluteRamp = z;
-  TotalPop = z;
-  RValve = z;
-  CValve = z;
-  IValve = z;
-  ResCap = z;
-  ComCap = z;
-  IndCap = z;
+    CrimeRamp = 0;
+    PolluteRamp = 0;
+    TotalPop = 0;
+    RValve = 0;
+    CValve = 0;
+    IValve = 0;
+    ResCap = 0;
+    ComCap = 0;
+    IndCap = 0;
 
-  EMarket = 6.0;
-  DisasterEvent = 0;
-  ScoreType = 0;
+    EMarket = 6.0;
+    DisasterEvent = 0;
+    ScoreType = 0;
 
-  /* This clears powermem */
-  PowerStackNum = z;		
-  DoPowerScan();
-  NewPower = 1;		/* post rel */	
+    // This clears powermem
+    PowerStackNum = 0;
+    DoPowerScan();
+    NewPower = 1; // post rel
 
-  InitSimLoad = 0;
+    InitSimLoad = 0;
 }
 
 
-/* comefrom: SimLoadInit */
 void DoNilPower()
 {
-  int x, y, z;
-
-  for (x = 0; x < SimWidth; x++)
-    for (y = 0; y < SimHeight; y++) {
-      z = Map[x][y];
-      if (z & ZONEBIT) {
-	SMapX = x;
-	SMapY = y;
-	CChr = z;
-	SetZPower();
-      }
+    for (int x = 0; x < SimWidth; x++)
+    {
+        for (int y = 0; y < SimHeight; y++)
+        {
+            int z = Map[x][y];
+            if (z & ZONEBIT)
+            {
+                SMapX = x;
+                SMapY = y;
+                CChr = z;
+                SetZPower();
+            }
+        }
     }
 }
 
 
-/* comefrom: Simulate */
-void DecTrafficMem()		/* tends to empty TrfDensity   */
+/* tends to empty TrfDensity   */
+void DecTrafficMem()
 {
-  int x, y, z;
-
-  for (x = 0; x < HalfWorldWidth; x++)
-    for (y = 0; y < HalfWorldHeight; y++)
-      if (z = TrfDensity[x][y]) {
-	if (z > 24) {
-	  if (z > 200) TrfDensity[x][y] = z - 34;
-	  else TrfDensity[x][y] = z - 24;
-	}
-	else TrfDensity[x][y] = 0;
-      }
+    
+    for (int x = 0; x < HalfWorldWidth; x++)
+    {
+        for (int y = 0; y < HalfWorldHeight; y++)
+        {
+            int z = TrfDensity[x][y];
+            if (z != 0)
+            {
+                if (z > 24)
+                {
+                    if (z > 200)
+                    {
+                        TrfDensity[x][y] = z - 34;
+                    }
+                    else
+                    {
+                        TrfDensity[x][y] = z - 24;
+                    }
+                }
+                else TrfDensity[x][y] = 0;
+            }
+        }
+    }
 }
 
 
 /* comefrom: DoSimInit */
 void SimLoadInit()
 {
-  static int DisTab[9] = { 0, 2, 10, 5, 20, 3, 5, 5, 2 * 48};
-  static int ScoreWaitTab[9] = { 0, 30 * 48, 5 * 48, 5 * 48, 10 * 48,
-				   5 * 48, 10 * 48, 5 * 48, 10 * 48 };
-  int z;
+    static int DisTab[9] = { 0, 2, 10, 5, 20, 3, 5, 5, 2 * 48 };
+    static int ScoreWaitTab[9] = { 0, 30 * 48, 5 * 48, 5 * 48, 10 * 48,
+                     5 * 48, 10 * 48, 5 * 48, 10 * 48 };
 
-  z = 0;
-  EMarket = (float)MiscHis[1];
-  ResPop = MiscHis[2];
-  ComPop = MiscHis[3];
-  IndPop = MiscHis[4];
-  RValve = MiscHis[5];
-  CValve = MiscHis[6];
-  IValve = MiscHis[7];
-  CrimeRamp = MiscHis[10];
-  PolluteRamp = MiscHis[11];
-  LVAverage = MiscHis[12];
-  CrimeAverage = MiscHis[13];
-  PolluteAverage = MiscHis[14];
-  GameLevel = MiscHis[15];
+    EMarket = (float)MiscHis[1];
+    ResPop = MiscHis[2];
+    ComPop = MiscHis[3];
+    IndPop = MiscHis[4];
+    RValve = MiscHis[5];
+    CValve = MiscHis[6];
+    IValve = MiscHis[7];
+    CrimeRamp = MiscHis[10];
+    PolluteRamp = MiscHis[11];
+    LVAverage = MiscHis[12];
+    CrimeAverage = MiscHis[13];
+    PolluteAverage = MiscHis[14];
+    GameLevel = MiscHis[15];
 
-  if (CityTime < 0) CityTime = 0;
-  if (!EMarket) EMarket = 4.0;
-  if ((GameLevel > 2) || (GameLevel < 0)) GameLevel = 0;
-  SetGameLevel(GameLevel);
+    if (CityTime < 0)
+    {
+        CityTime = 0;
+    }
 
-  SetCommonInits();
+    if (!EMarket)
+    {
+        EMarket = 4.0;
+    }
 
-  CityClass = MiscHis[16];
-  CityScore = MiscHis[17];
+    if ((GameLevel > 2) || (GameLevel < 0))
+    {
+        GameLevel = 0;
+    }
 
-  if ((CityClass > 5) || (CityClass < 0)) CityClass = 0;
-  if ((CityScore > 999) || (CityScore < 1)) CityScore = 500;
+    SetGameLevel(GameLevel);
+    SetCommonInits();
 
-  ResCap = 0;
-  ComCap = 0;
-  IndCap = 0;
+    CityClass = MiscHis[16];
+    CityScore = MiscHis[17];
 
-  AvCityTax = (CityTime % 48) * 7;  /* post */
+    if ((CityClass > 5) || (CityClass < 0))
+    {
+        CityClass = 0;
+    }
+    if ((CityScore > 999) || (CityScore < 1))
+    {
+        CityScore = 500;
+    }
 
-  for (z = 0; z < PWRMAPSIZE; z++)
-    PowerMap[z] = ~0; /* set power Map */
-  DoNilPower();
+    ResCap = 0;
+    ComCap = 0;
+    IndCap = 0;
 
-  if (ScenarioID > 8) ScenarioID = 0;
+    AvCityTax = (CityTime % 48) * 7; /* post */
 
-  if (ScenarioID) {
-    DisasterEvent = ScenarioID;
-    DisasterWait = DisTab[DisasterEvent];
-    ScoreType = DisasterEvent;
-    ScoreWait = ScoreWaitTab[DisasterEvent];
-  } else {
-    DisasterEvent = 0;
-    ScoreType = 0;
-  }
+    for (int z = 0; z < PWRMAPSIZE; z++) /* set power Map */
+    {
+        PowerMap[z] = ~0;
+    }
 
-  RoadEffect = 32;
-  PoliceEffect = 1000; /*post*/
-  FireEffect = 1000;
-  InitSimLoad = 0;
+    DoNilPower();
+
+    if (ScenarioID > 8)
+    {
+        ScenarioID = 0;
+    }
+
+    if (ScenarioID)
+    {
+        DisasterEvent = ScenarioID;
+        DisasterWait = DisTab[DisasterEvent];
+        ScoreType = DisasterEvent;
+        ScoreWait = ScoreWaitTab[DisasterEvent];
+    }
+    else
+    {
+        DisasterEvent = 0;
+        ScoreType = 0;
+    }
+
+    RoadEffect = 32;
+    PoliceEffect = 1000; /*post*/
+    FireEffect = 1000;
+    InitSimLoad = 0;
 }
 
 
@@ -1230,54 +1485,77 @@ void DoSimInit()
 
 void UpdateFundEffects()
 {
-  if (RoadFund)
-    RoadEffect = (int)(((float)RoadSpend /
-			  (float)RoadFund) * 32.0);
-  else
-    RoadEffect = 32;
+    if (RoadFund)
+    {
+        RoadEffect = (int)(((float)RoadSpend / (float)RoadFund) * 32.0);
+    }
+    else
+    {
+        RoadEffect = 32;
+    }
 
-  if (PoliceFund)
-    PoliceEffect = (int)(((float)PoliceSpend /
-			    (float)PoliceFund) * 1000.0);
-  else
-    PoliceEffect = 1000;
+    if (PoliceFund)
+    {
+        PoliceEffect = (int)(((float)PoliceSpend / (float)PoliceFund) * 1000.0);
+    }
+    else
+    {
+        PoliceEffect = 1000;
+    }
 
-  if (FireFund)
-    FireEffect = (int)(((float)FireSpend /
-			  (float)FireFund) * 1000.0);
-  else
-    FireEffect = 1000;
+    if (FireFund)
+    {
+        FireEffect = (int)(((float)FireSpend / (float)FireFund) * 1000.0);
+    }
+    else
+    {
+        FireEffect = 1000;
+    }
 
-  drawCurrPercents();
+    drawCurrPercents();
 }
 
 
-/* comefrom: DoFire MakeFlood */
 void FireZone(int Xloc, int Yloc, int ch)
 {
-  int Xtem, Ytem;
-  int x, y, XYmax;
+    int Xtem, Ytem;
+    int XYmax;
 
-  RateOGMem[Xloc >>3][Yloc >>3] -= 20;
+    RateOGMem[Xloc / 8][Yloc / 8] -= 20;
 
-  ch = ch & LOMASK;
-  if (ch < PORTBASE)
-    XYmax = 2;
-  else
-    if (ch == AIRPORT)
-      XYmax = 5;
+    ch = ch & LOMASK;
+    if (ch < PORTBASE)
+    {
+        XYmax = 2;
+    }
     else
-      XYmax = 4;
+    {
+        if (ch == AIRPORT)
+        {
+            XYmax = 5;
+        }
+        else
+        {
+            XYmax = 4;
+        }
+    }
 
-  for (x = -1; x < XYmax; x++)
-    for (y = -1; y < XYmax; y++) {
-      Xtem = Xloc + x;
-      Ytem = Yloc + y;
-      if ((Xtem < 0) || (Xtem > (SimWidth - 1)) ||
-	  (Ytem < 0) || (Ytem > (SimHeight - 1)))
-	continue;
-      if ((int)(Map[Xtem][Ytem] & LOMASK) >= ROADBASE) /* post release */
-	Map[Xtem][Ytem] |= BULLBIT;
+    for (int x = -1; x < XYmax; x++)
+    {
+        for (int y = -1; y < XYmax; y++)
+        {
+            Xtem = Xloc + x;
+            Ytem = Yloc + y;
+            if ((Xtem < 0) || (Xtem > (SimWidth - 1)) || (Ytem < 0) || (Ytem > (SimHeight - 1)))
+            {
+                continue;
+            }
+
+            if ((int)(Map[Xtem][Ytem] & LOMASK) >= ROADBASE) // post release
+            {
+                Map[Xtem][Ytem] |= BULLBIT;
+            }
+        }
     }
 }
 

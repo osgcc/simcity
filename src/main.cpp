@@ -541,6 +541,13 @@ namespace
 
     SDL_Rect TileHighlight{ 0, 0, 16, 16 };
     SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
+
+    std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 20, 37 };
+
+    unsigned int currentTick{};
+    unsigned int lastTick{};
+    unsigned int accumulator{};
+    unsigned int accumulatorAdjust{};
 };
 
 
@@ -872,20 +879,17 @@ void drawDebug()
     drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 10, 100 + MainFont->height() }, { 255, 255, 255, 100 });
     drawString(*MainFont, "Speed: " + SpeedString(SimSpeed()), {10, 100 + MainFont->height() * 3}, {255, 255, 255, 100});
     drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 10, 100 + MainFont->height() * 4 }, { 255, 255, 255, 100 });
+
+    drawString(*MainFont, "RValve: " + std::to_string(RValve), { 10, 100 + MainFont->height() * 6 }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "CValve: " + std::to_string(CValve), { 10, 100 + MainFont->height() * 7 }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "IValve: " + std::to_string(IValve), { 10, 100 + MainFont->height() * 8 }, { 255, 255, 255, 100 });
 }
 
-
-std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 20, 37 };
 
 unsigned int speedModifier()
 {
     return SpeedModifierTable[static_cast<unsigned int>(SimSpeed())];
 }
-
-unsigned int currentTick{};
-unsigned int lastTick{};
-unsigned int accumulator{};
-unsigned int accumulatorAdjust{};
 
 
 bool timerTick()
