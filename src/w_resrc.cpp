@@ -70,6 +70,14 @@
 #include <vector>
 
 
+enum class MessageId
+{
+    ResidentialNeeded,
+    CommercialNeeded
+
+};
+
+
 std::array<std::string, 64> StringTable =
 {{
     "More residential zones needed.",

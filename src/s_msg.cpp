@@ -136,7 +136,6 @@ void ClearMes()
 
 int SendMes(int Mnum)
 {
-
     MessageId(Mnum);
     return 0;
 }
@@ -262,40 +261,48 @@ void DoScenarioScore(int type)
 
 void CheckGrowth()
 {
-    int ThisCityPop;
-    int z;
-
-    if (!(CityTime % 4))
+    if (CityTime % 4 == 0)
     {
-        z = 0;
-        ThisCityPop = ((ResPop)+(ComPop * 8L) + (IndPop * 8L)) * 20L;
+        int growthMessageId = 0;
+        int currentPopulation = ((ResPop)+(ComPop * 8) + (IndPop * 8)) * 20;
+
         if (LastCityPop)
         {
-            if ((LastCityPop < 2000) && (ThisCityPop >= 2000))	z = 35;
-            if ((LastCityPop < 10000) && (ThisCityPop >= 10000)) 	z = 36;
-            if ((LastCityPop < 50000L) && (ThisCityPop >= 50000L)) 	z = 37;
-            if ((LastCityPop < 100000L) && (ThisCityPop >= 100000L))	z = 38;
-            if ((LastCityPop < 500000L) && (ThisCityPop >= 500000L))	z = 39;
-        }
-        if (z)
-        {
-            if (z != LastCategory)
+            if ((LastCityPop < 2000) && (currentPopulation >= 2000))
             {
-                SendMes(-z);
-                LastCategory = z;
+                growthMessageId = 35;
+            }
+            if ((LastCityPop < 10000) && (currentPopulation >= 10000))
+            {
+                growthMessageId = 36;
+            }
+            if ((LastCityPop < 50000L) && (currentPopulation >= 50000L))
+            {
+                growthMessageId = 37;
+            }
+            if ((LastCityPop < 100000L) && (currentPopulation >= 100000L))
+            {
+                growthMessageId = 38;
+            }
+            if ((LastCityPop < 500000L) && (currentPopulation >= 500000L))
+            {
+                growthMessageId = 39;
             }
         }
-        LastCityPop = ThisCityPop;
+        if (growthMessageId != 0 && growthMessageId != LastCategory)
+        {
+            SendMes(growthMessageId);
+            LastCategory = growthMessageId;
+        }
+
+        LastCityPop = currentPopulation;
     }
 }
 
 
+
 void SendMessages()
 {
-    int z;
-    int PowerPop;
-    float TM;
-
     if ((ScenarioID) && (ScoreType) && (ScoreWait))
     {
         ScoreWait--;
@@ -308,11 +315,9 @@ void SendMessages()
     CheckGrowth();
 
     TotalZPop = ResZPop + ComZPop + IndZPop;
-    PowerPop = NuclearPop + CoalPop;
+    int PowerPop = NuclearPop + CoalPop;
 
-    z = CityTime % 64;
-
-    switch (z)
+    switch (CityTime % 64)
     {
 
     case 1:
@@ -387,8 +392,14 @@ void SendMessages()
         else ComCap = 0;
         break;
 
-    case 32:
-        TM = static_cast<float>(unPwrdZCnt + PwrdZCnt);	/* dec score for unpowered zones */
+    case 32: /* dec score for unpowered zones */
+    {
+        float TM = static_cast<float>(unPwrdZCnt + PwrdZCnt);
+
+        /**
+         * \fixme   This should use fuzzy comparisons here due to
+         *          floating point drift.
+         */
         if (TM)
         {
             if ((PwrdZCnt / TM) < .7)
@@ -396,6 +407,7 @@ void SendMessages()
                 SendMes(15);
             }
         }
+    }
         break;
 
     case 35:
@@ -463,7 +475,6 @@ void SendMessages()
     }
 }
 
-#include <iostream>
 
 void doMessage()
 {
