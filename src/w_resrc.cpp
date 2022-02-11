@@ -59,96 +59,69 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "main.h"
 
 #include "w_resrc.h"
 
-#include <array>
 #include <map>
-#include <memory>
 #include <string>
-#include <vector>
 
 
-enum class MessageId
+std::map< MessageEnumerator, std::string> StringTable =
 {
-    ResidentialNeeded,
-    CommercialNeeded
-
+    { MessageEnumerator::ResidentialNeeded, "More residential zones needed." },
+    { MessageEnumerator::CommercialNeeded, "More commercial zones needed." },
+    { MessageEnumerator::IndustrialNeeded, "More industrial zones needed." },
+    { MessageEnumerator::RoadsNeeded, "More roads required." },
+    { MessageEnumerator::RailNeeded, "Inadequate rail system." },
+    { MessageEnumerator::PowerNeeded, "Build a Power Plant." },
+    { MessageEnumerator::StadiumNeeded, "Residents demand a Stadium." },
+    { MessageEnumerator::SeaportNeeded, "Industry requires a Sea Port." },
+    { MessageEnumerator::AirportNeeded, "Commerce requires an Airport." },
+    { MessageEnumerator::PollutionHigh, "Pollution very high." },
+    { MessageEnumerator::CrimeHigh, "Crime very high." },
+    { MessageEnumerator::TrafficJamsReported, "Frequent traffic jams reported." },
+    { MessageEnumerator::FireDepartmentNeeded, "Citizens demand a Fire Department." },
+    { MessageEnumerator::PoliceDepartmentNeeded, "Citizens demand a Police Department." },
+    { MessageEnumerator::BlackoutsReported, "Blackouts reported. Check power map." },
+    { MessageEnumerator::TaxesHigh, "Citizens upset. The tax rate is too high." },
+    { MessageEnumerator::RoadsDeteriorating, "Roads deteriorating due to lack of funds." },
+    { MessageEnumerator::FireDefunded, "Fire departments need funding." },
+    { MessageEnumerator::PoliceDefunded, "Police departments need funding." },
+    { MessageEnumerator::FireReported, "Fire reported !" },
+    { MessageEnumerator::MonsterReported, "A Monster has been sighted !!" },
+    { MessageEnumerator::TornadoReported, "Tornado reported !!" },
+    { MessageEnumerator::EarthquakeReported, "Major earthquake reported !!!" },
+    { MessageEnumerator::PlaneCrashed, "A plane has crashed !" },
+    { MessageEnumerator::ShipWrecked, "Shipwreck reported !" },
+    { MessageEnumerator::TrainCrashed, "A train crashed !" },
+    { MessageEnumerator::HelicopterCrashed, "A helicopter crashed !" },
+    { MessageEnumerator::UnemploymentHigh, "Unemployment rate is high." },
+    { MessageEnumerator::CoffersEmpty, "YOUR CITY HAS GONE BROKE!" },
+    { MessageEnumerator::FirebombingReported, "Firebombing reported !" },
+    { MessageEnumerator::ParksNeeded, "Need more parks." },
+    { MessageEnumerator::ExplosionReported, "Explosion detected !" },
+    { MessageEnumerator::InsufficientFunds, "Insufficient funds to build that." },
+    { MessageEnumerator::MustBulldoze, "Area must be bulldozed first." },
+    { MessageEnumerator::ReachedTown, "Population has reached 2,000." },
+    { MessageEnumerator::ReachedCity, "Population has reached 10,000." },
+    { MessageEnumerator::ReachedCapital, "Population has reached 50,000." },
+    { MessageEnumerator::ReachedMetropolis, "Population has reached 100,000." },
+    { MessageEnumerator::ReachedMegalopolis, "Population has reached 500,000." },
+    { MessageEnumerator::BrownoutsReported, "Brownouts, build another Power Plant." },
+    { MessageEnumerator::HeavyTrafficReported, "Heavy Traffic reported." },
+    { MessageEnumerator::FloodingReported, "Flooding reported !!" },
+    { MessageEnumerator::NuclearMeltdownReported, "A Nuclear Meltdown has occurred !!!" },
+    { MessageEnumerator::RiotsReported, "They're rioting in the streets !!" },
+    { MessageEnumerator::EndOfDemo, "End of Demo !!" },
+    { MessageEnumerator::NoSoundServer, "No Sound Server!" },
+    { MessageEnumerator::NoMultiplayerLicense, "No Multi Player License !!" },
+    { MessageEnumerator::NewCityStarted, "Started a New City." },
+    { MessageEnumerator::CityRestored, "Restored a Saved City." },
+    { MessageEnumerator::MessageNone, "" }
 };
 
 
-std::array<std::string, 64> StringTable =
-{{
-    "More residential zones needed.",
-    "More commercial zones needed.",
-    "More industrial zones needed.",
-    "More roads required.",
-    "Inadequate rail system.",
-    "Build a Power Plant.",
-    "Residents demand a Stadium.",
-    "Industry requires a Sea Port.",
-    "Commerce requires an Airport.",
-    "Pollution very high.",
-    "Crime very high.",
-    "Frequent traffic jams reported.",
-    "Citizens demand a Fire Department.",
-    "Citizens demand a Police Department.",
-    "Blackouts reported.Check power map.",
-    "Citizens upset. The tax rate is too high.",
-    "Roads deteriorating due to lack of funds.",
-    "Fire departments need funding.",
-    "Police departments need funding.",
-    "Fire reported !",
-    "A Monster has been sighted !!",
-    "Tornado reported !!",
-    "Major earthquake reported !!!",
-    "A plane has crashed !",
-    "Shipwreck reported !",
-    "A train crashed !",
-    "A helicopter crashed !",
-    "Unemployment rate is high.",
-    "YOUR CITY HAS GONE BROKE!",
-    "Firebombing reported !",
-    "Need more parks.",
-    "Explosion detected !",
-    "Insufficient funds to build that.",
-    "Area must be bulldozed first.",
-    "Population has reached 2,000.",
-    "Population has reached 10,000.",
-    "Population has reached 50,000.",
-    "Population has reached 100,000.",
-    "Population has reached 500,000.",
-    "Brownouts, build another Power Plant.",
-    "Heavy Traffic reported.",
-    "Flooding reported !!",
-    "A Nuclear Meltdown has occurred !!!",
-    "They're rioting in the streets !!",
-    "End of Demo !!",
-    "No Sound Server!",
-    "No Multi Player License !!",
-    "Started a New City.",
-    "Restored a Saved City.",
-    "x",
-    "x",
-    "x",
-    "x",
-    "x",
-    "x",
-    "x",
-    "x",
-    "x",
-    "x",
-    "x",
-    "x",
-    "x",
-    "x",
-    "x"
-}};
-
-
-// \param num Array indedx -- base 1
-const std::string& GetIndString(int /*id*/, int num)
+const std::string& GetIndString(int /*id*/, MessageEnumerator id)
 {
-    return StringTable[num - 1];
+    return StringTable.at(id);
 }
