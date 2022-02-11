@@ -79,7 +79,6 @@ int LastCityPop;
 int LastCategory;
 int LastPicNum;
 bool AutoGo = false;
-bool HaveLastMessage = false;
 std::string LastMessage;
 
 

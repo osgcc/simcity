@@ -464,7 +464,6 @@ void sim_init()
     userSoundOn(true);
 
     MustUpdateOptions = 1;
-    HaveLastMessage = false;
     ScenarioID = 0;
     StartingYear = 1900;
     tileSynch = 0x01;
