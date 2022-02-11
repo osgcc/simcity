@@ -172,8 +172,6 @@ void updateDate()
     {
         lastCityYear = y;
         lastCityMonth = m;
-
-        Eval(std::string("UISetDate ") + " " + MonthTable[m] + " " + std::to_string(y));
     }
 }
 
