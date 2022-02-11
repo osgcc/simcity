@@ -261,42 +261,45 @@ void DoScenarioScore(int type)
 
 void CheckGrowth()
 {
-    if (CityTime % 4 == 0)
+    if (CityTime % 4 != 0)
     {
-        int growthMessageId = 0;
-        int currentPopulation = ((ResPop)+(ComPop * 8) + (IndPop * 8)) * 20;
-
-        if (LastCityPop)
-        {
-            if ((LastCityPop < 2000) && (currentPopulation >= 2000))
-            {
-                growthMessageId = 35;
-            }
-            if ((LastCityPop < 10000) && (currentPopulation >= 10000))
-            {
-                growthMessageId = 36;
-            }
-            if ((LastCityPop < 50000L) && (currentPopulation >= 50000L))
-            {
-                growthMessageId = 37;
-            }
-            if ((LastCityPop < 100000L) && (currentPopulation >= 100000L))
-            {
-                growthMessageId = 38;
-            }
-            if ((LastCityPop < 500000L) && (currentPopulation >= 500000L))
-            {
-                growthMessageId = 39;
-            }
-        }
-        if (growthMessageId != 0 && growthMessageId != LastCategory)
-        {
-            SendMes(growthMessageId);
-            LastCategory = growthMessageId;
-        }
-
-        LastCityPop = currentPopulation;
+        return;
     }
+
+    int currentPopulation = ((ResPop)+(ComPop * 8) + (IndPop * 8)) * 20;
+    int growthMessageId = 0;
+
+    if (LastCityPop)
+    {
+        if ((LastCityPop < 2000) && (currentPopulation >= 2000))
+        {
+            growthMessageId = 35;
+        }
+        if ((LastCityPop < 10000) && (currentPopulation >= 10000))
+        {
+            growthMessageId = 36;
+        }
+        if ((LastCityPop < 50000L) && (currentPopulation >= 50000L))
+        {
+            growthMessageId = 37;
+        }
+        if ((LastCityPop < 100000L) && (currentPopulation >= 100000L))
+        {
+            growthMessageId = 38;
+        }
+        if ((LastCityPop < 500000L) && (currentPopulation >= 500000L))
+        {
+            growthMessageId = 39;
+        }
+    }
+    if (growthMessageId != 0 && growthMessageId != LastCategory)
+    {
+        SendMes(growthMessageId);
+        LastCategory = growthMessageId;
+    }
+
+    LastCityPop = currentPopulation;
+
 }
 
 
