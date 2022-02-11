@@ -504,9 +504,10 @@ void sim_init()
 }
 
 
-constexpr SDL_Color ColorCommercial{ 79, 79, 255, 255 };
 constexpr SDL_Color ColorResidential{ 0, 165, 0, 255 };
+constexpr SDL_Color ColorCommercial{ 79, 79, 255, 255 };
 constexpr SDL_Color ColorIndustrial{ 255, 255, 0, 255 };
+constexpr auto RciValveHeight = 20;
 
 
 SDL_Window* MainWindow = nullptr;
@@ -520,6 +521,7 @@ Texture SmallTileset{};
 Texture RCI_Indicator{};
 
 Font* MainFont{ nullptr };
+Font* MainBigFont{ nullptr };
 
 namespace
 {
@@ -531,6 +533,10 @@ namespace
     SDL_Rect MiniMapSelector{};
     SDL_Rect MiniMapDestination{ 10, 0, SimWidth * 3, SimHeight * 3 };
     SDL_Rect MiniMapBorder{};
+
+    SDL_Rect ResidentialValveRect{ 0, 0, 4, 0 };
+    SDL_Rect CommercialValveRect{ 0, 0, 4, 0 };
+    SDL_Rect IndustrialValveRect{ 0, 0, 4, 0 };
 
     Vector<int> WindowSize{};
 
@@ -835,21 +841,36 @@ void initViewParamters()
     UiHeaderRect.h = RCI_Indicator.dimensions.y + 10 + MainFont->height() + 10;
 
     RciDestination = { UiHeaderRect.x + 5, UiHeaderRect.y + MainFont->height() + 10, RCI_Indicator.dimensions.x, RCI_Indicator.dimensions.y };
+
+    ResidentialValveRect = { RciDestination.x + 9, RciDestination.y + 24, 4, 0 };
+    CommercialValveRect = { RciDestination.x + 18, RciDestination.y + 24, 4, 0 };
+    IndustrialValveRect = { RciDestination.x + 27, RciDestination.y + 24, 4, 0 };
 }
 
 
-SDL_Rect ResidentialValveRect{};
-SDL_Rect CommercialValveRect{};
-SDL_Rect IndustrialValveRect{};
-
 void drawValve()
 {
-    double r, c, i;
+    double residentialPercent = static_cast<double>(RValve) / 1500.0;
+    double commercialPercent = static_cast<double>(CValve) / 1500.0;
+    double industrialPercent = static_cast<double>(IValve) / 1500.0;
 
-    r = RValve;
-    c = CValve;
-    i = IValve;
+    ResidentialValveRect.h = -static_cast<int>(RciValveHeight * residentialPercent);
+    CommercialValveRect.h = -static_cast<int>(RciValveHeight * commercialPercent);
+    IndustrialValveRect.h = -static_cast<int>(RciValveHeight * industrialPercent);
 
+    SDL_SetRenderDrawColor(MainWindowRenderer, ColorResidential.r, ColorResidential.g, ColorResidential.b, ColorResidential.a);
+    SDL_RenderFillRect(MainWindowRenderer, &ResidentialValveRect);
+
+    SDL_SetRenderDrawColor(MainWindowRenderer, ColorCommercial.r, ColorCommercial.g, ColorCommercial.b, ColorCommercial.a);
+    SDL_RenderFillRect(MainWindowRenderer, &CommercialValveRect);
+
+    SDL_SetRenderDrawColor(MainWindowRenderer, ColorIndustrial.r, ColorIndustrial.g, ColorIndustrial.b, ColorIndustrial.a);
+    SDL_RenderFillRect(MainWindowRenderer, &IndustrialValveRect);
+
+    // not a huge fan of this
+    SDL_Rect rciSrc{ 4, 19, 32, 11 };
+    SDL_Rect rciDst{ RciDestination.x + 4, RciDestination.y + 19, 32, 11 };
+    SDL_RenderCopy(MainWindowRenderer, RCI_Indicator.texture, &rciSrc, &rciDst);
 }
 
 
@@ -863,11 +884,11 @@ void drawTopUi()
 
     // RCI
     SDL_RenderCopy(MainWindowRenderer, RCI_Indicator.texture, nullptr, &RciDestination);
+    drawValve();
 
     drawString(*MainFont, MonthString(static_cast<Month>(LastCityMonth())), {UiHeaderRect.x + 5, UiHeaderRect.y + 5}, {255, 255, 255, 255});
     drawString(*MainFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 30, UiHeaderRect.y + 5}, {255, 255, 255, 255});
 
-    drawValve();
 }
 
 
@@ -893,6 +914,7 @@ void drawDebug()
 {
     drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 10, 100 }, { 255, 255, 255, 100 });
     drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 10, 100 + MainFont->height() }, { 255, 255, 255, 100 });
+    
     drawString(*MainFont, "Speed: " + SpeedString(SimSpeed()), {10, 100 + MainFont->height() * 3}, {255, 255, 255, 100});
     drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 10, 100 + MainFont->height() * 4 }, { 255, 255, 255, 100 });
 
@@ -927,28 +949,16 @@ bool timerTick()
 
 void startGame()
 {
-    SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-
-    initRenderer();
-
-    loadGraphics();
-
-    MainFont = new Font("res/open-sans-medium.ttf", 12);
-
-    initViewParamters();
-    updateMapDrawParameters();
-
     sim_init();
-
     InitGame();
 
     Startup = -1;
 
     GameStarted();
-        
+
     DrawMiniMap();
     DrawBigMap();
-
+    
     while (!Exit)
     {
         sim_loop(timerTick());
@@ -965,16 +975,21 @@ void startGame()
 
         SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
         SDL_RenderFillRect(MainWindowRenderer, &TileHighlight);
-        
+
         drawDebug();
-        
+
         SDL_RenderPresent(MainWindowRenderer);
     }
+}
+
+
+void cleanUp()
+{
+    delete MainFont;
+    delete MainBigFont;
 
     SDL_DestroyTexture(BigTileset.texture);
     SDL_DestroyTexture(RCI_Indicator.texture);
-
-    delete MainFont;
 
     SDL_DestroyRenderer(MainWindowRenderer);
     SDL_DestroyWindow(MainWindow);
@@ -994,8 +1009,19 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    initRenderer();
+    loadGraphics();
+
+    MainFont = new Font("res/open-sans-medium.ttf", 12);
+    MainBigFont = new Font("res/open-sans-medium.ttf", 14);
+
+    initViewParamters();
+    updateMapDrawParameters();
+
     env_init();
     startGame();
+
+    cleanUp();
 
     SDL_Quit();
 
