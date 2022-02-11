@@ -75,15 +75,17 @@
 #include <string>
 
 
-int LastCityPop;
-int LastCategory;
-int LastPicNum;
 bool AutoGo = false;
 
 
 namespace
 {
+    int LastCityPop{};
+    int LastCategory{};
+    int LastPictureId{};
+
     int messageId{};
+
     Point<int> messageLocation{};
     std::string lastMessage;
 };
@@ -130,7 +132,7 @@ void ClearMes()
     //MessagePort = 0;
     MessageId(0);
     MessageLocation({ 0, 0 });
-    LastPicNum = 0;
+    LastPictureId = 0;
 }
 
 
