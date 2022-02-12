@@ -142,38 +142,16 @@ void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Ve
 */
 
 
-/**
- * Draws the full sized map
- * 
- * Paramters currently don't really do much other than specify how much of the
- * map to draw from origin (0, 0) up to (w, h). This function should take into
- * account a draw offset (probably using (x, y)) though those coords are being
- * used to reference \c dynamicFilter() (whatever that is, haven't exampled
- * that function yet).
- * 
- * TODO:
- * Have this function draw a map given a raster origin point and start reading
- * from the map array given a tile origin (e.g., currently origin 0, 0, can be
- * from any arbitrary point.
- * 
- * Additionally, checks should be put in place to ignore values outside of
- * array boundaries so the checks don't need to be done code further up the
- * chain.
- * 
- * Lastly, the \c SimView* parameter isn't currently used. This seems to have
- * been used as a way to get view paramters from some sort of a GUI context
- * from Tcl/Tk. Since it's no longer used this paramter can be removed.
- */
-void DrawBigMap()
+void DrawBigMapSegment(const Point<int>& begin, const Point<int>& end)
 {
 	SDL_SetRenderTarget(MainWindowRenderer, MainMapTexture.texture);
 
-	SDL_Rect drawRect{ 0, 0, 16, 16 }; 
+	SDL_Rect drawRect{ 0, 0, 16, 16 };
 	unsigned int tile = 0;
 
-	for (int row = 0; row < SimWidth; row++)
+	for (int row = begin.x; row < end.x; row++)
 	{
-		for (int col = 0; col < SimHeight; col++)
+		for (int col = begin.y; col < end.y; col++)
 		{
 			tile = getTileValue(row, col);
 
@@ -183,10 +161,7 @@ void DrawBigMap()
 			//	tile = LIGHTNINGBOLT;
 			//}
 
-
 			drawRect = { row * drawRect.w, col * drawRect.h, drawRect.w, drawRect.h };
-			//tileRect.y = getTileValue(row, col) * 16;
-
 
 			tileRect =
 			{
@@ -201,4 +176,10 @@ void DrawBigMap()
 
 	SDL_RenderPresent(MainWindowRenderer);
 	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
+}
+
+
+void DrawBigMap()
+{
+	DrawBigMapSegment(Point<int>{0, 0}, Point<int>{SimWidth, SimHeight});
 }
