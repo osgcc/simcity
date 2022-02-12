@@ -119,32 +119,16 @@ int toolOffset[] = {
 };
 
 
-//Ink *NewInk();
-
-
-/*************************************************************************/
-/* UTILITIES */
 
 void DidTool(SimView* view, const std::string& toolName, int x, int y)
 {
-  /*
-  char buf[256];
-
-  if (view != NULL) {
-    sprintf(buf, "UIDidTool%s %s %d %d",
-	    name, Tk_PathName(view->tkwin), x, y);
-    Eval(buf);
-  }
-  */
+    Eval("UIDidTool" + toolName + " " + "'winId'" + std::to_string(x) + " " + std::to_string(y));
 }
 
 
 void DoSetWandState(SimView *view, int state)
 {
-  //char buf[256];
-
-  //sprintf(buf, "UISetToolState %s %d", Tk_PathName(view->tkwin), state);
-  //Eval(buf);
+    Eval("UISetToolState " + std::to_string(state));
 }
 
 
@@ -156,130 +140,195 @@ void setWandState(SimView* view, int state)
 }
 
 
-int
-putDownPark(SimView *view, int mapH, int mapV)
+int putDownPark(SimView* view, int mapH, int mapV)
 {
-  int value, tile;
+    int tile{};
 
-  if (TotalFunds - CostOf[parkState] >= 0) {
-    value = RandomRange(0, 4);
+    if (TotalFunds - CostOf[parkState] >= 0)
+    {
+        int value = RandomRange(0, 4);
 
-    if (value == 4)
-      tile = FOUNTAIN | BURNBIT | BULLBIT | ANIMBIT;
+        if (value == 4)
+        {
+            tile = FOUNTAIN | BURNBIT | BULLBIT | ANIMBIT;
+        }
+        else
+        {
+            tile = (value + WOODS2) | BURNBIT | BULLBIT;
+        }
+
+        if (Map[mapH][mapV] == 0)
+        {
+            Spend(CostOf[parkState]);
+            UpdateFunds();
+            Map[mapH][mapV] = tile;
+            return 1;
+        }
+        return -1;
+    }
+    return -2;
+}
+
+
+int putDownNetwork(SimView* view, int mapH, int mapV)
+{
+    int tile = Map[mapH][mapV] & LOMASK;
+
+    if ((TotalFunds > 0) && tally(tile))
+    {
+        Map[mapH][mapV] = tile = 0;
+        Spend(1);
+    }
+
+    if (tile == 0)
+    {
+        if ((TotalFunds - CostOf[view->tool_state]) >= 0)
+        {
+            Map[mapH][mapV] = TELEBASE | CONDBIT | BURNBIT | BULLBIT | ANIMBIT;
+            Spend(CostOf[view->tool_state]);
+            return 1;
+        }
+        else
+        {
+            return -2;
+        }
+    }
     else
-      tile = (value + WOODS2) | BURNBIT | BULLBIT;
-
-    if (Map[mapH][mapV] == 0) {
-      Spend(CostOf[parkState]);
-      UpdateFunds();
-      Map[mapH][mapV] = tile;
-      return 1;
+    {
+        return -1;
     }
-    return -1;
-  }
-  return -2;
 }
 
 
-int
-putDownNetwork(SimView *view, int mapH, int mapV)
+int checkBigZone(int id, int* deltaHPtr, int* deltaVPtr)
 {
-  int tile = Map[mapH][mapV] & LOMASK;
+    switch (id)
+    {
+    case POWERPLANT: // check coal plant
+    case PORT: // check sea port
+    case NUCLEAR: // check nuc plant
+    case STADIUM: // check stadium
+        *deltaHPtr = 0;
+        *deltaVPtr = 0;
+        return (4);
 
-  if ((TotalFunds > 0) && tally(tile)) {
-    Map[mapH][mapV] = tile = 0;
-    Spend(1);
-  }
+    case POWERPLANT + 1: // check coal plant
+    case COALSMOKE3: // check coal plant, smoke
+    case COALSMOKE3 + 1: // check coal plant, smoke
+    case COALSMOKE3 + 2: // check coal plant, smoke
+    case PORT + 1: // check sea port
+    case NUCLEAR + 1: // check nuc plant
+    case STADIUM + 1: // check stadium
+        *deltaHPtr = -1;
+        *deltaVPtr = 0;
+        return (4);
 
-  if (tile == 0) {
-    if ((TotalFunds - CostOf[view->tool_state]) >= 0) {
-      Map[mapH][mapV] = TELEBASE | CONDBIT | BURNBIT | BULLBIT | ANIMBIT;
-      Spend(CostOf[view->tool_state]);
-      return 1;
-    } else {
-      return -2;
+    case POWERPLANT + 4: // check coal plant
+    case PORT + 4: // check sea port
+    case NUCLEAR + 4: // check nuc plant
+    case STADIUM + 4: // check stadium
+        *deltaHPtr = 0;
+        *deltaVPtr = -1;
+        return (4);
+
+    case POWERPLANT + 5: // check coal plant
+    case PORT + 5: // check sea port
+    case NUCLEAR + 5: // check nuc plant
+    case STADIUM + 5: // check stadium
+        *deltaHPtr = -1;
+        *deltaVPtr = -1;
+        return (4);
+
+        // check airport
+        //*** first row ***
+    case AIRPORT:
+        *deltaHPtr = 0;
+        *deltaVPtr = 0;
+        return (6);
+
+    case AIRPORT + 1:
+        *deltaHPtr = -1;
+        *deltaVPtr = 0;
+        return (6);
+
+    case AIRPORT + 2:
+        *deltaHPtr = -2;
+        *deltaVPtr = 0;
+        return (6);
+
+    case AIRPORT + 3:
+        *deltaHPtr = -3;
+        *deltaVPtr = 0;
+        return (6);
+
+        //*** second row ***
+    case AIRPORT + 6:
+        *deltaHPtr = 0;
+        *deltaVPtr = -1;
+        return (6);
+
+    case AIRPORT + 7:
+        *deltaHPtr = -1;
+        *deltaVPtr = -1;
+        return (6);
+
+    case AIRPORT + 8:
+        *deltaHPtr = -2;
+        *deltaVPtr = -1;
+        return (6);
+
+    case AIRPORT + 9:
+        *deltaHPtr = -3;
+        *deltaVPtr = -1;
+        return (6);
+
+        //*** third row ***
+    case AIRPORT + 12:
+        *deltaHPtr = 0;
+        *deltaVPtr = -2;
+        return (6);
+
+    case AIRPORT + 13:
+        *deltaHPtr = -1;
+        *deltaVPtr = -2;
+        return (6);
+
+    case AIRPORT + 14:
+        *deltaHPtr = -2;
+        *deltaVPtr = -2;
+        return (6);
+
+    case AIRPORT + 15:
+        *deltaHPtr = -3;
+        *deltaVPtr = -2;
+        return (6);
+
+        //*** fourth row ***
+    case AIRPORT + 18:
+        *deltaHPtr = 0;
+        *deltaVPtr = -3;
+        return (6);
+
+    case AIRPORT + 19:
+        *deltaHPtr = -1;
+        *deltaVPtr = -3;
+        return (6);
+
+    case AIRPORT + 20:
+        *deltaHPtr = -2;
+        *deltaVPtr = -3;
+        return (6);
+
+    case AIRPORT + 21:
+        *deltaHPtr = -3;
+        *deltaVPtr = -3;
+        return (6);
+
+    default:
+        *deltaHPtr = 0;
+        *deltaVPtr = 0;
+        return (0);
     }
-  } else {
-    return -1;
-  }
-}
-
-
-int
-checkBigZone(int id, int *deltaHPtr, int *deltaVPtr)
-{
-  switch (id) {
-  case POWERPLANT:	/* check coal plant */
-  case PORT:		/* check sea port */
-  case NUCLEAR:		/* check nuc plant */
-  case STADIUM:		/* check stadium */
-    *deltaHPtr = 0;	*deltaVPtr = 0;		return (4);
-
-  case POWERPLANT + 1:	/* check coal plant */
-  case COALSMOKE3:	/* check coal plant, smoke */
-  case COALSMOKE3 + 1:	/* check coal plant, smoke */
-  case COALSMOKE3 + 2:	/* check coal plant, smoke */
-  case PORT + 1:	/* check sea port */
-  case NUCLEAR + 1:	/* check nuc plant */
-  case STADIUM + 1:	/* check stadium */
-    *deltaHPtr = -1;	*deltaVPtr = 0;		return (4);
-
-  case POWERPLANT + 4:	/* check coal plant */
-  case PORT + 4:	/* check sea port */
-  case NUCLEAR + 4:	/* check nuc plant */
-  case STADIUM + 4:	/* check stadium */
-    *deltaHPtr = 0;	*deltaVPtr = -1;	return (4);
-
-  case POWERPLANT + 5:	/* check coal plant */
-  case PORT + 5:	/* check sea port */
-  case NUCLEAR + 5:	/* check nuc plant */
-  case STADIUM + 5:	/* check stadium */
-    *deltaHPtr = -1;	*deltaVPtr = -1;	return (4);
-
-    /* check airport */
-    /*** first row ***/
-  case AIRPORT:
-    *deltaHPtr = 0;	*deltaVPtr = 0;		return (6);
-  case AIRPORT + 1:
-    *deltaHPtr = -1;	*deltaVPtr = 0;		return (6);
-  case AIRPORT + 2:
-    *deltaHPtr = -2;	*deltaVPtr = 0;		return (6);
-  case AIRPORT + 3:
-    *deltaHPtr = -3;	*deltaVPtr = 0;		return (6);
-
-    /*** second row ***/
-  case AIRPORT + 6:
-    *deltaHPtr = 0;	*deltaVPtr = -1;	return (6);
-  case AIRPORT + 7:
-    *deltaHPtr = -1;	*deltaVPtr = -1;	return (6);
-  case AIRPORT + 8:
-    *deltaHPtr = -2;	*deltaVPtr = -1;	return (6);
-  case AIRPORT + 9:
-    *deltaHPtr = -3;	*deltaVPtr = -1;	return (6);
-
-    /*** third row ***/
-  case AIRPORT + 12:
-    *deltaHPtr = 0;	*deltaVPtr = -2;	return (6);
-  case AIRPORT + 13:
-    *deltaHPtr = -1;	*deltaVPtr = -2;	return (6);
-  case AIRPORT + 14:
-    *deltaHPtr = -2;	*deltaVPtr = -2;	return (6);
-  case AIRPORT + 15:
-    *deltaHPtr = -3;	*deltaVPtr = -2;	return (6);
-
-    /*** fourth row ***/
-  case AIRPORT + 18:
-    *deltaHPtr = 0;	*deltaVPtr = -3;	return (6);
-  case AIRPORT + 19:
-    *deltaHPtr = -1;	*deltaVPtr = -3;	return (6);
-  case AIRPORT + 20:
-    *deltaHPtr = -2;	*deltaVPtr = -3;	return (6);
-  case AIRPORT + 21:
-    *deltaHPtr = -3;	*deltaVPtr = -3;	return (6);
-
-  default:
-    *deltaHPtr = 0;	*deltaVPtr = 0;		return (0);
-  }
 }
 
 
@@ -292,408 +341,475 @@ bool tally(int tileValue)
 }
 
 
-int
-checkSize(int temp)
+int checkSize(int temp)
 {
-  /* check for the normal com, resl, ind 3x3 zones & the fireDept & PoliceDept */
-  if (((temp >= (RESBASE - 1)) && (temp  <= (PORTBASE - 1))) ||
-      ((temp >= (LASTPOWERPLANT + 1)) && (temp <= (POLICESTATION + 4)))) {
-    return (3);
-  } else if (((temp >= PORTBASE) && (temp <= LASTPORT)) ||
-	     ((temp >= COALBASE) && (temp <= LASTPOWERPLANT)) ||
-	     ((temp >= STADIUMBASE) && (temp <= LASTZONE))) {
-    return (4);
-  }
-  return (0);
+    /* check for the normal com, resl, ind 3x3 zones & the fireDept & PoliceDept */
+    if (((temp >= (RESBASE - 1)) && (temp <= (PORTBASE - 1))) ||
+        ((temp >= (LASTPOWERPLANT + 1)) && (temp <= (POLICESTATION + 4))))
+    {
+        return (3);
+    }
+    else if (((temp >= PORTBASE) && (temp <= LASTPORT)) ||
+        ((temp >= COALBASE) && (temp <= LASTPOWERPLANT)) ||
+        ((temp >= STADIUMBASE) && (temp <= LASTZONE)))
+    {
+        return (4);
+    }
+    return (0);
 }
 
 
 /* 3x3 */
 
 
-void
-check3x3border(int xMap, int yMap)
+void check3x3border(int xMap, int yMap)
 {
-  int xPos, yPos;
-  int cnt;
+    int xPos, yPos;
+    //int cnt;
 
-  xPos = xMap; yPos = yMap - 1;
-  for (cnt = 0; cnt < 3; cnt++) {
-    /*** this will do the upper bordering row ***/
-    ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
-    xPos++;
-  }
+    xPos = xMap; yPos = yMap - 1;
+    for (int cnt = 0; cnt < 3; cnt++)
+    {
+        /*** this will do the upper bordering row ***/
+        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        xPos++;
+    }
 
-  xPos = xMap - 1; yPos = yMap;
-  for (cnt = 0; cnt < 3; cnt++) {
-    /*** this will do the left bordering row ***/
-    ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
-    yPos++;
-  }
+    xPos = xMap - 1; yPos = yMap;
+    for (int cnt = 0; cnt < 3; cnt++)
+    {
+        /*** this will do the left bordering row ***/
+        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        yPos++;
+    }
 
-  xPos = xMap; yPos = yMap + 3;
-  for (cnt = 0; cnt < 3; cnt++) {
-    /*** this will do the bottom bordering row ***/
-    ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
-    xPos++;
-  }
-	
-  xPos = xMap + 3; yPos = yMap;
-  for (cnt = 0; cnt < 3; cnt++) {
-    /*** this will do the right bordering row ***/
-    ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
-    yPos++;
-  }
+    xPos = xMap; yPos = yMap + 3;
+    for (int cnt = 0; cnt < 3; cnt++)
+    {
+        /*** this will do the bottom bordering row ***/
+        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        xPos++;
+    }
+
+    xPos = xMap + 3; yPos = yMap;
+    for (int cnt = 0; cnt < 3; cnt++)
+    {
+        /*** this will do the right bordering row ***/
+        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        yPos++;
+    }
 }
 
 
-int
-check3x3(SimView *view, int mapH, int mapV, int base, int tool)
+int check3x3(SimView* view, int mapH, int mapV, int base, int tool)
 {
-  int rowNum, columnNum;
-  int holdMapH, holdMapV;
-  int xPos, yPos;
-  int cost = 0;
-  int tileValue;
-  int flag;
+    int rowNum, columnNum;
+    int holdMapH, holdMapV;
+    int xPos, yPos;
+    int cost = 0;
+    int tileValue;
+    int flag;
 
-  mapH--; mapV--;
-  if ((mapH < 0) || (mapH > (SimWidth - 3)) ||
-      (mapV < 0) || (mapV > (SimHeight - 3))) {
-    return -1;
-  }
-
-  xPos = holdMapH = mapH;
-  yPos = holdMapV = mapV;
-
-  flag = 1;
-
-  for (rowNum = 0; rowNum <= 2; rowNum++) {
-    mapH = holdMapH;
-
-    for (columnNum = 0; columnNum <= 2; columnNum++) {
-      tileValue = Map[mapH++][mapV] & LOMASK;
-
-      if (autoBulldoze) {
-	/* if autoDoze is enabled, add up the cost of bulldozed tiles */
-	if (tileValue != 0) {
-	  if (tally(tileValue)) {
-	    cost++;
-	  } else {
-	    flag = 0;
-	  }
-	}
-      } else {
-	/* check and see if the tile is clear or not  */
-	if (tileValue != 0) {
-	  flag = 0;
-	}
-      }
+    mapH--; mapV--;
+    if ((mapH < 0) || (mapH > (SimWidth - 3)) || (mapV < 0) || (mapV > (SimHeight - 3)))
+    {
+        return -1;
     }
-    mapV++;
-  }
 
-  if (flag == 0) {
-    return -1;
-  }
+    xPos = holdMapH = mapH;
+    yPos = holdMapV = mapV;
 
-  cost += CostOf[tool];
+    flag = 1;
 
-  if ((TotalFunds - cost) < 0) {
-    return -2;
-  }
+    for (rowNum = 0; rowNum <= 2; rowNum++)
+    {
+        mapH = holdMapH;
 
-  if ((Players > 1) &&
-      (OverRide == 0) &&
-      (cost >= Expensive) &&
-      (view != NULL) &&
-      (view->super_user == 0)) {
-    return -3;
-  }
+        for (columnNum = 0; columnNum <= 2; columnNum++)
+        {
+            tileValue = Map[mapH++][mapV] & LOMASK;
 
-  /* take care of the money situtation here */
-  Spend(cost);
-  UpdateFunds();
-
-  mapV = holdMapV;
-
-  for (rowNum = 0; rowNum <= 2; rowNum++) {
-    mapH = holdMapH;
-
-    for (columnNum = 0; columnNum <= 2; columnNum++) {
-      if (columnNum == 1 && rowNum == 1) {
-	Map[mapH++][mapV] = base + BNCNBIT + ZONEBIT;
-      } else {
-	Map[mapH++][mapV] = base + BNCNBIT;
-      }
-      base++;
+            if (autoBulldoze)
+            {
+                /* if autoDoze is enabled, add up the cost of bulldozed tiles */
+                if (tileValue != 0)
+                {
+                    if (tally(tileValue))
+                    {
+                        cost++;
+                    }
+                    else
+                    {
+                        flag = 0;
+                    }
+                }
+            }
+            else
+            {
+                /* check and see if the tile is clear or not  */
+                if (tileValue != 0)
+                {
+                    flag = 0;
+                }
+            }
+        }
+        mapV++;
     }
-    mapV++;
-  }
-  check3x3border(xPos, yPos);
-  return 1;
+
+    if (flag == 0)
+    {
+        return -1;
+    }
+
+    cost += CostOf[tool];
+
+    if ((TotalFunds - cost) < 0)
+    {
+        return -2;
+    }
+
+    if ((Players > 1) &&
+        (OverRide == 0) &&
+        (cost >= Expensive) &&
+        (view != NULL) &&
+        (view->super_user == 0))
+    {
+        return -3;
+    }
+
+    /* take care of the money situtation here */
+    Spend(cost);
+    UpdateFunds();
+
+    mapV = holdMapV;
+
+    for (rowNum = 0; rowNum <= 2; rowNum++)
+    {
+        mapH = holdMapH;
+
+        for (columnNum = 0; columnNum <= 2; columnNum++)
+        {
+            if (columnNum == 1 && rowNum == 1)
+            {
+                Map[mapH++][mapV] = base + BNCNBIT + ZONEBIT;
+            }
+            else
+            {
+                Map[mapH++][mapV] = base + BNCNBIT;
+            }
+            base++;
+        }
+        mapV++;
+    }
+
+    check3x3border(xPos, yPos);
+    return 1;
 }
 
 
 /* 4x4 */
 
 
-void
-check4x4border(int xMap, int yMap)
+void check4x4border(int xMap, int yMap)
 {
-  //Ptr tilePtr;
+    //Ptr tilePtr;
     int* tilePtr;
-  int xPos, yPos;
-  int cnt;
+    int xPos, yPos;
+    int cnt;
 
-  xPos = xMap; yPos = yMap - 1;
-  for (cnt = 0; cnt < 4; cnt++) {
-    /* this will do the upper bordering row */
-    tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
-    ConnecTile(xPos, yPos, tilePtr, 0);
-    xPos++;
-  }
+    xPos = xMap; yPos = yMap - 1;
+    for (cnt = 0; cnt < 4; cnt++)
+    {
+        /* this will do the upper bordering row */
+        tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
+        ConnecTile(xPos, yPos, tilePtr, 0);
+        xPos++;
+    }
 
-  xPos = xMap - 1; yPos = yMap;
-  for (cnt = 0; cnt < 4; cnt++) {
-    /* this will do the left bordering row */
-      tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
-    ConnecTile(xPos, yPos, tilePtr, 0);
-    yPos++;
-  }
+    xPos = xMap - 1; yPos = yMap;
+    for (cnt = 0; cnt < 4; cnt++)
+    {
+        /* this will do the left bordering row */
+        tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
+        ConnecTile(xPos, yPos, tilePtr, 0);
+        yPos++;
+    }
 
-  xPos = xMap; yPos = yMap + 4;
-  for (cnt = 0; cnt < 4;cnt++) {
-    /* this will do the bottom bordering row */
-      tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
-    ConnecTile(xPos, yPos, tilePtr, 0);
-    xPos++;
-  }
-	
-  xPos = xMap + 4; yPos = yMap;
-  for (cnt = 0; cnt < 4; cnt++) {
-    /* this will do the right bordering row */
-      tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
-    ConnecTile(xPos, yPos, tilePtr, 0);
-    yPos++;
-  }
+    xPos = xMap; yPos = yMap + 4;
+    for (cnt = 0; cnt < 4; cnt++)
+    {
+        /* this will do the bottom bordering row */
+        tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
+        ConnecTile(xPos, yPos, tilePtr, 0);
+        xPos++;
+    }
+
+    xPos = xMap + 4; yPos = yMap;
+    for (cnt = 0; cnt < 4; cnt++)
+    {
+        /* this will do the right bordering row */
+        tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
+        ConnecTile(xPos, yPos, tilePtr, 0);
+        yPos++;
+    }
 }
 
 
-int
-check4x4(SimView *view, int mapH, int mapV,
-	 int base, int aniFlag, int tool)
+int check4x4(SimView* view, int mapH, int mapV, int base, int aniFlag, int tool)
 {
-  int rowNum, columnNum;
-  int h, v;
-  int holdMapH;
-  int xMap, yMap;
-  int tileValue;
-  int flag;
-  int cost = 0;
+    int rowNum, columnNum;
+    int h, v;
+    int holdMapH;
+    int xMap, yMap;
+    int tileValue;
+    int flag;
+    int cost = 0;
 
-  mapH--; mapV--;
-  if ((mapH < 0) || (mapH > (SimWidth - 4)) ||
-      (mapV < 0) || (mapV > (SimHeight - 4))) {
-    return -1;
-  }
-
-  h = xMap = holdMapH = mapH;
-  v = yMap = mapV;
-
-  flag = 1;
-
-  for (rowNum = 0; rowNum <= 3; rowNum++) {
-    mapH = holdMapH;
-
-    for (columnNum = 0; columnNum <= 3; columnNum++) {
-      tileValue = Map[mapH++][mapV] & LOMASK;
-
-      if (autoBulldoze) {
-	/* if autoDoze is enabled, add up the cost of bulldozed tiles */
-	if (tileValue != 0) {
-	  if (tally(tileValue)) {
-	    cost++;
-	  } else {
-	    flag = 0;
-	  }
-	}
-      } else {
-	/* check and see if the tile is clear or not  */
-	if (tileValue != 0) {
-	  flag = 0;
-	}
-      }
+    mapH--; mapV--;
+    if ((mapH < 0) || (mapH > (SimWidth - 4)) ||
+        (mapV < 0) || (mapV > (SimHeight - 4)))
+    {
+        return -1;
     }
-    mapV++;
-  }
 
-  if (flag == 0) {
-    return -1;
-  }
+    h = xMap = holdMapH = mapH;
+    v = yMap = mapV;
 
-  cost += CostOf[tool];
+    flag = 1;
 
-  if ((TotalFunds - cost) < 0) {
-    return -2;
-  }
+    for (rowNum = 0; rowNum <= 3; rowNum++)
+    {
+        mapH = holdMapH;
 
-  if ((Players > 1) &&
-      (OverRide == 0) &&
-      (cost >= Expensive) &&
-      (view != NULL) &&
-      (view->super_user == 0)) {
-    return -3;
-  }
+        for (columnNum = 0; columnNum <= 3; columnNum++)
+        {
+            tileValue = Map[mapH++][mapV] & LOMASK;
 
-  /* take care of the money situtation here */
-  Spend(cost);
-  UpdateFunds();
-
-  mapV = v; holdMapH = h;
-
-  for (rowNum = 0; rowNum <= 3; rowNum++) {
-    mapH = holdMapH;
-
-    for (columnNum = 0; columnNum <= 3; columnNum++) {
-      if (columnNum == 1 && rowNum == 1)
-	Map[mapH++][mapV] = base + BNCNBIT + ZONEBIT;
-      else if (columnNum == 1 && rowNum == 2 && aniFlag)
-	Map[mapH++][mapV] = base + BNCNBIT + ANIMBIT;
-      else
-	Map[mapH++][mapV] = base + BNCNBIT;
-      base++;
+            if (autoBulldoze)
+            {
+                /* if autoDoze is enabled, add up the cost of bulldozed tiles */
+                if (tileValue != 0)
+                {
+                    if (tally(tileValue))
+                    {
+                        cost++;
+                    }
+                    else
+                    {
+                        flag = 0;
+                    }
+                }
+            }
+            else
+            {
+                /* check and see if the tile is clear or not  */
+                if (tileValue != 0)
+                {
+                    flag = 0;
+                }
+            }
+        }
+        mapV++;
     }
-    mapV++;
-  }
-  check4x4border(xMap, yMap);
-  return 1;
+
+    if (flag == 0)
+    {
+        return -1;
+    }
+
+    cost += CostOf[tool];
+
+    if ((TotalFunds - cost) < 0)
+    {
+        return -2;
+    }
+
+    if ((Players > 1) &&
+        (OverRide == 0) &&
+        (cost >= Expensive) &&
+        (view != NULL) &&
+        (view->super_user == 0))
+    {
+        return -3;
+    }
+
+    /* take care of the money situtation here */
+    Spend(cost);
+    UpdateFunds();
+
+    mapV = v; holdMapH = h;
+
+    for (rowNum = 0; rowNum <= 3; rowNum++)
+    {
+        mapH = holdMapH;
+
+        for (columnNum = 0; columnNum <= 3; columnNum++)
+        {
+            if (columnNum == 1 && rowNum == 1)
+            {
+                Map[mapH++][mapV] = base + BNCNBIT + ZONEBIT;
+            }
+            else if (columnNum == 1 && rowNum == 2 && aniFlag)
+            {
+                Map[mapH++][mapV] = base + BNCNBIT + ANIMBIT;
+            }
+            else
+            {
+                Map[mapH++][mapV] = base + BNCNBIT;
+            }
+            base++;
+        }
+        mapV++;
+    }
+
+    check4x4border(xMap, yMap);
+    return 1;
 }
 
 
 /* 6x6 */
-
-
-void
-check6x6border(int xMap, int yMap)
+void check6x6border(int xMap, int yMap)
 {
-  int xPos, yPos;
-  int cnt;
+    int xPos, yPos;
+    int cnt;
 
-  xPos = xMap; yPos = yMap - 1;
-  for (cnt = 0; cnt < 6; cnt++) {
-    /* this will do the upper bordering row */
-    ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
-    xPos++;
-  }
+    xPos = xMap; yPos = yMap - 1;
+    for (cnt = 0; cnt < 6; cnt++)
+    {
+        /* this will do the upper bordering row */
+        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        xPos++;
+    }
 
-  xPos = xMap - 1; yPos = yMap;
-  for (cnt=0; cnt < 6; cnt++) {
-    /* this will do the left bordering row */
-    ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
-    yPos++;
-  }
+    xPos = xMap - 1; yPos = yMap;
+    for (cnt = 0; cnt < 6; cnt++)
+    {
+        /* this will do the left bordering row */
+        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        yPos++;
+    }
 
-  xPos = xMap; yPos = yMap + 6;
-  for (cnt = 0; cnt < 6; cnt++) {
-    /* this will do the bottom bordering row */
-    ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
-    xPos++;
-  }
-	
-  xPos = xMap + 6; yPos = yMap;
-  for (cnt = 0; cnt < 6; cnt++) {
-    /* this will do the right bordering row */
-    ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
-    yPos++;
-  }
+    xPos = xMap; yPos = yMap + 6;
+    for (cnt = 0; cnt < 6; cnt++)
+    {
+        /* this will do the bottom bordering row */
+        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        xPos++;
+    }
+
+    xPos = xMap + 6; yPos = yMap;
+    for (cnt = 0; cnt < 6; cnt++)
+    {
+        /* this will do the right bordering row */
+        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        yPos++;
+    }
 }
 
 
-int
-check6x6(SimView *view, int mapH, int mapV, int base, int tool)
+int check6x6(SimView* view, int mapH, int mapV, int base, int tool)
 {
-  int rowNum, columnNum;
-  int h, v;
-  int holdMapH;
-  int xMap, yMap;
-  int flag;
-  int tileValue;
-  int cost = 0;
+    int rowNum, columnNum;
+    int h, v;
+    int holdMapH;
+    int xMap, yMap;
+    int flag;
+    int tileValue;
+    int cost = 0;
 
-  mapH--; mapV--;
-  if ((mapH < 0) || (mapH > (SimWidth - 6)) ||
-      (mapV < 0) || (mapV > (SimHeight - 6)))
-    return -1;
-
-  h = xMap = holdMapH = mapH;
-  v = yMap = mapV;
-
-  flag = 1;
-
-  for (rowNum = 0; rowNum <= 5; rowNum++) {
-    mapH = holdMapH;
-
-    for (columnNum = 0; columnNum <= 5; columnNum++) {
-      tileValue = Map[mapH++][mapV] & LOMASK;
-
-      if (autoBulldoze) {
-	/* if autoDoze is enabled, add up the cost of bulldozed tiles */
-	if (tileValue != 0)
-	  if (tally(tileValue)) {
-	    cost++;
-	  } else {
-	    flag = 0;
-	  }
-      } else {
-	/* check and see if the tile is clear or not  */
-	if (tileValue != 0) {
-	  flag = 0;
-	}
-      }
+    mapH--; mapV--;
+    if ((mapH < 0) || (mapH > (SimWidth - 6)) ||
+        (mapV < 0) || (mapV > (SimHeight - 6)))
+    {
+        return -1;
     }
-    mapV++;
-  }
 
-  if (flag == 0) {
-    return -1;
-  }
+    h = xMap = holdMapH = mapH;
+    v = yMap = mapV;
 
-  cost += CostOf[tool];
+    flag = 1;
 
-  if ((TotalFunds - cost) < 0) {
-    return -2;
-  }
+    for (rowNum = 0; rowNum <= 5; rowNum++)
+    {
+        mapH = holdMapH;
 
-  if ((Players > 1) &&
-      (OverRide == 0) &&
-      (cost >= Expensive) &&
-      (view != NULL) &&
-      (view->super_user == 0)) {
-    return -3;
-  }
 
-  /* take care of the money situtation here */
-  Spend(cost);
-  UpdateFunds();
+        for (columnNum = 0; columnNum <= 5; columnNum++) {
+            tileValue = Map[mapH++][mapV] & LOMASK;
 
-  mapV = v; holdMapH = h;
-
-  for (rowNum = 0; rowNum <= 5; rowNum++) {
-    mapH = holdMapH;
-
-    for (columnNum = 0; columnNum <= 5; columnNum++) {
-      if (columnNum == 1 && rowNum == 1) {
-	Map[mapH++][mapV] = base + BNCNBIT + ZONEBIT;
-      } else {
-	Map[mapH++][mapV] = base + BNCNBIT;
-      }
-      base++;
+            if (autoBulldoze)
+            {
+                /* if autoDoze is enabled, add up the cost of bulldozed tiles */
+                if (tileValue != 0)
+                    if (tally(tileValue))
+                    {
+                        cost++;
+                    }
+                    else
+                    {
+                        flag = 0;
+                    }
+            }
+            else
+            {
+                /* check and see if the tile is clear or not  */
+                if (tileValue != 0)
+                {
+                    flag = 0;
+                }
+            }
+        }
+        mapV++;
     }
-    mapV++;
-  }
-  check6x6border(xMap, yMap);
-  return 1;
+
+    if (flag == 0)
+    {
+        return -1;
+    }
+
+    cost += CostOf[tool];
+
+    if ((TotalFunds - cost) < 0)
+    {
+        return -2;
+    }
+
+    if ((Players > 1) &&
+        (OverRide == 0) &&
+        (cost >= Expensive) &&
+        (view != NULL) &&
+        (view->super_user == 0))
+    {
+        return -3;
+    }
+
+    /* take care of the money situtation here */
+    Spend(cost);
+    UpdateFunds();
+
+    mapV = v; holdMapH = h;
+
+    for (rowNum = 0; rowNum <= 5; rowNum++)
+    {
+        mapH = holdMapH;
+
+        for (columnNum = 0; columnNum <= 5; columnNum++)
+        {
+            if (columnNum == 1 && rowNum == 1)
+            {
+                Map[mapH++][mapV] = base + BNCNBIT + ZONEBIT;
+            }
+            else
+            {
+                Map[mapH++][mapV] = base + BNCNBIT;
+            }
+            base++;
+        }
+        mapV++;
+    }
+
+    check6x6border(xMap, yMap);
+    return 1;
 }
 
 
@@ -701,14 +817,36 @@ check6x6(SimView *view, int mapH, int mapV, int base, int tool)
 
 
 /* search table for zone status string match */
-static int idArray[28] = {
-  DIRT, RIVER, TREEBASE, RUBBLE,
-  FLOOD, RADTILE, FIRE, ROADBASE,
-  POWERBASE, RAILBASE, RESBASE, COMBASE,
-  INDBASE, PORTBASE, AIRPORTBASE, COALBASE,
-  FIRESTBASE, POLICESTBASE, STADIUMBASE, NUCLEARBASE,
-  827, 832, FOUNTAIN, INDBASE2,
-  FOOTBALLGAME1, VBRDG0, 952, 956
+static int idArray[28] =
+{
+    DIRT,
+    RIVER,
+    TREEBASE,
+    RUBBLE,
+    FLOOD,
+    RADTILE,
+    FIRE,
+    ROADBASE,
+    POWERBASE,
+    RAILBASE,
+    RESBASE,
+    COMBASE,
+    INDBASE,
+    PORTBASE,
+    AIRPORTBASE,
+    COALBASE,
+    FIRESTBASE,
+    POLICESTBASE,
+    STADIUMBASE,
+    NUCLEARBASE,
+    827, // crossed out lightning bolt
+    832, // radar dish first frame
+    FOUNTAIN,
+    INDBASE2,
+    FOOTBALLGAME1,
+    VBRDG0,
+    952, // radiation icon first frame
+    956 // white tile?
 };
 
 /*
@@ -732,45 +870,46 @@ static int idArray[28] = {
 
 int getDensityStr(int catNo, int mapH, int mapV)
 {
-  int z;
+    int z;
 
-  switch(catNo) {
-  case 0:
-    z = PopDensity[mapH >>1][mapV >>1];
-    z = z >> 6;
-    z = z & 3;
-    return (z);
-  
-  case 1:
-    z = LandValueMem[mapH >>1][mapV >>1];
-    if (z < 30) return (4);
-    if (z < 80) return (5);
-    if (z < 150) return (6);
-    return (7);
-  
-  case 2:
-    z = CrimeMem[mapH >>1][mapV >>1];
-    z = z >> 6;
-    z = z & 3;
-    return (z + 8);
- 
-  case 3:
-    z = PollutionMem[mapH >>1][mapV >>1];
-    if ((z < 64) && (z > 0)) return (13);
-    z = z >> 6;
-    z = z & 3;
-    return (z + 12);
-  
-  case 4:
-    z = RateOGMem[mapH >>3][mapV >>3];
-    if (z < 0) return (16);
-    if  (z == 0) return (17);
-    if  (z > 100) return (19);
-    return (18);
-  
-  default:
-      throw std::runtime_error("");
-  }
+    switch (catNo)
+    {
+    case 0:
+        z = PopDensity[mapH >> 1][mapV >> 1];
+        z = z >> 6;
+        z = z & 3;
+        return (z);
+
+    case 1:
+        z = LandValueMem[mapH >> 1][mapV >> 1];
+        if (z < 30) return (4);
+        if (z < 80) return (5);
+        if (z < 150) return (6);
+        return (7);
+
+    case 2:
+        z = CrimeMem[mapH >> 1][mapV >> 1];
+        z = z >> 6;
+        z = z & 3;
+        return (z + 8);
+
+    case 3:
+        z = PollutionMem[mapH >> 1][mapV >> 1];
+        if ((z < 64) && (z > 0)) return (13);
+        z = z >> 6;
+        z = z & 3;
+        return (z + 12);
+
+    case 4:
+        z = RateOGMem[mapH >> 3][mapV >> 3];
+        if (z < 0) return (16);
+        if (z == 0) return (17);
+        if (z > 100) return (19);
+        return (18);
+
+    default:
+        throw std::runtime_error("");
+    }
 }
 
 
@@ -808,7 +947,6 @@ void doZoneStatus(int mapH, int mapV)
     std::string localStr;
     std::array<std::string, 5> statusStr;
 
-
     int id;
     int x;
     int tileNum;
@@ -839,6 +977,7 @@ void doZoneStatus(int mapH, int mapV)
     }
 
     // \fixme yuck!
+    // \fixme needs to get the correct strings from the 219 file
     localStr = GetIndString(219, static_cast<MessageEnumerator>(x));
 
     for (x = 0; x < 5; x++)
@@ -857,87 +996,83 @@ void doZoneStatus(int mapH, int mapV)
 }
 
 
-/* comefrom: processWand */
 void put3x3Rubble(int x, int y)
 {
-  int xx, yy, zz;
-	
-  for (xx = x - 1; xx < x + 2; xx++) {
-    for (yy = y - 1; yy < y + 2; yy++)  {
-      if (TestBounds(xx, yy, SimWidth, SimHeight)) {
-	zz = Map[xx][yy] & LOMASK;
-	if ((zz != RADTILE) && (zz != 0)) {
-	  Map[xx][yy] =
-	    (DoAnimation
-	     ? (TINYEXP + RandomRange(0, 2))
-	     : SOMETINYEXP)
-	    | ANIMBIT | BULLBIT;
-	}
-      }
+    for (int xx = x - 1; xx < x + 2; xx++)
+    {
+        for (int yy = y - 1; yy < y + 2; yy++)
+        {
+            if (TestBounds(xx, yy, SimWidth, SimHeight))
+            {
+                int zz = Map[xx][yy] & LOMASK;
+                if ((zz != RADTILE) && (zz != 0))
+                {
+                    Map[xx][yy] = (DoAnimation ? (TINYEXP + RandomRange(0, 2)) : SOMETINYEXP) | ANIMBIT | BULLBIT;
+                }
+            }
+        }
     }
-  }
 }
 
 
 /* comefrom: processWand */
 void put4x4Rubble(int x, int y)
 {
-  int xx, yy, zz;
-	
-  for (xx = x - 1; xx < x + 3; xx++) {
-    for (yy = y - 1; yy < y + 3; yy++) {
-      if (TestBounds(xx, yy, SimWidth, SimHeight)) {
-	zz = Map[xx][yy] & LOMASK;
-	if ((zz != RADTILE) && (zz != 0)) {
-	  Map[xx][yy] =
-	    (DoAnimation
-	     ? (TINYEXP + RandomRange(0, 2))
-	     : SOMETINYEXP)
-	    | ANIMBIT | BULLBIT;
-	}
-      }
+    int xx, yy, zz;
+
+    for (xx = x - 1; xx < x + 3; xx++)
+    {
+        for (yy = y - 1; yy < y + 3; yy++)
+        {
+            if (TestBounds(xx, yy, SimWidth, SimHeight))
+            {
+                zz = Map[xx][yy] & LOMASK;
+                if ((zz != RADTILE) && (zz != 0))
+                {
+                    Map[xx][yy] = (DoAnimation ? (TINYEXP + RandomRange(0, 2)) : SOMETINYEXP) | ANIMBIT | BULLBIT;
+                }
+            }
+        }
     }
-  }
 }
 
 
 /* comefrom: processWand */
 void put6x6Rubble(int x, int y)
 {
-  int xx, yy, zz;
+    int xx, yy, zz;
 
-  for (xx = x - 1; xx < x + 5; xx++) {
-    for (yy = y - 1; yy < y + 5; yy++)  {
-      if (TestBounds(xx, yy, SimWidth, SimHeight)) {
-	zz = Map[xx][yy] & LOMASK;
-	if ((zz != RADTILE) && (zz != 0)) {
-	  Map[xx][yy] =
-	    (DoAnimation
-	     ? (TINYEXP + RandomRange(0, 2))
-	     : SOMETINYEXP)
-	    | ANIMBIT | BULLBIT;
-	}
-      }
+    for (xx = x - 1; xx < x + 5; xx++)
+    {
+        for (yy = y - 1; yy < y + 5; yy++)
+        {
+            if (TestBounds(xx, yy, SimWidth, SimHeight))
+            {
+                zz = Map[xx][yy] & LOMASK;
+                if ((zz != RADTILE) && (zz != 0))
+                {
+                    Map[xx][yy] = (DoAnimation ? (TINYEXP + RandomRange(0, 2)) : SOMETINYEXP) | ANIMBIT | BULLBIT;
+                }
+            }
+        }
     }
-  }
-}	
+}
 
 
 /************************************************************************/
 /* TOOLS */
 
 
-int
-query_tool(SimView *view, int x, int y)
+int query_tool(SimView* view, int x, int y)
 {
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
+        return -1;
+    }
 
-  doZoneStatus(x, y);
-  DidTool(view, "Qry", x, y);
-  return 1;
+    doZoneStatus(x, y);
+    DidTool(view, "Qry", x, y);
+    return 1;
 }
 
 
@@ -1038,275 +1173,278 @@ int bulldozer_tool(SimView* view, int x, int y)
 }
 
 
-int
-road_tool(SimView *view, int x, int y)
+int road_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
+        return -1;
+    }
 
-  result = ConnecTile(x, y, &Map[x][y], 2);
-  UpdateFunds();
-  if (result == 1) {
-    DidTool(view, "Road", x, y);
-  }
-  return result;
+    result = ConnecTile(x, y, &Map[x][y], 2);
+    UpdateFunds();
+
+    if (result == 1)
+    {
+        DidTool(view, "Road", x, y);
+    }
+    return result;
 }
 
 
-int
-rail_tool(SimView *view, int x, int y)
+int rail_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1))) {
+        return -1;
+    }
 
-  result = ConnecTile(x, y, &Map[x][y], 3);
-  UpdateFunds();
-  if (result == 1) {
-    DidTool(view, "Rail", x, y);
-  }
-  return result;
+    result = ConnecTile(x, y, &Map[x][y], 3);
+    UpdateFunds();
+    if (result == 1)
+    {
+        DidTool(view, "Rail", x, y);
+    }
+    return result;
 }
 
 
-int
-wire_tool(SimView *view, int x, int y)
+int wire_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1))) {
+        return -1;
+    }
 
-  result = ConnecTile(x, y, &Map[x][y], 4);
-  UpdateFunds();
-  if (result == 1) {
-    DidTool(view, "Wire", x, y);
-  }
-  return result;
+    result = ConnecTile(x, y, &Map[x][y], 4);
+    UpdateFunds();
+    if (result == 1)
+    {
+        DidTool(view, "Wire", x, y);
+    }
+    return result;
 }
 
 
-int
-park_tool(SimView *view, int x, int y)
+int park_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1)))
-    return -1;
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1)))
+        return -1;
 
-  result = putDownPark(view, x, y);
-  if (result == 1) {
-    DidTool(view, "Park", x, y);
-  }
-  return result;
+    result = putDownPark(view, x, y);
+    if (result == 1)
+    {
+        DidTool(view, "Park", x, y);
+    }
+    return result;
 }
 
 
-int
-residential_tool(SimView *view, int x, int y)
+int residential_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1))) {
+        return -1;
+    }
 
-  result = check3x3(view, x, y, RESBASE, residentialState);
-  if (result == 1) {
-    DidTool(view, "Res", x, y);
-  }
-  return result;
+    result = check3x3(view, x, y, RESBASE, residentialState);
+    if (result == 1)
+    {
+        DidTool(view, "Res", x, y);
+    }
+    return result;
 }
 
 
-int
-commercial_tool(SimView *view, int x, int y)
+int commercial_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1)))
+    {
+        return -1;
+    }
 
-  result = check3x3(view, x, y, COMBASE, commercialState);
-  if (result == 1) {
-    DidTool(view, "Com", x, y);
-  }
-  return result;
+    result = check3x3(view, x, y, COMBASE, commercialState);
+    if (result == 1)
+    {
+        DidTool(view, "Com", x, y);
+    }
+    return result;
 }
 
 
-int
-industrial_tool(SimView *view, int x, int y)
+int industrial_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1)))
+    {
+        return -1;
+    }
 
-  result = check3x3(view, x, y, INDBASE, industrialState);
-  if (result == 1) {
-    DidTool(view, "Ind", x, y);
-  }
-  return result;
+    result = check3x3(view, x, y, INDBASE, industrialState);
+    if (result == 1)
+    {
+        DidTool(view, "Ind", x, y);
+    }
+    return result;
 }
 
 
-int
-police_dept_tool(SimView *view, int x, int y)
+int police_dept_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1))) {
+        return -1;
+    }
 
-  result = check3x3(view, x, y, POLICESTBASE, policeState);
-  if (result == 1) {
-    DidTool(view, "Pol", x, y);
-  }
-  return result;
+    result = check3x3(view, x, y, POLICESTBASE, policeState);
+    if (result == 1)
+    {
+        DidTool(view, "Pol", x, y);
+    }
+    return result;
 }
 
 
-int
-fire_dept_tool(SimView *view, int x, int y)
+int fire_dept_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1))) {
+        return -1;
+    }
 
-  result = check3x3(view, x, y, FIRESTBASE, fireState);
-  if (result == 1) {
-    DidTool(view, "Fire", x, y);
-  }
-  return result;
+    result = check3x3(view, x, y, FIRESTBASE, fireState);
+    if (result == 1)
+    {
+        DidTool(view, "Fire", x, y);
+    }
+    return result;
 }
 
 
-int
-stadium_tool(SimView *view, int x, int y)
+int stadium_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1))) {
+        return -1;
+    }
 
-  result = check4x4(view, x, y, STADIUMBASE, 0, stadiumState);
-  if (result == 1) {
-    DidTool(view, "Stad", x, y);
-  }
-  return result;
+    result = check4x4(view, x, y, STADIUMBASE, 0, stadiumState);
+    if (result == 1)
+    {
+        DidTool(view, "Stad", x, y);
+    }
+    return result;
 }
 
 
-int
-coal_power_plant_tool(SimView *view, int x, int y)
+int coal_power_plant_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1))) {
+        return -1;
+    }
 
-  result = check4x4(view, x, y, COALBASE, 1, powerState);
-  if (result == 1) {
-    DidTool(view, "Coal", x, y);
-  }
-  return result;
+    result = check4x4(view, x, y, COALBASE, 1, powerState);
+    if (result == 1)
+    {
+        DidTool(view, "Coal", x, y);
+    }
+    return result;
 }
 
 
-int
-nuclear_power_plant_tool(SimView *view, int x, int y)
+int nuclear_power_plant_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1))) {
+        return -1;
+    }
 
-  result = check4x4(view, x, y, NUCLEARBASE, 1, nuclearState);
-  if (result == 1) {
-    DidTool(view, "Nuc", x, y);
-  }
-  return result;
+    result = check4x4(view, x, y, NUCLEARBASE, 1, nuclearState);
+    if (result == 1)
+    {
+        DidTool(view, "Nuc", x, y);
+    }
+    return result;
 }
 
 
-int
-seaport_tool(SimView *view, int x, int y)
+int seaport_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1))) {
+        return -1;
+    }
 
-  result = check4x4(view, x, y, PORTBASE, 0, seaportState);
-  if (result == 1) {
-    DidTool(view, "Seap", x, y);
-  }
-  return result;
+    result = check4x4(view, x, y, PORTBASE, 0, seaportState);
+    if (result == 1)
+    {
+        DidTool(view, "Seap", x, y);
+    }
+    return result;
 }
 
 
-int
-airport_tool(SimView *view, int x, int y)
+int airport_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1))) {
+        return -1;
+    }
 
-  result = check6x6(view, x, y, AIRPORTBASE, airportState);
-  if (result == 1) {
-    DidTool(view, "Airp", x, y);
-  }
-  return result;
+    result = check6x6(view, x, y, AIRPORTBASE, airportState);
+    if (result == 1)
+    {
+        DidTool(view, "Airp", x, y);
+    }
+    return result;
 }
 
 
-int
-network_tool(SimView *view, int x, int y)
+int network_tool(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  if ((x < 0) || (x > (SimWidth - 1)) ||
-      (y < 0) || (y > (SimHeight - 1))) {
-    return -1;
-  }
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1))) {
+        return -1;
+    }
 
-  result = putDownNetwork(view, x, y);
-  if (result == 1) {
-    DidTool(view, "Net", x, y);
-  }
-  return result;
+    result = putDownNetwork(view, x, y);
+    if (result == 1)
+    {
+        DidTool(view, "Net", x, y);
+    }
+    return result;
 }
 
 
@@ -1471,139 +1609,156 @@ EraserTo(SimView *view, int x, int y)
 */
 
 
-int
-do_tool(SimView *view, int state, int x, int y, int first)
+int do_tool(SimView* view, int state, int x, int y, int first)
 {
-  int result = 0;
+    int result = 0;
 
-  switch (state) {
-  case residentialState:
-    result = residential_tool(view, x >>4, y >>4);
-    break;
-  case commercialState:
-    result = commercial_tool(view, x >>4, y >>4);
-    break;
-  case industrialState:
-    result = industrial_tool(view, x >>4, y >>4);
-    break;
-  case fireState:
-    result = fire_dept_tool(view, x >>4, y >>4);
-    break;
-  case queryState:
-    result = query_tool(view, x >>4, y >>4);
-    break;
-  case policeState:
-    result = police_dept_tool(view, x >>4, y >>4);
-    break;
-  case wireState:
-    result = wire_tool(view, x >>4, y >>4);
-    break;
-  case dozeState:
-    result = bulldozer_tool(view, x >>4, y >>4);
-    break;
-  case rrState:
-    result = rail_tool(view, x >>4, y >>4);
-    break;
-  case roadState:
-    result = road_tool(view, x >>4, y >>4);
-    break;
-  case stadiumState:
-    result = stadium_tool(view, x >>4, y >>4);
-    break;
-  case parkState:
-    result = park_tool(view, x >>4, y >>4);
-    break;
-  case seaportState:
-    result = seaport_tool(view, x >>4, y >>4);
-    break;
-  case powerState:
-    result = coal_power_plant_tool(view, x >>4, y >>4);
-    break;
-  case nuclearState:
-    result = nuclear_power_plant_tool(view, x >>4, y >>4);
-    break;
-  case airportState:
-    result = airport_tool(view, x >>4, y >>4);
-    break;
-  case networkState:
-    result = network_tool(view, x >>4, y >>4);
-    break;
+    switch (state)
+    {
+    case residentialState:
+        result = residential_tool(view, x >> 4, y >> 4);
+        break;
 
-  default:
-    result = 0;
-    break;
-  }
+    case commercialState:
+        result = commercial_tool(view, x >> 4, y >> 4);
+        break;
 
-  return result;
+    case industrialState:
+        result = industrial_tool(view, x >> 4, y >> 4);
+        break;
+
+    case fireState:
+        result = fire_dept_tool(view, x >> 4, y >> 4);
+        break;
+
+    case queryState:
+        result = query_tool(view, x >> 4, y >> 4);
+        break;
+
+    case policeState:
+        result = police_dept_tool(view, x >> 4, y >> 4);
+        break;
+
+    case wireState:
+        result = wire_tool(view, x >> 4, y >> 4);
+        break;
+
+    case dozeState:
+        result = bulldozer_tool(view, x >> 4, y >> 4);
+        break;
+
+    case rrState:
+        result = rail_tool(view, x >> 4, y >> 4);
+        break;
+
+    case roadState:
+        result = road_tool(view, x >> 4, y >> 4);
+        break;
+
+    case stadiumState:
+        result = stadium_tool(view, x >> 4, y >> 4);
+        break;
+
+    case parkState:
+        result = park_tool(view, x >> 4, y >> 4);
+        break;
+
+    case seaportState:
+        result = seaport_tool(view, x >> 4, y >> 4);
+        break;
+
+    case powerState:
+        result = coal_power_plant_tool(view, x >> 4, y >> 4);
+        break;
+
+    case nuclearState:
+        result = nuclear_power_plant_tool(view, x >> 4, y >> 4);
+        break;
+
+    case airportState:
+        result = airport_tool(view, x >> 4, y >> 4);
+        break;
+
+    case networkState:
+        result = network_tool(view, x >> 4, y >> 4);
+        break;
+
+    default:
+        result = 0;
+        break;
+    }
+
+    return result;
 }
 
 
-int
-current_tool(SimView *view, int x, int y, int first)
+int current_tool(SimView* view, int x, int y, int first)
 {
-  return do_tool(view, view->tool_state, x, y, first);
+    return do_tool(view, view->tool_state, x, y, first);
 }
 
 
-void DoTool(SimView *view, int tool, int x, int y)
+void DoTool(SimView* view, int tool, int x, int y)
 {
-  int result;
+    int result;
 
-  result = do_tool(view, tool, x <<4, y <<4, 1);
+    result = do_tool(view, tool, x << 4, y << 4, 1);
 
-  if (result == -1) {
-    ClearMes();
-    SendMes(MessageEnumerator::MustBulldoze);
-    MakeSoundOn(view, "edit", "UhUh");
-  } else if (result == -2) {
-    ClearMes();
-    SendMes(MessageEnumerator::InsufficientFunds);
-    MakeSoundOn(view, "edit", "Sorry");
-  }
+    if (result == -1)
+    {
+        ClearMes();
+        SendMes(MessageEnumerator::MustBulldoze);
+        MakeSoundOn(view, "edit", "UhUh");
+    }
+    else if (result == -2)
+    {
+        ClearMes();
+        SendMes(MessageEnumerator::InsufficientFunds);
+        MakeSoundOn(view, "edit", "Sorry");
+    }
 
-  sim_skip = 0;
-  view->skip = 0;
-  InvalidateEditors();
+    sim_skip = 0;
+    view->skip = 0;
+    InvalidateEditors();
 }
 
 
-void DoPendTool(SimView *view, int tool, int x, int y)
+void DoPendTool(SimView* view, int tool, int x, int y)
 {
-  /*
-  char buf[256];
-
-  sprintf(buf, "DoPendTool %s %d %d %d",
-	  Tk_PathName(view->tkwin), tool, x, y);
-  Eval(buf);
-  */
+    Eval(std::string("") + "'winId' " + std::to_string(tool) + " " + std::to_string(x) + " " + std::to_string(y));
 }
 
 
-void ToolDown(SimView *view, int x, int y)
+void ToolDown(SimView* view, int x, int y)
 {
-  int result;
+    int result;
 
-  ViewToPixelCoords(view, x, y, x, y);
-  view->last_x = x;
-  view->last_y = y;
+    ViewToPixelCoords(view, x, y, x, y);
+    view->last_x = x;
+    view->last_y = y;
 
-  result = current_tool(view, x, y, 1);
+    result = current_tool(view, x, y, 1);
 
-  if (result == -1) {
-    ClearMes();
-    SendMes(MessageEnumerator::MustBulldoze);
-    MakeSoundOn(view, "edit", "UhUh");
-  } else if (result == -2) {
-    ClearMes();
-    SendMes(MessageEnumerator::InsufficientFunds);
-    MakeSoundOn(view, "edit", "Sorry");
-  } else if (result == -3) {
-    DoPendTool(view, view->tool_state, x >>4, y >>4);
-  }
+    if (result == -1)
+    {
+        ClearMes();
+        SendMes(MessageEnumerator::MustBulldoze);
+        MakeSoundOn(view, "edit", "UhUh");
+    }
+    else if (result == -2)
+    {
+        ClearMes();
+        SendMes(MessageEnumerator::InsufficientFunds);
+        MakeSoundOn(view, "edit", "Sorry");
+    }
+    else if (result == -3)
+    {
+        DoPendTool(view, view->tool_state, x >> 4, y >> 4);
+    }
 
-  sim_skip = 0;
-  view->skip = 0;
-  view->invalid = 1;
+    sim_skip = 0;
+    view->skip = 0;
+    view->invalid = 1;
 }
 
 
@@ -1615,10 +1770,8 @@ void ToolDrag(SimView* view, int px, int py)
     ViewToPixelCoords(view, px, py, x, y);
     view->tool_x = x; view->tool_y = y;
 
-
     current_tool(view, x, y, 0);
     view->last_x = x; view->last_y = y;
-
 
     dist = toolSize[view->tool_state];
 
@@ -1699,14 +1852,8 @@ void ToolDrag(SimView* view, int px, int py)
 }
 
 
-int ToolUp(SimView *view, int x, int y)
+int ToolUp(SimView* view, int x, int y)
 {
-  /*
-  int result;
-
-  result = ToolDrag(view, x, y);
-
-  return (result);
-  */
+    ToolDrag(view, x, y);
     return 0;
 }
