@@ -476,7 +476,7 @@ void sim_init()
     autoBulldoze = 1;
     autoBudget = 1;
     MessageId(MessageEnumerator::None);
-    LastMesTime = 0;
+    ClearMes();
     flagBlink = 1;
     SimSpeed(SimulationSpeed::Normal);
     ChangeEval();

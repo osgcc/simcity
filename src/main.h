@@ -422,8 +422,6 @@ extern int DoMessages;
 extern int DoNotices;
 extern unsigned char ColorIntensities[];
 
-extern int LastMesTime;
-
 extern int NoDisasters;
 extern int autoBulldoze;
 extern int autoBudget;

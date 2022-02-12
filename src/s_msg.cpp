@@ -79,6 +79,7 @@ namespace
 {
     int LastCityPop{};
     int LastPictureId{};
+    int lastMessageTime{};
 
     MessageEnumerator messageId{};
     MessageEnumerator LastCategory{};
@@ -130,6 +131,18 @@ const std::string& LastMessage()
 }
 
 
+void LastMessageTime(int tick)
+{
+    lastMessageTime = tick;
+}
+
+
+int LastMessageTime()
+{
+    return lastMessageTime;
+}
+
+
 MessageEnumerator MessageId()
 {
     return messageId;
@@ -160,7 +173,7 @@ void ClearMes()
     MessageId(MessageEnumerator::None);
     MessageLocation({ 0, 0 });
     LastPictureId = 0;
-    LastMesTime = 0;
+    LastMessageTime(0);
     LastMessage("");
 }
 
@@ -174,7 +187,7 @@ int SendMes(MessageEnumerator id)
         ClearMes();
     }
 
-    LastMesTime = TickCount();
+    LastMessageTime(TickCount());
 
     return 0;
 }
@@ -528,7 +541,7 @@ void doMessage()
         return;
     }
     else if (MessageId() != MessageEnumerator::None &&
-             TickCount() - LastMesTime > messageDisplayTime)
+             TickCount() - LastMessageTime() > messageDisplayTime)
     {
         ClearMes();
         return;
