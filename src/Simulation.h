@@ -7,12 +7,12 @@
 
 struct Sim
 {
-	SimView editor;
-	SimView map;
-	Graph graph;
-	SimDate date;
-	SimSprite sprite;
-	Ink overlay;
+	SimView editor{};
+	SimView map{};
+	Graph graph{};
+	SimDate date{};
+	SimSprite sprite{};
+	Ink overlay{};
 
 	int editors{ 0 };
 	int maps{ 0 };

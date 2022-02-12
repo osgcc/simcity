@@ -883,6 +883,7 @@ void pumpEvents()
             default:
                 break;
             }
+            break;
             
         default:
             break;
