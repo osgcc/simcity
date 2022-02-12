@@ -86,6 +86,16 @@ namespace
 };
 
 
+Point<int> PositionToCell(const Point<int>& position, const Point<int>& offset)
+{
+    return
+    {
+        (((position.x) + (offset.x % 16)) / 16),
+        (((position.y) + (offset.y % 16)) / 16),
+    };
+}
+
+
  /* tile bounds */
 bool TestBounds(int x, int y, int width, int height)
 {
