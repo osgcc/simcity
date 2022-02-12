@@ -130,6 +130,59 @@ int DoNotices = 1;
 bool Exit = false;
 
 
+namespace
+{
+    SDL_Rect MiniMapTileRect{ 0, 0, 3, 3 };
+    SDL_Rect UiHeaderRect{ 10, 10, 0, 0 };
+    SDL_Rect RciDestination{};
+    SDL_Rect FullMapViewRect{};
+
+    SDL_Rect MiniMapSelector{};
+    SDL_Rect MiniMapDestination{ 10, 0, SimWidth * 3, SimHeight * 3 };
+    SDL_Rect MiniMapBorder{};
+
+    SDL_Rect ResidentialValveRect{ 0, 0, 4, 0 };
+    SDL_Rect CommercialValveRect{ 0, 0, 4, 0 };
+    SDL_Rect IndustrialValveRect{ 0, 0, 4, 0 };
+
+    Vector<int> WindowSize{};
+
+    Point<int> MapViewOffset{};
+    Point<int> TilePointedAt{};
+    Point<int> MousePosition{};
+
+    SDL_Rect TileHighlight{ 0, 0, 16, 16 };
+    SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
+
+    std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 20, 37 };
+
+    unsigned int currentTick{};
+    unsigned int lastTick{};
+    unsigned int accumulator{};
+    unsigned int accumulatorAdjust{};
+};
+
+
+constexpr SDL_Color ColorResidential{ 0, 165, 0, 255 };
+constexpr SDL_Color ColorCommercial{ 79, 79, 255, 255 };
+constexpr SDL_Color ColorIndustrial{ 255, 255, 0, 255 };
+constexpr auto RciValveHeight = 20;
+
+
+SDL_Window* MainWindow = nullptr;
+SDL_Renderer* MainWindowRenderer = nullptr;
+
+Texture MainMapTexture{};
+Texture MiniMapTexture{};
+
+Texture BigTileset{};
+Texture SmallTileset{};
+Texture RCI_Indicator{};
+
+Font* MainFont{ nullptr };
+Font* MainBigFont{ nullptr };
+
+
 void sim_exit()
 {
     Exit = true;
@@ -429,6 +482,25 @@ void sim_update()
 }
 
 
+void DrawMiniMap()
+{
+    SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
+
+    SDL_SetRenderTarget(MainWindowRenderer, MiniMapTexture.texture);
+    for (int row = 0; row < SimWidth; row++)
+    {
+        for (int col = 0; col < SimHeight; col++)
+        {
+            miniMapDrawRect = { row * 3, col * 3, miniMapDrawRect.w, miniMapDrawRect.h };
+            MiniMapTileRect.y = getTileValue(row, col) * 3;
+            SDL_RenderCopy(MainWindowRenderer, SmallTileset.texture, &MiniMapTileRect, &miniMapDrawRect);
+        }
+    }
+    SDL_RenderPresent(MainWindowRenderer);
+    SDL_SetRenderTarget(MainWindowRenderer, nullptr);
+}
+
+
 void sim_loop(bool doSim)
 {
 
@@ -456,9 +528,21 @@ void sim_loop(bool doSim)
         MoveObjects();
     }
 
-    if (TickCount() % 25)
+    const int tick = TickCount();
+
+    if (tick % 100 == 0)
     {
         animateTiles();
+
+        const Point<int> begin{ MapViewOffset.x / 16, MapViewOffset.y / 16 };
+        const Point<int> end{ (MapViewOffset.x + WindowSize.x) / 16, (MapViewOffset.y + WindowSize.y) / 16 };
+
+        DrawBigMapSegment(begin, end);
+    }
+
+    if (tick % 1000 == 0)
+    {
+        DrawMiniMap();
     }
 
     sim_update();
@@ -508,58 +592,6 @@ void sim_init()
     SimSpeed(SimulationSpeed::Paused);
     setSkips(0);
 }
-
-
-constexpr SDL_Color ColorResidential{ 0, 165, 0, 255 };
-constexpr SDL_Color ColorCommercial{ 79, 79, 255, 255 };
-constexpr SDL_Color ColorIndustrial{ 255, 255, 0, 255 };
-constexpr auto RciValveHeight = 20;
-
-
-SDL_Window* MainWindow = nullptr;
-SDL_Renderer* MainWindowRenderer = nullptr;
-
-Texture MainMapTexture{};
-Texture MiniMapTexture{};
-
-Texture BigTileset{};
-Texture SmallTileset{};
-Texture RCI_Indicator{};
-
-Font* MainFont{ nullptr };
-Font* MainBigFont{ nullptr };
-
-namespace
-{
-    SDL_Rect MiniMapTileRect{ 0, 0, 3, 3 };
-    SDL_Rect UiHeaderRect{ 10, 10, 0, 0 };
-    SDL_Rect RciDestination{};
-    SDL_Rect FullMapViewRect{};
-    
-    SDL_Rect MiniMapSelector{};
-    SDL_Rect MiniMapDestination{ 10, 0, SimWidth * 3, SimHeight * 3 };
-    SDL_Rect MiniMapBorder{};
-
-    SDL_Rect ResidentialValveRect{ 0, 0, 4, 0 };
-    SDL_Rect CommercialValveRect{ 0, 0, 4, 0 };
-    SDL_Rect IndustrialValveRect{ 0, 0, 4, 0 };
-
-    Vector<int> WindowSize{};
-
-    Point<int> MapViewOffset{};
-    Point<int> TilePointedAt{};
-    Point<int> MousePosition{};
-
-    SDL_Rect TileHighlight{ 0, 0, 16, 16 };
-    SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
-
-    std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 20, 37 };
-
-    unsigned int currentTick{};
-    unsigned int lastTick{};
-    unsigned int accumulator{};
-    unsigned int accumulatorAdjust{};
-};
 
 
 void drawString(Font& font, std::string_view text, Point<int> position, SDL_Color color)
@@ -649,25 +681,6 @@ void loadGraphics()
 }
 
 
-void DrawMiniMap()
-{
-    SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
-
-    SDL_SetRenderTarget(MainWindowRenderer, MiniMapTexture.texture);
-    for (int row = 0; row < SimWidth; row++)
-    {
-        for (int col = 0; col < SimHeight; col++)
-        {
-            miniMapDrawRect = { row * 3, col * 3, miniMapDrawRect.w, miniMapDrawRect.h };
-            MiniMapTileRect.y = getTileValue(row, col) * 3;
-            SDL_RenderCopy(MainWindowRenderer, SmallTileset.texture, &MiniMapTileRect, &miniMapDrawRect);
-        }
-    }
-    SDL_RenderPresent(MainWindowRenderer);
-    SDL_SetRenderTarget(MainWindowRenderer, nullptr);
-}
-
-
 void updateMapDrawParameters()
 {
     FullMapViewRect =
@@ -742,11 +755,7 @@ void windowResized(const Vector<int>& size)
 
 void calculateMouseToWorld()
 {
-    Point<int> screenCell =
-    {
-        (((MousePosition.x) + (MapViewOffset.x % 16)) / 16) % WindowSize.x,
-        (((MousePosition.y) + (MapViewOffset.y % 16)) / 16) % WindowSize.y
-    };
+    auto screenCell = PositionToCell(MousePosition, MapViewOffset);
     
     TilePointedAt =
     {
@@ -833,9 +842,6 @@ void handleMouseEvent(SDL_Event& event)
         {
             put3x3Rubble(TilePointedAt.x, TilePointedAt.y);
             putDownPark(nullptr, TilePointedAt.x, TilePointedAt.y);
-
-            DrawBigMap();
-            DrawMiniMap();
         }
         break;
 
