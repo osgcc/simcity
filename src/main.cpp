@@ -81,6 +81,7 @@
 #include "w_map.h"
 #include "w_sound.h"
 #include "w_stubs.h"
+#include "w_tool.h"
 #include "w_tk.h"
 #include "w_update.h"
 #include "w_util.h"
@@ -803,6 +804,38 @@ void handleKeyEvent(SDL_Event& event)
 }
 
 
+void handleMouseEvent(SDL_Event& event)
+{
+    switch (event.type)
+    {
+    case SDL_MOUSEMOTION:
+        MousePosition = { event.motion.x, event.motion.y };
+
+        calculateMouseToWorld();
+
+        if ((SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON_RMASK) != 0)
+        {
+            MapViewOffset -= { event.motion.xrel, event.motion.yrel };
+            clampViewOffset();
+            updateMapDrawParameters();
+        }
+        break;
+
+    case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == SDL_BUTTON_LEFT)
+        {
+            put3x3Rubble(TilePointedAt.x, TilePointedAt.y);
+            DrawBigMap();
+            DrawMiniMap();
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
+
 void pumpEvents()
 {
     SDL_Event event;
@@ -815,16 +848,9 @@ void pumpEvents()
             break;
 
         case SDL_MOUSEMOTION:
-            MousePosition = { event.motion.x, event.motion.y };
-
-            calculateMouseToWorld();
-
-            if ((SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON_RMASK) != 0)
-            {
-                MapViewOffset -= { event.motion.xrel, event.motion.yrel };
-                clampViewOffset();
-                updateMapDrawParameters();
-            }
+        case SDL_MOUSEBUTTONDOWN:
+        case SDL_MOUSEBUTTONUP:
+            handleMouseEvent(event);
             break;
 
         case SDL_QUIT:
