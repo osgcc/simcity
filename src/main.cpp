@@ -63,6 +63,8 @@
 
 #include "Font.h"
 #include "Map.h"
+
+#include "g_ani.h"
 #include "g_map.h"
 
 #include "s_alloc.h"
@@ -454,6 +456,11 @@ void sim_loop(bool doSim)
         MoveObjects();
     }
 
+    if (TickCount() % 25)
+    {
+        animateTiles();
+    }
+
     sim_update();
 }
 
@@ -825,6 +832,8 @@ void handleMouseEvent(SDL_Event& event)
         if (event.button.button == SDL_BUTTON_LEFT)
         {
             put3x3Rubble(TilePointedAt.x, TilePointedAt.y);
+            putDownPark(nullptr, TilePointedAt.x, TilePointedAt.y);
+
             DrawBigMap();
             DrawMiniMap();
         }
