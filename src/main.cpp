@@ -852,6 +852,20 @@ void handleMouseEvent(SDL_Event& event)
 }
 
 
+void handleWindowEvent(SDL_Event& event)
+{
+    switch (event.window.event)
+    {
+    case SDL_WINDOWEVENT_RESIZED:
+        windowResized(Vector<int>{event.window.data1, event.window.data2});
+        break;
+
+    default:
+        break;
+    }
+}
+
+
 void pumpEvents()
 {
     SDL_Event event;
@@ -874,15 +888,7 @@ void pumpEvents()
             break;
 
         case SDL_WINDOWEVENT:
-            switch (event.window.event)
-            {
-            case SDL_WINDOWEVENT_RESIZED:
-                windowResized(Vector<int>{event.window.data1, event.window.data2});
-                break;
-
-            default:
-                break;
-            }
+            handleWindowEvent(event);
             break;
             
         default:
