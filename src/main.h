@@ -346,26 +346,25 @@ constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
  * These describe the wand values, the object dragged around on the screen.
  */
 
-#define residentialState 0
-#define commercialState 1
-#define industrialState 2
-#define fireState 3
-#define queryState 4
-#define policeState 5
-#define wireState 6
-#define dozeState 7
-#define rrState 8
-#define roadState 9
-#define UNUSED_STATE_1 10
-#define UNUSED_STATE_2 11
-#define stadiumState 12
-#define parkState 13
-#define seaportState  14
-#define powerState 15
-#define nuclearState 16
-#define airportState 17
-#define networkState 18
-
+constexpr auto residentialState = 0;
+constexpr auto commercialState = 1;
+constexpr auto industrialState = 2;
+constexpr auto fireState = 3;
+constexpr auto queryState = 4;
+constexpr auto policeState = 5;
+constexpr auto wireState = 6;
+constexpr auto dozeState = 7;
+constexpr auto rrState = 8;
+constexpr auto roadState = 9;
+constexpr auto UNUSED_STATE_1 = 10;
+constexpr auto UNUSED_STATE_2 = 11;
+constexpr auto stadiumState = 12;
+constexpr auto parkState = 13;
+constexpr auto seaportState = 14;
+constexpr auto powerState = 15;
+constexpr auto nuclearState = 16;
+constexpr auto airportState = 17;
+constexpr auto networkState = 18;
 
 #define firstState residentialState
 #define lastState networkState

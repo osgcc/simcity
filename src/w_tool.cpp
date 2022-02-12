@@ -170,6 +170,7 @@ int putDownPark(SimView* view, int mapH, int mapV)
 }
 
 
+// Radar?
 int putDownNetwork(SimView* view, int mapH, int mapV)
 {
     int tile = Map[mapH][mapV] & LOMASK;
