@@ -609,12 +609,12 @@ void doMessage()
 
         if (AutoGotoMessageLocation() && (MessageLocation() != Point<int>{0, 0}))
         {
-            DoAutoGoto(MessageLocation().x, MessageLocation().y, GetIndString(301, MessageId()));
+            DoAutoGoto(MessageLocation().x, MessageLocation().y, NotificationString(MessageId()));
             MessageLocation({ 0, 0 });
         }
         else
         {
-            SetMessageField(GetIndString(301, MessageId()));
+            SetMessageField(NotificationString(MessageId()));
         }
     }
     else
@@ -629,7 +629,7 @@ void doMessage()
 
         if (AutoGo && (MesX || MesY))
         {
-            DoAutoGoto(MesX, MesY, GetIndString(301, pictId));
+            DoAutoGoto(MesX, MesY, NotificationString(pictId));
             MesX = 0;
             MesY = 0;
         }

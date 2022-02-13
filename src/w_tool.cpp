@@ -77,6 +77,7 @@
 
 #include "View.h"
 
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <string>
@@ -957,7 +958,7 @@ int getDensityStr(int catNo, int mapH, int mapV)
 }
 
 
-struct ZoneStatsString
+struct ZoneStatsStrings
 {
     const std::string str;
     const std::string s0;
@@ -968,7 +969,7 @@ struct ZoneStatsString
 };
 
 
-void DoShowZoneStatus(const ZoneStatsString zoneStats, int x, int y)
+void DoShowZoneStatus(const ZoneStatsStrings zoneStats, int x, int y)
 {
     const std::string msg{
         "UIShowZoneStatus {" +
@@ -1020,19 +1021,18 @@ void doZoneStatus(int mapH, int mapV)
         x = 28;
     }
 
-    // \fixme yuck!
-    // \fixme needs to get the correct strings from the 219 file
-    localStr = GetIndString(219, static_cast<NotificationId>(x));
+    // \fixme ugly cast
+    localStr = QueryStatsString(static_cast<QueryStatsId>(x));
 
     for (x = 0; x < 5; x++)
     {
         id = getDensityStr(x, mapH, mapV);
         id++;
-        if (id <= 0) { id = 1; }
-        if (id > 20) { id = 20; }
         
-        // \fixme yuck!
-        statusStr[x] = GetIndString(202, static_cast<NotificationId>(id));
+        id = std::clamp(id, 1, 20);
+        
+        // \fixme ugly cast
+        statusStr[x] = ZoneStatsString(static_cast<ZoneStatsId>(id));
     }
 
     DoShowZoneStatus({ localStr, statusStr[0], statusStr[1],

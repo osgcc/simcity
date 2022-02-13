@@ -117,11 +117,80 @@ std::map<NotificationId, std::string> NotificationStringTable =
     { NotificationId::NoMultiplayerLicense, "No Multi Player License !!" },
     { NotificationId::NewCityStarted, "Started a New City." },
     { NotificationId::CityRestored, "Restored a Saved City." },
-    { NotificationId::None, "" }
+    { NotificationId::None, "XXX" }
 };
 
 
-const std::string& GetIndString(int /*id*/, NotificationId id)
+std::map<ZoneStatsId, std::string> ZoneStatsTable =
+{
+    { ZoneStatsId::Low, "Low" },
+    { ZoneStatsId::Medium, "Medium" },
+    { ZoneStatsId::High, "High" },
+    { ZoneStatsId::VeryHigh, "Very High" },
+    { ZoneStatsId::Slum, "Slum" },
+    { ZoneStatsId::LowerClass, "Lower Class" },
+    { ZoneStatsId::MiddleClass, "Middle Class" },
+    { ZoneStatsId::HighClass, "High x" },
+    { ZoneStatsId::Safe, "Safe" },
+    { ZoneStatsId::Light, "Light" },
+    { ZoneStatsId::Moderate, "Moderate" },
+    { ZoneStatsId::Dangerous, "Dangerous" },
+    { ZoneStatsId::None, "None" },
+    { ZoneStatsId::Moderate2, "Moderate2" },
+    { ZoneStatsId::Heavy, "Heavy" },
+    { ZoneStatsId::VeryHeavy, "Very Heavy" },
+    { ZoneStatsId::Declining, "Declining" },
+    { ZoneStatsId::Stable, "Stable" },
+    { ZoneStatsId::SlowGrowth, "Slow Growth" },
+    { ZoneStatsId::FastGrowth, "Fast Growth" },
+};
+
+
+std::map<QueryStatsId, std::string> QueryStatsTable =
+{
+    { QueryStatsId::Clear, "Clear" },
+    { QueryStatsId::Water, "Water" },
+    { QueryStatsId::Trees, "Trees" },
+    { QueryStatsId::Rubble, "Rubble" },
+    { QueryStatsId::Flood, "Flood" },
+    { QueryStatsId::RadioactiveWaste, "Radioactive Waste" },
+    { QueryStatsId::Fire, "Fire" },
+    { QueryStatsId::Road, "Road" },
+    { QueryStatsId::Power, "Power" },
+    { QueryStatsId::Rail, "Rail" },
+    { QueryStatsId::Residential, "Residential" },
+    { QueryStatsId::Commercial, "Commercial" },
+    { QueryStatsId::Industrial, "Industrial" },
+    { QueryStatsId::Seaport, "Seaport" },
+    { QueryStatsId::Airport, "Airport" },
+    { QueryStatsId::CoalPower, "Coal Power" },
+    { QueryStatsId::FireDepartment, "Fire Department" },
+    { QueryStatsId::PoliceDepartment, "Police Department" },
+    { QueryStatsId::Stadium, "Stadium" },
+    { QueryStatsId::NuclearPower, "Nuclear Power" },
+    { QueryStatsId::DrawBridge, "Draw Bridge" },
+    { QueryStatsId::RadarDish, "Radar Dish" },
+    { QueryStatsId::Fountain, "Fountain" },
+    { QueryStatsId::Industrial2, "Industrial2" },
+    { QueryStatsId::Steelers38Bears3, "Steelers 38  Bears 3" },
+    { QueryStatsId::DrawBridge2, "Draw Bridge2" },
+    { QueryStatsId::Ur238, "Ur 238" }
+};
+
+
+const std::string& NotificationString(NotificationId id)
 {
     return NotificationStringTable.at(id);
+}
+
+
+const std::string& ZoneStatsString(ZoneStatsId id)
+{
+    return ZoneStatsTable.at(id);
+}
+
+
+const std::string& QueryStatsString(QueryStatsId id)
+{
+    return QueryStatsTable.at(id);
 }

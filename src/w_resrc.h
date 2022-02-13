@@ -56,4 +56,63 @@ enum class NotificationId
     CityRestored
 };
 
-const std::string& GetIndString(int /*id*/, NotificationId);
+enum class ZoneStatsId
+{
+    Low,
+    Medium,
+    High,
+    VeryHigh,
+    Slum,
+    LowerClass,
+    MiddleClass,
+    HighClass,
+    Safe,
+    Light,
+    Moderate,
+    Dangerous,
+    None,
+    Moderate2,
+    Heavy,
+    VeryHeavy,
+    Declining,
+    Stable,
+    SlowGrowth,
+    FastGrowth
+};
+
+
+enum class QueryStatsId
+{
+    Clear,
+    Water,
+    Trees,
+    Rubble,
+    Flood,
+    RadioactiveWaste,
+    Fire,
+    Road,
+    Power,
+    Rail,
+    Residential,
+    Commercial,
+    Industrial,
+    Seaport,
+    Airport,
+    CoalPower,
+    FireDepartment,
+    PoliceDepartment,
+    Stadium,
+    NuclearPower,
+    DrawBridge,
+    RadarDish,
+    Fountain,
+    Industrial2,
+    Steelers38Bears3,
+    DrawBridge2,
+    Ur238
+};
+
+
+const std::string& NotificationString(NotificationId);
+const std::string& ZoneStatsString(ZoneStatsId id);
+const std::string& QueryStatsString(QueryStatsId id);
