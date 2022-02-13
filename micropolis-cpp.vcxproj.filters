@@ -266,5 +266,8 @@
     <ClInclude Include="src\VectorSizeRange.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ToolPalette.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

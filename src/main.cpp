@@ -90,6 +90,7 @@
 #include "w_x.h"
 
 #include "Texture.h"
+#include "ToolPalette.h"
 
 #include <algorithm>
 #include <iostream>
@@ -178,7 +179,6 @@ Texture MiniMapTexture{};
 Texture BigTileset{};
 Texture SmallTileset{};
 Texture RCI_Indicator{};
-Texture ToolButtons{};
 
 Font* MainFont{ nullptr };
 Font* MainBigFont{ nullptr };
@@ -678,7 +678,6 @@ void loadGraphics()
     buildBigTileset();
     RCI_Indicator = loadTexture(MainWindowRenderer, "images/demandg.xpm");
     SmallTileset = loadTexture(MainWindowRenderer, "images/tilessm.xpm");
-    ToolButtons = loadTexture(MainWindowRenderer, "icons/buttons.png");
 }
 
 
@@ -1018,79 +1017,6 @@ void drawDebug()
 }
 
 
-SDL_Rect toolButtonDst{ 10, 100, 32, 32 };
-
-
-std::array<SDL_Rect, 20> toolButtonUV =
-{{
-    { 0, 0, 32, 32 },   // Residential
-    { 0, 32, 32, 32 },  // Commercial
-    { 0, 64, 32, 32 },  // Industrial
-    { 0, 96, 32, 32 },  // Fire Department
-    { 0, 128, 32, 32 }, // Query
-    { 0, 160, 32, 32 }, // Police Department
-    { 0, 192, 32, 32 }, // Power Lines
-    { 0, 224, 32, 32 }, // Bulldozer
-    { 0, 256, 32, 32 }, // Rail
-    { 0, 288, 32, 32 }, // Road
-    { 0, 320, 32, 32 }, // UNUSED 1
-    { 0, 352, 32, 32 }, // UNUSED 2
-    { 0, 384, 32, 32 }, // Stadium
-    { 0, 416, 32, 32 }, // Park
-    { 0, 448, 32, 32 }, // Seaport
-    { 0, 480, 32, 32 }, // Coal Power
-    { 0, 512, 32, 32 }, // Nuclear Power
-    { 0, 544, 32, 32 }, // Airport
-    { 0, 576, 32, 32 }, // Network <- ??
-    { 0, 608, 32, 32 }  // UNUSED 3
-}};
-
-
-std::array<SDL_Rect, 20> toolButtonPosition =
-{{
-    { 0, 0, 32, 32 },   // Residential
-    { 33, 0, 32, 32 },  // Commercial
-    { 66, 0, 32, 32 },  // Industrial
-    { 0, 33, 32, 32 },  // Fire Department
-    { 33, 33, 32, 32 }, // Query
-    { 66, 33, 32, 32 }, // Police Department
-    { 0, 66, 32, 32 }, // Power Lines
-    { 33, 66, 32, 32 }, // Bulldozer
-    { 66, 66, 32, 32 }, // Rail
-    { 0, 99, 32, 32 }, // Road
-    { 33, 99, 32, 32 }, // UNUSED 1
-    { 66, 99, 32, 32 }, // UNUSED 2
-    { 0, 132, 32, 32 }, // Stadium
-    { 33, 132, 32, 32 }, // Park
-    { 66, 132, 32, 32 }, // Seaport
-    { 0, 165, 32, 32 }, // Coal Power
-    { 33, 165, 32, 32 }, // Nuclear Power
-    { 66, 165, 32, 32 }, // Airport
-    { 0, 198, 32, 32 }, // Network <- ??
-    { 33, 198, 32, 32 }  // UNUSED 3
-}};
-
-
-void setToolbarOrigin(const Point<int>& position)
-{
-    
-    for (size_t i = 0; i < 20; ++i)
-    {
-        toolButtonPosition[i].x = (i % 3) * 33 + position.x;
-        toolButtonPosition[i].y = (i % 7) * 33 + position.y;
-    }
-}
-
-
-void drawToolbar()
-{
-    for (size_t i = 0; i < 20; ++i)
-    {
-        SDL_RenderCopy(MainWindowRenderer, ToolButtons.texture, &toolButtonUV[i], &toolButtonPosition[i]);
-    }
-}
-
-
 unsigned int speedModifier()
 {
     return SpeedModifierTable[static_cast<unsigned int>(SimSpeed())];
@@ -1126,7 +1052,8 @@ void startGame()
     DrawMiniMap();
     DrawBigMap();
 
-    setToolbarOrigin({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
+    ToolPalette toolPalette(MainWindowRenderer);
+    toolPalette.position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
     
     while (!Exit)
     {
@@ -1142,7 +1069,8 @@ void startGame()
         drawTopUi();
         //drawMiniMapUi();
 
-        drawToolbar();
+        toolPalette.injectMouse(MousePosition);
+        toolPalette.draw();
 
         SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
         SDL_RenderFillRect(MainWindowRenderer, &TileHighlight);

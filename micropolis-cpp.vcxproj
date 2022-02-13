@@ -81,6 +81,7 @@
     <ClInclude Include="src\s_traf.h" />
     <ClInclude Include="src\s_zone.h" />
     <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\ToolPalette.h" />
     <ClInclude Include="src\Vector.h" />
     <ClInclude Include="src\VectorSizeRange.h" />
     <ClInclude Include="src\View.h" />
