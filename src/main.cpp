@@ -639,7 +639,7 @@ void handleMouseEvent(SDL_Event& event)
         if (event.button.button == SDL_BUTTON_LEFT)
         {
             //putDownNetwork(nullptr, TilePointedAt.x, TilePointedAt.y);
-            query_tool(nullptr, TilePointedAt.x, TilePointedAt.y);
+            query_tool(TilePointedAt.x, TilePointedAt.y);
         }
         break;
 

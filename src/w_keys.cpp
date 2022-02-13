@@ -166,7 +166,7 @@ void doKeyDown(SimView *view, int charCode)
       if (++s > lastState) {
 	s = firstState;
       }
-      setWandState(view, s);
+      setWandState(s);
       break;
     }
 
@@ -176,7 +176,7 @@ void doKeyDown(SimView *view, int charCode)
       if (--s < firstState) {
 	  s = lastState;
       }
-      setWandState(view, s);
+      setWandState(s);
       break;
     }
 
@@ -187,7 +187,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(view, dozeState);
+      setWandState(dozeState);
       break;
     }
 
@@ -198,7 +198,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(view, roadState);
+      setWandState(roadState);
       break;
     }
 
@@ -209,7 +209,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(view, wireState);
+      setWandState(wireState);
       break;
     }
 
@@ -220,7 +220,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(view, rrState);
+      setWandState(rrState);
       break;
     }
 
@@ -254,7 +254,7 @@ void doKeyUp(SimView* view, int charCode)
     case 'Q' - '@':
         if (view->tool_state_save != -1)
         {
-            setWandState(view, view->tool_state_save);
+            setWandState(view->tool_state_save);
         }
         view->tool_state_save = -1;
         break;

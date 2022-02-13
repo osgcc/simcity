@@ -75,8 +75,6 @@
 #include "w_util.h"
 #include "w_x.h"
 
-#include "View.h"
-
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -169,27 +167,26 @@ const int ToolOffset[] =
 
 
 
-void DidTool(SimView* view, const std::string& toolName, int x, int y)
+void DidTool(const std::string& toolName, int x, int y)
 {
-    Eval("UIDidTool" + toolName + " " + "'winId'" + std::to_string(x) + " " + std::to_string(y));
+    //Eval("UIDidTool" + toolName + " " + "'winId' " + std::to_string(x) + " " + std::to_string(y));
 }
 
 
-void DoSetWandState(SimView *view, int state)
+void DoSetWandState(int state)
 {
     Eval("UISetToolState " + std::to_string(state));
 }
 
 
-void setWandState(SimView* view, int state)
+void setWandState(int state)
 {
-    view->tool_state = state;
     sim_update_editors();
-    DoSetWandState(view, state);
+    DoSetWandState(state);
 }
 
 
-int putDownPark(SimView* view, int mapH, int mapV)
+int putDownPark(int mapH, int mapV)
 {
     int tile{};
 
@@ -220,7 +217,7 @@ int putDownPark(SimView* view, int mapH, int mapV)
 
 
 // Radar?
-int putDownNetwork(SimView* view, int mapH, int mapV)
+int putDownNetwork(int mapH, int mapV)
 {
     int tile = Map[mapH][mapV] & LOMASK;
 
@@ -449,7 +446,7 @@ void check3x3border(int xMap, int yMap)
 }
 
 
-int check3x3(SimView* view, int mapH, int mapV, int base, int tool)
+int check3x3(int mapH, int mapV, int base, int tool)
 {
     int rowNum, columnNum;
     int holdMapH, holdMapV;
@@ -518,9 +515,7 @@ int check3x3(SimView* view, int mapH, int mapV, int base, int tool)
 
     if ((Players > 1) &&
         (OverRide == 0) &&
-        (cost >= Expensive) &&
-        (view != NULL) &&
-        (view->super_user == 0))
+        (cost >= Expensive))
     {
         return -3;
     }
@@ -601,7 +596,7 @@ void check4x4border(int xMap, int yMap)
 }
 
 
-int check4x4(SimView* view, int mapH, int mapV, int base, int aniFlag, int tool)
+int check4x4(int mapH, int mapV, int base, int aniFlag, int tool)
 {
     int rowNum, columnNum;
     int h, v;
@@ -672,9 +667,7 @@ int check4x4(SimView* view, int mapH, int mapV, int base, int aniFlag, int tool)
 
     if ((Players > 1) &&
         (OverRide == 0) &&
-        (cost >= Expensive) &&
-        (view != NULL) &&
-        (view->super_user == 0))
+        (cost >= Expensive))
     {
         return -3;
     }
@@ -753,7 +746,7 @@ void check6x6border(int xMap, int yMap)
 }
 
 
-int check6x6(SimView* view, int mapH, int mapV, int base, int tool)
+int check6x6(int mapH, int mapV, int base, int tool)
 {
     int rowNum, columnNum;
     int h, v;
@@ -822,9 +815,7 @@ int check6x6(SimView* view, int mapH, int mapV, int base, int tool)
 
     if ((Players > 1) &&
         (OverRide == 0) &&
-        (cost >= Expensive) &&
-        (view != NULL) &&
-        (view->super_user == 0))
+        (cost >= Expensive))
     {
         return -3;
     }
@@ -1105,7 +1096,7 @@ void put6x6Rubble(int x, int y)
 /* TOOLS */
 
 
-int query_tool(SimView* view, int x, int y)
+int query_tool(int x, int y)
 {
     if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
     {
@@ -1113,12 +1104,12 @@ int query_tool(SimView* view, int x, int y)
     }
 
     doZoneStatus(x, y);
-    DidTool(view, "Qry", x, y);
+    DidTool("Qry", x, y);
     return 1;
 }
 
 
-int bulldozer_tool(SimView* view, int x, int y)
+int bulldozer_tool(int x, int y)
 {
     unsigned int currTile, temp;
     int zoneSize, deltaH, deltaV;
@@ -1209,13 +1200,13 @@ int bulldozer_tool(SimView* view, int x, int y)
     UpdateFunds();
     if (result == 1)
     {
-        DidTool(view, "Dozr", x, y);
+        DidTool("Dozr", x, y);
     }
     return result;
 }
 
 
-int road_tool(SimView* view, int x, int y)
+int road_tool(int x, int y)
 {
     int result;
 
@@ -1229,13 +1220,13 @@ int road_tool(SimView* view, int x, int y)
 
     if (result == 1)
     {
-        DidTool(view, "Road", x, y);
+        DidTool("Road", x, y);
     }
     return result;
 }
 
 
-int rail_tool(SimView* view, int x, int y)
+int rail_tool(int x, int y)
 {
     int result;
 
@@ -1248,13 +1239,13 @@ int rail_tool(SimView* view, int x, int y)
     UpdateFunds();
     if (result == 1)
     {
-        DidTool(view, "Rail", x, y);
+        DidTool("Rail", x, y);
     }
     return result;
 }
 
 
-int wire_tool(SimView* view, int x, int y)
+int wire_tool(int x, int y)
 {
     int result;
 
@@ -1267,13 +1258,13 @@ int wire_tool(SimView* view, int x, int y)
     UpdateFunds();
     if (result == 1)
     {
-        DidTool(view, "Wire", x, y);
+        DidTool("Wire", x, y);
     }
     return result;
 }
 
 
-int park_tool(SimView* view, int x, int y)
+int park_tool(int x, int y)
 {
     int result;
 
@@ -1281,16 +1272,16 @@ int park_tool(SimView* view, int x, int y)
         (y < 0) || (y > (SimHeight - 1)))
         return -1;
 
-    result = putDownPark(view, x, y);
+    result = putDownPark(x, y);
     if (result == 1)
     {
-        DidTool(view, "Park", x, y);
+        DidTool("Park", x, y);
     }
     return result;
 }
 
 
-int residential_tool(SimView* view, int x, int y)
+int residential_tool(int x, int y)
 {
     int result;
 
@@ -1299,35 +1290,16 @@ int residential_tool(SimView* view, int x, int y)
         return -1;
     }
 
-    result = check3x3(view, x, y, RESBASE, residentialState);
+    result = check3x3(x, y, RESBASE, residentialState);
     if (result == 1)
     {
-        DidTool(view, "Res", x, y);
+        DidTool("Res", x, y);
     }
     return result;
 }
 
 
-int commercial_tool(SimView* view, int x, int y)
-{
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1)))
-    {
-        return -1;
-    }
-
-    result = check3x3(view, x, y, COMBASE, commercialState);
-    if (result == 1)
-    {
-        DidTool(view, "Com", x, y);
-    }
-    return result;
-}
-
-
-int industrial_tool(SimView* view, int x, int y)
+int commercial_tool(int x, int y)
 {
     int result;
 
@@ -1337,16 +1309,35 @@ int industrial_tool(SimView* view, int x, int y)
         return -1;
     }
 
-    result = check3x3(view, x, y, INDBASE, industrialState);
+    result = check3x3(x, y, COMBASE, commercialState);
     if (result == 1)
     {
-        DidTool(view, "Ind", x, y);
+        DidTool("Com", x, y);
     }
     return result;
 }
 
 
-int police_dept_tool(SimView* view, int x, int y)
+int industrial_tool(int x, int y)
+{
+    int result;
+
+    if ((x < 0) || (x > (SimWidth - 1)) ||
+        (y < 0) || (y > (SimHeight - 1)))
+    {
+        return -1;
+    }
+
+    result = check3x3(x, y, INDBASE, industrialState);
+    if (result == 1)
+    {
+        DidTool("Ind", x, y);
+    }
+    return result;
+}
+
+
+int police_dept_tool(int x, int y)
 {
     int result;
 
@@ -1355,16 +1346,16 @@ int police_dept_tool(SimView* view, int x, int y)
         return -1;
     }
 
-    result = check3x3(view, x, y, POLICESTBASE, policeState);
+    result = check3x3(x, y, POLICESTBASE, policeState);
     if (result == 1)
     {
-        DidTool(view, "Pol", x, y);
+        DidTool("Pol", x, y);
     }
     return result;
 }
 
 
-int fire_dept_tool(SimView* view, int x, int y)
+int fire_dept_tool(int x, int y)
 {
     int result;
 
@@ -1373,16 +1364,16 @@ int fire_dept_tool(SimView* view, int x, int y)
         return -1;
     }
 
-    result = check3x3(view, x, y, FIRESTBASE, fireState);
+    result = check3x3(x, y, FIRESTBASE, fireState);
     if (result == 1)
     {
-        DidTool(view, "Fire", x, y);
+        DidTool("Fire", x, y);
     }
     return result;
 }
 
 
-int stadium_tool(SimView* view, int x, int y)
+int stadium_tool(int x, int y)
 {
     int result;
 
@@ -1391,16 +1382,16 @@ int stadium_tool(SimView* view, int x, int y)
         return -1;
     }
 
-    result = check4x4(view, x, y, STADIUMBASE, 0, stadiumState);
+    result = check4x4(x, y, STADIUMBASE, 0, stadiumState);
     if (result == 1)
     {
-        DidTool(view, "Stad", x, y);
+        DidTool("Stad", x, y);
     }
     return result;
 }
 
 
-int coal_power_plant_tool(SimView* view, int x, int y)
+int coal_power_plant_tool(int x, int y)
 {
     int result;
 
@@ -1409,16 +1400,16 @@ int coal_power_plant_tool(SimView* view, int x, int y)
         return -1;
     }
 
-    result = check4x4(view, x, y, COALBASE, 1, powerState);
+    result = check4x4(x, y, COALBASE, 1, powerState);
     if (result == 1)
     {
-        DidTool(view, "Coal", x, y);
+        DidTool("Coal", x, y);
     }
     return result;
 }
 
 
-int nuclear_power_plant_tool(SimView* view, int x, int y)
+int nuclear_power_plant_tool(int x, int y)
 {
     int result;
 
@@ -1427,16 +1418,16 @@ int nuclear_power_plant_tool(SimView* view, int x, int y)
         return -1;
     }
 
-    result = check4x4(view, x, y, NUCLEARBASE, 1, nuclearState);
+    result = check4x4(x, y, NUCLEARBASE, 1, nuclearState);
     if (result == 1)
     {
-        DidTool(view, "Nuc", x, y);
+        DidTool("Nuc", x, y);
     }
     return result;
 }
 
 
-int seaport_tool(SimView* view, int x, int y)
+int seaport_tool(int x, int y)
 {
     int result;
 
@@ -1445,16 +1436,16 @@ int seaport_tool(SimView* view, int x, int y)
         return -1;
     }
 
-    result = check4x4(view, x, y, PORTBASE, 0, seaportState);
+    result = check4x4(x, y, PORTBASE, 0, seaportState);
     if (result == 1)
     {
-        DidTool(view, "Seap", x, y);
+        DidTool("Seap", x, y);
     }
     return result;
 }
 
 
-int airport_tool(SimView* view, int x, int y)
+int airport_tool(int x, int y)
 {
     int result;
 
@@ -1463,16 +1454,16 @@ int airport_tool(SimView* view, int x, int y)
         return -1;
     }
 
-    result = check6x6(view, x, y, AIRPORTBASE, airportState);
+    result = check6x6(x, y, AIRPORTBASE, airportState);
     if (result == 1)
     {
-        DidTool(view, "Airp", x, y);
+        DidTool("Airp", x, y);
     }
     return result;
 }
 
 
-int network_tool(SimView* view, int x, int y)
+int network_tool(int x, int y)
 {
     int result;
 
@@ -1481,87 +1472,87 @@ int network_tool(SimView* view, int x, int y)
         return -1;
     }
 
-    result = putDownNetwork(view, x, y);
+    result = putDownNetwork(x, y);
     if (result == 1)
     {
-        DidTool(view, "Net", x, y);
+        DidTool("Net", x, y);
     }
     return result;
 }
 
 
-int do_tool(SimView* view, int state, int x, int y, int first)
+int do_tool(int state, int x, int y, int first)
 {
     int result = 0;
 
     switch (state)
     {
     case residentialState:
-        result = residential_tool(view, x >> 4, y >> 4);
+        result = residential_tool(x >> 4, y >> 4);
         break;
 
     case commercialState:
-        result = commercial_tool(view, x >> 4, y >> 4);
+        result = commercial_tool(x >> 4, y >> 4);
         break;
 
     case industrialState:
-        result = industrial_tool(view, x >> 4, y >> 4);
+        result = industrial_tool(x >> 4, y >> 4);
         break;
 
     case fireState:
-        result = fire_dept_tool(view, x >> 4, y >> 4);
+        result = fire_dept_tool(x >> 4, y >> 4);
         break;
 
     case queryState:
-        result = query_tool(view, x >> 4, y >> 4);
+        result = query_tool(x >> 4, y >> 4);
         break;
 
     case policeState:
-        result = police_dept_tool(view, x >> 4, y >> 4);
+        result = police_dept_tool(x >> 4, y >> 4);
         break;
 
     case wireState:
-        result = wire_tool(view, x >> 4, y >> 4);
+        result = wire_tool(x >> 4, y >> 4);
         break;
 
     case dozeState:
-        result = bulldozer_tool(view, x >> 4, y >> 4);
+        result = bulldozer_tool(x >> 4, y >> 4);
         break;
 
     case rrState:
-        result = rail_tool(view, x >> 4, y >> 4);
+        result = rail_tool(x >> 4, y >> 4);
         break;
 
     case roadState:
-        result = road_tool(view, x >> 4, y >> 4);
+        result = road_tool(x >> 4, y >> 4);
         break;
 
     case stadiumState:
-        result = stadium_tool(view, x >> 4, y >> 4);
+        result = stadium_tool(x >> 4, y >> 4);
         break;
 
     case parkState:
-        result = park_tool(view, x >> 4, y >> 4);
+        result = park_tool(x >> 4, y >> 4);
         break;
 
     case seaportState:
-        result = seaport_tool(view, x >> 4, y >> 4);
+        result = seaport_tool(x >> 4, y >> 4);
         break;
 
     case powerState:
-        result = coal_power_plant_tool(view, x >> 4, y >> 4);
+        result = coal_power_plant_tool(x >> 4, y >> 4);
         break;
 
     case nuclearState:
-        result = nuclear_power_plant_tool(view, x >> 4, y >> 4);
+        result = nuclear_power_plant_tool(x >> 4, y >> 4);
         break;
 
     case airportState:
-        result = airport_tool(view, x >> 4, y >> 4);
+        result = airport_tool(x >> 4, y >> 4);
         break;
 
     case networkState:
-        result = network_tool(view, x >> 4, y >> 4);
+        result = network_tool(x >> 4, y >> 4);
         break;
 
     default:
@@ -1573,45 +1564,46 @@ int do_tool(SimView* view, int state, int x, int y, int first)
 }
 
 
-int current_tool(SimView* view, int x, int y, int first)
+int current_tool(int x, int y, int first)
 {
-    return do_tool(view, view->tool_state, x, y, first);
+    return do_tool(0 /*tool_state*/, x, y, first);
 }
 
 
-void DoTool(SimView* view, int tool, int x, int y)
+void DoTool(int tool, int x, int y)
 {
     int result;
 
-    result = do_tool(view, tool, x << 4, y << 4, 1);
+    result = do_tool(tool, x << 4, y << 4, 1);
 
     if (result == -1)
     {
         ClearMes();
         SendMes(NotificationId::MustBulldoze);
-        MakeSoundOn(view, "edit", "UhUh");
+        MakeSoundOn(nullptr, "edit", "UhUh");
     }
     else if (result == -2)
     {
         ClearMes();
         SendMes(NotificationId::InsufficientFunds);
-        MakeSoundOn(view, "edit", "Sorry");
+        MakeSoundOn(nullptr, "edit", "Sorry");
     }
 
     sim_skip = 0;
-    view->skip = 0;
+    //view->skip = 0;
     InvalidateEditors();
 }
 
 
-void DoPendTool(SimView* view, int tool, int x, int y)
+void DoPendTool(int tool, int x, int y)
 {
-    Eval(std::string("") + "'winId' " + std::to_string(tool) + " " + std::to_string(x) + " " + std::to_string(y));
+    Eval(std::string("DoPendTool: ") + "'winId' " + std::to_string(tool) + " " + std::to_string(x) + " " + std::to_string(y));
 }
 
 
-void ToolDown(SimView* view, int x, int y)
+void ToolDown(int x, int y)
 {
+    /*
     int result;
 
     ViewToPixelCoords(view, x, y, x, y);
@@ -1640,11 +1632,13 @@ void ToolDown(SimView* view, int x, int y)
     sim_skip = 0;
     view->skip = 0;
     view->invalid = 1;
+    */
 }
 
 
-void ToolDrag(SimView* view, int px, int py)
+void ToolDrag(int px, int py)
 {
+    /*
     int x, y, dx, dy, adx, ady, lx, ly, dist;
     float i, step, tx, ty, dtx, dty, rx, ry;
 
@@ -1692,7 +1686,7 @@ void ToolDrag(SimView* view, int px, int py)
             dty = std::abs(ty - ly);
             if (dtx >= 1 || dty >= 1)
             {
-                /* fill in corners */
+                /* fill in corners
                 if ((dtx >= 1) && (dty >= 1))
                 {
                     if (dtx > dty)
@@ -1727,14 +1721,15 @@ void ToolDrag(SimView* view, int px, int py)
         view->last_y = (ly << 4) + 8;
     }
 
-    sim_skip = 0; /* update editors overlapping this one */
+    sim_skip = 0; /* update editors overlapping this one 
     view->skip = 0;
     view->invalid = 1;
+    */
 }
 
 
-int ToolUp(SimView* view, int x, int y)
+int ToolUp(int x, int y)
 {
-    ToolDrag(view, x, y);
+    //ToolDrag(view, x, y);
     return 0;
 }

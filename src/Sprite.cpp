@@ -1487,7 +1487,7 @@ void DoBusSprite(SimSprite* sprite)
             /* can't drive forward into a new tile */
             if (speed == 8)
             {
-                bulldozer_tool(NULL, tx, ty);
+                bulldozer_tool(tx, ty);
             }
             else
             {
