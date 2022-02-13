@@ -1241,253 +1241,216 @@ int wire_tool(int x, int y)
 
 int park_tool(int x, int y)
 {
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1)))
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
         return -1;
+    }
 
-    result = putDownPark(x, y);
-    return result;
+    return putDownPark(x, y);
 }
 
 
 int residential_tool(int x, int y)
 {
-    int result;
 
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1))) {
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
         return -1;
     }
 
-    result = check3x3(x, y, RESBASE, residentialState);
-    return result;
+    return check3x3(x, y, RESBASE, residentialState);
 }
 
 
 int commercial_tool(int x, int y)
 {
-    int result;
 
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1)))
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
     {
         return -1;
     }
 
-    result = check3x3(x, y, COMBASE, commercialState);
-    return result;
+    return  check3x3(x, y, COMBASE, commercialState);
 }
 
 
 int industrial_tool(int x, int y)
 {
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1)))
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
     {
         return -1;
     }
 
-    result = check3x3(x, y, INDBASE, industrialState);
-    return result;
+    return check3x3(x, y, INDBASE, industrialState);
 }
 
 
 int police_dept_tool(int x, int y)
 {
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1))) {
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
         return -1;
     }
 
-    result = check3x3(x, y, POLICESTBASE, policeState);
-    return result;
+    return check3x3(x, y, POLICESTBASE, policeState);
 }
 
 
 int fire_dept_tool(int x, int y)
 {
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1))) {
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
         return -1;
     }
 
-    result = check3x3(x, y, FIRESTBASE, fireState);
-    return result;
+    return check3x3(x, y, FIRESTBASE, fireState);
 }
 
 
 int stadium_tool(int x, int y)
 {
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1))) {
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
         return -1;
     }
 
-    result = check4x4(x, y, STADIUMBASE, 0, stadiumState);
-    return result;
+    return check4x4(x, y, STADIUMBASE, 0, stadiumState);
 }
 
 
 int coal_power_plant_tool(int x, int y)
 {
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1))) {
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
         return -1;
     }
 
-    result = check4x4(x, y, COALBASE, 1, powerState);
-    return result;
+    return check4x4(x, y, COALBASE, 1, powerState);
 }
 
 
 int nuclear_power_plant_tool(int x, int y)
 {
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1))) {
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
         return -1;
     }
 
-    result = check4x4(x, y, NUCLEARBASE, 1, nuclearState);
-    return result;
+    return check4x4(x, y, NUCLEARBASE, 1, nuclearState);
 }
 
 
 int seaport_tool(int x, int y)
 {
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1))) {
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
         return -1;
     }
 
-    result = check4x4(x, y, PORTBASE, 0, seaportState);
-    return result;
+    return check4x4(x, y, PORTBASE, 0, seaportState);
 }
 
 
 int airport_tool(int x, int y)
 {
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1))) {
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
         return -1;
     }
 
-    result = check6x6(x, y, AIRPORTBASE, airportState);
-    return result;
+    return check6x6(x, y, AIRPORTBASE, airportState);
 }
 
 
 int network_tool(int x, int y)
 {
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1))) {
+    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    {
         return -1;
     }
 
-    result = putDownNetwork(x, y);
-    return result;
+    return putDownNetwork(x, y);
 }
 
 
 int do_tool(int state, int x, int y, int first)
 {
-    int result = 0;
-
     switch (state)
     {
     case residentialState:
-        result = residential_tool(x >> 4, y >> 4);
+        return residential_tool(x >> 4, y >> 4);
         break;
 
     case commercialState:
-        result = commercial_tool(x >> 4, y >> 4);
+        return commercial_tool(x >> 4, y >> 4);
         break;
 
     case industrialState:
-        result = industrial_tool(x >> 4, y >> 4);
+        return industrial_tool(x >> 4, y >> 4);
         break;
 
     case fireState:
-        result = fire_dept_tool(x >> 4, y >> 4);
+        return fire_dept_tool(x >> 4, y >> 4);
         break;
 
     case queryState:
-        result = query_tool(x >> 4, y >> 4);
+        return query_tool(x >> 4, y >> 4);
         break;
 
     case policeState:
-        result = police_dept_tool(x >> 4, y >> 4);
+        return police_dept_tool(x >> 4, y >> 4);
         break;
 
     case wireState:
-        result = wire_tool(x >> 4, y >> 4);
+        return wire_tool(x >> 4, y >> 4);
         break;
 
     case dozeState:
-        result = bulldozer_tool(x >> 4, y >> 4);
+        return bulldozer_tool(x >> 4, y >> 4);
         break;
 
     case rrState:
-        result = rail_tool(x >> 4, y >> 4);
+        return rail_tool(x >> 4, y >> 4);
         break;
 
     case roadState:
-        result = road_tool(x >> 4, y >> 4);
+        return road_tool(x >> 4, y >> 4);
         break;
 
     case stadiumState:
-        result = stadium_tool(x >> 4, y >> 4);
+        return stadium_tool(x >> 4, y >> 4);
         break;
 
     case parkState:
-        result = park_tool(x >> 4, y >> 4);
+        return park_tool(x >> 4, y >> 4);
         break;
 
     case seaportState:
-        result = seaport_tool(x >> 4, y >> 4);
+        return seaport_tool(x >> 4, y >> 4);
         break;
 
     case powerState:
-        result = coal_power_plant_tool(x >> 4, y >> 4);
+        return coal_power_plant_tool(x >> 4, y >> 4);
         break;
 
     case nuclearState:
-        result = nuclear_power_plant_tool(x >> 4, y >> 4);
+        return nuclear_power_plant_tool(x >> 4, y >> 4);
         break;
 
     case airportState:
-        result = airport_tool(x >> 4, y >> 4);
+        return airport_tool(x >> 4, y >> 4);
         break;
 
     case networkState:
-        result = network_tool(x >> 4, y >> 4);
+        return network_tool(x >> 4, y >> 4);
         break;
 
     default:
-        result = 0;
+        return 0;
         break;
     }
 
-    return result;
+    return 0;
 }
 
 
@@ -1499,9 +1462,7 @@ int current_tool(int x, int y, int first)
 
 void DoTool(int tool, int x, int y)
 {
-    int result;
-
-    result = do_tool(tool, x << 4, y << 4, 1);
+    int result = do_tool(tool, x << 4, y << 4, 1);
 
     if (result == -1)
     {
