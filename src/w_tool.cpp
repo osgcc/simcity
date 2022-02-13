@@ -1091,7 +1091,7 @@ void put6x6Rubble(int x, int y)
 
 int query_tool(int x, int y)
 {
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1241,7 +1241,7 @@ int wire_tool(int x, int y)
 
 int park_tool(int x, int y)
 {
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1252,8 +1252,7 @@ int park_tool(int x, int y)
 
 int residential_tool(int x, int y)
 {
-
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1264,8 +1263,7 @@ int residential_tool(int x, int y)
 
 int commercial_tool(int x, int y)
 {
-
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1276,7 +1274,7 @@ int commercial_tool(int x, int y)
 
 int industrial_tool(int x, int y)
 {
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1287,7 +1285,7 @@ int industrial_tool(int x, int y)
 
 int police_dept_tool(int x, int y)
 {
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1298,7 +1296,7 @@ int police_dept_tool(int x, int y)
 
 int fire_dept_tool(int x, int y)
 {
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1309,7 +1307,7 @@ int fire_dept_tool(int x, int y)
 
 int stadium_tool(int x, int y)
 {
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1320,7 +1318,7 @@ int stadium_tool(int x, int y)
 
 int coal_power_plant_tool(int x, int y)
 {
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1331,7 +1329,7 @@ int coal_power_plant_tool(int x, int y)
 
 int nuclear_power_plant_tool(int x, int y)
 {
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1342,7 +1340,7 @@ int nuclear_power_plant_tool(int x, int y)
 
 int seaport_tool(int x, int y)
 {
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1353,7 +1351,7 @@ int seaport_tool(int x, int y)
 
 int airport_tool(int x, int y)
 {
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
@@ -1364,7 +1362,7 @@ int airport_tool(int x, int y)
 
 int network_tool(int x, int y)
 {
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return -1;
     }
