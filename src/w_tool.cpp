@@ -1022,7 +1022,7 @@ void doZoneStatus(int mapH, int mapV)
 
     // \fixme yuck!
     // \fixme needs to get the correct strings from the 219 file
-    localStr = GetIndString(219, static_cast<MessageEnumerator>(x));
+    localStr = GetIndString(219, static_cast<NotificationId>(x));
 
     for (x = 0; x < 5; x++)
     {
@@ -1032,7 +1032,7 @@ void doZoneStatus(int mapH, int mapV)
         if (id > 20) { id = 20; }
         
         // \fixme yuck!
-        statusStr[x] = GetIndString(202, static_cast<MessageEnumerator>(id));
+        statusStr[x] = GetIndString(202, static_cast<NotificationId>(id));
     }
 
     DoShowZoneStatus({ localStr, statusStr[0], statusStr[1],
@@ -1590,13 +1590,13 @@ void DoTool(SimView* view, int tool, int x, int y)
     if (result == -1)
     {
         ClearMes();
-        SendMes(MessageEnumerator::MustBulldoze);
+        SendMes(NotificationId::MustBulldoze);
         MakeSoundOn(view, "edit", "UhUh");
     }
     else if (result == -2)
     {
         ClearMes();
-        SendMes(MessageEnumerator::InsufficientFunds);
+        SendMes(NotificationId::InsufficientFunds);
         MakeSoundOn(view, "edit", "Sorry");
     }
 
@@ -1625,13 +1625,13 @@ void ToolDown(SimView* view, int x, int y)
     if (result == -1)
     {
         ClearMes();
-        SendMes(MessageEnumerator::MustBulldoze);
+        SendMes(NotificationId::MustBulldoze);
         MakeSoundOn(view, "edit", "UhUh");
     }
     else if (result == -2)
     {
         ClearMes();
-        SendMes(MessageEnumerator::InsufficientFunds);
+        SendMes(NotificationId::InsufficientFunds);
         MakeSoundOn(view, "edit", "Sorry");
     }
     else if (result == -3)

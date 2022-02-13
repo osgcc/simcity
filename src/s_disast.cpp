@@ -150,7 +150,7 @@ void FireBomb()
     CrashY = RandomRange(0, SimHeight - 1);
     MakeExplosion(CrashX, CrashY);
     ClearMes();
-    SendMesAt(MessageEnumerator::FirebombingReported, CrashX, CrashY);
+    SendMesAt(NotificationId::FirebombingReported, CrashX, CrashY);
 }
 
 
@@ -164,7 +164,7 @@ bool Vulnerable(int tem)
 void MakeEarthquake()
 {
     DoEarthQuake();
-    SendMesAt(MessageEnumerator::EarthquakeReported, CCx, CCy);
+    SendMesAt(NotificationId::EarthquakeReported, CCx, CCy);
 
     int time = RandomRange(0, 700) + 300;
 
@@ -207,7 +207,7 @@ void SetFire()
             Map[x][y] = FIRE + ANIMBIT + (Rand16() & 7);
             CrashX = x;
             CrashY = y;
-            SendMesAt(MessageEnumerator::FireReported, x, y);
+            SendMesAt(NotificationId::FireReported, x, y);
         }
     }
 }
@@ -227,7 +227,7 @@ void MakeFire()
             if ((z > 21) && (z < LASTZONE))
             {
                 Map[x][y] = FIRE + ANIMBIT + (Rand16() & 7);
-                SendMesAt(MessageEnumerator::FireReported, x, y);
+                SendMesAt(NotificationId::FireReported, x, y);
                 return;
             }
         }
@@ -261,7 +261,7 @@ void MakeFlood()
                     {
                         Map[xx][yy] = FLOOD;
                         FloodCount = 30;
-                        SendMesAt(MessageEnumerator::FloodingReported, xx, yy);
+                        SendMesAt(NotificationId::FloodingReported, xx, yy);
                         FloodX = xx;
                         FloodY = yy;
                         return;

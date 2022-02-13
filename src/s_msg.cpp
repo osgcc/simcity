@@ -81,8 +81,8 @@ namespace
     int LastPictureId{};
     int lastMessageTime{};
 
-    MessageEnumerator messageId{};
-    MessageEnumerator LastCategory{};
+    NotificationId messageId{};
+    NotificationId LastCategory{};
 
     bool AutoGotoLocation{ false };
 
@@ -143,13 +143,13 @@ int LastMessageTime()
 }
 
 
-MessageEnumerator MessageId()
+NotificationId MessageId()
 {
     return messageId;
 }
 
 
-void MessageId(MessageEnumerator id)
+void MessageId(NotificationId id)
 {
     messageId = id;
 }
@@ -170,7 +170,7 @@ const Point<int>& MessageLocation()
 void ClearMes()
 {
     //MessagePort = 0;
-    MessageId(MessageEnumerator::None);
+    MessageId(NotificationId::None);
     MessageLocation({ 0, 0 });
     LastPictureId = 0;
     LastMessageTime(0);
@@ -178,11 +178,11 @@ void ClearMes()
 }
 
 
-int SendMes(MessageEnumerator id)
+int SendMes(NotificationId id)
 {
     MessageId(id);
 
-    if (id == MessageEnumerator::None)
+    if (id == NotificationId::None)
     {
         ClearMes();
     }
@@ -193,7 +193,7 @@ int SendMes(MessageEnumerator id)
 }
 
 
-void SendMesAt(MessageEnumerator id, int x, int y)
+void SendMesAt(NotificationId id, int x, int y)
 {
     if (SendMes(id))
     {
@@ -319,32 +319,32 @@ void CheckGrowth()
     }
 
     int currentPopulation = ((ResPop)+(ComPop * 8) + (IndPop * 8)) * 20;
-    MessageEnumerator growthMessageId = MessageEnumerator::None;
+    NotificationId growthMessageId = NotificationId::None;
 
     if (LastCityPop)
     {
         if ((LastCityPop < 2000) && (currentPopulation >= 2000))
         {
-            growthMessageId = MessageEnumerator::ReachedTown;
+            growthMessageId = NotificationId::ReachedTown;
         }
         if ((LastCityPop < 10000) && (currentPopulation >= 10000))
         {
-            growthMessageId = MessageEnumerator::ReachedCity;
+            growthMessageId = NotificationId::ReachedCity;
         }
         if ((LastCityPop < 50000L) && (currentPopulation >= 50000L))
         {
-            growthMessageId = MessageEnumerator::ReachedCapital;
+            growthMessageId = NotificationId::ReachedCapital;
         }
         if ((LastCityPop < 100000L) && (currentPopulation >= 100000L))
         {
-            growthMessageId = MessageEnumerator::ReachedMetropolis;
+            growthMessageId = NotificationId::ReachedMetropolis;
         }
         if ((LastCityPop < 500000L) && (currentPopulation >= 500000L))
         {
-            growthMessageId = MessageEnumerator::ReachedMegalopolis;
+            growthMessageId = NotificationId::ReachedMegalopolis;
         }
     }
-    if (growthMessageId != MessageEnumerator::None &&
+    if (growthMessageId != NotificationId::None &&
         growthMessageId != LastCategory)
     {
         SendMes(growthMessageId);
@@ -379,49 +379,49 @@ void SendMessages()
     case 1:
         if ((TotalZPop / 4) >= ResZPop) /* need Res */
         {
-            SendMes(MessageEnumerator::ResidentialNeeded);
+            SendMes(NotificationId::ResidentialNeeded);
         }
         break;
 
     case 5:
         if ((TotalZPop / 8) >= ComZPop) /* need Com */
         {
-            SendMes(MessageEnumerator::CommercialNeeded);
+            SendMes(NotificationId::CommercialNeeded);
         }
         break;
 
     case 10:
         if ((TotalZPop / 8) >= IndZPop) /* need Ind */
         {
-            SendMes(MessageEnumerator::IndustrialNeeded);
+            SendMes(NotificationId::IndustrialNeeded);
         }
         break;
 
     case 14:
         if ((TotalZPop > 10) && ((TotalZPop << 1) > RoadTotal))
         {
-            SendMes(MessageEnumerator::RoadsNeeded);
+            SendMes(NotificationId::RoadsNeeded);
         }
         break;
 
     case 18:
         if ((TotalZPop > 50) && (TotalZPop > RailTotal))
         {
-            SendMes(MessageEnumerator::RailNeeded);
+            SendMes(NotificationId::RailNeeded);
         }
         break;
 
     case 22:
         if ((TotalZPop > 10) && (PowerPop == 0)) /* need Power */
         {
-            SendMes(MessageEnumerator::PowerNeeded);
+            SendMes(NotificationId::PowerNeeded);
         }
         break;
 
     case 26:
         if ((ResPop > 500) && (StadiumPop == 0)) /* need Stad */
         {
-            SendMes(MessageEnumerator::StadiumNeeded);
+            SendMes(NotificationId::StadiumNeeded);
             ResCap = 1;
         }
         else
@@ -433,7 +433,7 @@ void SendMessages()
     case 28:
         if ((IndPop > 70) && (PortPop == 0))
         {
-            SendMes(MessageEnumerator::SeaportNeeded);
+            SendMes(NotificationId::SeaportNeeded);
             IndCap = 1;
         }
         else IndCap = 0;
@@ -442,7 +442,7 @@ void SendMessages()
     case 30:
         if ((ComPop > 100) && (APortPop == 0))
         {
-            SendMes(MessageEnumerator::AirportNeeded);
+            SendMes(NotificationId::AirportNeeded);
             ComCap = 1;
         }
         else ComCap = 0;
@@ -460,7 +460,7 @@ void SendMessages()
         {
             if ((PwrdZCnt / TM) < .7)
             {
-                SendMes(MessageEnumerator::BlackoutsReported);
+                SendMes(NotificationId::BlackoutsReported);
             }
         }
     }
@@ -469,63 +469,63 @@ void SendMessages()
     case 35:
         if (PolluteAverage > /* 80 */ 60)
         {
-            SendMes(MessageEnumerator::PollutionHigh);
+            SendMes(NotificationId::PollutionHigh);
         }
         break;
 
     case 42:
         if (CrimeAverage > 100)
         {
-            SendMes(MessageEnumerator::CrimeHigh);
+            SendMes(NotificationId::CrimeHigh);
         }
         break;
 
     case 45:
         if ((TotalPop > 60) && (FireStPop == 0))
         {
-            SendMes(MessageEnumerator::FireDepartmentNeeded);
+            SendMes(NotificationId::FireDepartmentNeeded);
         }
         break;
 
     case 48:
         if ((TotalPop > 60) && (PolicePop == 0))
         {
-            SendMes(MessageEnumerator::PoliceDepartmentNeeded);
+            SendMes(NotificationId::PoliceDepartmentNeeded);
         }
         break;
 
     case 51:
         if (CityTax > 12)
         {
-            SendMes(MessageEnumerator::TaxesHigh);
+            SendMes(NotificationId::TaxesHigh);
         }
         break;
 
     case 54:
         if ((RoadEffect < 20) && (RoadTotal > 30))
         {
-            SendMes(MessageEnumerator::RoadsDeteriorating);
+            SendMes(NotificationId::RoadsDeteriorating);
         }
         break;
 
     case 57:
         if ((FireEffect < 700) && (TotalPop > 20))
         {
-            SendMes(MessageEnumerator::FireDefunded);
+            SendMes(NotificationId::FireDefunded);
         }
         break;
 
     case 60:
         if ((PoliceEffect < 700) && (TotalPop > 20))
         {
-            SendMes(MessageEnumerator::PoliceDefunded);
+            SendMes(NotificationId::PoliceDefunded);
         }
         break;
 
     case 63:
         if (TrafficAverage > 60)
         {
-            SendMes(MessageEnumerator::TrafficJamsReported);
+            SendMes(NotificationId::TrafficJamsReported);
         }
         break;
     }
@@ -536,11 +536,11 @@ void doMessage()
 {
     bool firstTime = false;
     
-    if (MessageId() == MessageEnumerator::None)
+    if (MessageId() == NotificationId::None)
     {
         return;
     }
-    else if (MessageId() != MessageEnumerator::None &&
+    else if (MessageId() != NotificationId::None &&
              TickCount() - LastMessageTime() > messageDisplayTime)
     {
         ClearMes();
@@ -551,7 +551,7 @@ void doMessage()
     {
         switch (MessageId())
         {
-        case MessageEnumerator::TrafficJamsReported:
+        case NotificationId::TrafficJamsReported:
             if (RandomRange(0, 5) == 1)
             {
                 MakeSound("city", "HonkHonk-Med");
@@ -566,33 +566,33 @@ void doMessage()
             }
             break;
 
-        case MessageEnumerator::CrimeHigh:
-        case MessageEnumerator::FireReported:
-        case MessageEnumerator::TornadoReported:
-        case MessageEnumerator::EarthquakeReported:
-        case MessageEnumerator::PlaneCrashed:
-        case MessageEnumerator::ShipWrecked:
-        case MessageEnumerator::TrainCrashed:
-        case MessageEnumerator::HelicopterCrashed:
+        case NotificationId::CrimeHigh:
+        case NotificationId::FireReported:
+        case NotificationId::TornadoReported:
+        case NotificationId::EarthquakeReported:
+        case NotificationId::PlaneCrashed:
+        case NotificationId::ShipWrecked:
+        case NotificationId::TrainCrashed:
+        case NotificationId::HelicopterCrashed:
             MakeSound("city", "Siren");
             break;
 
-        case MessageEnumerator::MonsterReported:
+        case NotificationId::MonsterReported:
             MakeSound("city", "Monster -speed [MonsterSpeed]");
             break;
 
-        case MessageEnumerator::FirebombingReported:
+        case NotificationId::FirebombingReported:
             MakeSound("city", "Explosion-Low");
             MakeSound("city", "Siren");
             break;
 
-        case  MessageEnumerator::NuclearMeltdownReported:
+        case  NotificationId::NuclearMeltdownReported:
             MakeSound("city", "Explosion-High");
             MakeSound("city", "Explosion-Low");
             MakeSound("city", "Siren");
             break;
 
-        case  MessageEnumerator::RiotsReported:
+        case  NotificationId::RiotsReported:
             MakeSound("city", "Siren");
             break;
         }
@@ -600,7 +600,7 @@ void doMessage()
         firstTime = false;
     }
 
-    if (MessageId() != MessageEnumerator::None)
+    if (MessageId() != NotificationId::None)
     {
         if (MessageLocation() != Point<int>{0, 0})
         {

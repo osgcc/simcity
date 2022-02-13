@@ -224,7 +224,7 @@ void DoPowerScan()
         {
             if (++NumPower > MaxPower)
             {
-                SendMes(MessageEnumerator::BrownoutsReported);
+                SendMes(NotificationId::BrownoutsReported);
                 return;
             }
             

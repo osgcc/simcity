@@ -3,14 +3,14 @@
 #include "Point.h"
 #include "w_resrc.h"
 
-int SendMes(MessageEnumerator);
+int SendMes(NotificationId);
 void SendMessages();
 void ClearMes();
-void SendMesAt(MessageEnumerator, int x, int y);
+void SendMesAt(NotificationId, int x, int y);
 void doMessage();
 
-MessageEnumerator MessageId();
-void MessageId(MessageEnumerator);
+NotificationId MessageId();
+void MessageId(NotificationId);
 
 void MessageLocation(Point<int> location);
 const Point<int>& MessageLocation();

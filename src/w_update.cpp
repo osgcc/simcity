@@ -161,7 +161,7 @@ void updateDate()
     {
         SetYear(StartingYear);
         y = StartingYear;
-        SendMes(MessageEnumerator::BrownoutsReported);
+        SendMes(NotificationId::BrownoutsReported);
     }
 
     doMessage();

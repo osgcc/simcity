@@ -666,31 +666,31 @@ void ExplodeSprite(SimSprite* sprite)
     case AIR:
         CrashX = x;
         CrashY = y;
-        SendMesAt(MessageEnumerator::PlaneCrashed, x, y);
+        SendMesAt(NotificationId::PlaneCrashed, x, y);
         break;
 
     case SHI:
         CrashX = x;
         CrashY = y;
-        SendMesAt(MessageEnumerator::ShipWrecked, x, y);
+        SendMesAt(NotificationId::ShipWrecked, x, y);
         break;
 
     case TRA:
         CrashX = x;
         CrashY = y;
-        SendMesAt(MessageEnumerator::TrainCrashed, x, y);
+        SendMesAt(NotificationId::TrainCrashed, x, y);
         break;
 
     case COP:
         CrashX = x;
         CrashY = y;
-        SendMesAt(MessageEnumerator::HelicopterCrashed, x, y);
+        SendMesAt(NotificationId::HelicopterCrashed, x, y);
         break;
 
     case BUS:
         CrashX = x;
         CrashY = y;
-        SendMesAt(MessageEnumerator::TrainCrashed, x, y); /* XXX for now */
+        SendMesAt(NotificationId::TrainCrashed, x, y); /* XXX for now */
         break;
     }
 
@@ -806,7 +806,7 @@ void DoCopterSprite(SimSprite* sprite)
             (y < (SimHeight >> 1))) {
             /* Don changed from 160 to 170 to shut the #$%#$% thing up! */
             if ((TrfDensity[x][y] > 170) && ((Rand16() & 7) == 0)) {
-                SendMesAt(MessageEnumerator::HeavyTrafficReported, (x << 1) + 1, (y << 1) + 1);
+                SendMesAt(NotificationId::HeavyTrafficReported, (x << 1) + 1, (y << 1) + 1);
                 MakeSound("city", "HeavyTraffic"); /* chopper */
                 sprite->sound_count = 200;
             }
@@ -1277,7 +1277,7 @@ void DoExplosionSprite(SimSprite *sprite)
       MakeSound("city", "Explosion-High"); /* explosion */
       x = (sprite->x >>4) + 3;
       y = (sprite->y >>4);
-      SendMesAt(MessageEnumerator::ExplosionReported, x, y);
+      SendMesAt(NotificationId::ExplosionReported, x, y);
     }
     sprite->frame++;
   }
@@ -1707,7 +1707,7 @@ void MonsterHere(int x, int y)
 {
   MakeSprite(GOD, (x <<4) + 48, (y <<4));
   ClearMes();
-  SendMesAt(MessageEnumerator::MonsterReported, x + 5, y);
+  SendMesAt(NotificationId::MonsterReported, x + 5, y);
 }
 
 
@@ -1783,7 +1783,7 @@ void MakeTornado()
     MakeSprite(TOR, x, y);
 
     ClearMes();
-    SendMesAt(MessageEnumerator::TornadoReported, (x >> 4) + 3, (y >> 4) + 2);
+    SendMesAt(NotificationId::TornadoReported, (x >> 4) + 3, (y >> 4) + 2);
 }
 
 

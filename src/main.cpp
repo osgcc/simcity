@@ -366,7 +366,7 @@ void sim_init()
     PunishCnt = 0;
     autoBulldoze = 1;
     autoBudget = 1;
-    MessageId(MessageEnumerator::None);
+    MessageId(NotificationId::None);
     ClearMes();
     flagBlink = 1;
     SimSpeed(SimulationSpeed::Normal);

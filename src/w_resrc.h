@@ -2,7 +2,7 @@
 
 #include <string>
 
-enum class MessageEnumerator
+enum class NotificationId
 {
     None,
     ResidentialNeeded,
@@ -56,4 +56,4 @@ enum class MessageEnumerator
     CityRestored
 };
 
-const std::string& GetIndString(int /*id*/, MessageEnumerator);
+const std::string& GetIndString(int /*id*/, NotificationId);
