@@ -16,3 +16,6 @@ void DoPlayNewCity();
 
 void CityName(const std::string& name);
 const std::string& CityName();
+
+void GameLevel(const int level);
+int GameLevel();

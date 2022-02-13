@@ -175,42 +175,26 @@ void setSkips(int skips)
     sim_skip = 0;
 }
 
-
-void UpdateGameLevel()
-{
-  /*
-  char buf[256];
-
-  sprintf(buf, "UISetGameLevel %d", GameLevel);
-  Eval(buf);
-  */
-}
-
-
-void SetGameLevel(int level)
-{
-  GameLevel = level;
-  UpdateGameLevel();
-}
-
-
 void SetGameLevelFunds(int level)
 {
-  switch (level) {
-  default:
-  case 0:
-    SetFunds(20000);
-    SetGameLevel(0);
-    break;
-  case 1:
-    SetFunds(10000);
-    SetGameLevel(1);
-    break;
-  case 2:
-    SetFunds(5000);
-    SetGameLevel(2);
-    break;
-  }
+    switch (level)
+    {
+    default:
+    case 0:
+        SetFunds(20000);
+        GameLevel(0);
+        break;
+
+    case 1:
+        SetFunds(10000);
+        GameLevel(1);
+        break;
+
+    case 2:
+        SetFunds(5000);
+        GameLevel(2);
+        break;
+    }
 }
 
 

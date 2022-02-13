@@ -75,15 +75,15 @@
 
 #include "w_budget.h"
 #include "w_graph.h"
-#include "Sprite.h"
+#include "w_stubs.h"
 #include "w_util.h"
 
-#include <algorithm>
-
-#include <random>
-
+#include "Sprite.h"
 
 #include <SDL2/SDL.h>
+
+#include <algorithm>
+#include <random>
 
 
 /* Simulation */
@@ -490,7 +490,7 @@ void DoSPZone(int PwrOn)
         return;
 
     case NUCLEAR:
-        if (!NoDisasters && !RandomRange(0, MltdwnTab[GameLevel]))
+        if (!NoDisasters && !RandomRange(0, MltdwnTab[GameLevel()]))
         {
             DoMeltdown(SMapX, SMapY);
             return;
@@ -709,7 +709,7 @@ void SetValves()
     MiscHis[12] = LVAverage;
     MiscHis[13] = CrimeAverage;
     MiscHis[14] = PolluteAverage;
-    MiscHis[15] = GameLevel;
+    MiscHis[15] = GameLevel();
     MiscHis[16] = CityClass;
     MiscHis[17] = CityScore;
 
@@ -753,7 +753,7 @@ void SetValves()
     PjComPop = IntMarket * LaborBase;
 
     temp = 1;
-    switch (GameLevel)
+    switch (GameLevel())
     {
     case 0:
         temp = 1.2f;
@@ -803,7 +803,7 @@ void SetValves()
     if (Cratio > 2) { Cratio = 2; }
     if (Iratio > 2) { Iratio = 2; }
 
-    int index = std::clamp(CityTax + GameLevel, 0, 20);
+    int index = std::clamp(CityTax + GameLevel(), 0, 20);
 
     Rratio = ((Rratio - 1) * 600) + TaxTable[index]; /* global tax/Glevel effects */
     Cratio = ((Cratio - 1) * 600) + TaxTable[index];
@@ -1048,8 +1048,8 @@ void CollectTax()
         AvCityTax = 0;
         PoliceFund = PolicePop * 100;
         FireFund = FireStPop * 100;
-        RoadFund = static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel]);
-        TaxFund = static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * CityTax * FLevels[GameLevel]); //yuck
+        RoadFund = static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel()]);
+        TaxFund = static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * CityTax * FLevels[GameLevel()]); //yuck
 
         if (TotalPop) // if there are people to tax
         {
@@ -1219,7 +1219,7 @@ void SimLoadInit()
     LVAverage = MiscHis[12];
     CrimeAverage = MiscHis[13];
     PolluteAverage = MiscHis[14];
-    GameLevel = MiscHis[15];
+    GameLevel(MiscHis[15]);
 
     if (CityTime < 0)
     {
@@ -1231,12 +1231,6 @@ void SimLoadInit()
         EMarket = 4.0;
     }
 
-    if ((GameLevel > 2) || (GameLevel < 0))
-    {
-        GameLevel = 0;
-    }
-
-    SetGameLevel(GameLevel);
     SetCommonInits();
 
     CityClass = MiscHis[16];

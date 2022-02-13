@@ -414,7 +414,7 @@ void LoadScenario(int s)
     std::string name;
     std::string fname;
 
-    SetGameLevel(0);
+    GameLevel(0);
 
     if ((s < 1) || (s > 8)) { s = 1; }
 

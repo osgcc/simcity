@@ -72,6 +72,8 @@
 
 
 #include <SDL2/SDL.h>
+
+#include <algorithm>
 #include <string>
 
 /* Stubs */
@@ -80,7 +82,7 @@
 int PunishCnt;
 int autoBulldoze, autoBudget;
 int autoGo;
-int GameLevel;
+
 int InitSimLoad;
 int ScenarioID;
 int NoDisasters;
@@ -92,9 +94,23 @@ namespace
 {
     int totalFunds{};
     int lastFunds{};
-    
+    int gameLevel{};
+
     std::string cityName{};
 }
+
+
+void GameLevel(const int level)
+{
+    gameLevel = std::clamp(level, 0, 2);
+}
+
+
+int GameLevel()
+{
+    return gameLevel;
+}
+
 
 void LastFunds(const int funds)
 {
@@ -148,9 +164,9 @@ void DoPlayNewCity()
 {
     Eval("UIPlayNewCity");
 
-    GameLevel = 0;
+    GameLevel(0);
     CityName("NowHere");
-    if (GameLevel == -1) { GameLevel = 0; }
+    if (GameLevel() == -1) { GameLevel(0); }
     GenerateNewCity();
 
     /*

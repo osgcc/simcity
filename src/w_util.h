@@ -30,6 +30,5 @@ int CurrentYear();
 void SetYear(int year);
 void SetGameLevelFunds(int level);
 void setSkips(int skips);
-void SetGameLevel(int level);
 bool TestBounds(int x, int y, int width, int height);
 Point<int> PositionToCell(const Point<int>& position, const Point<int>& offset);

@@ -61,7 +61,7 @@
  */
 #include "main.h"
 
-
+#include "w_stubs.h"
 #include "w_tk.h"
 #include "w_util.h"
 
@@ -175,7 +175,7 @@ void doScoreCard()
 		std::to_string(deltaCityPop),
 		NumberToDollarDecimal(CityAssValue),
 		cityClassStr[CityClass],
-		cityLevelStr[GameLevel],
+		cityLevelStr[GameLevel()],
 		std::to_string(CityYes) + "%",
 		std::to_string(CityNo) + "%",
 		"City Evaluation  " + std::to_string(CurrentYear())

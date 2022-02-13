@@ -65,6 +65,8 @@
 #include "s_sim.h"
 
 #include "s_msg.h"
+
+#include "w_stubs.h"
 #include "w_util.h"
 
 #include <algorithm>
@@ -382,7 +384,7 @@ void DoDisasters()
         return;
     }
     
-    int disasterChance = DisChance[std::clamp(GameLevel, 0, 2)];
+    int disasterChance = DisChance[std::clamp(GameLevel(), 0, 2)];
     if (disasterChance == 0)
     {
         int disasterType = RandomRange(0, 8);
