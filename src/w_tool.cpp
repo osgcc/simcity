@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-#include "main.h"
+//#include "main.h"
 
 #include "s_alloc.h"
 #include "s_msg.h"
@@ -94,44 +94,76 @@ int PendingY;
 
 const int ToolCost[] =
 {
-    100,
-    100,
-    100,
-    500,
-    0,
-    500,
-    5,
-    1,
-    20,
-    10,
-    0,
-    0,
-    5000,
-    10,
-    3000,
-    3000,
-    5000,
-    10000,
-    100,
-    0
+    100,    // residentialState
+    100,    // commercialState
+    100,    // industrialState
+    500,    // fireState
+    0,      // queryState
+    500,    // policeState
+    5,      // wireState
+    1,      // dozeState
+    20,     // rrState
+    10,     // roadState
+    0,      // UNUSED STATE 1
+    0,      // UNUSED STATE 2
+    5000,   // stadiumState
+    10,     // parkState
+    3000,   // seaportState
+    3000,   // powerState
+    5000,   // nuclearState
+    10000,  // airportState
+    100,    // networkState
+    0       // UNUSED STATE 3
 };
 
 
-int toolSize[] = {
-  3, 3, 3, 3,
-  1, 3, 1, 1,
-  1, 1, 0, 0,
-  4, 1, 4, 4, 
-  4, 6, 1, 0,
+const int ToolSize[] =
+{
+    3, // residentialState
+    3, // commercialState
+    3, // industrialState
+    3, // fireState
+    1, // queryState
+    3, // policeState
+    1, // wireState
+    1, // dozeState
+    1, // rrState
+    1, // roadState
+    0, // UNUSED STATE 1
+    0, // UNUSED STATE 2
+    4, // stadiumState
+    1, // parkState
+    4, // seaportState
+    4, // powerState
+    4, // nuclearState
+    6, // airportState
+    1, // networkState
+    0  // UNUSED STATE 3
 };
 
 
-int toolOffset[] = {
-  1, 1, 1, 1,
-  0, 1, 0, 0,
-  0, 0, 0, 0,
-  1, 0, 1, 1,
-  1, 1, 0, 0,
+const int ToolOffset[] =
+{
+    1, // residentialState
+    1, // commercialState
+    1, // industrialState
+    1, // fireState
+    0, // queryState
+    1, // policeState
+    0, // wireState
+    0, // dozeState
+    0, // rrState
+    0, // roadState
+    0, // UNUSED STATE 1
+    0, // UNUSED STATE 2
+    1, // stadiumState
+    0, // parkState
+    1, // seaportState
+    1, // powerState
+    1, // nuclearState
+    1, // airportState
+    0, // networkState
+    0, // UNUSED STATE 3
 };
 
 
@@ -199,10 +231,10 @@ int putDownNetwork(SimView* view, int mapH, int mapV)
 
     if (tile == 0)
     {
-        if ((TotalFunds() - ToolCost[view->tool_state]) >= 0)
+        if ((TotalFunds() - ToolCost[networkState]) >= 0)
         {
             Map[mapH][mapV] = TELEBASE | CONDBIT | BURNBIT | BULLBIT | ANIMBIT;
-            Spend(ToolCost[view->tool_state]);
+            Spend(ToolCost[networkState]);
             return 1;
         }
         else
@@ -377,8 +409,6 @@ int checkSize(int temp)
 
 
 /* 3x3 */
-
-
 void check3x3border(int xMap, int yMap)
 {
     int xPos, yPos;
@@ -525,8 +555,6 @@ int check3x3(SimView* view, int mapH, int mapV, int base, int tool)
 
 
 /* 4x4 */
-
-
 void check4x4border(int xMap, int yMap)
 {
     //Ptr tilePtr;
@@ -831,7 +859,6 @@ int check6x6(SimView* view, int mapH, int mapV, int base, int tool)
 
 
 /* QUERY */
-
 
 /* search table for zone status string match */
 static int idArray[28] =
@@ -1465,167 +1492,6 @@ int network_tool(SimView* view, int x, int y)
 }
 
 
-/*
-int
-ChalkTool(SimView *view, int x, int y, int color, int first)
-{
-  if (first) {
-    ChalkStart(view, x, y, color);
-  } else {
-    ChalkTo(view, x, y);
-  }
-  DidTool(view, "Chlk", x, y);
-  return 1;
-}
-
-
-
-ChalkStart(SimView *view, int x, int y, int color)
-{
-  Ink *ink;
-  Ink **ip;
-
-  for (ip = &sim->overlay; *ip != NULL; ip = &((*ip)->next)) ;
-
-  *ip = ink = NewInk();
-  ink->x = x; ink->y = y;
-  ink->color = color;
-  StartInk(ink, x, y);
-  view->track_info = (char *)ink;
-  view->last_x = x;
-  view->last_y = y;
-  view->tool_event_time = view->tool_last_event_time =
-    ((TkWindow *)view->tkwin)->dispPtr->lastEventTime;
-}
-
-
-ChalkTo(SimView *view, int x, int y)
-{
-  int x0, y0, lx, ly;
-  Ink *ink = (Ink *)view->track_info;
-
-#ifdef MOTIONBUFFER
-  if (view->x->dpy->motion_buffer) {
-    XTimeCoord *coords = NULL, *coord;
-    int n = 0, i;
-    
-    view->tool_last_event_time = view->tool_event_time;
-    view->tool_event_time =
-      ((TkWindow *)view->tkwin)->dispPtr->lastEventTime;
-
-    coords = XGetMotionEvents(view->x->dpy,
-			      Tk_WindowId(view->tkwin),
-			      view->tool_last_event_time,
-			      view->tool_event_time,
-			      &n);
-    if (n) {
-      lx = ink->last_x; ly = ink->last_y;
-
-      for (i = 0, coord = coords; i < n; i++, coord++) {
-	ViewToPixelCoords(view, coord->x, coord->y, &x0, &y0);
-	lx = (lx + lx + lx + x0) >>2;
-	ly = (ly + ly + ly + y0) >>2;
-	AddInk(ink, lx, ly);
-      }
-    }
-
-    if (coords) {
-      XFree((char *)coords);
-    }
-  }
-#endif
-
-  AddInk(ink, x, y);
-  view->last_x = x;
-  view->last_y = y;
-}
-
-
-int
-EraserTool(SimView *view, int x, int y, int first)
-{
-  if (first) {
-    EraserStart(view, x, y);
-  } else {
-    EraserTo(view, x, y);
-  }
-  DidTool(view, "Eraser", x, y);
-  return 1;
-}
-
-
-InkInBox(Ink *ink, int left, int top, int right, int bottom)
-{
-  if ((left <= ink->right) &&
-      (right >= ink->left) &&
-      (top <= ink->bottom) &&
-      (bottom >= ink->top)) {
-    int x, y, lx, ly, i;
-
-    if (ink->length == 1) {
-      return 1;
-    }
-
-    x = ink->x;  y = ink->y;
-    for (i = 1; i < ink->length; i++) {
-      int ileft, iright, itop, ibottom;
-
-      lx = x; ly = y;
-      x += ink->points[i].x;  y += ink->points[i].y;
-      if (x < lx) { ileft = x; iright = lx; }
-      else { ileft = lx; iright = x; }
-      if (y < ly) { itop = y; ibottom = ly; }
-      else { itop = ly; ibottom = y; }
-      if ((left <= iright) &&
-	  (right >= ileft) &&
-	  (top <= ibottom) &&
-	  (bottom >= itop)) {
-	return 1;
-      }
-    }
-  }
-  return 0;
-}
-
-
-EraserStart(SimView *view, int x, int y)
-{
-  EraserTo(view, x, y);
-}
-
-
-EraserTo(SimView *view, int x, int y)
-{
-  SimView *v;
-  Ink **ip, *ink;
-
-  for (ip = &sim->overlay; *ip != NULL;) {
-    ink = *ip;
-    if (InkInBox(ink, x - 8, y - 8, x + 8, y + 8)) {
-
-      for (view = sim->editor; view != NULL; view = view->next) {
-	int vleft, vtop;
-
-	if ((ink->right >= (vleft = (view->pan_x - (view->w_width / 2)))) &&
-	    (ink->left <= (vleft + view->w_width)) &&
-	    (ink->bottom >= (vtop = (view->pan_y - (view->w_height / 2)))) &&
-	    (ink->top <= (vtop + view->w_height))) {
-	  view->overlay_mode = 0;
-	  EventuallyRedrawView(view);
-	}
-      }
-
-      *ip = ink->next;
-
-      FreeInk(ink);
-    } else {
-      ip = &((*ip)->next);
-    }
-  }
-}
-*/
-
-
 int do_tool(SimView* view, int state, int x, int y, int first)
 {
     int result = 0;
@@ -1790,7 +1656,7 @@ void ToolDrag(SimView* view, int px, int py)
     current_tool(view, x, y, 0);
     view->last_x = x; view->last_y = y;
 
-    dist = toolSize[view->tool_state];
+    dist = ToolSize[view->tool_state];
 
     x >>= 4; y >>= 4;
     lx = view->last_x >> 4;

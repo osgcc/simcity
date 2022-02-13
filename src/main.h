@@ -497,9 +497,6 @@ extern int CurveLevel;
 extern int specialBase;
 extern int PunishCnt;
 
-extern int toolSize[];
-extern int toolOffset[];
-
 extern std::string Displays;
 extern std::string FirstDisplay;
 

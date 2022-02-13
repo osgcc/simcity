@@ -69,7 +69,9 @@
 #include "s_sim.h"
 
 #include "Sprite.h"
+
 #include "w_tk.h"
+#include "w_tool.h"
 #include "w_util.h"
 #include "w_x.h"
 
@@ -922,10 +924,10 @@ void DrawPending(SimView* view)
     int x, y, size;
     std::string iconname{};
 
-    x = (PendingX - toolOffset[PendingTool]) << 4;
-    y = (PendingY - toolOffset[PendingTool]) << 4;
+    x = (PendingX - ToolOffset[PendingTool]) << 4;
+    y = (PendingY - ToolOffset[PendingTool]) << 4;
 
-    size = toolSize[PendingTool] << 4;
+    size = ToolSize[PendingTool] << 4;
 
     x += left;
     y += top;
