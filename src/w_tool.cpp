@@ -1010,9 +1010,9 @@ const std::string& queryString(int tileValue)
 }
 
 
-void doZoneStatus(int mapH, int mapV)
+void doZoneStatus(int x, int y)
 {
-    int tileNum = Map[mapH][mapV] & LOMASK;
+    int tileNum = Map[x][y] & LOMASK;
     if (tileNum >= COALSMOKE1 && tileNum < FOOTBALLGAME1)
     {
         tileNum = COALBASE;
@@ -1021,16 +1021,16 @@ void doZoneStatus(int mapH, int mapV)
     std::string localStr = queryString(tileNum);
     std::array<std::string, 5> statusStr;
 
-    for (int x = 0; x < 5; x++)
+    for (int _x = 0; _x < 5; ++_x)
     {
-        int id = getDensityStr(x, mapH, mapV);
+        int id = getDensityStr(_x, x, y);
         id++;
         
         // \fixme ugly cast
-        statusStr[x] = ZoneStatsString(static_cast<ZoneStatsId>(std::clamp(id, 1, 20)));
+        statusStr[_x] = ZoneStatsString(static_cast<ZoneStatsId>(std::clamp(id, 1, 20)));
     }
 
-    DoShowZoneStatus({ localStr, statusStr[0], statusStr[1], statusStr[2], statusStr[3], statusStr[4] }, mapH, mapV);
+    DoShowZoneStatus({ localStr, statusStr[0], statusStr[1], statusStr[2], statusStr[3], statusStr[4] }, x, y);
 }
 
 
