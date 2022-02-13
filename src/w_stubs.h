@@ -1,6 +1,5 @@
 #pragma once
 
-extern std::string CityName;
 extern int autoGo;
 
 void Spend(int dollars);
@@ -14,3 +13,6 @@ int TickCount();
 void InitGame();
 void GameStarted();
 void DoPlayNewCity();
+
+void CityName(const std::string& name);
+const std::string& CityName();

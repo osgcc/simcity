@@ -374,7 +374,7 @@ void sim_init()
     MessageLocation({ 0, 0 });
     
     InitSimLoad = 2;
-    Exit = 0;
+    Exit = false;
 
     InitializeSound();
     initMapArrays();
