@@ -42,6 +42,7 @@
     <ClCompile Include="src\s_traf.cpp" />
     <ClCompile Include="src\s_zone.cpp" />
     <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\ToolPalette.cpp" />
     <ClCompile Include="src\w_budget.cpp" />
     <ClCompile Include="src\w_con.cpp" />
     <ClCompile Include="src\w_editor.cpp" />
