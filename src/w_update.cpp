@@ -234,16 +234,6 @@ void updateOptions()
 }
 
 
-
-
-void doTimeStuff() 
-{
-//  if ((CityTime >> 2) != LastCityTime) {
-    updateDate();
-//  }
-}
-
-
 void UpdateMaps()
 {
   InvalidateMaps();

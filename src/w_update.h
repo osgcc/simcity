@@ -24,8 +24,8 @@ void UpdateGraphs();
 void UpdateEvaluation();
 void UpdateHeads();
 void UpdateFunds();
-void doTimeStuff();
 void updateOptions();
+void updateDate();
 
 extern const std::string dateStr[12];
 

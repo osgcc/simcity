@@ -236,7 +236,7 @@ void SetYear(int year)
 
     year = (year - StartingYear) - (CityTime / 48);
     CityTime += year * 48;
-    doTimeStuff();
+    updateDate();
 }
 
 
