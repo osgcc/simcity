@@ -987,56 +987,50 @@ void DoShowZoneStatus(const ZoneStatsStrings zoneStats, int x, int y)
 }
 
 
+const std::string& queryString(int tileValue)
+{
+    for (int i = 1; i < 29; ++i)
+    {
+        if (tileValue < idArray[i])
+        {
+            int queryId = i - 1;
+            if (queryId < 1 || queryId > 28)
+            {
+                queryId = 28;
+            }
+
+            // \fixme ugly cast
+            return QueryStatsString(static_cast<QueryStatsId>(queryId));
+
+            break;
+        }
+    }
+
+    return QueryStatsString(QueryStatsId::Padding2);
+}
+
+
 void doZoneStatus(int mapH, int mapV)
 {
-    std::string localStr;
-    std::array<std::string, 5> statusStr;
-
-    int id;
-    int x;
-    int tileNum;
-    int found;
-
-    tileNum = Map[mapH][mapV] & LOMASK;
-
+    int tileNum = Map[mapH][mapV] & LOMASK;
     if (tileNum >= COALSMOKE1 && tileNum < FOOTBALLGAME1)
     {
         tileNum = COALBASE;
     }
 
-    found = 1;
+    std::string localStr = queryString(tileNum);
+    std::array<std::string, 5> statusStr;
 
-    for (x = 1; x < 29 && found; x++)
+    for (int x = 0; x < 5; x++)
     {
-        if (tileNum < idArray[x])
-        {
-            found = 0;
-        }
-    }
-
-    x--;
-
-    if (x < 1 || x > 28)
-    {
-        x = 28;
-    }
-
-    // \fixme ugly cast
-    localStr = QueryStatsString(static_cast<QueryStatsId>(x));
-
-    for (x = 0; x < 5; x++)
-    {
-        id = getDensityStr(x, mapH, mapV);
+        int id = getDensityStr(x, mapH, mapV);
         id++;
         
-        id = std::clamp(id, 1, 20);
-        
         // \fixme ugly cast
-        statusStr[x] = ZoneStatsString(static_cast<ZoneStatsId>(id));
+        statusStr[x] = ZoneStatsString(static_cast<ZoneStatsId>(std::clamp(id, 1, 20)));
     }
 
-    DoShowZoneStatus({ localStr, statusStr[0], statusStr[1],
-             statusStr[2], statusStr[3], statusStr[4] }, mapH, mapV);
+    DoShowZoneStatus({ localStr, statusStr[0], statusStr[1], statusStr[2], statusStr[3], statusStr[4] }, mapH, mapV);
 }
 
 

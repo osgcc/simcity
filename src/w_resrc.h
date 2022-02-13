@@ -109,7 +109,9 @@ enum class QueryStatsId
     Industrial2,
     Steelers38Bears3,
     DrawBridge2,
-    Ur238
+    Ur238,
+    Padding1,
+    Padding2
 };
 
 

@@ -174,7 +174,9 @@ std::map<QueryStatsId, std::string> QueryStatsTable =
     { QueryStatsId::Industrial2, "Industrial2" },
     { QueryStatsId::Steelers38Bears3, "Steelers 38  Bears 3" },
     { QueryStatsId::DrawBridge2, "Draw Bridge2" },
-    { QueryStatsId::Ur238, "Ur 238" }
+    { QueryStatsId::Ur238, "Ur 238" },
+    { QueryStatsId::Padding1, "" },
+    { QueryStatsId::Padding2, "" }
 };
 
 
