@@ -10,3 +10,7 @@ int query_tool(int x, int y);
 
 extern const int ToolSize[];
 extern const int ToolOffset[];
+
+extern int PendingTool;
+extern int PendingX;
+extern int PendingY;

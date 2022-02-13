@@ -86,9 +86,10 @@ int OverRide = 0;
 int Expensive = 1000;
 int Players = 1;
 int Votes = 0;
-int PendingTool = -1;
-int PendingX;
-int PendingY;
+
+int PendingTool{ -1 };
+int PendingX{};
+int PendingY{};
 
 
 const int ToolCost[] =
