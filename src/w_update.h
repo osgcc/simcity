@@ -25,7 +25,6 @@ void UpdateEvaluation();
 void UpdateHeads();
 void UpdateFunds();
 void doTimeStuff();
-void ReallyUpdateFunds();
 void updateOptions();
 
 extern const std::string dateStr[12];

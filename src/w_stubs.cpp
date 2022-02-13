@@ -127,7 +127,6 @@ void Spend(int dollars)
 void SetFunds(int dollars)
 {
     totalFunds = dollars;
-    UpdateFunds();
 }
 
 

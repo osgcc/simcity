@@ -217,7 +217,7 @@ void signal_init()
 void sim_update_editors()
 {
     doTimeStuff();
-    ReallyUpdateFunds();
+    UpdateFunds();
     updateOptions();
 }
 

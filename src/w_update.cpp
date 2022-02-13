@@ -103,9 +103,6 @@ namespace
       "Nov",
       "Dec"
     };
-
-    bool MustUpdateFunds{ false };
-
 }
 
 
@@ -247,18 +244,6 @@ void doTimeStuff()
 }
 
 
-void ReallyUpdateFunds()
-{
-    if (MustUpdateFunds)
-    {
-        MustUpdateFunds = false;
-
-        SetFunds(std::clamp(TotalFunds(), 0, std::numeric_limits<int>::max()));
-        LastFunds(TotalFunds());
-    }
-}
-
-
 void UpdateMaps()
 {
   InvalidateMaps();
@@ -279,7 +264,6 @@ void UpdateEvaluation()
 
 void UpdateHeads()
 {
-    MustUpdateFunds = true;
     lastCityTime = lastCityYear = lastCityMonth = -999999;
     sim_update_editors();
 }
@@ -287,5 +271,6 @@ void UpdateHeads()
 
 void UpdateFunds()
 {
-    MustUpdateFunds = true;
+    SetFunds(std::clamp(TotalFunds(), 0, std::numeric_limits<int>::max()));
+    LastFunds(TotalFunds());
 }
