@@ -151,6 +151,9 @@ namespace
     Point<int> MapViewOffset{};
     Point<int> TilePointedAt{};
     Point<int> MousePosition{};
+    Point<int> MouseClickPosition{};
+
+    bool MouseClicked{};
 
     SDL_Rect TileHighlight{ 0, 0, 16, 16 };
     SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
@@ -845,6 +848,14 @@ void handleMouseEvent(SDL_Event& event)
         }
         break;
 
+    case SDL_MOUSEBUTTONUP:
+        if (event.button.button == SDL_BUTTON_LEFT)
+        {
+            MouseClicked = true;
+            MouseClickPosition = { event.button.x, event.button.y };
+        }
+        break;
+
     default:
         break;
     }
@@ -1069,7 +1080,12 @@ void startGame()
         drawTopUi();
         //drawMiniMapUi();
 
-        toolPalette.injectMouse(MousePosition);
+        if (MouseClicked)
+        {
+            MouseClicked = false;
+            toolPalette.injectMouseClickPosition(MouseClickPosition);
+        }
+
         toolPalette.draw();
 
         SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
