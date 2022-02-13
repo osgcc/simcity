@@ -83,7 +83,6 @@ int autoGo;
 int GameLevel;
 int InitSimLoad;
 int ScenarioID;
-std::string CityName;
 int NoDisasters;
 int EvalChanged;
 int flagBlink;
@@ -93,6 +92,8 @@ namespace
 {
     int totalFunds{};
     int lastFunds{};
+    
+    std::string cityName{};
 }
 
 void LastFunds(const int funds)
@@ -113,8 +114,15 @@ int TotalFunds()
 }
 
 
-void setCityName(const std::string& name)
+void CityName(const std::string& name)
 {
+    cityName = name;
+}
+
+
+const std::string& CityName()
+{
+    return cityName;
 }
 
 
@@ -141,7 +149,7 @@ void DoPlayNewCity()
     Eval("UIPlayNewCity");
 
     GameLevel = 0;
-    CityName = "NowHere"; 
+    CityName("NowHere");
     if (GameLevel == -1) { GameLevel = 0; }
     GenerateNewCity();
 
@@ -231,12 +239,12 @@ void GameStarted()
     case -1:
         if (!StartupName.empty())
         {
-            setCityName(StartupName);
+            CityName(StartupName);
             StartupName = "";
         }
         else
         {
-            setCityName("NowHere");
+            CityName("NowHere");
         }
         DoPlayNewCity();
         break;
