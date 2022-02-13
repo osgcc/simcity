@@ -510,7 +510,6 @@ extern std::string FirstDisplay;
 extern bool NewMap;
 extern int NewMapFlags[NMAPS];
 extern int NewGraph;
-extern bool MustUpdateFunds;
 extern int MustUpdateOptions;
 extern int EvalChanged;
 extern int MeltX, MeltY;
