@@ -164,6 +164,8 @@ namespace
     unsigned int lastTick{};
     unsigned int accumulator{};
     unsigned int accumulatorAdjust{};
+
+    std::string currentBudget{};
 };
 
 
@@ -461,7 +463,6 @@ void sim_heat()
 }
 
 
-
 void sim_update()
 {
     /* -- blink speed of 0.5 seconds
@@ -507,7 +508,6 @@ void DrawMiniMap()
 
 void sim_loop(bool doSim)
 {
-
     if (heat_steps)
     {
         int j;
@@ -988,6 +988,9 @@ void drawTopUi()
     drawString(*MainBigFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 35, UiHeaderRect.y + 5}, {255, 255, 255, 255});
 
     drawString(*MainBigFont, LastMessage(), {100, UiHeaderRect.y + 5}, {255, 255, 255, 255});
+
+    const Point<int> budgetPosition{ UiHeaderRect.x + UiHeaderRect.w - 5 - MainBigFont->width(currentBudget), UiHeaderRect.y + 5 };
+    drawString(*MainBigFont, currentBudget, budgetPosition, { 255, 255, 255, 255 });
 }
 
 
@@ -1068,8 +1071,9 @@ void startGame()
     while (!Exit)
     {
         sim_loop(timerTick());
-
         pumpEvents();
+
+        currentBudget = NumberToDollarDecimal(TotalFunds());
 
         SDL_RenderClear(MainWindowRenderer);
 
