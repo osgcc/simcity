@@ -90,7 +90,7 @@ void InitWillStuff()
     LastCityMonth(0);
     LastFunds(-1);
     OverRide = 0;
-    PendingTool = -1;
+    PendingTool = Tool::None;
 
     MessageId(NotificationId::None);
     //MessagePort = 0;

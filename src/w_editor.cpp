@@ -913,96 +913,6 @@ DoNewEditor(SimView *view)
 */
 
 
-char CursorDashes[] = { 4, 4 };
-
-void DrawPending(SimView* view)
-{
-    
-    //Pixmap pm = view->pixmap2;
-    int left = (view->w_width / 2) - view->pan_x;
-    int top = (view->w_height / 2) - view->pan_y;
-    int x, y, size;
-    std::string iconname{};
-
-    x = (PendingX - ToolOffset[PendingTool]) << 4;
-    y = (PendingY - ToolOffset[PendingTool]) << 4;
-
-    size = ToolSize[PendingTool] << 4;
-
-    x += left;
-    y += top;
-
-    //XSetStipple(view->x->dpy, view->x->gc, view->x->gray50_stipple);
-    //XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
-    //XSetForeground(view->x->dpy, view->x->gc, view->x->pixels[COLOR_BLACK]);
-    //XSetFillStyle(view->x->dpy, view->x->gc, FillStippled);
-    //XFillRectangle(view->x->dpy, pm, view->x->gc, x, y, size, size);
-    //XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
-
-    switch (PendingTool)
-    {
-    case residentialState:
-        iconname = "@images/res.xpm";
-        break;
-
-    case commercialState:
-        iconname = "@images/com.xpm";
-        break;
-
-    case industrialState:
-        iconname = "@images/ind.xpm";
-        break;
-
-    case fireState:
-        iconname = "@images/fire.xpm";
-        break;
-
-    case policeState:
-        iconname = "@images/police.xpm";
-        break;
-
-    case stadiumState:
-        iconname = "@images/stadium.xpm";
-        break;
-
-    case seaportState:
-        iconname = "@images/seaport.xpm";
-        break;
-
-    case powerState:
-        iconname = "@images/coal.xpm";
-        break;
-
-    case nuclearState:
-        iconname = "@images/nuclear.xpm";
-        break;
-
-    case airportState:
-        iconname = "@images/airport.xpm";
-        break;
-
-    default:
-        break;
-    }
-
-    if (!iconname.empty())
-    {
-        //Pixmap icon = Tk_GetPixmap(view->interp, view->tkwin, iconname);
-        //float f;
-       // int i;
-        //
-        //gettimeofday(&now_time, NULL);
-        //f = (2 * now_time.tv_usec / 1000000.0);
-        //if (f > 1.0) f = 2.0 - f;
-        //i = (int)(f * BobHeight * (Players - Votes));
-
-        //if (icon != None)
-        //{
-           // XCopyArea(view->x->dpy, icon, pm, view->x->gc, 0, 0, size, size, x + i, y - i);
-        //}
-    }   
-}
-
 
 void DrawOutside(SimView* view)
 {
@@ -1336,6 +1246,7 @@ void DrawCursor(SimView* view)
 }
 
 
+/*
 void DoUpdateEditor(SimView* view)
 {
     int dx, dy, i;
@@ -1347,7 +1258,7 @@ void DoUpdateEditor(SimView* view)
         return;
     }
 
-    if ((!ShakeNow) && /*      (!view->invalid) &&*/ (!view->update) && (sim_skips || view->skips))
+    if ((!ShakeNow) && (!view->update) && (sim_skips || view->skips))
     {
         if (sim_skips)
         {

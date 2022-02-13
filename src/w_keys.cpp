@@ -160,6 +160,7 @@ void doKeyDown(SimView *view, int charCode)
 
   switch (charCode) {
     
+      /*
     case 'X':
     case 'x': {
       int s = view->tool_state;
@@ -179,6 +180,7 @@ void doKeyDown(SimView *view, int charCode)
       setWandState(s);
       break;
     }
+    */
 
     /***** shift wand state to bull dozer *****/
     case 'B':
@@ -187,7 +189,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(dozeState);
+      setWandState(Tool::Bulldoze);
       break;
     }
 
@@ -198,7 +200,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(roadState);
+      setWandState(Tool::Road);
       break;
     }
 
@@ -209,7 +211,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(wireState);
+      setWandState(Tool::Wire);
       break;
     }
 
@@ -220,7 +222,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(rrState);
+      setWandState(Tool::Rail);
       break;
     }
 
@@ -252,11 +254,13 @@ void doKeyUp(SimView* view, int charCode)
     case 'q':
     case 'Q':
     case 'Q' - '@':
+        /*
         if (view->tool_state_save != -1)
         {
             setWandState(view->tool_state_save);
         }
         view->tool_state_save = -1;
+        */
         break;
 
     default:

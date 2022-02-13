@@ -87,93 +87,40 @@ int Expensive = 1000;
 int Players = 1;
 int Votes = 0;
 
-int PendingTool{ -1 };
+Tool PendingTool{ Tool::None };
 int PendingX{};
 int PendingY{};
 
 
-const int ToolCost[] =
+std::map<Tool, ToolProperties> Tools =
 {
-    100,    // residentialState
-    100,    // commercialState
-    100,    // industrialState
-    500,    // fireState
-    0,      // queryState
-    500,    // policeState
-    5,      // wireState
-    1,      // dozeState
-    20,     // rrState
-    10,     // roadState
-    0,      // UNUSED STATE 1
-    0,      // UNUSED STATE 2
-    5000,   // stadiumState
-    10,     // parkState
-    3000,   // seaportState
-    3000,   // powerState
-    5000,   // nuclearState
-    10000,  // airportState
-    100,    // networkState
-    0       // UNUSED STATE 3
+    { Tool::Residential, { 100, 3, 1, "Residential" }},
+    { Tool::Commercial, { 100, 3, 1, "Commercial" }},
+    { Tool::Industrial, { 100, 3, 1, "Industrial" }},
+    { Tool::Fire, { 500, 3, 1, "Fire Department" }},
+    { Tool::Query, { 0, 0, 0, "Query" }},
+    { Tool::Police, { 500, 3, 1, "Police Department" }},
+    { Tool::Wire, { 5, 1, 0, "Power Line" }},
+    { Tool::Bulldoze, { 1, 1, 0, "Bulldoze" }},
+    { Tool::Rail, { 20, 1, 0, "Rail" }},
+    { Tool::Road, { 10, 1, 0, "Roads" }},
+    { Tool::Stadium, { 5000, 4, 1, "Stadium" }},
+    { Tool::Park, { 10, 1, 0, "Park" }},
+    { Tool::Seaport, { 3000, 4, 1, "Seaport" }},
+    { Tool::Coal, { 3000, 4, 1, "Coal Power" }},
+    { Tool::Nuclear, { 5000, 4, 1, "Nuclear Power" }},
+    { Tool::Airport, { 10000, 6, 1, "Airport" }},
+    { Tool::Network, { 100, 1, 0, "Network" }}
 };
 
 
-const int ToolSize[] =
+void DoSetWandState(Tool tool)
 {
-    3, // residentialState
-    3, // commercialState
-    3, // industrialState
-    3, // fireState
-    1, // queryState
-    3, // policeState
-    1, // wireState
-    1, // dozeState
-    1, // rrState
-    1, // roadState
-    0, // UNUSED STATE 1
-    0, // UNUSED STATE 2
-    4, // stadiumState
-    1, // parkState
-    4, // seaportState
-    4, // powerState
-    4, // nuclearState
-    6, // airportState
-    1, // networkState
-    0  // UNUSED STATE 3
-};
-
-
-const int ToolOffset[] =
-{
-    1, // residentialState
-    1, // commercialState
-    1, // industrialState
-    1, // fireState
-    0, // queryState
-    1, // policeState
-    0, // wireState
-    0, // dozeState
-    0, // rrState
-    0, // roadState
-    0, // UNUSED STATE 1
-    0, // UNUSED STATE 2
-    1, // stadiumState
-    0, // parkState
-    1, // seaportState
-    1, // powerState
-    1, // nuclearState
-    1, // airportState
-    0, // networkState
-    0, // UNUSED STATE 3
-};
-
-
-void DoSetWandState(int state)
-{
-    Eval("UISetToolState " + std::to_string(state));
+    Eval("UISetToolState " + Tools.at(tool).name);
 }
 
 
-void setWandState(int state)
+void setWandState(Tool state)
 {
     sim_update_editors();
     DoSetWandState(state);
@@ -184,7 +131,7 @@ int putDownPark(int mapH, int mapV)
 {
     int tile{};
 
-    if (TotalFunds() - ToolCost[parkState] >= 0)
+    if (TotalFunds() - Tools.at(Tool::Park).cost >= 0)
     {
         int value = RandomRange(0, 4);
 
@@ -199,7 +146,7 @@ int putDownPark(int mapH, int mapV)
 
         if (Map[mapH][mapV] == 0)
         {
-            Spend(ToolCost[parkState]);
+            Spend(Tools.at(Tool::Park).cost);
             UpdateFunds();
             Map[mapH][mapV] = tile;
             return 1;
@@ -223,10 +170,10 @@ int putDownNetwork(int mapH, int mapV)
 
     if (tile == 0)
     {
-        if ((TotalFunds() - ToolCost[networkState]) >= 0)
+        if ((TotalFunds() - Tools.at(Tool::Network).cost) >= 0)
         {
             Map[mapH][mapV] = TELEBASE | CONDBIT | BURNBIT | BULLBIT | ANIMBIT;
-            Spend(ToolCost[networkState]);
+            Spend(Tools.at(Tool::Network).cost);
             return 1;
         }
         else
@@ -440,7 +387,7 @@ void check3x3border(int xMap, int yMap)
 }
 
 
-int check3x3(int mapH, int mapV, int base, int tool)
+int check3x3(int mapH, int mapV, int base, Tool tool)
 {
     int rowNum, columnNum;
     int holdMapH, holdMapV;
@@ -500,7 +447,7 @@ int check3x3(int mapH, int mapV, int base, int tool)
         return -1;
     }
 
-    cost += ToolCost[tool];
+    cost += Tools.at(tool).cost;
 
     if ((TotalFunds() - cost) < 0)
     {
@@ -590,7 +537,7 @@ void check4x4border(int xMap, int yMap)
 }
 
 
-int check4x4(int mapH, int mapV, int base, int aniFlag, int tool)
+int check4x4(int mapH, int mapV, int base, int aniFlag, Tool tool)
 {
     int rowNum, columnNum;
     int h, v;
@@ -652,7 +599,7 @@ int check4x4(int mapH, int mapV, int base, int aniFlag, int tool)
         return -1;
     }
 
-    cost += ToolCost[tool];
+    cost += Tools.at(tool).cost;
 
     if ((TotalFunds() - cost) < 0)
     {
@@ -740,7 +687,7 @@ void check6x6border(int xMap, int yMap)
 }
 
 
-int check6x6(int mapH, int mapV, int base, int tool)
+int check6x6(int mapH, int mapV, int base, Tool tool)
 {
     int rowNum, columnNum;
     int h, v;
@@ -800,7 +747,7 @@ int check6x6(int mapH, int mapV, int base, int tool)
         return -1;
     }
 
-    cost += ToolCost[tool];
+    cost += Tools.at(tool).cost;
 
     if ((TotalFunds() - cost) < 0)
     {
@@ -1258,7 +1205,7 @@ int residential_tool(int x, int y)
         return -1;
     }
 
-    return check3x3(x, y, RESBASE, residentialState);
+    return check3x3(x, y, RESBASE, Tool::Residential);
 }
 
 
@@ -1269,7 +1216,7 @@ int commercial_tool(int x, int y)
         return -1;
     }
 
-    return  check3x3(x, y, COMBASE, commercialState);
+    return  check3x3(x, y, COMBASE, Tool::Commercial);
 }
 
 
@@ -1280,7 +1227,7 @@ int industrial_tool(int x, int y)
         return -1;
     }
 
-    return check3x3(x, y, INDBASE, industrialState);
+    return check3x3(x, y, INDBASE, Tool::Industrial);
 }
 
 
@@ -1291,7 +1238,7 @@ int police_dept_tool(int x, int y)
         return -1;
     }
 
-    return check3x3(x, y, POLICESTBASE, policeState);
+    return check3x3(x, y, POLICESTBASE, Tool::Police);
 }
 
 
@@ -1302,7 +1249,7 @@ int fire_dept_tool(int x, int y)
         return -1;
     }
 
-    return check3x3(x, y, FIRESTBASE, fireState);
+    return check3x3(x, y, FIRESTBASE, Tool::Fire);
 }
 
 
@@ -1313,7 +1260,7 @@ int stadium_tool(int x, int y)
         return -1;
     }
 
-    return check4x4(x, y, STADIUMBASE, 0, stadiumState);
+    return check4x4(x, y, STADIUMBASE, 0, Tool::Stadium);
 }
 
 
@@ -1324,7 +1271,7 @@ int coal_power_plant_tool(int x, int y)
         return -1;
     }
 
-    return check4x4(x, y, COALBASE, 1, powerState);
+    return check4x4(x, y, COALBASE, 1, Tool::Coal);
 }
 
 
@@ -1335,7 +1282,7 @@ int nuclear_power_plant_tool(int x, int y)
         return -1;
     }
 
-    return check4x4(x, y, NUCLEARBASE, 1, nuclearState);
+    return check4x4(x, y, NUCLEARBASE, 1, Tool::Nuclear);
 }
 
 
@@ -1346,7 +1293,7 @@ int seaport_tool(int x, int y)
         return -1;
     }
 
-    return check4x4(x, y, PORTBASE, 0, seaportState);
+    return check4x4(x, y, PORTBASE, 0, Tool::Seaport);
 }
 
 
@@ -1357,7 +1304,7 @@ int airport_tool(int x, int y)
         return -1;
     }
 
-    return check6x6(x, y, AIRPORTBASE, airportState);
+    return check6x6(x, y, AIRPORTBASE, Tool::Airport);
 }
 
 
@@ -1372,75 +1319,75 @@ int network_tool(int x, int y)
 }
 
 
-int do_tool(int state, int x, int y, int first)
+int do_tool(Tool state, int x, int y, int first)
 {
     switch (state)
     {
-    case residentialState:
+    case Tool::Residential:
         return residential_tool(x >> 4, y >> 4);
         break;
 
-    case commercialState:
+    case Tool::Commercial:
         return commercial_tool(x >> 4, y >> 4);
         break;
 
-    case industrialState:
+    case Tool::Industrial:
         return industrial_tool(x >> 4, y >> 4);
         break;
 
-    case fireState:
+    case Tool::Fire:
         return fire_dept_tool(x >> 4, y >> 4);
         break;
 
-    case queryState:
+    case Tool::Query:
         return query_tool(x >> 4, y >> 4);
         break;
 
-    case policeState:
+    case Tool::Police:
         return police_dept_tool(x >> 4, y >> 4);
         break;
 
-    case wireState:
+    case Tool::Wire:
         return wire_tool(x >> 4, y >> 4);
         break;
 
-    case dozeState:
+    case Tool::Bulldoze:
         return bulldozer_tool(x >> 4, y >> 4);
         break;
 
-    case rrState:
+    case Tool::Rail:
         return rail_tool(x >> 4, y >> 4);
         break;
 
-    case roadState:
+    case Tool::Road:
         return road_tool(x >> 4, y >> 4);
         break;
 
-    case stadiumState:
+    case Tool::Stadium:
         return stadium_tool(x >> 4, y >> 4);
         break;
 
-    case parkState:
+    case Tool::Park:
         return park_tool(x >> 4, y >> 4);
         break;
 
-    case seaportState:
+    case Tool::Seaport:
         return seaport_tool(x >> 4, y >> 4);
         break;
 
-    case powerState:
+    case Tool::Coal:
         return coal_power_plant_tool(x >> 4, y >> 4);
         break;
 
-    case nuclearState:
+    case Tool::Nuclear:
         return nuclear_power_plant_tool(x >> 4, y >> 4);
         break;
 
-    case airportState:
+    case Tool::Airport:
         return airport_tool(x >> 4, y >> 4);
         break;
 
-    case networkState:
+    case Tool::Network:
         return network_tool(x >> 4, y >> 4);
         break;
 
@@ -1453,13 +1400,14 @@ int do_tool(int state, int x, int y, int first)
 }
 
 
+/*
 int current_tool(int x, int y, int first)
 {
-    return do_tool(0 /*tool_state*/, x, y, first);
+    return do_tool(tool_state, x, y, first);
 }
+*/
 
-
-void DoTool(int tool, int x, int y)
+void DoTool(Tool tool, int x, int y)
 {
     int result = do_tool(tool, x << 4, y << 4, 1);
 
@@ -1477,7 +1425,6 @@ void DoTool(int tool, int x, int y)
     }
 
     sim_skip = 0;
-    //view->skip = 0;
     InvalidateEditors();
 }
 

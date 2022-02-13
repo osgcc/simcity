@@ -342,33 +342,6 @@ constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 
 #define TILE_COUNT	960
 
-/* 
- * These describe the wand values, the object dragged around on the screen.
- */
-
-constexpr auto residentialState = 0;
-constexpr auto commercialState = 1;
-constexpr auto industrialState = 2;
-constexpr auto fireState = 3;
-constexpr auto queryState = 4;
-constexpr auto policeState = 5;
-constexpr auto wireState = 6;
-constexpr auto dozeState = 7;
-constexpr auto rrState = 8;
-constexpr auto roadState = 9;
-constexpr auto UNUSED_STATE_1 = 10;
-constexpr auto UNUSED_STATE_2 = 11;
-constexpr auto stadiumState = 12;
-constexpr auto parkState = 13;
-constexpr auto seaportState = 14;
-constexpr auto powerState = 15;
-constexpr auto nuclearState = 16;
-constexpr auto airportState = 17;
-constexpr auto networkState = 18;
-
-#define firstState residentialState
-#define lastState networkState
-
 #define STATE_CMD 0
 #define STATE_TILES 1
 #define STATE_OVERLAYS 2

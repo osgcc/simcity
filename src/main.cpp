@@ -808,6 +808,93 @@ void drawMiniMapUi()
 }
 
 
+void DrawPending(SimView* view)
+{
+    std::string iconname{};
+
+    //int left = (view->w_width / 2) - view->pan_x;
+    //int top = (view->w_height / 2) - view->pan_y;
+
+    int x = (PendingX - Tools.at(PendingTool).offset) * 16;
+    int y = (PendingY - Tools.at(PendingTool).offset) * 16;
+
+    int size = Tools.at(PendingTool).size * 16;
+
+    //x += left;
+    //y += top;
+
+    //XSetStipple(view->x->dpy, view->x->gc, view->x->gray50_stipple);
+    //XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
+    //XSetForeground(view->x->dpy, view->x->gc, view->x->pixels[COLOR_BLACK]);
+    //XSetFillStyle(view->x->dpy, view->x->gc, FillStippled);
+    //XFillRectangle(view->x->dpy, pm, view->x->gc, x, y, size, size);
+    //XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
+
+    switch (PendingTool)
+    {
+    case Tool::Residential:
+        iconname = "@images/res.xpm";
+        break;
+
+    case Tool::Commercial:
+        iconname = "@images/com.xpm";
+        break;
+
+    case Tool::Industrial :
+        iconname = "@images/ind.xpm";
+        break;
+
+    case Tool::Fire:
+        iconname = "@images/fire.xpm";
+        break;
+
+    case Tool::Police:
+        iconname = "@images/police.xpm";
+        break;
+
+    case Tool::Stadium:
+        iconname = "@images/stadium.xpm";
+        break;
+
+    case Tool::Seaport:
+        iconname = "@images/seaport.xpm";
+        break;
+
+    case Tool::Coal:
+        iconname = "@images/coal.xpm";
+        break;
+
+    case Tool::Nuclear:
+        iconname = "@images/nuclear.xpm";
+        break;
+
+    case Tool::Airport:
+        iconname = "@images/airport.xpm";
+        break;
+
+    default:
+        break;
+    }
+
+    if (!iconname.empty())
+    {
+        //Pixmap icon = Tk_GetPixmap(view->interp, view->tkwin, iconname);
+        //float f;
+       // int i;
+        //
+        //gettimeofday(&now_time, NULL);
+        //f = (2 * now_time.tv_usec / 1000000.0);
+        //if (f > 1.0) f = 2.0 - f;
+        //i = (int)(f * BobHeight * (Players - Votes));
+
+        //if (icon != None)
+        //{
+           // XCopyArea(view->x->dpy, icon, pm, view->x->gc, 0, 0, size, size, x + i, y - i);
+        //}
+    }
+}
+
+
 void drawDebug()
 {
     drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 10, 100 }, { 255, 255, 255, 100 });
