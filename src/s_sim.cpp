@@ -118,7 +118,7 @@ void DoFire()
         {
             int Xtem = SMapX + DX[z];
             int Ytem = SMapY + DY[z];
-            if (TestBounds(Xtem, Ytem, SimWidth, SimHeight))
+            if (CoordinatesValid(Xtem, Ytem, SimWidth, SimHeight))
             {
                 int c = Map[Xtem][Ytem];
                 if (c & BURNBIT)
@@ -317,7 +317,7 @@ bool DoBridge()
       for (z = 0; z < 7; z++) { /* Close  */
 	x = SMapX + VDx[z];
 	y = SMapY + VDy[z];
-	if (TestBounds(x, y, SimWidth, SimHeight))
+	if (CoordinatesValid(x, y, SimWidth, SimHeight))
 	  if ((Map[x][y] & LOMASK) == (VBRTAB[z] & LOMASK))
 	    Map[x][y] = VBRTAB2[z];
       }
@@ -329,7 +329,7 @@ bool DoBridge()
       for (z = 0; z < 7; z++) { /* Close  */
 	x = SMapX + HDx[z];
 	y = SMapY + HDy[z];
-	if (TestBounds(x, y, SimWidth, SimHeight))
+	if (CoordinatesValid(x, y, SimWidth, SimHeight))
 	  if ((Map[x][y] & LOMASK) == (HBRTAB[z] & LOMASK))
 	    Map[x][y] = HBRTAB2[z];
       }
@@ -343,7 +343,7 @@ bool DoBridge()
 	  for (z = 0; z < 7; z++) {
 	    x = SMapX + VDx[z];
 	    y = SMapY + VDy[z];
-	    if (TestBounds(x, y, SimWidth, SimHeight))  {
+	    if (CoordinatesValid(x, y, SimWidth, SimHeight))  {
 	      MPtem = Map[x][y];
 	      if ((MPtem == CHANNEL) ||
 		  ((MPtem & 15) == (VBRTAB2[z] & 15)))
@@ -359,7 +359,7 @@ bool DoBridge()
 	  for (z = 0; z < 7; z++) {
 	    x = SMapX + HDx[z];
 	    y = SMapY + HDy[z];
-	    if (TestBounds(x, y, SimWidth, SimHeight)) {
+	    if (CoordinatesValid(x, y, SimWidth, SimHeight)) {
 	      MPtem = Map[x][y];
 	      if (((MPtem & 15) == (HBRTAB2[z] & 15)) ||
 		  (MPtem == CHANNEL))
@@ -429,7 +429,7 @@ void RepairZone(int ZCent, int zsize)
       int xx = SMapX + x;
       int yy = SMapY + y;
       cnt++;
-      if (TestBounds(xx, yy, SimWidth, SimHeight)) {
+      if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
 	ThCh = Map[xx][yy];
 	if (ThCh & ZONEBIT) continue;
 	if (ThCh & ANIMBIT) continue;

@@ -96,8 +96,7 @@ Point<int> PositionToCell(const Point<int>& position, const Point<int>& offset)
 }
 
 
- /* tile bounds */
-bool TestBounds(int x, int y, int width, int height)
+bool CoordinatesValid(int x, int y, int width, int height)
 {
     return (((x) >= 0) && ((x) < width) && ((y) >= 0) && ((y) < height));
 }

@@ -595,7 +595,7 @@ int ConnecTile(int x, int y, int* TileAdrPtr, int Command)
     int result = 1;
 
     /* make sure the array subscripts are in bounds */
-    if (!TestBounds(x, y, SimWidth, SimHeight))
+    if (!CoordinatesValid(x, y, SimWidth, SimHeight))
     {
         return (0);
     }

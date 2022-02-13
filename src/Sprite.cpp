@@ -378,7 +378,7 @@ int GetChar(int x, int y)
 {
   x >>= 4;
   y >>= 4;
-  if (!TestBounds(x, y, SimWidth, SimHeight))
+  if (!CoordinatesValid(x, y, SimWidth, SimHeight))
     return(-1);
   else
     return(Map[x][y] & LOMASK);
@@ -495,7 +495,7 @@ int CanDriveOn(int x, int y)
 {
     int tile;
 
-    if (!TestBounds(x, y, SimWidth, SimHeight))
+    if (!CoordinatesValid(x, y, SimWidth, SimHeight))
     {
         return 0;
     }
@@ -609,7 +609,7 @@ void Destroy(int ox, int oy)
     int x = ox >> 4; // ox == offset? Origin?
     int y = oy >> 4;
 
-    if (!TestBounds(x, y, SimWidth, SimHeight))
+    if (!CoordinatesValid(x, y, SimWidth, SimHeight))
     {
         return;
     }
@@ -926,7 +926,7 @@ void DoShipSprite(SimSprite* sprite)
             if (z == sprite->dir) continue;
             x = ((sprite->x + (48 - 1)) >> 4) + BDx[z];
             y = (sprite->y >> 4) + BDy[z];
-            if (TestBounds(x, y, SimWidth, SimHeight)) {
+            if (CoordinatesValid(x, y, SimWidth, SimHeight)) {
                 t = Map[x][y] & LOMASK;
                 if ((t == CHANNEL) || (t == BRWH) || (t == BRWV) ||
                     TryOther(t, sprite->dir, z)) {

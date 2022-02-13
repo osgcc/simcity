@@ -253,7 +253,7 @@ void MakeFlood()
             {
                 int xx = x + Dx[t];
                 int yy = y + Dy[t];
-                if (TestBounds(xx, yy, SimWidth, SimHeight))
+                if (CoordinatesValid(xx, yy, SimWidth, SimHeight))
                 {
                     cell = Map[xx][yy];
                     /* TILE_IS_FLOODABLE(c) */
@@ -286,7 +286,7 @@ void DoFlood()
             {
                 int xx = SMapX + Dx[z];
                 int yy = SMapY + Dy[z];
-                if (TestBounds(xx, yy, SimWidth, SimHeight))
+                if (CoordinatesValid(xx, yy, SimWidth, SimHeight))
                 {
                     int cell = Map[xx][yy];
                     int terrain = cell & LOMASK;

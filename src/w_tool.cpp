@@ -1028,7 +1028,7 @@ void put3x3Rubble(int x, int y)
     {
         for (int yy = y - 1; yy < y + 2; yy++)
         {
-            if (TestBounds(xx, yy, SimWidth, SimHeight))
+            if (CoordinatesValid(xx, yy, SimWidth, SimHeight))
             {
                 int zz = Map[xx][yy] & LOMASK;
                 if ((zz != RADTILE) && (zz != 0))
@@ -1050,7 +1050,7 @@ void put4x4Rubble(int x, int y)
     {
         for (yy = y - 1; yy < y + 3; yy++)
         {
-            if (TestBounds(xx, yy, SimWidth, SimHeight))
+            if (CoordinatesValid(xx, yy, SimWidth, SimHeight))
             {
                 zz = Map[xx][yy] & LOMASK;
                 if ((zz != RADTILE) && (zz != 0))
@@ -1072,7 +1072,7 @@ void put6x6Rubble(int x, int y)
     {
         for (yy = y - 1; yy < y + 5; yy++)
         {
-            if (TestBounds(xx, yy, SimWidth, SimHeight))
+            if (CoordinatesValid(xx, yy, SimWidth, SimHeight))
             {
                 zz = Map[xx][yy] & LOMASK;
                 if ((zz != RADTILE) && (zz != 0))

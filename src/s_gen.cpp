@@ -161,7 +161,7 @@ void PutOnMap(int Mchar, int Xoff, int Yoff)
     int Xloc = MapX + Xoff;
     int Yloc = MapY + Yoff;
 
-    if (!TestBounds(Xloc, Yloc, SimWidth, SimHeight))
+    if (!CoordinatesValid(Xloc, Yloc, SimWidth, SimHeight))
     {
         return;
     }
@@ -214,7 +214,7 @@ void SmoothTrees()
                     int Xtem = MapX + DX[z];
                     int Ytem = MapY + DY[z];
 
-                    if (TestBounds(Xtem, Ytem, SimWidth, SimHeight) && IsTree(Map[Xtem][Ytem]))
+                    if (CoordinatesValid(Xtem, Ytem, SimWidth, SimHeight) && IsTree(Map[Xtem][Ytem]))
                     {
                         bitindex++;
                     }
@@ -269,7 +269,7 @@ void SmoothRiver()
                     bitindex = bitindex << 1;
                     int Xtem = MapX + DX[z];
                     int Ytem = MapY + DY[z];
-                    if (TestBounds(Xtem, Ytem, SimWidth, SimHeight) &&
+                    if (CoordinatesValid(Xtem, Ytem, SimWidth, SimHeight) &&
                         ((Map[Xtem][Ytem] & LOMASK) != DIRT) &&
                         (((Map[Xtem][Ytem] & LOMASK) < WOODS_LOW) ||
                             ((Map[Xtem][Ytem] & LOMASK) > WOODS_HIGH)))
@@ -307,7 +307,7 @@ void TreeSplash(int xloc, int yloc)
 
         MoveMap(dir);
 
-        if (!(TestBounds(MapX, MapY, SimWidth, SimHeight)))
+        if (!(CoordinatesValid(MapX, MapY, SimWidth, SimHeight)))
         {
             return;
         }
@@ -407,7 +407,7 @@ void DoLargeRiver()
         r2 = CurveLevel + 100;
     }
 
-    while (TestBounds(MapX + 4, MapY + 4, SimWidth, SimHeight))
+    while (CoordinatesValid(MapX + 4, MapY + 4, SimWidth, SimHeight))
     {
         PlopLargeRiver();
         if (RandomRange(0, r1) < 10)
@@ -439,7 +439,7 @@ void DoSmallRiver()
         r2 = CurveLevel + 100;
     }
 
-    while (TestBounds(MapX + 3, MapY + 3, SimWidth, SimHeight))
+    while (CoordinatesValid(MapX + 3, MapY + 3, SimWidth, SimHeight))
     {
         PlopSmallRiver();
         if (RandomRange(0, r1) < 10)
