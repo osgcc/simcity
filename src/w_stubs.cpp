@@ -207,7 +207,7 @@ void DropFireBombs()
 
 void InitGame()
 {
-    sim_skips = sim_skip = heat_steps = 0;
+    sim_skips = sim_skip = 0;
     
     SimSpeed(SimulationSpeed::Paused);
 }

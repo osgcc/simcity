@@ -154,62 +154,6 @@ void doKeyDown(SimView *view, int charCode)
       }
     }
     LastKeys[0] = '\0';
-  } else if (strcmp(LastKeys, "stop") == 0) {
-    heat_steps = 0;
-    LastKeys[0] = '\0';
-    Kick();
-  } else if (strcmp(LastKeys, "will") == 0) {
-    int i;
-    int n = 500;
-    for (i = 0; i < n; i++) {
-      int x1 = RandomRange(0, SimWidth - 1);
-      int y1 = RandomRange(0, SimHeight - 1);
-      int x2 = RandomRange(0, SimWidth - 1);
-      int y2 = RandomRange(0, SimHeight - 1);
-      int temp =
-	Map[x1][y1];
-      Map[x1][y1] =
-	Map[x2][y2];
-      Map[x2][y2] =
-	temp;
-    }
-    Kick();
-  } else if (strcmp(LastKeys, "bobo") == 0) {
-    heat_steps = 1;
-    heat_flow = -1;
-    heat_rule = 0;
-    LastKeys[0] = '\0';
-    Kick();
-  } else if (strcmp(LastKeys, "boss") == 0) {
-    heat_steps = 1;
-    heat_flow = 1;
-    heat_rule = 0;
-    LastKeys[0] = '\0';
-    Kick();
-  } else if (strcmp(LastKeys, "mack") == 0) {
-    heat_steps = 1;
-    heat_flow = 0;
-    heat_rule = 0;
-    LastKeys[0] = '\0';
-    Kick();
-  } else if (strcmp(LastKeys, "donh") == 0) {
-    heat_steps = 1;
-    heat_flow = -1;
-    heat_rule = 1;
-    LastKeys[0] = '\0';
-    Kick();
-  } else if (strcmp(LastKeys, "patb") == 0) {
-    heat_steps = 1;
-    heat_flow = RandomRange(0, 40) - 20;
-    heat_rule = 0;
-    LastKeys[0] = '\0';
-    Kick();
-  } else if (strcmp(LastKeys, "lucb") == 0) {
-    heat_steps = 1;
-    heat_flow = (0, 1000) - 500;
-    heat_rule = 0;
-    LastKeys[0] = '\0';
-    Kick();
   } else if (strcmp(LastKeys, "olpc") == 0) {
     Spend(-1000000);
   }

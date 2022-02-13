@@ -482,9 +482,6 @@ extern int MultiPlayerMode;
 extern int sim_skips;
 extern int sim_skip;
 
-extern int heat_steps;
-extern int heat_flow;
-extern int heat_rule;
 extern int UpdateDelayed;
 extern int DynamicData[32];
 extern int Players;

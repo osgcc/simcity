@@ -1373,7 +1373,7 @@ void DoUpdateEditor(SimView* view)
 
     HandleAutoGoto(view);
 
-    if (DoAnimation && !Paused() && !heat_steps && !TilesAnimated)
+    if (DoAnimation && !Paused() && !TilesAnimated)
     {
         TilesAnimated = 1;
         animateTiles();
