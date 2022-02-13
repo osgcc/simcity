@@ -393,7 +393,6 @@ extern std::string CityFileName;
 extern std::string StartupName;
 extern int StartingYear;
 extern int CityTime;
-extern int LastFunds;
 extern int GameLevel;
 extern int Cycle;
 extern int ScenarioID;

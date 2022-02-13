@@ -70,6 +70,7 @@
 #include "w_graph.h"
 #include "w_keys.h"
 #include "Sprite.h"
+#include "w_stubs.h"
 #include "w_update.h"
 #include "w_util.h"
 
@@ -86,7 +87,7 @@ void InitWillStuff()
     LastCityTime(-1);
     LastCityYear(1);
     LastCityMonth(0);
-    LastFunds = -1;
+    LastFunds(-1);
     OverRide = 0;
     PendingTool = -1;
 

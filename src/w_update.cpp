@@ -81,7 +81,6 @@
 
 bool MustUpdateFunds = false;
 int MustUpdateOptions;
-int LastFunds;
 
 
 namespace
@@ -256,7 +255,7 @@ void ReallyUpdateFunds()
     MustUpdateFunds = false;
 
     SetFunds(std::clamp(TotalFunds(), 0, std::numeric_limits<int>::max()));
-    LastFunds = TotalFunds();
+    LastFunds(TotalFunds());
 }
 
 
@@ -281,7 +280,7 @@ void UpdateEvaluation()
 void UpdateHeads()
 {
     MustUpdateFunds = true;
-    lastCityTime = lastCityYear = lastCityMonth = LastFunds = -999999;
+    lastCityTime = lastCityYear = lastCityMonth = -999999;
     sim_update_editors();
 }
 

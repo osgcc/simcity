@@ -92,7 +92,20 @@ int flagBlink;
 namespace
 {
     int totalFunds{};
+    int lastFunds{};
 }
+
+void LastFunds(const int funds)
+{
+    lastFunds = funds;
+}
+
+
+int LastFunds()
+{
+    return lastFunds;
+}
+
 
 int TotalFunds()
 {
