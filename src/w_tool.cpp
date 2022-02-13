@@ -144,7 +144,7 @@ int putDownPark(SimView* view, int mapH, int mapV)
 {
     int tile{};
 
-    if (TotalFunds - CostOf[parkState] >= 0)
+    if (TotalFunds() - CostOf[parkState] >= 0)
     {
         int value = RandomRange(0, 4);
 
@@ -175,7 +175,7 @@ int putDownNetwork(SimView* view, int mapH, int mapV)
 {
     int tile = Map[mapH][mapV] & LOMASK;
 
-    if ((TotalFunds > 0) && tally(tile))
+    if ((TotalFunds() > 0) && tally(tile))
     {
         Map[mapH][mapV] = tile = 0;
         Spend(1);
@@ -183,7 +183,7 @@ int putDownNetwork(SimView* view, int mapH, int mapV)
 
     if (tile == 0)
     {
-        if ((TotalFunds - CostOf[view->tool_state]) >= 0)
+        if ((TotalFunds() - CostOf[view->tool_state]) >= 0)
         {
             Map[mapH][mapV] = TELEBASE | CONDBIT | BURNBIT | BULLBIT | ANIMBIT;
             Spend(CostOf[view->tool_state]);
@@ -464,7 +464,7 @@ int check3x3(SimView* view, int mapH, int mapV, int base, int tool)
 
     cost += CostOf[tool];
 
-    if ((TotalFunds - cost) < 0)
+    if ((TotalFunds() - cost) < 0)
     {
         return -2;
     }
@@ -620,7 +620,7 @@ int check4x4(SimView* view, int mapH, int mapV, int base, int aniFlag, int tool)
 
     cost += CostOf[tool];
 
-    if ((TotalFunds - cost) < 0)
+    if ((TotalFunds() - cost) < 0)
     {
         return -2;
     }
@@ -770,7 +770,7 @@ int check6x6(SimView* view, int mapH, int mapV, int base, int tool)
 
     cost += CostOf[tool];
 
-    if ((TotalFunds - cost) < 0)
+    if ((TotalFunds() - cost) < 0)
     {
         return -2;
     }
@@ -1093,7 +1093,7 @@ int bulldozer_tool(SimView* view, int x, int y)
 
     if (currTile & ZONEBIT)
     { /* zone center bit is set */
-        if (TotalFunds > 0)
+        if (TotalFunds() > 0)
         {
             Spend(1);
             switch (checkSize(temp))
@@ -1121,7 +1121,7 @@ int bulldozer_tool(SimView* view, int x, int y)
     }
     else if ((zoneSize = checkBigZone(temp, &deltaH, &deltaV)))
     {
-        if (TotalFunds > 0)
+        if (TotalFunds() > 0)
         {
             Spend(1);
             switch (zoneSize)
@@ -1147,7 +1147,7 @@ int bulldozer_tool(SimView* view, int x, int y)
     {
         if (temp == RIVER || temp == REDGE || temp == CHANNEL)
         {
-            if (TotalFunds >= 6)
+            if (TotalFunds() >= 6)
             {
                 result = ConnecTile(x, y, &Map[x][y], 1);
                 if (temp != (Map[x][y] & LOMASK))

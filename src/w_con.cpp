@@ -100,7 +100,7 @@ _LayDoze(int x, int y, int *TileAdrPtr)
 {
   int Tile;
 
-  if (!(TotalFunds)) {
+  if (!(TotalFunds())) {
     return -2;			/* no mas dinero. */
   }
 
@@ -149,7 +149,7 @@ _LayRoad(int x, int y, int *TileAdrPtr)
   int Tile;
   int cost = 10;
 
-  if (TotalFunds < 10) {
+  if (TotalFunds() < 10) {
     return -2;
   }
 
@@ -164,7 +164,7 @@ _LayRoad(int x, int y, int *TileAdrPtr)
   case RIVER:			/* Road on Water */
   case REDGE:
   case CHANNEL:			/* Check how to build bridges, if possible. */
-    if (TotalFunds < 50) {
+    if (TotalFunds() < 50) {
       return -2;
     }
 
@@ -255,7 +255,7 @@ _LayRail(int x, int y, int *TileAdrPtr)
   int Tile;
   int cost = 20;
 
-  if (TotalFunds < 20) {
+  if (TotalFunds() < 20) {
     return -2;
   }
 
@@ -270,7 +270,7 @@ _LayRail(int x, int y, int *TileAdrPtr)
   case 2:			/* Rail on Water */
   case 3:
   case 4:			/* Check how to build underwater tunnel, if possible. */
-    if (TotalFunds < 100) {
+    if (TotalFunds() < 100) {
       return -2;
     }
     cost = 100;
@@ -346,7 +346,7 @@ _LayWire(int x, int y, int *TileAdrPtr)
   int Tile;
   int cost = 5;
 
-  if (TotalFunds < 5) {
+  if (TotalFunds() < 5) {
     return -2;
   }
 
@@ -361,7 +361,7 @@ _LayWire(int x, int y, int *TileAdrPtr)
   case 2:			/* Wire on Water */
   case 3:
   case 4:			/* Check how to lay underwater wire, if possible. */
-    if (TotalFunds < 25)
+    if (TotalFunds() < 25)
       return -2;
     cost = 25;
 
@@ -605,7 +605,7 @@ int ConnecTile(int x, int y, int* TileAdrPtr, int Command)
     {
 
         if ((autoBulldoze != 0) &&
-            (TotalFunds > 0) &&
+            (TotalFunds() > 0) &&
             ((Tile = (*TileAdrPtr)) & BULLBIT))
         {
             NeutralizeRoad(Tile);

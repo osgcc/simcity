@@ -843,8 +843,7 @@ void handleMouseEvent(SDL_Event& event)
     case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT)
         {
-            put3x3Rubble(TilePointedAt.x, TilePointedAt.y);
-            putDownPark(nullptr, TilePointedAt.x, TilePointedAt.y);
+
         }
         break;
 

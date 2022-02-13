@@ -255,9 +255,8 @@ void ReallyUpdateFunds()
 
     MustUpdateFunds = false;
 
-    TotalFunds = std::clamp(TotalFunds, 0, std::numeric_limits<int>::max());
-
-    LastFunds = TotalFunds;
+    SetFunds(std::clamp(TotalFunds(), 0, std::numeric_limits<int>::max()));
+    LastFunds = TotalFunds();
 }
 
 

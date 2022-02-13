@@ -407,7 +407,6 @@ extern int roadMaxValue, policeMaxValue, fireMaxValue;
 extern int TaxFund, RoadFund, PoliceFund, FireFund;
 extern int RoadEffect, PoliceEffect, FireEffect;
 extern int TaxFlag, CityTax;
-extern int TotalFunds;
 
 extern int costOf[];
 
@@ -523,4 +522,3 @@ extern int GotXError;
 
 void sim_exit();
 void sim_update_editors();
-void drawValve();

@@ -77,7 +77,6 @@
 /* Stubs */
 
 
-int TotalFunds;
 int PunishCnt;
 int autoBulldoze, autoBudget;
 int autoGo;
@@ -90,6 +89,17 @@ int EvalChanged;
 int flagBlink;
 
 
+namespace
+{
+    int totalFunds{};
+}
+
+int TotalFunds()
+{
+    return totalFunds;
+}
+
+
 void setCityName(const std::string& name)
 {
 }
@@ -97,13 +107,13 @@ void setCityName(const std::string& name)
 
 void Spend(int dollars)
 {
-    SetFunds(TotalFunds - dollars);
+    SetFunds(TotalFunds() - dollars);
 }
 
 
 void SetFunds(int dollars)
 {
-    TotalFunds = dollars;
+    totalFunds = dollars;
     UpdateFunds();
 }
 
@@ -113,8 +123,6 @@ int TickCount()
     return static_cast<int>(SDL_GetTicks());
 }
 
-#include <iostream>
-#include "s_alloc.h"
 
 void DoPlayNewCity()
 {

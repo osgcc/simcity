@@ -131,7 +131,7 @@ void DoBudgetNow(int fromMenu)
 
   total = fireInt + policeInt + roadInt;
 
-  yumDuckets = TaxFund + TotalFunds;
+  yumDuckets = TaxFund + TotalFunds();
 
   if (yumDuckets > total) {
     fireValue = fireInt;
@@ -257,8 +257,8 @@ void ReallyDrawBudgetWindow()
     const int cashFlow = TaxFund - fireValue - policeValue - roadValue;
 
     const std::string cashFlowString = ((cashFlow < 0) ? "-" : "+") + NumberToDollarDecimal(cashFlow);
-    const std::string previousFundsString = NumberToDollarDecimal(TotalFunds);
-    const std::string currentFundsString = NumberToDollarDecimal(cashFlow + TotalFunds);
+    const std::string previousFundsString = NumberToDollarDecimal(TotalFunds());
+    const std::string currentFundsString = NumberToDollarDecimal(cashFlow + TotalFunds());
     const std::string taxesCollectedString = NumberToDollarDecimal(TaxFund);
 
     SetBudget(cashFlowString, previousFundsString, currentFundsString, taxesCollectedString, CityTax);
