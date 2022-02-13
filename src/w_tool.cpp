@@ -993,11 +993,15 @@ const std::string& queryString(int tileValue)
     {
         if (tileValue < idArray[i])
         {
+            /*
             int queryId = i - 1;
             if (queryId < 1 || queryId > 28)
             {
                 queryId = 28;
             }
+            */
+
+            int queryId = std::clamp(i - 1, 0, 28);
 
             // \fixme ugly cast
             return QueryStatsString(static_cast<QueryStatsId>(queryId));

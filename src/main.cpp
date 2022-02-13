@@ -638,7 +638,8 @@ void handleMouseEvent(SDL_Event& event)
     case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT)
         {
-            putDownNetwork(nullptr, TilePointedAt.x, TilePointedAt.y);
+            //putDownNetwork(nullptr, TilePointedAt.x, TilePointedAt.y);
+            query_tool(nullptr, TilePointedAt.x, TilePointedAt.y);
         }
         break;
 
