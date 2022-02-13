@@ -166,13 +166,6 @@ const int ToolOffset[] =
 };
 
 
-
-void DidTool(const std::string& toolName, int x, int y)
-{
-    //Eval("UIDidTool" + toolName + " " + "'winId' " + std::to_string(x) + " " + std::to_string(y));
-}
-
-
 void DoSetWandState(int state)
 {
     Eval("UISetToolState " + std::to_string(state));
@@ -1104,7 +1097,6 @@ int query_tool(int x, int y)
     }
 
     doZoneStatus(x, y);
-    DidTool("Qry", x, y);
     return 1;
 }
 
@@ -1198,10 +1190,6 @@ int bulldozer_tool(int x, int y)
         }
     }
     UpdateFunds();
-    if (result == 1)
-    {
-        DidTool("Dozr", x, y);
-    }
     return result;
 }
 
@@ -1217,11 +1205,6 @@ int road_tool(int x, int y)
 
     result = ConnecTile(x, y, &Map[x][y], 2);
     UpdateFunds();
-
-    if (result == 1)
-    {
-        DidTool("Road", x, y);
-    }
     return result;
 }
 
@@ -1237,10 +1220,6 @@ int rail_tool(int x, int y)
 
     result = ConnecTile(x, y, &Map[x][y], 3);
     UpdateFunds();
-    if (result == 1)
-    {
-        DidTool("Rail", x, y);
-    }
     return result;
 }
 
@@ -1256,10 +1235,6 @@ int wire_tool(int x, int y)
 
     result = ConnecTile(x, y, &Map[x][y], 4);
     UpdateFunds();
-    if (result == 1)
-    {
-        DidTool("Wire", x, y);
-    }
     return result;
 }
 
@@ -1273,10 +1248,6 @@ int park_tool(int x, int y)
         return -1;
 
     result = putDownPark(x, y);
-    if (result == 1)
-    {
-        DidTool("Park", x, y);
-    }
     return result;
 }
 
@@ -1291,10 +1262,6 @@ int residential_tool(int x, int y)
     }
 
     result = check3x3(x, y, RESBASE, residentialState);
-    if (result == 1)
-    {
-        DidTool("Res", x, y);
-    }
     return result;
 }
 
@@ -1310,10 +1277,6 @@ int commercial_tool(int x, int y)
     }
 
     result = check3x3(x, y, COMBASE, commercialState);
-    if (result == 1)
-    {
-        DidTool("Com", x, y);
-    }
     return result;
 }
 
@@ -1329,10 +1292,6 @@ int industrial_tool(int x, int y)
     }
 
     result = check3x3(x, y, INDBASE, industrialState);
-    if (result == 1)
-    {
-        DidTool("Ind", x, y);
-    }
     return result;
 }
 
@@ -1347,10 +1306,6 @@ int police_dept_tool(int x, int y)
     }
 
     result = check3x3(x, y, POLICESTBASE, policeState);
-    if (result == 1)
-    {
-        DidTool("Pol", x, y);
-    }
     return result;
 }
 
@@ -1365,10 +1320,6 @@ int fire_dept_tool(int x, int y)
     }
 
     result = check3x3(x, y, FIRESTBASE, fireState);
-    if (result == 1)
-    {
-        DidTool("Fire", x, y);
-    }
     return result;
 }
 
@@ -1383,10 +1334,6 @@ int stadium_tool(int x, int y)
     }
 
     result = check4x4(x, y, STADIUMBASE, 0, stadiumState);
-    if (result == 1)
-    {
-        DidTool("Stad", x, y);
-    }
     return result;
 }
 
@@ -1401,10 +1348,6 @@ int coal_power_plant_tool(int x, int y)
     }
 
     result = check4x4(x, y, COALBASE, 1, powerState);
-    if (result == 1)
-    {
-        DidTool("Coal", x, y);
-    }
     return result;
 }
 
@@ -1419,10 +1362,6 @@ int nuclear_power_plant_tool(int x, int y)
     }
 
     result = check4x4(x, y, NUCLEARBASE, 1, nuclearState);
-    if (result == 1)
-    {
-        DidTool("Nuc", x, y);
-    }
     return result;
 }
 
@@ -1437,10 +1376,6 @@ int seaport_tool(int x, int y)
     }
 
     result = check4x4(x, y, PORTBASE, 0, seaportState);
-    if (result == 1)
-    {
-        DidTool("Seap", x, y);
-    }
     return result;
 }
 
@@ -1455,10 +1390,6 @@ int airport_tool(int x, int y)
     }
 
     result = check6x6(x, y, AIRPORTBASE, airportState);
-    if (result == 1)
-    {
-        DidTool("Airp", x, y);
-    }
     return result;
 }
 
@@ -1473,10 +1404,6 @@ int network_tool(int x, int y)
     }
 
     result = putDownNetwork(x, y);
-    if (result == 1)
-    {
-        DidTool("Net", x, y);
-    }
     return result;
 }
 
