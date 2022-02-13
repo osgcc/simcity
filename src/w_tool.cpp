@@ -92,12 +92,28 @@ int PendingX;
 int PendingY;
 
 
-int CostOf[] = {
-    100,    100,    100,    500,
-      0,    500,      5,      1,
-     20,     10,      0,      0,
-   5000,     10,   3000,   3000,
-   5000,  10000,    100,      0,
+const int ToolCost[] =
+{
+    100,
+    100,
+    100,
+    500,
+    0,
+    500,
+    5,
+    1,
+    20,
+    10,
+    0,
+    0,
+    5000,
+    10,
+    3000,
+    3000,
+    5000,
+    10000,
+    100,
+    0
 };
 
 
@@ -144,7 +160,7 @@ int putDownPark(SimView* view, int mapH, int mapV)
 {
     int tile{};
 
-    if (TotalFunds() - CostOf[parkState] >= 0)
+    if (TotalFunds() - ToolCost[parkState] >= 0)
     {
         int value = RandomRange(0, 4);
 
@@ -159,7 +175,7 @@ int putDownPark(SimView* view, int mapH, int mapV)
 
         if (Map[mapH][mapV] == 0)
         {
-            Spend(CostOf[parkState]);
+            Spend(ToolCost[parkState]);
             UpdateFunds();
             Map[mapH][mapV] = tile;
             return 1;
@@ -183,10 +199,10 @@ int putDownNetwork(SimView* view, int mapH, int mapV)
 
     if (tile == 0)
     {
-        if ((TotalFunds() - CostOf[view->tool_state]) >= 0)
+        if ((TotalFunds() - ToolCost[view->tool_state]) >= 0)
         {
             Map[mapH][mapV] = TELEBASE | CONDBIT | BURNBIT | BULLBIT | ANIMBIT;
-            Spend(CostOf[view->tool_state]);
+            Spend(ToolCost[view->tool_state]);
             return 1;
         }
         else
@@ -462,7 +478,7 @@ int check3x3(SimView* view, int mapH, int mapV, int base, int tool)
         return -1;
     }
 
-    cost += CostOf[tool];
+    cost += ToolCost[tool];
 
     if ((TotalFunds() - cost) < 0)
     {
@@ -618,7 +634,7 @@ int check4x4(SimView* view, int mapH, int mapV, int base, int aniFlag, int tool)
         return -1;
     }
 
-    cost += CostOf[tool];
+    cost += ToolCost[tool];
 
     if ((TotalFunds() - cost) < 0)
     {
@@ -768,7 +784,7 @@ int check6x6(SimView* view, int mapH, int mapV, int base, int tool)
         return -1;
     }
 
-    cost += CostOf[tool];
+    cost += ToolCost[tool];
 
     if ((TotalFunds() - cost) < 0)
     {
