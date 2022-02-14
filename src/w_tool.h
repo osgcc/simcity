@@ -35,16 +35,10 @@ struct ToolProperties
 };
 
 
-extern std::map<Tool, ToolProperties> Tools;
-
 void ToolDown(int mapX, int mapY);
-
-int bulldozer_tool(int x, int y);
 bool tally(int tileValue);
-void put3x3Rubble(int x, int y);
-int putDownPark(int mapH, int mapV);
-int putDownNetwork(int mapH, int mapV);
-int query_tool(int x, int y);
+
+extern std::map<Tool, ToolProperties> Tools;
 
 extern Tool PendingTool;
 extern int PendingX;

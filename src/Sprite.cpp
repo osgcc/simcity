@@ -1297,6 +1297,7 @@ void DoExplosionSprite(SimSprite *sprite)
 
 void DoBusSprite(SimSprite* sprite)
 {
+    /*
     static int Dx[5] = { 0,   1,   0,  -1,   0 };
     static int Dy[5] = { -1,   0,   1,   0,   0 };
     static int Dir2Frame[4] = { 1, 2, 1, 2 };
@@ -1306,26 +1307,26 @@ void DoBusSprite(SimSprite* sprite)
 
     if (sprite->turn)
     {
-        if (sprite->turn < 0)/* ccw */
+        if (sprite->turn < 0)/* ccw 
         {
-            if (sprite->dir & 1) /* up or down */
+            if (sprite->dir & 1) /* up or down 
             {
                 sprite->frame = 4;
             }
-            else /* left or right */
+            else /* left or right 
             {
                 sprite->frame = 3;
             }
             sprite->turn++;
             sprite->dir = (sprite->dir - 1) & 3;
         }
-        else /* cw */
+        else /* cw 
         {
-            if (sprite->dir & 1) /* up or down */
+            if (sprite->dir & 1) /* up or down 
             {
                 sprite->frame = 3;
             }
-            else /* left or right */
+            else /* left or right 
             {
                 sprite->frame = 4;
             }
@@ -1336,7 +1337,7 @@ void DoBusSprite(SimSprite* sprite)
     }
     else
     {
-        /* finish turn */
+        /* finish turn 
         if ((sprite->frame == 3) || (sprite->frame == 4))
         {
             turned = 1;
@@ -1346,10 +1347,10 @@ void DoBusSprite(SimSprite* sprite)
 
     if (sprite->speed == 0)
     {
-        /* brake */
+        /* brake 
         dx = 0; dy = 0;
     }
-    else /* cruise at traffic speed */
+    else /* cruise at traffic speed 
     {
 
         tx = (sprite->x + sprite->x_hot) >> 5;
@@ -1382,7 +1383,7 @@ void DoBusSprite(SimSprite* sprite)
             break;
         }
 
-        /* govern speed */
+        /* govern speed 
         if (speed > sprite->speed)
         {
             speed = sprite->speed;
@@ -1405,28 +1406,28 @@ void DoBusSprite(SimSprite* sprite)
             tx = (sprite->x + sprite->x_hot) >> 4;
             ty = (sprite->y + sprite->y_hot) >> 4;
 
-            /* drift into the right lane */
+            /* drift into the right lane 
             switch (sprite->dir)
             {
-            case 0: /* up */
+            case 0: /* up 
                 z = ((tx << 4) + 4) - (sprite->x + sprite->x_hot);
                 if (z < 0) dx = -1;
                 else if (z > 0) dx = 1;
                 break;
 
-            case 1: /* right */
+            case 1: /* right 
                 z = ((ty << 4) + 4) - (sprite->y + sprite->y_hot);
                 if (z < 0) dy = -1;
                 else if (z > 0) dy = 1;
                 break;
 
-            case 2: /* down */
+            case 2: /* down 
                 z = ((tx << 4)) - (sprite->x + sprite->x_hot);
                 if (z < 0) dx = -1;
                 else if (z > 0) dx = 1;
                 break;
 
-            case 3: /* left */
+            case 3: /* left 
                 z = ((ty << 4)) - (sprite->y + sprite->y_hot);
                 if (z < 0) dy = -1;
                 else if (z > 0) dy = 1;
@@ -1484,7 +1485,7 @@ void DoBusSprite(SimSprite* sprite)
         z = CanDriveOn(tx, ty);
         if (z == 0)
         {
-            /* can't drive forward into a new tile */
+            /* can't drive forward into a new tile 
             if (speed == 8)
             {
                 bulldozer_tool(tx, ty);
@@ -1495,14 +1496,14 @@ void DoBusSprite(SimSprite* sprite)
         }
         else
         {
-            /* drive forward into a new tile */
+            /* drive forward into a new tile 
             if (z > 0)
             {
-                /* smooth */
+                /* smooth 
             }
             else
             {
-                /* bumpy */
+                /* bumpy 
                 dx /= 2;
                 dy /= 2;
             }
@@ -1515,17 +1516,17 @@ void DoBusSprite(SimSprite* sprite)
     z = CanDriveOn(tx, ty);
     if (z > 0)
     {
-        /* cool, cruise along */
+        /* cool, cruise along 
     }
     else
     {
         if (z < 0)
         {
-            /* bumpy */
+            /* bumpy 
         }
         else
         {
-            /* something in the way */
+            /* something in the way 
         }
     }
 
@@ -1550,12 +1551,13 @@ void DoBusSprite(SimSprite* sprite)
                 explode = true;
             }
         }
-        */
+        
         if (explode)
         {
             ExplodeSprite(sprite);
         }
     }
+    */
 }
 
 
