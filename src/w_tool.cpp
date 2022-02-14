@@ -112,6 +112,19 @@ std::map<Tool, ToolProperties> Tools =
 };
 
 
+std::map<ToolResult, std::string> ToolResultStringTable =
+{
+    { ToolResult::CannotBulldoze, "Cannot Bulldoze" },
+    { ToolResult::InsufficientFunds, "Insufficient Funds" },
+    { ToolResult::InvalidLocation, "Invalid Location" },
+    { ToolResult::InvalidOperation, "Invalid Operation" },
+    { ToolResult::NetworkVotedNo, "Other players vetoed action" },
+    { ToolResult::OutOfBounds, "Out of Bounds" },
+    { ToolResult::RequiresBulldozing, "Bulldozing Required" },
+    { ToolResult::Success, "Success!" }
+};
+
+
 ToolResult putDownPark(int mapH, int mapV)
 {
     int tile{};
