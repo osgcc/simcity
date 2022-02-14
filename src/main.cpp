@@ -820,17 +820,12 @@ void drawMiniMapUi()
 }
 
 
-void DrawPendingTool()
+void DrawPendingTool(const ToolPalette& palette)
 {
-    if (PendingTool == Tool::None)
+    if (palette.tool() == Tool::None)
     {
         return;
     }
-
-    //int x = (PendingX - Tools.at(PendingTool).offset) * 16;
-    //int y = (PendingY - Tools.at(PendingTool).offset) * 16;
-
-    //int size = Tools.at(PendingTool).size * 16;
 
     SDL_Rect toolRect =
     {
@@ -840,75 +835,17 @@ void DrawPendingTool()
         Tools.at(PendingTool).size * 16
     };
 
+    if (palette.toolGost().texture)
+    {
+        SDL_RenderCopy(MainWindowRenderer, palette.toolGost().texture, &palette.toolGost().area, &toolRect);
+        return;
+    }
+
     SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
     SDL_RenderFillRect(MainWindowRenderer, &toolRect);
 
     SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 255);
     SDL_RenderDrawRect(MainWindowRenderer, &toolRect);
-
-    std::string iconname{};
-    switch (PendingTool)
-    {
-    case Tool::Residential:
-        iconname = "@images/res.xpm";
-        break;
-
-    case Tool::Commercial:
-        iconname = "@images/com.xpm";
-        break;
-
-    case Tool::Industrial :
-        iconname = "@images/ind.xpm";
-        break;
-
-    case Tool::Fire:
-        iconname = "@images/fire.xpm";
-        break;
-
-    case Tool::Police:
-        iconname = "@images/police.xpm";
-        break;
-
-    case Tool::Stadium:
-        iconname = "@images/stadium.xpm";
-        break;
-
-    case Tool::Seaport:
-        iconname = "@images/seaport.xpm";
-        break;
-
-    case Tool::Coal:
-        iconname = "@images/coal.xpm";
-        break;
-
-    case Tool::Nuclear:
-        iconname = "@images/nuclear.xpm";
-        break;
-
-    case Tool::Airport:
-        iconname = "@images/airport.xpm";
-        break;
-
-    default:
-        break;
-    }
-
-    if (!iconname.empty())
-    {
-        //Pixmap icon = Tk_GetPixmap(view->interp, view->tkwin, iconname);
-        //float f;
-       // int i;
-        //
-        //gettimeofday(&now_time, NULL);
-        //f = (2 * now_time.tv_usec / 1000000.0);
-        //if (f > 1.0) f = 2.0 - f;
-        //i = (int)(f * BobHeight * (Players - Votes));
-
-        //if (icon != None)
-        //{
-           // XCopyArea(view->x->dpy, icon, pm, view->x->gc, 0, 0, size, size, x + i, y - i);
-        //}
-    }
 }
 
 
@@ -985,7 +922,7 @@ void startGame()
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
 
 
-        DrawPendingTool();
+        DrawPendingTool(toolPalette);
 
 
         //SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);

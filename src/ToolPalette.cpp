@@ -1,5 +1,8 @@
 #include "ToolPalette.h"
 
+#include <stdexcept>
+#include <string>
+
 
 ToolPalette::ToolPalette(SDL_Renderer* renderer) :
     mRenderer(renderer),
@@ -13,6 +16,7 @@ ToolPalette::ToolPalette(SDL_Renderer* renderer) :
     mButtonStates[19] = DisabledState;
 
     setToolValues();
+    loadToolGhosts();
 }
 
 
@@ -65,6 +69,12 @@ Tool ToolPalette::tool() const
 }
 
 
+const Texture& ToolPalette::toolGost() const
+{
+    return mToolButtons[mSelectedIndex].ghost;
+}
+
+
 void ToolPalette::injectMouseClickPosition(const Point<int>& mousePosition)
 {
     for (int i = 0; i < 20; ++i)
@@ -96,6 +106,43 @@ void ToolPalette::initToolbarUv()
     for (int i = 0; i < 80; ++i)
     {
         mToolButtonUV[i] = { (i / 20) * 32, (i % 20) * 32, 32, 32 };
+    }
+}
+
+
+void ToolPalette::loadToolGhosts()
+{
+    mToolButtons[0].ghost = loadTexture(mRenderer, "images/res.xpm");
+    mToolButtons[1].ghost = loadTexture(mRenderer, "images/com.xpm");
+    mToolButtons[2].ghost = loadTexture(mRenderer, "images/ind.xpm");
+    mToolButtons[3].ghost = loadTexture(mRenderer, "images/fire.xpm");
+    //mToolButtons[4].ghost = loadTexture(mRenderer, ""); // Query
+    mToolButtons[5].ghost = loadTexture(mRenderer, "images/police.xpm");
+    //mToolButtons[6].ghost = loadTexture(mRenderer, ""); // Wire
+    //mToolButtons[7].ghost = loadTexture(mRenderer, ""); // Bulldoze
+    //mToolButtons[8].ghost = loadTexture(mRenderer, ""); // Rail
+    //mToolButtons[9].ghost = loadTexture(mRenderer, ""); // Road
+    //mToolButtons[10].ghost = loadTexture(mRenderer, ""); // Unused
+    //mToolButtons[11].ghost = loadTexture(mRenderer, ""); // Unused
+    mToolButtons[12].ghost = loadTexture(mRenderer, "images/stadium.xpm");
+    //mToolButtons[13].ghost = loadTexture(mRenderer, ""); // Park
+    mToolButtons[14].ghost = loadTexture(mRenderer, "images/seaport.xpm");
+    mToolButtons[15].ghost = loadTexture(mRenderer, "images/coal.xpm");
+    mToolButtons[16].ghost = loadTexture(mRenderer, "images/nuclear.xpm");
+    mToolButtons[17].ghost = loadTexture(mRenderer, "images/airport.xpm");
+    //mToolButtons[18].ghost = loadTexture(mRenderer, ""); // Network
+    //mToolButtons[19].ghost = loadTexture(mRenderer, ""); // Unused
+
+    for (auto& item : mToolButtons)
+    {
+        if (item.ghost.texture)
+        {
+            SDL_SetTextureBlendMode(item.ghost.texture, SDL_BLENDMODE_BLEND);
+            if(SDL_SetTextureAlphaMod(item.ghost.texture, 125))
+            {
+                throw std::runtime_error(std::string("Unable to set alpha mod: ") + SDL_GetError());
+            }
+        }
     }
 }
 

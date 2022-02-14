@@ -35,6 +35,8 @@ public:
 
     Tool tool() const;
 
+    const Texture& toolGost() const;
+
     void injectMouseClickPosition(const Point<int>& mousePosition);
 
     const SDL_Rect& rect() const;
@@ -44,10 +46,13 @@ private:
     {
         SDL_Rect rect{};
         Tool tool;
+
+        Texture ghost;
     };
 
 private:
     void initToolbarUv();
+    void loadToolGhosts();
     void setToolValues();
     void setButtonState(int buttonIndex, int buttonState);
     void drawBackground();
