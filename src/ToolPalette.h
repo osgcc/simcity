@@ -26,28 +26,23 @@ public:
 public:
     ToolPalette(SDL_Renderer* renderer);
 
-    void draw();
-
-    void position(const Point<int>& position);
-
-    void toolIndex(const int toolIndex);
-    int toolIndex() const;
-
     Tool tool() const;
-
     const Texture& toolGost() const;
-
-    void injectMouseClickPosition(const Point<int>& mousePosition);
-
     const SDL_Rect& rect() const;
+
+    void draw();
+    void position(const Point<int>& position);
+    void injectMouseClickPosition(const Point<int>& mousePosition);
 
 private:
     struct ButtonMeta
     {
         SDL_Rect rect{};
-        Tool tool;
+        Tool tool{};
 
-        Texture ghost;
+        int state{};
+
+        Texture ghost{};
     };
 
 private:
@@ -57,9 +52,11 @@ private:
     void setButtonState(int buttonIndex, int buttonState);
     void drawBackground();
 
+    void toolIndex(const int toolIndex);
+    int toolIndex() const;
+
     std::array<SDL_Rect, 80> mToolButtonUV{};
     std::array<ButtonMeta, 20> mToolButtons{};
-    std::array<int, 20> mButtonStates{};
 
     SDL_Rect mRect{};
 

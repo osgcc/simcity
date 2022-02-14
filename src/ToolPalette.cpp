@@ -10,10 +10,10 @@ ToolPalette::ToolPalette(SDL_Renderer* renderer) :
 {
     initToolbarUv();
 
-    mButtonStates[10] = DisabledState;
-    mButtonStates[11] = DisabledState;
-    mButtonStates[18] = DisabledState;
-    mButtonStates[19] = DisabledState;
+    mToolButtons[10].state = DisabledState;
+    mToolButtons[11].state = DisabledState;
+    mToolButtons[18].state = DisabledState;
+    mToolButtons[19].state = DisabledState;
 
     setToolValues();
     loadToolGhosts();
@@ -26,7 +26,7 @@ void ToolPalette::draw()
 
     for (size_t i = 0; i < 20; ++i)
     {
-        SDL_RenderCopy(mRenderer, texture.texture, &mToolButtonUV[i + (mButtonStates[i] * 20)], &mToolButtons[i].rect);
+        SDL_RenderCopy(mRenderer, texture.texture, &mToolButtonUV[i + (mToolButtons[i].state * 20)], &mToolButtons[i].rect);
     }
 }
 
@@ -83,7 +83,8 @@ void ToolPalette::injectMouseClickPosition(const Point<int>& mousePosition)
         if (mousePosition.x >= buttonRect.x && mousePosition.x <= buttonRect.x + buttonRect.w &&
             mousePosition.y >= buttonRect.y && mousePosition.y <= buttonRect.y + buttonRect.h)
         {
-            if (mButtonStates[i] == PressedState || mButtonStates[i] == DisabledState)
+            const int buttonState = mToolButtons[i].state;
+            if (buttonState == PressedState || buttonState == DisabledState)
             {
                 continue;
             }
@@ -174,7 +175,7 @@ void ToolPalette::setToolValues()
 
 void ToolPalette::setButtonState(int buttonIndex, int buttonState)
 {
-    mButtonStates[buttonIndex] = buttonState;
+    mToolButtons[buttonIndex].state = buttonState;
 }
 
 
