@@ -91,17 +91,7 @@ constexpr auto QuarterWorldHeight = SimHeight / 4;
 constexpr auto SmX = SimWidth / 8;
 constexpr auto SmY = (SimHeight + 7) / 8;
 
-#define EDITOR_W (SimWidth * 16)
-#define EDITOR_H (SimHeight * 16)
-
-#define MAP_W (SimWidth * 3)
-#define MAP_H (SimHeight * 3)
-
-#define NIL		0
-#define HORIZ		1
-#define VERT		0
-
-#define PROBNUM 10
+constexpr auto PROBNUM = 10;
 
 constexpr auto HistoryLength = 240;
 constexpr auto MISCHISTLEN = 240;
@@ -137,8 +127,6 @@ constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 #define NMAPS 15
 
 /* These adjust frequency in Simulate() */
-
-#define VALVERATE 2
 #define CENSUSRATE 4
 #define TAXFREQ 48
 
