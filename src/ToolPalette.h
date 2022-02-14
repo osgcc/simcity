@@ -17,6 +17,8 @@ public:
     ToolPalette(const ToolPalette&) = delete;
     const ToolPalette& operator=(const ToolPalette&) = delete;
 
+    ~ToolPalette();
+
     const int NoSelection = -1;
     
     const int NormalState = 0;

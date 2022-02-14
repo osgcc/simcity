@@ -20,6 +20,23 @@ ToolPalette::ToolPalette(SDL_Renderer* renderer) :
 }
 
 
+ToolPalette::~ToolPalette()
+{
+    for (auto& item : mToolButtons)
+    {
+        if (item.ghost.texture)
+        {
+            SDL_DestroyTexture(item.ghost.texture);
+        }
+    }
+
+    if (texture.texture)
+    {
+        SDL_DestroyTexture(texture.texture);
+    }
+}
+
+
 void ToolPalette::draw()
 {
     drawBackground();
