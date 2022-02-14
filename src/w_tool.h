@@ -35,11 +35,22 @@ struct ToolProperties
 };
 
 
+enum class ToolResult
+{
+    Success,
+    OutOfBounds,
+    InsufficientFunds,
+    InvalidLocation,
+    InvalidOperation,
+    NetworkVotedNo,
+    RequiresBulldozing,
+    CannotBulldoze
+};
+
+
 void ToolDown(int mapX, int mapY);
 bool tally(int tileValue);
 
 extern std::map<Tool, ToolProperties> Tools;
 
 extern Tool PendingTool;
-extern int PendingX;
-extern int PendingY;

@@ -62,6 +62,7 @@
 #include "main.h"
 
 #include "w_stubs.h"
+#include "w_tool.h"
 #include "w_util.h"
 
 
@@ -95,19 +96,19 @@ int _WireTable[16] = {
 
 
 /* comefrom: ConnecTile */
-int
+ToolResult
 _LayDoze(int x, int y, int *TileAdrPtr)
 {
   int Tile;
 
   if (!(TotalFunds())) {
-    return -2;			/* no mas dinero. */
+    return ToolResult::InsufficientFunds;			/* no mas dinero. */
   }
 
   Tile = (*TileAdrPtr);
 
   if (!(Tile & BULLBIT)) {
-    return 0;			/* Check dozeable bit. */
+    return ToolResult::CannotBulldoze;			/* Check dozeable bit. */
   }
 
   NeutralizeRoad(Tile);
@@ -138,19 +139,19 @@ _LayDoze(int x, int y, int *TileAdrPtr)
   }
 
   Spend(1);			/* Costs $1.00....*/
-  return 1;
+  return ToolResult::Success;
 }
 
 
 /* comefrom: ConnecTile */
-int
+ToolResult
 _LayRoad(int x, int y, int *TileAdrPtr)
 {
   int Tile;
   int cost = 10;
 
   if (TotalFunds() < 10) {
-    return -2;
+    return ToolResult::InsufficientFunds;
   }
 
   Tile = (*TileAdrPtr) & LOMASK;
@@ -165,7 +166,7 @@ _LayRoad(int x, int y, int *TileAdrPtr)
   case REDGE:
   case CHANNEL:			/* Check how to build bridges, if possible. */
     if (TotalFunds() < 50) {
-      return -2;
+      return ToolResult::InsufficientFunds;
     }
 
     cost = 50;
@@ -219,7 +220,7 @@ _LayRoad(int x, int y, int *TileAdrPtr)
     }
 
     /* Can't do road... */
-    return 0;
+    return ToolResult::InvalidOperation;
 
   case LHPOWER:		/* Road on power */
     (*TileAdrPtr) = VROADPOWER | CONDBIT | BURNBIT | BULLBIT;
@@ -238,25 +239,25 @@ _LayRoad(int x, int y, int *TileAdrPtr)
     break;
 
   default:		/* Can't do road */
-    return 0;
+    return ToolResult::InvalidOperation;
 
   }
 
   Spend(cost);
 
-  return 1;
+  return ToolResult::Success;
 }
 
 
 /* comefrom: ConnecTile */
-int
+ToolResult
 _LayRail(int x, int y, int *TileAdrPtr)
 {
   int Tile;
   int cost = 20;
 
   if (TotalFunds() < 20) {
-    return -2;
+    return ToolResult::InsufficientFunds;
   }
 
   Tile = (*TileAdrPtr) & LOMASK;
@@ -271,7 +272,7 @@ _LayRail(int x, int y, int *TileAdrPtr)
   case 3:
   case 4:			/* Check how to build underwater tunnel, if possible. */
     if (TotalFunds() < 100) {
-      return -2;
+      return ToolResult::InsufficientFunds;
     }
     cost = 100;
 
@@ -312,7 +313,7 @@ _LayRail(int x, int y, int *TileAdrPtr)
     }
 
     /* Can't do rail... */
-    return 0;
+    return ToolResult::InvalidOperation;
 
   case 210:		/* Rail on power */
     (*TileAdrPtr) = 222 | CONDBIT | BURNBIT | BULLBIT;
@@ -331,23 +332,23 @@ _LayRail(int x, int y, int *TileAdrPtr)
     break;
 
   default:		/* Can't do rail */
-    return 0;
+    return ToolResult::InvalidOperation;
   }
 
   Spend(cost);
-  return 1;
+  return ToolResult::Success;
 }
 
 
 /* comefrom: ConnecTile */
-int
+ToolResult
 _LayWire(int x, int y, int *TileAdrPtr)
 {
   int Tile;
   int cost = 5;
 
   if (TotalFunds() < 5) {
-    return -2;
+    return ToolResult::InsufficientFunds;
   }
 
   Tile = (*TileAdrPtr) & LOMASK;
@@ -362,7 +363,7 @@ _LayWire(int x, int y, int *TileAdrPtr)
   case 3:
   case 4:			/* Check how to lay underwater wire, if possible. */
     if (TotalFunds() < 25)
-      return -2;
+      return ToolResult::InsufficientFunds;
     cost = 25;
 
     if (x < (SimWidth - 1)) {
@@ -410,7 +411,7 @@ _LayWire(int x, int y, int *TileAdrPtr)
     }
 
     /* Can't do wire... */
-    return 0;
+    return ToolResult::InvalidOperation;
 
   case 66:		/* Wire on Road */
     (*TileAdrPtr) = 77 | CONDBIT | BURNBIT | BULLBIT;
@@ -429,11 +430,11 @@ _LayWire(int x, int y, int *TileAdrPtr)
     break;
 
   default:		/* Can't do wire */
-    return 0;
+    return ToolResult::InvalidOperation;
   }
 
   Spend(cost);
-  return 1;
+  return ToolResult::Success;
 }
 
 
@@ -589,15 +590,14 @@ void _FixZone(int x, int y, int *TileAdrPtr)
 
 
 /* comefrom: check3Border check4Border check5Border processWand */
-int ConnecTile(int x, int y, int* TileAdrPtr, int Command)
+ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command)
 {
     int Tile;
-    int result = 1;
 
     /* make sure the array subscripts are in bounds */
     if (!CoordinatesValid(x, y, SimWidth, SimHeight))
     {
-        return (0);
+        return ToolResult::OutOfBounds;
     }
 
     /* AutoDoze */
@@ -618,9 +618,9 @@ int ConnecTile(int x, int y, int* TileAdrPtr, int Command)
         }
     }
 
+    ToolResult result = ToolResult::Success;
     switch (Command)
     {
-
     case 0:	/* Fix zone */
         _FixZone(x, y, TileAdrPtr);
         break;

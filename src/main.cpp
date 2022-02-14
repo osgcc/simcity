@@ -584,12 +584,6 @@ void handleKeyEvent(SDL_Event& event)
 {
     switch (event.key.keysym.sym)
     {
-    case SDLK_SPACE:
-        DoPlayNewCity();
-        DrawMiniMap();
-        DrawBigMap();
-        break;
-
     case SDLK_ESCAPE:
         sim_exit();
         break;
@@ -641,7 +635,6 @@ void handleMouseEvent(SDL_Event& event)
     case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT)
         {
-            //putDownNetwork(nullptr, TilePointedAt.x, TilePointedAt.y);
             SDL_Point mp{ event.button.x, event.button.y };
             for (auto rect : UiRects)
             {

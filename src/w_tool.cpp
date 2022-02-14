@@ -87,8 +87,6 @@ int Players = 1;
 int Votes = 0;
 
 Tool PendingTool{ Tool::None };
-int PendingX{};
-int PendingY{};
 
 
 std::map<Tool, ToolProperties> Tools =
@@ -113,7 +111,7 @@ std::map<Tool, ToolProperties> Tools =
 };
 
 
-int putDownPark(int mapH, int mapV)
+ToolResult putDownPark(int mapH, int mapV)
 {
     int tile{};
 
@@ -135,16 +133,18 @@ int putDownPark(int mapH, int mapV)
             Spend(Tools.at(Tool::Park).cost);
             UpdateFunds();
             Map[mapH][mapV] = tile;
-            return 1;
+            return ToolResult::Success;
         }
-        return -1;
+
+        return ToolResult::InvalidLocation;
     }
-    return -2;
+
+    return ToolResult::InsufficientFunds;
 }
 
 
 // Radar?
-int putDownNetwork(int mapH, int mapV)
+ToolResult putDownNetwork(int mapH, int mapV)
 {
     int tile = Map[mapH][mapV] & LOMASK;
 
@@ -160,16 +160,16 @@ int putDownNetwork(int mapH, int mapV)
         {
             Map[mapH][mapV] = TELEBASE | CONDBIT | BURNBIT | BULLBIT | ANIMBIT;
             Spend(Tools.at(Tool::Network).cost);
-            return 1;
+            return ToolResult::Success;
         }
         else
         {
-            return -2;
+            return ToolResult::InsufficientFunds;
         }
     }
     else
     {
-        return -1;
+        return ToolResult::InvalidLocation;
     }
 }
 
@@ -373,7 +373,7 @@ void check3x3border(int xMap, int yMap)
 }
 
 
-int check3x3(int mapH, int mapV, int base, Tool tool)
+ToolResult check3x3(int mapH, int mapV, int base, Tool tool)
 {
     int rowNum, columnNum;
     int holdMapH, holdMapV;
@@ -385,7 +385,7 @@ int check3x3(int mapH, int mapV, int base, Tool tool)
     mapH--; mapV--;
     if ((mapH < 0) || (mapH > (SimWidth - 3)) || (mapV < 0) || (mapV > (SimHeight - 3)))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     xPos = holdMapH = mapH;
@@ -430,21 +430,21 @@ int check3x3(int mapH, int mapV, int base, Tool tool)
 
     if (flag == 0)
     {
-        return -1;
+        return ToolResult::RequiresBulldozing;
     }
 
     cost += Tools.at(tool).cost;
 
     if ((TotalFunds() - cost) < 0)
     {
-        return -2;
+        return ToolResult::InsufficientFunds;
     }
 
     if ((Players > 1) &&
         (OverRide == 0) &&
         (cost >= Expensive))
     {
-        return -3;
+        return ToolResult::NetworkVotedNo;
     }
 
     /* take care of the money situtation here */
@@ -473,7 +473,7 @@ int check3x3(int mapH, int mapV, int base, Tool tool)
     }
 
     check3x3border(xPos, yPos);
-    return 1;
+    return ToolResult::Success;
 }
 
 
@@ -523,7 +523,7 @@ void check4x4border(int xMap, int yMap)
 }
 
 
-int check4x4(int mapH, int mapV, int base, int aniFlag, Tool tool)
+ToolResult check4x4(int mapH, int mapV, int base, int aniFlag, Tool tool)
 {
     int rowNum, columnNum;
     int h, v;
@@ -537,7 +537,7 @@ int check4x4(int mapH, int mapV, int base, int aniFlag, Tool tool)
     if ((mapH < 0) || (mapH > (SimWidth - 4)) ||
         (mapV < 0) || (mapV > (SimHeight - 4)))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     h = xMap = holdMapH = mapH;
@@ -582,21 +582,21 @@ int check4x4(int mapH, int mapV, int base, int aniFlag, Tool tool)
 
     if (flag == 0)
     {
-        return -1;
+        return ToolResult::RequiresBulldozing;
     }
 
     cost += Tools.at(tool).cost;
 
     if ((TotalFunds() - cost) < 0)
     {
-        return -2;
+        return ToolResult::InsufficientFunds;
     }
 
     if ((Players > 1) &&
         (OverRide == 0) &&
         (cost >= Expensive))
     {
-        return -3;
+        return ToolResult::NetworkVotedNo;
     }
 
     /* take care of the money situtation here */
@@ -629,7 +629,7 @@ int check4x4(int mapH, int mapV, int base, int aniFlag, Tool tool)
     }
 
     check4x4border(xMap, yMap);
-    return 1;
+    return ToolResult::Success;
 }
 
 
@@ -673,7 +673,7 @@ void check6x6border(int xMap, int yMap)
 }
 
 
-int check6x6(int mapH, int mapV, int base, Tool tool)
+ToolResult check6x6(int mapH, int mapV, int base, Tool tool)
 {
     int rowNum, columnNum;
     int h, v;
@@ -687,7 +687,7 @@ int check6x6(int mapH, int mapV, int base, Tool tool)
     if ((mapH < 0) || (mapH > (SimWidth - 6)) ||
         (mapV < 0) || (mapV > (SimHeight - 6)))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     h = xMap = holdMapH = mapH;
@@ -730,21 +730,21 @@ int check6x6(int mapH, int mapV, int base, Tool tool)
 
     if (flag == 0)
     {
-        return -1;
+        return ToolResult::RequiresBulldozing;
     }
 
     cost += Tools.at(tool).cost;
 
     if ((TotalFunds() - cost) < 0)
     {
-        return -2;
+        return ToolResult::InsufficientFunds;
     }
 
     if ((Players > 1) &&
         (OverRide == 0) &&
         (cost >= Expensive))
     {
-        return -3;
+        return ToolResult::NetworkVotedNo;
     }
 
     /* take care of the money situtation here */
@@ -773,7 +773,7 @@ int check6x6(int mapH, int mapV, int base, Tool tool)
     }
 
     check6x6border(xMap, yMap);
-    return 1;
+    return ToolResult::Success;
 }
 
 
@@ -1023,31 +1023,32 @@ void put6x6Rubble(int x, int y)
 /* TOOLS */
 
 
-int query_tool(int x, int y)
+ToolResult query_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     doZoneStatus(x, y);
-    return 1;
+    return ToolResult::Success;
 }
 
 
-int bulldozer_tool(int x, int y)
+ToolResult bulldozer_tool(int x, int y)
 {
     unsigned int currTile, temp;
     int zoneSize, deltaH, deltaV;
-    int result = 1;
 
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     currTile = Map[x][y];
     temp = currTile & LOMASK;
+
+    ToolResult result = ToolResult::Success;
 
     if (currTile & ZONEBIT)
     { /* zone center bit is set */
@@ -1115,7 +1116,7 @@ int bulldozer_tool(int x, int y)
             }
             else
             {
-                result = 0;
+                result = ToolResult::InsufficientFunds;
             }
         }
         else
@@ -1128,184 +1129,178 @@ int bulldozer_tool(int x, int y)
 }
 
 
-int road_tool(int x, int y)
-{
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
-    {
-        return -1;
-    }
-
-    result = ConnecTile(x, y, &Map[x][y], 2);
-    UpdateFunds();
-    return result;
-}
-
-
-int rail_tool(int x, int y)
-{
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1))) {
-        return -1;
-    }
-
-    result = ConnecTile(x, y, &Map[x][y], 3);
-    UpdateFunds();
-    return result;
-}
-
-
-int wire_tool(int x, int y)
-{
-    int result;
-
-    if ((x < 0) || (x > (SimWidth - 1)) ||
-        (y < 0) || (y > (SimHeight - 1))) {
-        return -1;
-    }
-
-    result = ConnecTile(x, y, &Map[x][y], 4);
-    UpdateFunds();
-    return result;
-}
-
-
-int park_tool(int x, int y)
+ToolResult road_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
+    }
+
+    ToolResult result = ConnecTile(x, y, &Map[x][y], 2);
+    UpdateFunds();
+    return result;
+}
+
+
+ToolResult rail_tool(int x, int y)
+{
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    {
+        return ToolResult::OutOfBounds;
+    }
+
+    ToolResult result = ConnecTile(x, y, &Map[x][y], 3);
+    UpdateFunds();
+    return result;
+}
+
+
+ToolResult wire_tool(int x, int y)
+{
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    {
+        return ToolResult::OutOfBounds;
+    }
+
+    ToolResult result = ConnecTile(x, y, &Map[x][y], 4);
+    UpdateFunds();
+    return result;
+}
+
+
+ToolResult park_tool(int x, int y)
+{
+    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    {
+        return ToolResult::OutOfBounds;
     }
 
     return putDownPark(x, y);
 }
 
 
-int residential_tool(int x, int y)
+ToolResult residential_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     return check3x3(x, y, RESBASE, Tool::Residential);
 }
 
 
-int commercial_tool(int x, int y)
+ToolResult commercial_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
-    return  check3x3(x, y, COMBASE, Tool::Commercial);
+    return check3x3(x, y, COMBASE, Tool::Commercial);
 }
 
 
-int industrial_tool(int x, int y)
+ToolResult industrial_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     return check3x3(x, y, INDBASE, Tool::Industrial);
 }
 
 
-int police_dept_tool(int x, int y)
+ToolResult police_dept_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     return check3x3(x, y, POLICESTBASE, Tool::Police);
 }
 
 
-int fire_dept_tool(int x, int y)
+ToolResult fire_dept_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     return check3x3(x, y, FIRESTBASE, Tool::Fire);
 }
 
 
-int stadium_tool(int x, int y)
+ToolResult stadium_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     return check4x4(x, y, STADIUMBASE, 0, Tool::Stadium);
 }
 
 
-int coal_power_plant_tool(int x, int y)
+ToolResult coal_power_plant_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     return check4x4(x, y, COALBASE, 1, Tool::Coal);
 }
 
 
-int nuclear_power_plant_tool(int x, int y)
+ToolResult nuclear_power_plant_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     return check4x4(x, y, NUCLEARBASE, 1, Tool::Nuclear);
 }
 
 
-int seaport_tool(int x, int y)
+ToolResult seaport_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     return check4x4(x, y, PORTBASE, 0, Tool::Seaport);
 }
 
 
-int airport_tool(int x, int y)
+ToolResult airport_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     return check6x6(x, y, AIRPORTBASE, Tool::Airport);
 }
 
 
-int network_tool(int x, int y)
+ToolResult network_tool(int x, int y)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
-        return -1;
+        return ToolResult::OutOfBounds;
     }
 
     return putDownNetwork(x, y);
 }
 
 
-int do_tool(Tool state, int mapX, int mapY, int first)
+ToolResult do_tool(Tool state, int mapX, int mapY)
 {
     switch (state)
     {
@@ -1378,46 +1373,23 @@ int do_tool(Tool state, int mapX, int mapY, int first)
         break;
 
     default:
-        return 0;
+        return ToolResult::InvalidOperation;
         break;
     }
 
-    return 0;
+    return ToolResult::InvalidOperation;
 }
 
 
-int current_tool(int x, int y, int first)
+ToolResult current_tool(int x, int y)
 {
-    //return do_tool(tool_state, x, y, first);
-    return 0;
-}
-
-
-void DoTool(Tool tool, int x, int y)
-{
-    int result = do_tool(tool, x << 4, y << 4, 1);
-
-    if (result == -1)
-    {
-        ClearMes();
-        SendMes(NotificationId::MustBulldoze);
-        MakeSoundOn(nullptr, "edit", "UhUh");
-    }
-    else if (result == -2)
-    {
-        ClearMes();
-        SendMes(NotificationId::InsufficientFunds);
-        MakeSoundOn(nullptr, "edit", "Sorry");
-    }
-
-    sim_skip = 0;
-    InvalidateEditors();
+    return do_tool(PendingTool, x, y);
 }
 
 
 void DoPendTool(Tool tool, int x, int y)
 {
-    //Eval(std::string("DoPendTool: ") + "'winId' " + std::to_string(tool) + " " + std::to_string(x) + " " + std::to_string(y));
+    Eval(std::string("DoPendTool: ") + "'winId' " + std::to_string((int)tool) + " " + std::to_string(x) + " " + std::to_string(y));
 }
 
 
@@ -1429,21 +1401,26 @@ void DoPendTool(Tool tool, int x, int y)
  */
 void ToolDown(int mapX, int mapY)
 {
-    int result = current_tool(mapX, mapY, 1);
+    if (PendingTool == Tool::None)
+    {
+        return;
+    }
 
-    if (result == -1)
+    ToolResult result = current_tool(mapX, mapY);
+
+    if (result == ToolResult::RequiresBulldozing)
     {
         ClearMes();
         SendMes(NotificationId::MustBulldoze);
         MakeSoundOn(nullptr, "edit", "UhUh");
     }
-    else if (result == -2)
+    else if (result == ToolResult::InsufficientFunds)
     {
         ClearMes();
         SendMes(NotificationId::InsufficientFunds);
         MakeSoundOn(nullptr, "edit", "Sorry");
     }
-    else if (result == -3)
+    else
     {
         DoPendTool(Tool::None, mapX, mapY);
     }
