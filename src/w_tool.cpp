@@ -59,7 +59,7 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-//#include "main.h"
+#include "w_tool.h"
 
 #include "s_alloc.h"
 #include "s_msg.h"
@@ -70,7 +70,6 @@
 #include "w_sound.h"
 #include "w_stubs.h"
 #include "w_tk.h"
-#include "w_tool.h"
 #include "w_update.h"
 #include "w_util.h"
 #include "w_x.h"
@@ -98,7 +97,7 @@ std::map<Tool, ToolProperties> Tools =
     { Tool::Commercial, { 100, 3, 1, "Commercial" }},
     { Tool::Industrial, { 100, 3, 1, "Industrial" }},
     { Tool::Fire, { 500, 3, 1, "Fire Department" }},
-    { Tool::Query, { 0, 0, 0, "Query" }},
+    { Tool::Query, { 0, 1, 0, "Query" }},
     { Tool::Police, { 500, 3, 1, "Police Department" }},
     { Tool::Wire, { 5, 1, 0, "Power Line" }},
     { Tool::Bulldoze, { 1, 1, 0, "Bulldoze" }},
