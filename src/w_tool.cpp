@@ -106,10 +106,10 @@ std::map<Tool, ToolProperties> Tools =
     { Tool::Road, { 10, 1, 0, "Roads" }},
     { Tool::Stadium, { 5000, 4, 1, "Stadium" }},
     { Tool::Park, { 10, 1, 0, "Park" }},
-    { Tool::Seaport, { 3000, 4, 1, "Seaport" }},
-    { Tool::Coal, { 3000, 4, 1, "Coal Power" }},
-    { Tool::Nuclear, { 5000, 4, 1, "Nuclear Power" }},
-    { Tool::Airport, { 10000, 6, 1, "Airport" }},
+    { Tool::Seaport, { 3000, 4, 2, "Seaport" }},
+    { Tool::Coal, { 3000, 4, 2, "Coal Power" }},
+    { Tool::Nuclear, { 5000, 4, 2, "Nuclear Power" }},
+    { Tool::Airport, { 10000, 6, 3, "Airport" }},
     { Tool::Network, { 100, 1, 0, "Network" }}
 };
 
@@ -1319,76 +1319,76 @@ int network_tool(int x, int y)
 }
 
 
-int do_tool(Tool state, int x, int y, int first)
+int do_tool(Tool state, int mapX, int mapY, int first)
 {
     switch (state)
     {
     case Tool::Residential:
-        return residential_tool(x >> 4, y >> 4);
+        return residential_tool(mapX, mapY);
         break;
 
     case Tool::Commercial:
-        return commercial_tool(x >> 4, y >> 4);
+        return commercial_tool(mapX, mapY);
         break;
 
     case Tool::Industrial:
-        return industrial_tool(x >> 4, y >> 4);
+        return industrial_tool(mapX, mapY);
         break;
 
     case Tool::Fire:
-        return fire_dept_tool(x >> 4, y >> 4);
+        return fire_dept_tool(mapX, mapY);
         break;
 
     case Tool::Query:
-        return query_tool(x >> 4, y >> 4);
+        return query_tool(mapX, mapY);
         break;
 
     case Tool::Police:
-        return police_dept_tool(x >> 4, y >> 4);
+        return police_dept_tool(mapX, mapY);
         break;
 
     case Tool::Wire:
-        return wire_tool(x >> 4, y >> 4);
+        return wire_tool(mapX, mapY);
         break;
 
     case Tool::Bulldoze:
-        return bulldozer_tool(x >> 4, y >> 4);
+        return bulldozer_tool(mapX, mapY);
         break;
 
     case Tool::Rail:
-        return rail_tool(x >> 4, y >> 4);
+        return rail_tool(mapX, mapY);
         break;
 
     case Tool::Road:
-        return road_tool(x >> 4, y >> 4);
+        return road_tool(mapX, mapY);
         break;
 
     case Tool::Stadium:
-        return stadium_tool(x >> 4, y >> 4);
+        return stadium_tool(mapX, mapY);
         break;
 
     case Tool::Park:
-        return park_tool(x >> 4, y >> 4);
+        return park_tool(mapX, mapY);
         break;
 
     case Tool::Seaport:
-        return seaport_tool(x >> 4, y >> 4);
+        return seaport_tool(mapX, mapY);
         break;
 
     case Tool::Coal:
-        return coal_power_plant_tool(x >> 4, y >> 4);
+        return coal_power_plant_tool(mapX, mapY);
         break;
 
     case Tool::Nuclear:
-        return nuclear_power_plant_tool(x >> 4, y >> 4);
+        return nuclear_power_plant_tool(mapX, mapY);
         break;
 
     case Tool::Airport:
-        return airport_tool(x >> 4, y >> 4);
+        return airport_tool(mapX, mapY);
         break;
 
     case Tool::Network:
-        return network_tool(x >> 4, y >> 4);
+        return network_tool(mapX, mapY);
         break;
 
     default:
@@ -1400,12 +1400,12 @@ int do_tool(Tool state, int x, int y, int first)
 }
 
 
-/*
 int current_tool(int x, int y, int first)
 {
-    return do_tool(tool_state, x, y, first);
+    //return do_tool(tool_state, x, y, first);
+    return 0;
 }
-*/
+
 
 void DoTool(Tool tool, int x, int y)
 {
@@ -1429,44 +1429,40 @@ void DoTool(Tool tool, int x, int y)
 }
 
 
-void DoPendTool(int tool, int x, int y)
+void DoPendTool(Tool tool, int x, int y)
 {
-    Eval(std::string("DoPendTool: ") + "'winId' " + std::to_string(tool) + " " + std::to_string(x) + " " + std::to_string(y));
+    //Eval(std::string("DoPendTool: ") + "'winId' " + std::to_string(tool) + " " + std::to_string(x) + " " + std::to_string(y));
 }
 
 
-void ToolDown(int x, int y)
+/**
+ * Performs tool action
+ * 
+ * Coordinates expected to be in tile coords,
+ * not screen coords.
+ */
+void ToolDown(int mapX, int mapY)
 {
-    /*
-    int result;
-
-    ViewToPixelCoords(view, x, y, x, y);
-    view->last_x = x;
-    view->last_y = y;
-
-    result = current_tool(view, x, y, 1);
+    int result = current_tool(mapX, mapY, 1);
 
     if (result == -1)
     {
         ClearMes();
         SendMes(NotificationId::MustBulldoze);
-        MakeSoundOn(view, "edit", "UhUh");
+        MakeSoundOn(nullptr, "edit", "UhUh");
     }
     else if (result == -2)
     {
         ClearMes();
         SendMes(NotificationId::InsufficientFunds);
-        MakeSoundOn(view, "edit", "Sorry");
+        MakeSoundOn(nullptr, "edit", "Sorry");
     }
     else if (result == -3)
     {
-        DoPendTool(view, view->tool_state, x >> 4, y >> 4);
+        DoPendTool(Tool::None, mapX, mapY);
     }
 
     sim_skip = 0;
-    view->skip = 0;
-    view->invalid = 1;
-    */
 }
 
 

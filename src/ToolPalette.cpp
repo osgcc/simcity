@@ -11,6 +11,8 @@ ToolPalette::ToolPalette(SDL_Renderer* renderer) :
     mButtonStates[11] = DisabledState;
     mButtonStates[18] = DisabledState;
     mButtonStates[19] = DisabledState;
+
+    setToolValues();
 }
 
 

@@ -651,7 +651,7 @@ void handleMouseEvent(SDL_Event& event)
                 }
             }
 
-            query_tool(TilePointedAt.x, TilePointedAt.y);
+            ToolDown(TilePointedAt.x, TilePointedAt.y);
         }
         break;
 
@@ -820,28 +820,33 @@ void drawMiniMapUi()
 }
 
 
-void DrawPending(SimView* view)
+void DrawPendingTool()
 {
+    if (PendingTool == Tool::None)
+    {
+        return;
+    }
+
+    //int x = (PendingX - Tools.at(PendingTool).offset) * 16;
+    //int y = (PendingY - Tools.at(PendingTool).offset) * 16;
+
+    //int size = Tools.at(PendingTool).size * 16;
+
+    SDL_Rect toolRect =
+    {
+        TileHighlight.x - (Tools.at(PendingTool).offset * 16),
+        TileHighlight.y - (Tools.at(PendingTool).offset * 16),
+        Tools.at(PendingTool).size * 16,
+        Tools.at(PendingTool).size * 16
+    };
+
+    SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
+    SDL_RenderFillRect(MainWindowRenderer, &toolRect);
+
+    SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(MainWindowRenderer, &toolRect);
+
     std::string iconname{};
-
-    //int left = (view->w_width / 2) - view->pan_x;
-    //int top = (view->w_height / 2) - view->pan_y;
-
-    int x = (PendingX - Tools.at(PendingTool).offset) * 16;
-    int y = (PendingY - Tools.at(PendingTool).offset) * 16;
-
-    int size = Tools.at(PendingTool).size * 16;
-
-    //x += left;
-    //y += top;
-
-    //XSetStipple(view->x->dpy, view->x->gc, view->x->gray50_stipple);
-    //XSetTSOrigin(view->x->dpy, view->x->gc, 0, 0);
-    //XSetForeground(view->x->dpy, view->x->gc, view->x->pixels[COLOR_BLACK]);
-    //XSetFillStyle(view->x->dpy, view->x->gc, FillStippled);
-    //XFillRectangle(view->x->dpy, pm, view->x->gc, x, y, size, size);
-    //XSetFillStyle(view->x->dpy, view->x->gc, FillSolid);
-
     switch (PendingTool)
     {
     case Tool::Residential:
@@ -968,6 +973,7 @@ void startGame()
 
     while (!Exit)
     {
+        PendingTool = toolPalette.tool();
         sim_loop(timerTick());
         pumpEvents();
 
@@ -978,8 +984,12 @@ void startGame()
         // Map
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
 
-        SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
-        SDL_RenderFillRect(MainWindowRenderer, &TileHighlight);
+
+        DrawPendingTool();
+
+
+        //SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
+        //SDL_RenderFillRect(MainWindowRenderer, &TileHighlight);
         drawTopUi();
 
         //drawMiniMapUi();
