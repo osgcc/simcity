@@ -369,7 +369,7 @@ extern int TaxFlag, CityTax;
 
 extern int costOf[];
 
-extern int flagBlink;
+extern bool flagBlink;
 extern unsigned char tileSynch;
 extern int aniTile[];
 extern unsigned char aniSynch[];

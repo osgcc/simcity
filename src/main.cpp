@@ -285,10 +285,11 @@ void sim_update_evaluations()
 
 void sim_update()
 {
-    /* -- blink speed of 0.5 seconds
-    gettimeofday(&now_time, nullptr);
-    flagBlink = (now_time.tv_usec < 500000) ? 1 : -1;
-    */
+    /* -- blink speed of 0.5 seconds */
+    //gettimeofday(&now_time, nullptr);
+
+    //flagBlink = (TickCount() % 500) ? 1 : -1;
+    
 
     sim_update_editors();
 
@@ -311,7 +312,7 @@ void DrawMiniMap()
         for (int col = 0; col < SimHeight; col++)
         {
             miniMapDrawRect = { row * 3, col * 3, miniMapDrawRect.w, miniMapDrawRect.h };
-            MiniMapTileRect.y = getTileValue(row, col) * 3;
+            MiniMapTileRect.y = maskedTileValue(tileValue(row, col)) * 3;
             SDL_RenderCopy(MainWindowRenderer, SmallTileset.texture, &MiniMapTileRect, &miniMapDrawRect);
         }
     }
@@ -322,7 +323,6 @@ void DrawMiniMap()
 
 void sim_loop(bool doSim)
 {
-
     if (doSim)
     {
         SimFrame();
@@ -371,7 +371,7 @@ void sim_init()
     autoBudget = 1;
     MessageId(NotificationId::None);
     ClearMes();
-    flagBlink = 1;
+    flagBlink = true;
     SimSpeed(SimulationSpeed::Normal);
     ChangeEval();
     MessageLocation({ 0, 0 });
@@ -883,6 +883,13 @@ bool timerTick()
 }
 
 
+unsigned int zonePowerBlinkFlag(unsigned int interval, void* param)
+{
+    flagBlink = !flagBlink;
+    return interval;
+}
+
+
 void startGame()
 {
     sim_init();
@@ -894,6 +901,8 @@ void startGame()
 
     DrawMiniMap();
     DrawBigMap();
+
+    SDL_TimerID zonePowerBlink = SDL_AddTimer(500, zonePowerBlinkFlag, nullptr);
 
     ToolPalette toolPalette(MainWindowRenderer);
     toolPalette.position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
@@ -914,9 +923,7 @@ void startGame()
         // Map
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
 
-
         DrawPendingTool(toolPalette);
-
 
         //SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
         //SDL_RenderFillRect(MainWindowRenderer, &TileHighlight);
@@ -935,6 +942,8 @@ void startGame()
 
         SDL_RenderPresent(MainWindowRenderer);
     }
+
+    SDL_RemoveTimer(zonePowerBlink);
 }
 
 

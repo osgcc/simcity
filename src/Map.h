@@ -7,7 +7,8 @@
 void DrawBigMapSegment(const Point<int>& begin, const Point<int>& end);
 void DrawBigMap();
 
-unsigned int getTileValue(const int x, const int y);
+unsigned int tileValue(const int x, const int y);
+unsigned int maskedTileValue(unsigned int tile);
 
 bool tilePowered(const unsigned int tile);
 bool tileIsZoned(const unsigned int tile);

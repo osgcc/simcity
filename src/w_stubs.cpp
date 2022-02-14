@@ -87,7 +87,7 @@ int InitSimLoad;
 int ScenarioID;
 int NoDisasters;
 int EvalChanged;
-int flagBlink;
+bool flagBlink;
 
 
 namespace

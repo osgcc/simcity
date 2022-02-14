@@ -83,15 +83,15 @@ namespace
 };
 
 
-unsigned int getRawTileValue(const int x, const int y)
+unsigned int tileValue(const int x, const int y)
 {
 	return static_cast<unsigned int>(Map[x][y]);
 }
 
 
-unsigned int getTileValue(const int x, const int y)
+unsigned int maskedTileValue(unsigned int tile)
 {
-	return getRawTileValue(x, y) & LOMASK;
+	return tile & LOMASK;
 }
 
 
@@ -108,7 +108,7 @@ bool tileIsZoned(const unsigned int tile)
 
 bool blink()
 {
-	return flagBlink <= 0;
+	return flagBlink;
 }
 
 
@@ -153,20 +153,20 @@ void DrawBigMapSegment(const Point<int>& begin, const Point<int>& end)
 	{
 		for (int col = begin.y; col < end.y; col++)
 		{
-			tile = getTileValue(row, col);
-
+			tile = tileValue(row, col);
 			// Blink lightning bolt in unpowered zone center
-			//if (blink() && tileIsZoned(tile) && !tilePowered(tile))
-			//{
-			//	tile = LIGHTNINGBOLT;
-			//}
+			if (blink() && tileIsZoned(tile) && !tilePowered(tile))
+			{
+				tile = LIGHTNINGBOLT;
+			}
 
 			drawRect = { row * drawRect.w, col * drawRect.h, drawRect.w, drawRect.h };
 
+			const unsigned int masked = maskedTileValue(tile);
 			tileRect =
 			{
-				(static_cast<int>(tile) % 32) * 16,
-				(static_cast<int>(tile) / 32) * 16,
+				(static_cast<int>(masked) % 32) * 16,
+				(static_cast<int>(masked) / 32) * 16,
 				16, 16
 			};
 
