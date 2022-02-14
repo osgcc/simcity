@@ -113,19 +113,6 @@ std::map<Tool, ToolProperties> Tools =
 };
 
 
-void DoSetWandState(Tool tool)
-{
-    Eval("UISetToolState " + Tools.at(tool).name);
-}
-
-
-void setWandState(Tool state)
-{
-    sim_update_editors();
-    DoSetWandState(state);
-}
-
-
 int putDownPark(int mapH, int mapV)
 {
     int tile{};

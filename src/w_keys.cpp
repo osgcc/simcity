@@ -189,7 +189,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(Tool::Bulldoze);
+      //setWandState(Tool::Bulldoze);
       break;
     }
 
@@ -200,7 +200,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(Tool::Road);
+      //setWandState(Tool::Road);
       break;
     }
 
@@ -211,7 +211,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(Tool::Wire);
+      //setWandState(Tool::Wire);
       break;
     }
 
@@ -222,7 +222,7 @@ void doKeyDown(SimView *view, int charCode)
       if (view->tool_state_save == -1) {
 	view->tool_state_save = view->tool_state;
       }
-      setWandState(Tool::Rail);
+      //setWandState(Tool::Rail);
       break;
     }
 

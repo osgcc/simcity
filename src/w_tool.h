@@ -39,7 +39,6 @@ extern std::map<Tool, ToolProperties> Tools;
 
 void ToolDown(int mapX, int mapY);
 
-void setWandState(Tool tool);
 int bulldozer_tool(int x, int y);
 bool tally(int tileValue);
 void put3x3Rubble(int x, int y);
