@@ -105,9 +105,9 @@ std::map<Tool, ToolProperties> Tools =
     { Tool::Road, { 10, 1, 0, "Roads" }},
     { Tool::Stadium, { 5000, 4, 1, "Stadium" }},
     { Tool::Park, { 10, 1, 0, "Park" }},
-    { Tool::Seaport, { 3000, 4, 2, "Seaport" }},
-    { Tool::Coal, { 3000, 4, 2, "Coal Power" }},
-    { Tool::Nuclear, { 5000, 4, 2, "Nuclear Power" }},
+    { Tool::Seaport, { 3000, 4, 1, "Seaport" }},
+    { Tool::Coal, { 3000, 4, 1, "Coal Power" }},
+    { Tool::Nuclear, { 5000, 4, 1, "Nuclear Power" }},
     { Tool::Airport, { 10000, 6, 3, "Airport" }},
     { Tool::Network, { 100, 1, 0, "Network" }}
 };
