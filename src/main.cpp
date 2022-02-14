@@ -96,6 +96,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -161,6 +162,8 @@ namespace
     unsigned int accumulatorAdjust{};
 
     std::string currentBudget{};
+
+    std::vector<const SDL_Rect*> UiRects{};
 };
 
 
@@ -639,6 +642,15 @@ void handleMouseEvent(SDL_Event& event)
         if (event.button.button == SDL_BUTTON_LEFT)
         {
             //putDownNetwork(nullptr, TilePointedAt.x, TilePointedAt.y);
+            SDL_Point mp{ event.button.x, event.button.y };
+            for (auto rect : UiRects)
+            {
+                if (SDL_PointInRect(&mp, rect))
+                {
+                    return;
+                }
+            }
+
             query_tool(TilePointedAt.x, TilePointedAt.y);
         }
         break;
@@ -951,6 +963,9 @@ void startGame()
     ToolPalette toolPalette(MainWindowRenderer);
     toolPalette.position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
 
+    UiRects.push_back(&toolPalette.rect());
+    UiRects.push_back(&UiHeaderRect);
+
     while (!Exit)
     {
         sim_loop(timerTick());
@@ -963,7 +978,10 @@ void startGame()
         // Map
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
 
+        SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
+        SDL_RenderFillRect(MainWindowRenderer, &TileHighlight);
         drawTopUi();
+
         //drawMiniMapUi();
 
         if (MouseClicked)
@@ -971,11 +989,7 @@ void startGame()
             MouseClicked = false;
             toolPalette.injectMouseClickPosition(MouseClickPosition);
         }
-
         toolPalette.draw();
-
-        SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
-        SDL_RenderFillRect(MainWindowRenderer, &TileHighlight);
 
         //drawDebug();
 
