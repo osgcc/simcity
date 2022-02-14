@@ -107,7 +107,8 @@ std::map<Tool, ToolProperties> Tools =
     { Tool::Coal, { 3000, 4, 1, "Coal Power" }},
     { Tool::Nuclear, { 5000, 4, 1, "Nuclear Power" }},
     { Tool::Airport, { 10000, 6, 3, "Airport" }},
-    { Tool::Network, { 100, 1, 0, "Network" }}
+    { Tool::Network, { 100, 1, 0, "Network" }},
+    { Tool::None, { 0, 0, 0, "No Tool" } }
 };
 
 
@@ -1389,7 +1390,7 @@ ToolResult current_tool(int x, int y)
 
 void DoPendTool(Tool tool, int x, int y)
 {
-    Eval(std::string("DoPendTool: ") + "'winId' " + std::to_string((int)tool) + " " + std::to_string(x) + " " + std::to_string(y));
+    Eval(std::string("DoPendTool: ") + "'winId' " + Tools.at(tool).name + " " + std::to_string(x) + " " + std::to_string(y));
 }
 
 
@@ -1422,7 +1423,7 @@ void ToolDown(int mapX, int mapY)
     }
     else
     {
-        DoPendTool(Tool::None, mapX, mapY);
+        DoPendTool(PendingTool, mapX, mapY);
     }
 
     sim_skip = 0;
