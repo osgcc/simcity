@@ -7,6 +7,8 @@
 #include "Point.h"
 #include "Texture.h"
 
+#include "w_tool.h"
+
 
 class ToolPalette
 {
@@ -28,23 +30,30 @@ public:
 
     void position(const Point<int>& position);
 
-    void selectedTool(const int toolIndex);
+    void toolIndex(const int toolIndex);
+    int toolIndex() const;
 
-    int selectedTool() const;
+    Tool tool() const;
 
     void injectMouseClickPosition(const Point<int>& mousePosition);
 
     const SDL_Rect& rect() const;
 
 private:
+    struct ButtonMeta
+    {
+        SDL_Rect rect{};
+        Tool tool;
+    };
+
+private:
     void initToolbarUv();
-
+    void setToolValues();
     void setButtonState(int buttonIndex, int buttonState);
-
     void drawBackground();
 
     std::array<SDL_Rect, 80> mToolButtonUV{};
-    std::array<SDL_Rect, 20> mToolButtonPosition{};
+    std::array<ButtonMeta, 20> mToolButtons{};
     std::array<int, 20> mButtonStates{};
 
     SDL_Rect mRect{};
@@ -53,4 +62,5 @@ private:
     Texture texture{};
 
     int mSelectedIndex{ NoSelection };
+    Tool mTool{ Tool::None };
 };
