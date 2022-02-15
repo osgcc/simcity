@@ -424,7 +424,7 @@ extern int CityPop, deltaCityPop;
 extern int CityYes, CityNo;
 extern int ProblemTable[PROBNUM];
 extern int ProblemOrder[4];
-extern int CityAssValue;
+extern int CityAssessedValue;
 
 extern int InitSimLoad;
 extern int DoInitialEval;

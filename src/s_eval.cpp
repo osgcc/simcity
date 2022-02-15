@@ -76,7 +76,7 @@ int ProblemTaken[PROBNUM];
 int ProblemVotes[PROBNUM];		/* these are the votes for each  */
 int ProblemOrder[4];			/* sorted index to above  */
 int CityPop, deltaCityPop;
-int CityAssValue;               /* assessed city value */
+int CityAssessedValue;               /* assessed city value */
 int CityClass;                  /*  0..5  */
 int CityScore, deltaCityScore, AverageCityScore;
 int TrafficAverage;
@@ -84,35 +84,24 @@ int TrafficAverage;
 
 void EvalInit()
 {
-    int x, z;
-
-    z = 0;
-    CityYes = z;
-    CityNo = z;
-    CityPop = z;
-    deltaCityPop = z;
-    CityAssValue = z;
-    CityClass = z;
+    CityYes = 0;
+    CityNo = 0;
+    CityPop = 0;
+    deltaCityPop = 0;
+    CityAssessedValue = 0;
+    CityClass = 0;
     CityScore = 500;
-    deltaCityScore = z;
+    deltaCityScore = 0;
     EvalValid = 1;
-    for (x = 0; x < PROBNUM; x++)
-    {
-        ProblemVotes[x] = z;
-    }
-    for (x = 0; x < 4; x++)
-    {
-        ProblemOrder[x] = z;
-    }
+    
+    std::fill_n(ProblemVotes, PROBNUM, 0);
+    std::fill_n(ProblemOrder, 4, 0);
 }
 
 
-// AssValue?
-void GetAssValue()
+void GetAssessedValue()
 {
-    int z;
-
-    z = RoadTotal * 5;
+    int z = RoadTotal * 5;
     z += RailTotal * 10;
     z += PolicePop * 1000;
     z += FireStPop * 1000;
@@ -122,7 +111,7 @@ void GetAssValue()
     z += APortPop * 10000;
     z += CoalPop * 3000;
     z += NuclearPop * 6000;
-    CityAssValue = z * 1000;
+    CityAssessedValue = z * 1000;
 }
 
 
@@ -398,7 +387,7 @@ void CityEvaluation()
     EvalValid = 0;
     if (TotalPop)
     {
-        GetAssValue();
+        GetAssessedValue();
         DoPopNum();
         DoProblems();
         GetScore();

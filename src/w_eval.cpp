@@ -173,7 +173,7 @@ void doScoreCard()
 		ProblemVotes[ProblemOrder[3]] ? std::to_string(ProblemVotes[ProblemOrder[3]]) + "%" : " ",
 		std::to_string(CityPop),
 		std::to_string(deltaCityPop),
-		NumberToDollarDecimal(CityAssValue),
+		NumberToDollarDecimal(CityAssessedValue),
 		cityClassStr[CityClass],
 		cityLevelStr[GameLevel()],
 		std::to_string(CityYes) + "%",
