@@ -304,6 +304,7 @@ SimSprite* GetSprite(int type)
 
 SimSprite* MakeSprite(int type, int x, int y)
 {
+    /*
     SimSprite* sprite;
 
     if ((sprite = GlobalSprites[type]) == NULL)
@@ -315,22 +316,27 @@ SimSprite* MakeSprite(int type, int x, int y)
         InitSprite(sprite, x, y);
     }
     return sprite;
+    */
+    return nullptr;
 }
 
 
-SimSprite *
-MakeNewSprite(int type, int x, int y)
+SimSprite* MakeNewSprite(int type, int x, int y)
 {
-  SimSprite *sprite;
-  
-  sprite = NewSprite("", type, x, y);
-  return sprite;
+    /*
+    SimSprite* sprite;
+
+    sprite = NewSprite("", type, x, y);
+    return sprite;
+    */
+    return nullptr;
 }
 
 
 void DrawSprite(SimView* view, SimSprite* sprite)
 {
-    //Pixmap pict, mask;
+    /*
+    Pixmap pict, mask;
 
     if (sprite->frame == 0)
     {
@@ -349,6 +355,7 @@ void DrawSprite(SimView* view, SimSprite* sprite)
     //XCopyArea(view->x->dpy, pict, view->pixmap2, view->x->gc, 0, 0, sprite->width, sprite->height, x, y);
     //XSetClipMask(view->x->dpy, view->x->gc, None);
     //XSetClipOrigin(view->x->dpy, view->x->gc, 0, 0);
+    */
 }
 
 
