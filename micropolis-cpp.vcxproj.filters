@@ -21,9 +21,6 @@
     <ClCompile Include="src\g_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_setup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\g_smmaps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

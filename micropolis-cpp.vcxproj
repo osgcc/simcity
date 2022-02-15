@@ -22,7 +22,6 @@
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\g_ani.cpp" />
     <ClCompile Include="src\g_map.cpp" />
-    <ClCompile Include="src\g_setup.cpp" />
     <ClCompile Include="src\g_smmaps.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Map.cpp" />
