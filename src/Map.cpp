@@ -112,36 +112,6 @@ bool blink()
 }
 
 
-/*
-void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Vector<int>& loops)
-{
-	SDL_Rect drawRect{ 0, 0, 16, 16 };
-	unsigned int tile = 0;
-
-	for (int row = 0; row < loops.x; row++)
-	{
-		for (int col = 0; col < loops.y; col++)
-		{
-			tile = getTileValue(row + offset.x, col + offset.y);
-
-			// Blink lightning bolt in unpowered zone center
-			if (blink() && tileIsZoned(tile) && !tilePowered(tile))
-			{
-				tile = LIGHTNINGBOLT;
-			}
-
-			drawRect.x = (row * drawRect.w) + drawOrigin.x;
-			drawRect.y = (col * drawRect.h) + drawOrigin.y;
-
-			tileRect.y = tile * 16;
-
-			SDL_RenderCopy(MainWindowRenderer, BigTileset.texture, &tileRect, &drawRect);
-		}
-	}
-}
-*/
-
-
 void DrawBigMapSegment(const Point<int>& begin, const Point<int>& end)
 {
 	SDL_SetRenderTarget(MainWindowRenderer, MainMapTexture.texture);
