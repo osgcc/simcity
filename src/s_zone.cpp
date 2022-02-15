@@ -603,7 +603,7 @@ void DoCommercial(int ZonePwrFlg)
 
 void DoResidential(int ZonePwrFlg)
 {
-    int tpop, zscore, locvalve, value, TrfGood;
+    int tpop, value, TrfGood;
 
     ResZPop++;
     if (CChr9 == FREEZ)
@@ -634,14 +634,14 @@ void DoResidential(int ZonePwrFlg)
 
     if ((CChr9 == FREEZ) || (!(Rand16() & 7)))
     {
-        locvalve = EvalRes(TrfGood);
-        zscore = RValve + locvalve;
+        int locvalve = EvalRes(TrfGood);
+        int zscore = RValve + locvalve;
         if (!ZonePwrFlg)
         {
             zscore = -500;
         }
 
-        if (zscore > -350 && zscore - 26380 > Rand16())
+        if (zscore > -350 && zscore - 26380 > -Rand16())
         {
             if ((!tpop) && (!(Rand16() & 3)))
             {

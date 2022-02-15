@@ -1569,5 +1569,5 @@ int Random()
 
 int Rand16()
 {
-    return RandomRange(0, 32767);
+    return RandomRange(0, 32767) * (RandomRange(0, 1) ? -1 : 1);
 }
