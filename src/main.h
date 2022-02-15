@@ -371,8 +371,6 @@ extern int costOf[];
 
 extern bool flagBlink;
 extern unsigned char tileSynch;
-extern int aniTile[];
-extern unsigned char aniSynch[];
 extern int TilesAnimated;
 extern int DoAnimation;
 extern int DoMessages;
