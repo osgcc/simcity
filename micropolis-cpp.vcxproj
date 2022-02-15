@@ -65,7 +65,6 @@
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\PointInRectangleRange.h" />
-    <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\s_disast.h" />
     <ClInclude Include="src\s_eval.h" />
@@ -87,7 +86,6 @@
     <ClInclude Include="src\w_graph.h" />
     <ClInclude Include="src\animtab.h" />
     <ClInclude Include="src\g_map.h" />
-    <ClInclude Include="src\macros.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\s_alloc.h" />
     <ClInclude Include="src\w_eval.h" />

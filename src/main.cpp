@@ -73,7 +73,6 @@
 #include "s_msg.h"
 #include "s_sim.h"
 
-#include "Simulation.h"
 #include "Sprite.h"
 
 #include "w_budget.h"
@@ -109,8 +108,6 @@ std::string StartupName;
 std::string Displays;
 std::string FirstDisplay;
 
-
-Sim Simulation;
 
 int sim_skips = 0;
 int sim_skip = 0;

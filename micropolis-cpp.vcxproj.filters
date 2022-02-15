@@ -131,9 +131,6 @@
     <ClInclude Include="src\animtab.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\macros.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -219,9 +216,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\g_ani.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Simulation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Date.h">
