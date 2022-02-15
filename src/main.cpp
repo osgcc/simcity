@@ -189,12 +189,6 @@ void sim_exit()
 }
 
 
-void sim_really_exit(int val)
-{
-    exit(val);
-}
-
-
 /**
  * Init filesystem environment/path
  */

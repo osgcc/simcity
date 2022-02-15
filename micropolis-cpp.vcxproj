@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Date.cpp" />
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\g_ani.cpp" />
     <ClCompile Include="src\g_map.cpp" />
@@ -58,7 +57,6 @@
     <ClCompile Include="src\w_util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Date.h" />
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Graph.h" />
     <ClInclude Include="src\g_ani.h" />
