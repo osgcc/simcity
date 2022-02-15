@@ -78,7 +78,7 @@ int CChr, CChr9;
 int RoadTotal, RailTotal, FirePop;
 
 int ResPop, ComPop, IndPop, TotalPop, LastTotalPop;
-int ResZPop, ComZPop, IndZPop, TotalZPop;
+int ResZPop, ComZPop, IndZPop, TotalZPop; // zone counts
 int HospPop, ChurchPop, StadiumPop;
 int PolicePop, FireStPop;
 int CoalPop, NuclearPop, PortPop, APortPop;

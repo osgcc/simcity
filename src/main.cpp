@@ -94,6 +94,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -844,18 +845,32 @@ void DrawPendingTool(const ToolPalette& palette)
 
 void drawDebug()
 {
-    drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 10, 100 }, { 255, 255, 255, 100 });
-    drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 10, 100 + MainFont->height() }, { 255, 255, 255, 150 });
+    drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 200, 100 }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 200, 100 + MainFont->height() }, { 255, 255, 255, 150 });
     
-    drawString(*MainFont, "Speed: " + SpeedString(SimSpeed()), {10, 100 + MainFont->height() * 3}, {255, 255, 255, 100});
-    drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 10, 100 + MainFont->height() * 4 }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "Speed: " + SpeedString(SimSpeed()), { 200, 100 + MainFont->height() * 3}, {255, 255, 255, 100});
+    drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 200, 100 + MainFont->height() * 4 }, { 255, 255, 255, 100 });
 
-    drawString(*MainFont, "RValve: " + std::to_string(RValve), { 10, 100 + MainFont->height() * 6 }, { 255, 255, 255, 100 });
-    drawString(*MainFont, "CValve: " + std::to_string(CValve), { 10, 100 + MainFont->height() * 7 }, { 255, 255, 255, 100 });
-    drawString(*MainFont, "IValve: " + std::to_string(IValve), { 10, 100 + MainFont->height() * 8 }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "RValve: " + std::to_string(RValve), { 200, 100 + MainFont->height() * 6 }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "CValve: " + std::to_string(CValve), { 200, 100 + MainFont->height() * 7 }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "IValve: " + std::to_string(IValve), { 200, 100 + MainFont->height() * 8 }, { 255, 255, 255, 100 });
 
-    drawString(*MainFont, "TotalPop: " + std::to_string(TotalPop), { 10, 100 + MainFont->height() * 10 }, { 255, 255, 255, 100 });
-    drawString(*MainFont, "TotalZPop: " + std::to_string(TotalZPop), { 10, 100 + MainFont->height() * 11 }, { 255, 255, 255, 100 });
+    drawString(*MainFont, "TotalPop: " + std::to_string(TotalPop), { 200, 100 + MainFont->height() * 10 }, { 255, 255, 255, 100 });
+    
+    
+    std::stringstream sstream;
+
+    sstream << "Res: " << ResPop << " Com: " << ComPop << " Ind: " << IndPop << " Tot: " << TotalPop << " LastTot: " << LastTotalPop;
+    drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 11 }, { 255, 255, 255, 100 });
+
+    sstream.str("");
+    sstream << "TotalZPop: " << TotalZPop << " ResZ: " << ResZPop << " ComZ: " << ComZPop << " IndZ: " << IndZPop;
+    drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 12 }, { 255, 255, 255, 100 });
+
+    sstream.str("");
+    sstream << "PolicePop: " << PolicePop << " FireStPop: " << FireStPop;
+    drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 13 }, { 255, 255, 255, 100 });
+
 
 }
 
@@ -925,8 +940,6 @@ void startGame()
 
         DrawPendingTool(toolPalette);
 
-        //SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
-        //SDL_RenderFillRect(MainWindowRenderer, &TileHighlight);
         drawTopUi();
 
         //drawMiniMapUi();
@@ -938,7 +951,7 @@ void startGame()
         }
         toolPalette.draw();
 
-        //drawDebug();
+        drawDebug();
 
         SDL_RenderPresent(MainWindowRenderer);
     }
