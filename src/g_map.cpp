@@ -61,7 +61,10 @@
  */
 
 #include "main.h"
-#include "view.h"
+
+#include "SmallMaps.h"
+
+#include "g_map.h"
 
 #include "s_alloc.h"
 
@@ -85,17 +88,9 @@ int valMap[] =
 };
 
 
-void (*mapProcs[NMAPS])(SimView*);
+//void (*mapProcs[NMAPS])(SimView*);
 
-void drawAll(SimView *view);
-void drawLilTransMap(SimView* view);
-void drawRes(SimView *view);
-void drawCom(SimView *view);
-void drawInd(SimView *view);
-void drawDynamic(SimView *view);
-void drawPower(SimView *view);
-
-void maybeDrawRect(SimView* view, int val, int x, int y, int w, int h);
+//void maybeDrawRect(SimView* view, int val, int x, int y, int w, int h);
 
 //int drawPopDensity(SimView *view);
 //int drawRateOfGrowth(SimView *view);
@@ -130,22 +125,22 @@ int GetColorIndex(int x)
 }
 
 
-void drawPopDensity(SimView* view)
+void drawPopDensity()
 {
-	drawAll(view);
+	drawAll();
 	for (int x = 0; x < HalfWorldWidth; x++)
 	{
 		for (int y = 0; y < HalfWorldHeight; y++)
 		{
-			maybeDrawRect(view, GetColorIndex(PopDensity[x][y]), x * 6, y * 6, 6, 6);
+			maybeDrawRect(GetColorIndex(PopDensity[x][y]), x * 6, y * 6, 6, 6);
 		}
 	}
 }
 
 
-void drawRateOfGrowth(SimView* view)
+void drawRateOfGrowth()
 {
-	drawAll(view);
+	drawAll();
 	for (int x = 0; x < SmX; x++)
 	{
 		for (int y = 0; y < SmY; y++)
@@ -181,124 +176,98 @@ void drawRateOfGrowth(SimView* view)
 					}
 				}
 			}
-			maybeDrawRect(view, val, x * 24, y * 24, 24, 24);
+			maybeDrawRect(val, x * 24, y * 24, 24, 24);
 		}
 	}
 }
 
 
-void drawTrafficMap(SimView* view)
+void drawTrafficMap()
 {
-	drawLilTransMap(view);
+	drawLilTransMap();
 
 	for (int x = 0; x < HalfWorldWidth; x++)
 	{
 		for (int y = 0; y < HalfWorldHeight; y++)
 		{
-			maybeDrawRect(view, GetColorIndex(TrfDensity[x][y]), x * 6, y * 6, 6, 6);
+			maybeDrawRect(GetColorIndex(TrfDensity[x][y]), x * 6, y * 6, 6, 6);
 		}
 	}
 }
 
 
-void drawPollutionMap(SimView* view)
+void drawPollutionMap()
 {
-	drawAll(view);
+	drawAll();
 
 	for (int x = 0; x < HalfWorldWidth; x++)
 	{
 		for (int y = 0; y < HalfWorldHeight; y++)
 		{
-			maybeDrawRect(view, GetColorIndex(10 + PollutionMem[x][y]), x * 6, y * 6, 6, 6);
+			maybeDrawRect(GetColorIndex(10 + PollutionMem[x][y]), x * 6, y * 6, 6, 6);
 		}
 	}
 }
 
 
-void drawCrimeMap(SimView* view)
+void drawCrimeMap()
 {
-	drawAll(view);
+	drawAll();
 
 	for (int x = 0; x < HalfWorldWidth; x++)
 	{
 		for (int y = 0; y < HalfWorldHeight; y++)
 		{
-			maybeDrawRect(view, GetColorIndex(CrimeMem[x][y]), x * 6, y * 6, 6, 6);
+			maybeDrawRect(GetColorIndex(CrimeMem[x][y]), x * 6, y * 6, 6, 6);
 		}
 	}
 }
 
 
-void drawLandMap(SimView* view)
+void drawLandMap()
 {
-	drawAll(view);
+	drawAll();
 
 	for (int x = 0; x < HalfWorldWidth; x++)
 	{
 		for (int y = 0; y < HalfWorldHeight; y++)
 		{
-			maybeDrawRect(view, GetColorIndex(LandValueMem[x][y]), x * 6, y * 6, 6, 6);
+			maybeDrawRect(GetColorIndex(LandValueMem[x][y]), x * 6, y * 6, 6, 6);
 		}
 	}
 }
 
 
-void drawFireRadius(SimView* view)
+void drawFireRadius()
 {
-	drawAll(view);
+	drawAll();
 	for (int x = 0; x < SmY; x++)
 	{
 		for (int y = 0; y < SmY; y++)
 		{
-			maybeDrawRect(view, GetColorIndex(FireRate[x][y]), x * 24, y * 24, 24, 24);
+			maybeDrawRect(GetColorIndex(FireRate[x][y]), x * 24, y * 24, 24, 24);
 		}
 	}
 }
 
 
-void drawPoliceRadius(SimView* view)
+void drawPoliceRadius()
 {
-	drawAll(view);
+	drawAll();
 	for (int x = 0; x < SmX; x++)
 	{
 		for (int y = 0; y < SmY; y++)
 		{
-			maybeDrawRect(view, GetColorIndex(PoliceMapEffect[x][y]), x * 24, y * 24, 24, 24);
+			maybeDrawRect(GetColorIndex(PoliceMapEffect[x][y]), x * 24, y * 24, 24, 24);
 		}
 	}
-}
-
-
-void setUpMapProcs()
-{
-  mapProcs[ALMAP] = drawAll;
-  mapProcs[REMAP] = drawRes;
-  mapProcs[COMAP] = drawCom;
-  mapProcs[INMAP] = drawInd;
-  mapProcs[PRMAP] = drawPower;
-  mapProcs[RDMAP] = drawLilTransMap;
-  mapProcs[PDMAP] = drawPopDensity;
-  mapProcs[RGMAP] = drawRateOfGrowth;
-  mapProcs[TDMAP] = drawTrafficMap;
-  mapProcs[PLMAP] = drawPollutionMap;
-  mapProcs[CRMAP] = drawCrimeMap;
-  mapProcs[LVMAP] = drawLandMap;
-  mapProcs[FIMAP] = drawFireRadius;
-  mapProcs[POMAP] = drawPoliceRadius;
-  mapProcs[DYMAP] = drawDynamic;
-}
-
-
-void MemDrawMap(SimView* view)
-{
-	(*mapProcs[view->map_state])(view);
 }
 
 
 /**
  * \c pixel	Maps to a given color. See table above (valMap) for mapping.
  */
-void drawRect(SimView* view, int pixel, int solid, int x, int y, int w, int h)
+void drawRect(int pixel, int solid, int x, int y, int w, int h)
 {
 	/*
 	int W = view->m_width, H = view->m_height;
@@ -492,12 +461,12 @@ void drawRect(SimView* view, int pixel, int solid, int x, int y, int w, int h)
 }
 
 
-void maybeDrawRect(SimView* view, int val, int x, int y, int w, int h)
+void maybeDrawRect(int val, int x, int y, int w, int h)
 {
 	if (val == VAL_NONE)
 	{
 		return;
 	}
 
-	drawRect(view, view->pixels[valMap[val]], 0, x, y, w, h);
+	//drawRect(view->pixels[valMap[val]], 0, x, y, w, h);
 }

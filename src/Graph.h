@@ -1,7 +1,5 @@
 #pragma once
 
-#include "View.h"
-
 struct Graph
 {
 	struct Graph* next;
@@ -19,7 +17,7 @@ struct Graph
 	int w_x, w_y;
 	int w_width, w_height;
 
-	Pixmap pixmap;
+	//Pixmap pixmap;
 
 	int* pixels;
 

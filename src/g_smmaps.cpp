@@ -63,14 +63,12 @@
 
 #include "s_alloc.h"
 
-#include "View.h"
-
-
 int DynamicData[32];
 
 
-void drawAll(SimView * view)
+void drawAll()
 {
+    /*
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
@@ -100,11 +98,13 @@ void drawAll(SimView * view)
             }
         }
     }
+    */
 }
 
 
-void drawRes(SimView* view)
+void drawRes()
 {
+    /*
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
@@ -141,11 +141,13 @@ void drawRes(SimView* view)
             }
         }
     }
+    */
 }
 
 
-void drawCom(SimView* view)
+void drawCom()
 {
+    /*
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
@@ -182,11 +184,13 @@ void drawCom(SimView* view)
             }
         }
     }
+    */
 }
 
 
-void drawInd(SimView* view)
+void drawInd()
 {
+    /*
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
@@ -226,11 +230,13 @@ void drawInd(SimView* view)
             }
         }
     }
+    */
 }
 
 
-void drawLilTransMap(SimView* view)
+void drawLilTransMap()
 {
+    /*
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
@@ -269,6 +275,7 @@ void drawLilTransMap(SimView* view)
             }
         }
     }
+    */
 }
 
 
@@ -278,8 +285,9 @@ void drawLilTransMap(SimView* view)
 #define CONDUCTIVE	COLOR_LIGHTGRAY
 
 
-void drawPower(SimView* view)
+void drawPower()
 {
+    /*
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
@@ -358,6 +366,7 @@ void drawPower(SimView* view)
             }
         }
     }
+    */
 }
 
 
@@ -401,8 +410,9 @@ int dynamicFilter(int col, int row)
 }
 
 
-void drawDynamic(SimView* view)
+void drawDynamic()
 {
+    /*
     int lineBytes = view->line_bytes;
     int pixelBytes = view->pixel_bytes;
 
@@ -442,4 +452,5 @@ void drawDynamic(SimView* view)
             }
         }
     }
+    */
 }

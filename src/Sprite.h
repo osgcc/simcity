@@ -1,7 +1,5 @@
 #pragma once
 
-#include "view.h"
-
 #include <string>
 
 struct SimSprite
@@ -39,4 +37,4 @@ void MakeExplosionAt(int x, int y);
 void MakeExplosion(int x, int y);
 void MakeTornado();
 void MakeMonster();
-void DrawObjects(SimView* view);
+void DrawObjects();

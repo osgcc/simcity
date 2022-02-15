@@ -503,5 +503,4 @@ void LoadScenario(int s)
     DoInitialEval = 0;
     DoSimInit();
     DidLoadScenario();
-    Kick();
 }

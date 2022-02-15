@@ -102,136 +102,146 @@ void ResetLastKeys()
 
 
 /* comefrom: processEvent */
-void doKeyDown(SimView *view, int charCode)
+void doKeyDown(SimView* view, int charCode)
 {
-  LastKeys[0] = LastKeys[1];
-  LastKeys[1] = LastKeys[2];
-  LastKeys[2] = LastKeys[3];
-  LastKeys[3] = tolower(charCode);
+    LastKeys[0] = LastKeys[1];
+    LastKeys[1] = LastKeys[2];
+    LastKeys[2] = LastKeys[3];
+    LastKeys[3] = tolower(charCode);
 
-  if (strcmp(LastKeys, "fund") == 0) {
-    Spend(-10000);
-    PunishCnt++;				/* punish for cheating */
-    if (PunishCnt == 5) {
-      PunishCnt = 0;
-      MakeEarthquake();
+    if (strcmp(LastKeys, "fund") == 0) {
+        Spend(-10000);
+        PunishCnt++;				/* punish for cheating */
+        if (PunishCnt == 5) {
+            PunishCnt = 0;
+            MakeEarthquake();
+        }
+        LastKeys[0] = '\0';
     }
-    LastKeys[0] = '\0';
-  } else if (strcmp(LastKeys, "fart") == 0) {
-    MakeSound("city", "Explosion-High");
-    MakeSound("city", "Explosion-Low");
-    MakeFire();
-    MakeFlood();
-    MakeTornado();
-    MakeEarthquake();
-    MakeMonster();
-    LastKeys[0] = '\0';
-  } else if (strcmp(LastKeys, "nuke") == 0) {
-    int i, j;
-    MakeSound("city", "Explosion-High");
-    MakeSound("city", "Explosion-Low");
-    for (i = 0; i < SimWidth; i++) {
-      for (j = 0; j < SimHeight; j++) {
-	int tile = Map[i][j] & LOMASK;
-	if ((tile >= RUBBLE) &&
-	    ((tile < CHURCH - 4) ||
-	     (tile > CHURCH + 4))) {
-	  if ((tile >= HBRIDGE && tile <= VBRIDGE) ||
-	      (tile >= BRWH && tile <= LTRFBASE + 1) ||
-	      (tile >= BRWV && tile <= BRWV + 2) ||
-	      (tile >= BRWXXX1 && tile <= BRWXXX1 + 2) ||
-	      (tile >= BRWXXX2 && tile <= BRWXXX2 + 2) ||
-	      (tile >= BRWXXX3 && tile <= BRWXXX3 + 2) ||
-	      (tile >= BRWXXX4 && tile <= BRWXXX4 + 2) ||
-	      (tile >= BRWXXX5 && tile <= BRWXXX5 + 2) ||
-	      (tile >= BRWXXX6 && tile <= BRWXXX6 + 2) ||
-	      (tile >= BRWXXX7 && tile <= BRWXXX7 + 2)) {
-	    Map[i][j] = RIVER;
-	  } else {
-	    Map[i][j] = TINYEXP + ANIMBIT + BULLBIT + RandomRange(0, 2);
-	  }
-	}
+    else if (strcmp(LastKeys, "fart") == 0) {
+        MakeSound("city", "Explosion-High");
+        MakeSound("city", "Explosion-Low");
+        MakeFire();
+        MakeFlood();
+        MakeTornado();
+        MakeEarthquake();
+        MakeMonster();
+        LastKeys[0] = '\0';
+    }
+    else if (strcmp(LastKeys, "nuke") == 0) {
+        int i, j;
+        MakeSound("city", "Explosion-High");
+        MakeSound("city", "Explosion-Low");
+        for (i = 0; i < SimWidth; i++) {
+            for (j = 0; j < SimHeight; j++) {
+                int tile = Map[i][j] & LOMASK;
+                if ((tile >= RUBBLE) &&
+                    ((tile < CHURCH - 4) ||
+                        (tile > CHURCH + 4))) {
+                    if ((tile >= HBRIDGE && tile <= VBRIDGE) ||
+                        (tile >= BRWH && tile <= LTRFBASE + 1) ||
+                        (tile >= BRWV && tile <= BRWV + 2) ||
+                        (tile >= BRWXXX1 && tile <= BRWXXX1 + 2) ||
+                        (tile >= BRWXXX2 && tile <= BRWXXX2 + 2) ||
+                        (tile >= BRWXXX3 && tile <= BRWXXX3 + 2) ||
+                        (tile >= BRWXXX4 && tile <= BRWXXX4 + 2) ||
+                        (tile >= BRWXXX5 && tile <= BRWXXX5 + 2) ||
+                        (tile >= BRWXXX6 && tile <= BRWXXX6 + 2) ||
+                        (tile >= BRWXXX7 && tile <= BRWXXX7 + 2)) {
+                        Map[i][j] = RIVER;
+                    }
+                    else {
+                        Map[i][j] = TINYEXP + ANIMBIT + BULLBIT + RandomRange(0, 2);
+                    }
+                }
+            }
+        }
+        LastKeys[0] = '\0';
+    }
+    else if (strcmp(LastKeys, "olpc") == 0) {
+        Spend(-1000000);
+    }
+
+    switch (charCode) {
+
+        /*
+      case 'X':
+      case 'x': {
+        int s = view->tool_state;
+        if (++s > lastState) {
+      s = firstState;
+        }
+        setWandState(s);
+        break;
       }
-    }
-    LastKeys[0] = '\0';
-  } else if (strcmp(LastKeys, "olpc") == 0) {
-    Spend(-1000000);
-  }
 
-  switch (charCode) {
-    
-      /*
-    case 'X':
-    case 'x': {
-      int s = view->tool_state;
-      if (++s > lastState) {
-	s = firstState;
+      case 'Z':
+      case 'z': {
+        int s = view->tool_state;
+        if (--s < firstState) {
+        s = lastState;
+        }
+        setWandState(s);
+        break;
       }
-      setWandState(s);
-      break;
-    }
+      */
 
-    case 'Z':
-    case 'z': {
-      int s = view->tool_state;
-      if (--s < firstState) {
-	  s = lastState;
-      }
-      setWandState(s);
-      break;
-    }
-    */
-
-    /***** shift wand state to bull dozer *****/
+      /***** shift wand state to bull dozer *****/
     case 'B':
     case 'b':
-    case 'B'-'@': {
-      if (view->tool_state_save == -1) {
-	view->tool_state_save = view->tool_state;
-      }
-      //setWandState(Tool::Bulldoze);
-      break;
+    case 'B' - '@':
+    {
+        //if (view->tool_state_save == -1)
+        //{
+        //    view->tool_state_save = view->tool_state;
+        //}
+        //setWandState(Tool::Bulldoze);
+        break;
     }
 
     /***** shift wand state to roads *****/
     case 'R':
     case 'r':
-    case 'R'-'@': {
-      if (view->tool_state_save == -1) {
-	view->tool_state_save = view->tool_state;
-      }
-      //setWandState(Tool::Road);
-      break;
+    case 'R' - '@':
+    {
+        //if (view->tool_state_save == -1) {
+        //view->tool_state_save = view->tool_state;
+        //}
+        //setWandState(Tool::Road);
+        break;
     }
 
     /***** shift wand state to power *****/
     case 'P':
     case 'p':
-    case 'P'-'@': {
-      if (view->tool_state_save == -1) {
-	view->tool_state_save = view->tool_state;
-      }
-      //setWandState(Tool::Wire);
-      break;
+    case 'P' - '@':
+    {
+        //if (view->tool_state_save == -1)
+        //{
+        //    view->tool_state_save = view->tool_state;
+        //}
+        //setWandState(Tool::Wire);
+        break;
     }
 
     /***** shift wand state to transit *****/
     case 'T':
     case 't':
-    case 'T'-'@': {
-      if (view->tool_state_save == -1) {
-	view->tool_state_save = view->tool_state;
-      }
-      //setWandState(Tool::Rail);
-      break;
+    case 'T' - '@':
+    {
+        //if (view->tool_state_save == -1)
+        //{
+        //    view->tool_state_save = view->tool_state;
+        //}
+        //setWandState(Tool::Rail);
+        break;
     }
 
-    case 27: {
-      SoundOff();
-      break;
-    }
+    case 27:
+        SoundOff();
+        break;
 
-  }
+    }
 }
 
 

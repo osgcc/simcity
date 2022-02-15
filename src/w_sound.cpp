@@ -60,7 +60,6 @@
  * NOT APPLY TO YOU.
  */
 #include "main.h"
-#include "view.h"
 #include "w_tk.h"
 
 #include <string>

@@ -77,7 +77,6 @@
 #include "Sprite.h"
 
 #include "w_budget.h"
-#include "w_editor.h"
 #include "w_eval.h"
 #include "w_graph.h"
 #include "w_map.h"
@@ -87,7 +86,6 @@
 #include "w_tk.h"
 #include "w_update.h"
 #include "w_util.h"
-#include "w_x.h"
 
 #include "Texture.h"
 #include "ToolPalette.h"
@@ -196,7 +194,6 @@ void sim_exit()
 
 void sim_really_exit(int val)
 {
-    DoStopMicropolis();
     exit(val);
 }
 
@@ -298,8 +295,6 @@ void sim_update()
     sim_update_graphs();
     sim_update_budgets();
     sim_update_evaluations();
-
-    UpdateFlush();
 }
 
 
@@ -384,7 +379,6 @@ void sim_init()
     initMapArrays();
     initGraphs();
     InitFundingLevel();
-    setUpMapProcs();
     StopEarthquake();
     ResetMapState();
     ResetEditorState();

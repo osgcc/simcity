@@ -61,12 +61,12 @@
  */
 #include "main.h"
 
-#include "Texture.h"
-
-#include "SmallMaps.h"
-
 #include "s_alloc.h"
 
+#include "Point.h"
+
+#include "Texture.h"
+#include "SmallMaps.h"
 #include "Sprite.h"
 
 

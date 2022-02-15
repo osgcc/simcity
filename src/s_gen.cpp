@@ -634,7 +634,6 @@ void GenerateSomeCity(int seed)
     UpdateFunds();
     DoSimInit();
     Eval("UIDidGenerateNewCity");
-    Kick();
 
     GenerateMap(seed);
 }

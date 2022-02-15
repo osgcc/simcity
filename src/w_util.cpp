@@ -67,8 +67,6 @@
 #include "w_tk.h"
 #include "w_update.h"
 
-#include "View.h"
-
 #include <algorithm>
 #include <array>
 #include <string>
@@ -134,12 +132,10 @@ void SimSpeed(SimulationSpeed speed)
     {
         previousSimulationSpeed = simulationSpeed;
         simulationSpeed = speed;
-        StopMicropolisTimer();
         return;
     }
 
     simulationSpeed = speed;
-    StartMicropolisTimer();
 }
 
 
@@ -226,19 +222,6 @@ void SetYear(int year)
 int CurrentYear()
 {
     return (CityTime / 48 + StartingYear);
-}
-
-
-void DoSetMapState(SimView *view, int state)
-{
-  //char buf[256];
-
-  view->map_state = state;
-  view->invalid = 1;
-  EventuallyRedrawView(view);
-
-  //sprintf(buf, "UISetMapState %s %d", Tk_PathName(view->tkwin), state);
-  //Eval(buf);
 }
 
 

@@ -63,7 +63,6 @@
 #include "Sprite.h"
 
 #include "main.h"
-#include "View.h"
 
 #include "Simulation.h"
 

@@ -61,8 +61,6 @@
  */
 
 #include "main.h"
-#include "view.h"
-
 
 #include "g_map.h"
 
@@ -125,19 +123,18 @@ int DoMapCmd(ClientData clientData, Tcl_Interp* interp, int argc, char** argv)
  */
 
 
-void DoNewMap(SimView* view)
+void DoNewMap()
 {
-    
     //sim->maps++; view->next = sim->map; sim->map = view;
     NewMap = 1;
-    view->invalid = 1;
+    //view->invalid = 1;
 }
 
 
 /**
  * This appears to draw the camera indicator box in the minimap
  */
-void DrawMapEditorViews(SimView* view)
+void DrawMapEditorViews()
 {
     /*
     Pixmap pm = Tk_WindowId(view->tkwin);
@@ -209,95 +206,9 @@ int CompareColor(struct Pix* p1, struct Pix* p2)
 }
 
 
-void WireDrawMap(SimView* view)
-{
-    unsigned char* old, * _new;
-
-    memcpy(view->other_data, view->data, view->line_bytes * view->m_height); /* XXX: handle depth */
-    MemDrawMap(view);
-
-    old = view->other_data; _new = view->data; /* XXX: handle depth */
-    int different = 0;
-
-    // dirty pixel method? This can be skipped and entire map redrawn as needed
-    // Scan the pixels that have changed
-    for (int y = 0; y < view->m_height; y++)
-    {
-        for (int x = 0; x < view->m_width; x++)
-        {
-            if (old[x] != _new[x])
-            {
-                if (different >= max_pix)
-                {
-                    /* Wow, lots of the pixels have changed.
-                       Maybe we ought to just do it the hard way. */
-                    //XPutImage(view->x->dpy, view->pixmap, view->x->gc, view->image, 0, 0, 0, 0, view->m_width, view->m_height);
-                    return;
-                }
-                pix[different].color = _new[x];
-                pix[different].x = x;
-                pix[different].y = y;
-                different++;
-            }
-        }
-        old += view->line_bytes; _new += view->line_bytes; /* XXX: handle depth */
-    }
-
-    /* Whew, the images are identical! */
-    if (different == 0)
-    {
-        return;
-    }
-
-    /* Always draw the whole pixmap, for now. */
-    //XPutImage(view->x->dpy, view->pixmap, view->x->gc, view->image, 0, 0, 0, 0, view->m_width, view->m_height);
-}
-
-
-// Chalk lines and such on map?
-void DrawMapInk(SimView* view)
+int DoUpdateMap()
 {
     /*
-    //Pixmap pm = view->pixmap2;
-    //SimView* v;
-    Ink* ink, * ink2 = NewInk();
-    int i, X, Y, x, y;
-
-    //XSetLineAttributes(view->x->dpy, view->x->gc, 0, LineSolid, CapButt, JoinBevel);
-
-    for (ink = sim->overlay; ink != NULL; ink = ink->next)
-    {
-        X = ink->x; x = (X * 3) >> 4;
-        Y = ink->y; y = (Y * 3) >> 4;
-
-        if (ink->length <= 1)
-        {
-            //XSetForeground(view->x->dpy, view->x->gc, view->pixels[ink->color]);
-            //XFillArc(view->x->dpy, pm, view->x->gc, ink->x - 1, ink->y - 1, 1, 1, 0, 360 * 64);
-        }
-        else
-        {
-            StartInk(ink2, x, y);
-
-            for (i = 1; i < ink->length; i++)
-            {
-                X += ink->points[i].x; x = (X * 3) >> 4;
-                Y += ink->points[i].y; y = (Y * 3) >> 4;
-                AddInk(ink2, x, y);
-            }
-
-            //XSetForeground(view->x->dpy, view->x->gc, view->pixels[ink->color]);
-            //XDrawLines(view->x->dpy, pm, view->x->gc, ink2->points, ink2->length, CoordModePrevious);
-        }
-    }
-
-    FreeInk(ink2);
-    */
-}
-
-
-int DoUpdateMap(SimView* view)
-{
     int dx, dy, i;
 
     view->updates++;
@@ -369,6 +280,7 @@ int DoUpdateMap(SimView* view)
     {
         DrawMapEditorViews(view);
     }
+    */
 
     return 1;
 }

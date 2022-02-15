@@ -2,5 +2,4 @@
 
 struct SimView;
 
-void MemDrawMap(SimView* view);
-void setUpMapProcs();
+void maybeDrawRect(int val, int x, int y, int w, int h);

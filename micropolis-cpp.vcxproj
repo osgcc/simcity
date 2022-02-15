@@ -45,7 +45,6 @@
     <ClCompile Include="src\ToolPalette.cpp" />
     <ClCompile Include="src\w_budget.cpp" />
     <ClCompile Include="src\w_con.cpp" />
-    <ClCompile Include="src\w_editor.cpp" />
     <ClCompile Include="src\w_eval.cpp" />
     <ClCompile Include="src\w_graph.cpp" />
     <ClCompile Include="src\w_keys.cpp" />
@@ -57,14 +56,12 @@
     <ClCompile Include="src\w_tool.cpp" />
     <ClCompile Include="src\w_update.cpp" />
     <ClCompile Include="src\w_util.cpp" />
-    <ClCompile Include="src\w_x.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Date.h" />
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Graph.h" />
     <ClInclude Include="src\g_ani.h" />
-    <ClInclude Include="src\g_setup.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\PointInRectangleRange.h" />
@@ -85,7 +82,6 @@
     <ClInclude Include="src\ToolPalette.h" />
     <ClInclude Include="src\Vector.h" />
     <ClInclude Include="src\VectorSizeRange.h" />
-    <ClInclude Include="src\View.h" />
     <ClInclude Include="src\w_budget.h" />
     <ClInclude Include="src\w_con.h" />
     <ClInclude Include="src\w_graph.h" />
@@ -94,7 +90,6 @@
     <ClInclude Include="src\macros.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\s_alloc.h" />
-    <ClInclude Include="src\w_editor.h" />
     <ClInclude Include="src\w_eval.h" />
     <ClInclude Include="src\w_keys.h" />
     <ClInclude Include="src\w_map.h" />
@@ -105,7 +100,6 @@
     <ClInclude Include="src\w_tool.h" />
     <ClInclude Include="src\w_update.h" />
     <ClInclude Include="src\w_util.h" />
-    <ClInclude Include="src\w_x.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
