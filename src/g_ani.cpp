@@ -59,27 +59,21 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-//#include "main.h"
 #include "animtab.h"
 
 #include "s_alloc.h"
 
-/* comefrom: moveWorld doEditWindow scoreDoer doMapInFront graphDoer */
+#include <iostream>
+
 void animateTiles()
 {
-    unsigned int tilevalue, tileflags;
-    unsigned int* tMapPtr;
-    int i;
-
-    /* Animate whole world */
-    tMapPtr = (unsigned int*)&(Map[0][0]);
-
-    for (i = SimWidth * SimHeight; i > 0; i--)
+    int* tMapPtr = &(Map[0][0]);
+    for (int i = SimWidth * SimHeight; i > 0; i--)
     {
-        tilevalue = (*tMapPtr);
+        int tilevalue = (*tMapPtr);
         if (tilevalue & ANIMBIT)
         {
-            tileflags = tilevalue & ALLBITS;
+            const int tileflags = tilevalue & ALLBITS;
             tilevalue &= LOMASK;
 
             tilevalue = aniTile[tilevalue];
