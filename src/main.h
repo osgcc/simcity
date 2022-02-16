@@ -224,12 +224,12 @@ constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 #define HROADPOWER	77
 #define VROADPOWER	78
 #define BRWH		79
-#define LTRFBASE	80
+#define LTRFBASE	80	// Light traffic base value
 #define BRWV		95
 #define BRWXXX1		111
 #define BRWXXX2		127
 #define BRWXXX3		143
-#define HTRFBASE	144
+#define HTRFBASE	144 // Heavy traffic base value
 #define BRWXXX4		159
 #define BRWXXX5		175
 #define BRWXXX6		191
@@ -340,7 +340,8 @@ typedef unsigned char Byte;
 extern int SpriteXOffset[OBJN];
 extern int SpriteYOffset[OBJN];
 extern int SMapX, SMapY;
-extern int CChr, CChr9;
+extern int CChr; // unmasked tile value
+extern int CChr9; // masked tile value
 extern int RoadTotal, RailTotal, FirePop;
 extern int ResPop, ComPop, IndPop, TotalPop, LastTotalPop;
 extern int ResZPop, ComZPop, IndZPop, TotalZPop;

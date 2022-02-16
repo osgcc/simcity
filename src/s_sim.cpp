@@ -375,44 +375,85 @@ bool DoBridge()
 }
 
 
-/* comefrom: MapScan */
 void DoRoad()
 {
-  int Density, tden, z;
-  static int DenTab[3] = { ROADBASE, LTRFBASE, HTRFBASE };
+    int tden, z;
+    
+    static int DensityTable[3] =
+    {
+        ROADBASE,   // No Traffic
+        LTRFBASE,   // Light Traffic
+        HTRFBASE    // Heavy Traffic
+    };
 
-  RoadTotal++;
-/*  GenerateBus(SMapX, SMapY); */
-  if (RoadEffect < 30) /* Deteriorating Roads */
-    if (!(Rand16() & 511))
-      if (!(CChr & CONDBIT))
-	if (RoadEffect < (Rand16() & 31)) {
-	  if (((CChr9 & 15) < 2) || ((CChr9 & 15) == 15))
-	    Map[SMapX][SMapY] = RIVER;
-	  else
-	    Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
-	  return;
-	}
-
-  if (!(CChr & BURNBIT)) { /* If Bridge */
-    RoadTotal += 4;			
-    if (DoBridge())  return;
-  }
-  if (CChr9 < LTRFBASE) tden = 0;
-  else if (CChr9 < HTRFBASE) tden = 1;
-  else {
     RoadTotal++;
-    tden = 2;
-  }
+    // GenerateBus(SMapX, SMapY);
 
-  Density = (TrfDensity[SMapX >>1][SMapY >>1]) >>6;  /* Set Traf Density  */
-  if (Density > 1) Density--;
-  if (tden != Density) { /* tden 0..2   */
-    z = ((CChr9 - ROADBASE) & 15) + DenTab[Density];
-    z += CChr & (ALLBITS - ANIMBIT);
-    if (Density) z += ANIMBIT;
-    Map[SMapX][SMapY] = z;
-  }
+    if (RoadEffect < 30) // Deteriorating Roads
+    {
+        if (!(Rand16() & 511))
+        {
+            if (!(CChr & CONDBIT))
+            {
+                if (RoadEffect < (Rand16() & 31))
+                {
+                    if (((CChr9 & 15) < 2) || ((CChr9 & 15) == 15))
+                    {
+                        Map[SMapX][SMapY] = RIVER;
+                    }
+                    else
+                    {
+                        Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
+    if (!(CChr & BURNBIT)) /* If Bridge */
+    {
+        RoadTotal += 4;
+        if (DoBridge())
+        {
+            return;
+        }
+    }
+
+    if (CChr9 < LTRFBASE)
+    {
+        tden = 0;
+    }
+    else if (CChr9 < HTRFBASE)
+    {
+        tden = 1;
+    }
+    else
+    {
+        RoadTotal++;
+        tden = 2;
+    }
+
+    int Density = (TrfDensity[SMapX / 2][SMapY / 2]) / 64;  // Set Traf Density
+   
+    if (Density > 1)
+    {
+        --Density;
+    }
+
+    if (tden != Density) /* tden 0..2   */
+    {
+        z = ((CChr9 - ROADBASE) & 15) + DensityTable[Density];
+        
+        z += CChr & (ALLBITS - ANIMBIT);
+        
+        if (Density)
+        {
+            z += ANIMBIT;
+        }
+
+        Map[SMapX][SMapY] = z;
+    }
 }
 
 
@@ -1067,6 +1108,7 @@ void CollectTax()
 
 
 // tends to empty RateOGMem
+// ROG == Rate Of Growth
 void DecROGMem()
 {
     for (int x = 0; x < SmX; x++)
@@ -1373,7 +1415,7 @@ void Simulate(int mod16)
         {
             DecROGMem();
         }
-        DecTrafficMem();
+        //DecTrafficMem();
         NewMapFlags[TDMAP] = 1;
         NewMapFlags[RDMAP] = 1;
         NewMapFlags[ALMAP] = 1;

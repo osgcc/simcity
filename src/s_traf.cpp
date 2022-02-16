@@ -61,6 +61,8 @@
  */
 #include "main.h"
 
+#include "Map.h"
+
 #include "s_alloc.h"
 #include "s_power.h"
 #include "s_sim.h"
@@ -102,47 +104,54 @@ void PullPos()
 /* comefrom: MakeTraf */
 void SetTrafMem()
 {
-  int x, z;
+    for (int x = PosStackN; x > 0; x--)
+    {
+        PullPos();
+        if (CoordinatesValid(SMapX, SMapY, SimWidth, SimHeight))
+        {
+            int z = maskedTileValue(SMapX, SMapY);
+            if ((z >= ROADBASE) && (z < POWERBASE))
+            {
+                SimSprite* sprite;
 
-  for (x = PosStackN; x > 0; x--) {
-    PullPos();
-    if (CoordinatesValid(SMapX, SMapY, SimWidth, SimHeight)) {
-      z = Map[SMapX][SMapY] & LOMASK;
-      if ((z >= ROADBASE) && (z < POWERBASE)) {
-	SimSprite *sprite;
-
-	/* check for rail */
-	z = TrfDensity[SMapX >>1][SMapY >>1];
-	z += 50;
-	if ((z > 240) &&
-	    (!RandomRange(0, 5))) {
-	  z = 240;
-	  TrafMaxX = SMapX <<4;
-	  TrafMaxY = SMapY <<4;
-	  if (((sprite = GetSprite(COP)) != NULL) &&
-	      (sprite->control == -1)) {
-	    sprite->dest_x = TrafMaxX;
-	    sprite->dest_y = TrafMaxY;
-	  }
-	}
-	TrfDensity[SMapX >>1][SMapY >>1] = z;
-      }
+                /* check for rail */
+                z = TrfDensity[SMapX >> 1][SMapY >> 1];
+                z += 50;
+                if ((z > 240) && (!RandomRange(0, 5)))
+                {
+                    z = 240;
+                    TrafMaxX = SMapX << 4;
+                    TrafMaxY = SMapY << 4;
+                    if (((sprite = GetSprite(COP)) != NULL) && (sprite->control == -1))
+                    {
+                        sprite->dest_x = TrafMaxX;
+                        sprite->dest_y = TrafMaxY;
+                    }
+                }
+                TrfDensity[SMapX >> 1][SMapY >> 1] = z;
+            }
+        }
     }
-  }
 }
 
 
 /* comefrom: TryGo FindPRoad */
-bool RoadTest(int x)
+bool RoadTest(const int x)
 {
-  x = x & LOMASK;
-  if (x < ROADBASE)
-    return false;
-  if (x > LASTRAIL)
-    return false;
-  if ((x >= POWERBASE) && (x < RAILHPOWERV))
-    return false;
-  return true;
+    int tile = x & LOMASK;
+    if (tile < ROADBASE)
+    {
+        return false;
+    }
+    if (tile > LASTRAIL)
+    {
+        return false;
+    }
+    if ((tile >= POWERBASE) && (tile < RAILHPOWERV))
+    {
+        return false;
+    }
+    return true;
 }
 
 
@@ -189,50 +198,66 @@ bool FindPTele()		/* look for telecommunication on edges of zone */
 
 
 /* comefrom: TryGo DriveDone */
-bool GetFromMap(int x)
+int GetFromMap(int x)
 {
-  switch (x) {
-  case 0:
-    if (SMapY > 0)
-      return (Map[SMapX][SMapY - 1] & LOMASK);
-    return false;
-  case 1:
-    if (SMapX < (SimWidth - 1))
-      return (Map[SMapX + 1][SMapY] & LOMASK);
-    return false;
-  case 2:
-    if (SMapY < (SimHeight - 1))
-      return (Map[SMapX][SMapY + 1] & LOMASK);
-    return false;
-  case 3:
-    if (SMapX > 0)
-      return (Map[SMapX - 1][SMapY] & LOMASK);
-    return false;
-  default: 
-    return false;
-  }
+    switch (x)
+    {
+    case 0:
+        if (SMapY > 0)
+        {
+            return (Map[SMapX][SMapY - 1] & LOMASK);
+        }
+        return 0;
+    case 1:
+        if (SMapX < (SimWidth - 1))
+        {
+            return (Map[SMapX + 1][SMapY] & LOMASK);
+        }
+        return 0;
+
+    case 2:
+        if (SMapY < (SimHeight - 1))
+        {
+            return (Map[SMapX][SMapY + 1] & LOMASK);
+        }
+        return 0;
+
+    case 3:
+        if (SMapX > 0)
+        {
+            return (Map[SMapX - 1][SMapY] & LOMASK);
+        }
+        return 0;
+
+    default:
+        return 0;
+    }
 }
 
 
 /* comefrom: TryDrive */
 bool TryGo(int z)
 {
-  int x, rdir, realdir;
-
-  rdir = Rand16() & 3;
-
-  for (x = rdir; x < (rdir + 4); x++) {	/* for the 4 directions */
-    realdir = x & 3;
-    if (realdir == LDir) continue;	/* skip last direction */
-    if (RoadTest(GetFromMap(realdir))) {
-      MoveMapSim(realdir);
-      LDir = (realdir + 2) & 3;
-      if (z & 1)			/* save pos every other move */
-	PushPos();
-      return true;
+    int rdir = RandomRange(0, 4);
+    for (int x = rdir; x < (rdir + 4); x++) // for the 4 directions
+    {
+        int realdir = x % 4;
+        if (realdir == LDir) // skip last direction
+        {
+            continue;
+        }
+        if (RoadTest(GetFromMap(realdir)))
+        {
+            MoveMapSim(realdir);
+            LDir = (realdir + 2) % 4;
+            if (z & 1) // save pos every other move
+            {
+                PushPos();
+            }
+            return true;
+        }
     }
-  }
-  return false;
+    return false;
 }
 
 
@@ -256,48 +281,59 @@ bool DriveDone()
 }
 
 
-/* comefrom: MakeTraf */
 bool TryDrive()
 {
-  int z;
-
-  LDir = 5;
-  for (z = 0; z < MAXDIS; z++) {	/* Maximum distance to try */
-    if (TryGo(z)) {			/* if it got a road */
-      if (DriveDone())			/* if destination is reached */
-	return true;			/* pass */
-    } else {
-      if (PosStackN) {			/* deadend , backup */
-	PosStackN--;
-	z += 3;
-      }
-      else return false;		/* give up at start  */	
+    LDir = 5;
+    for (int z = 0; z < MAXDIS; ++z) // Maximum distance to try
+    {
+        if (TryGo(z)) // if it got a road
+        {
+            if (DriveDone()) // if destination is reached
+            {
+                return true; // pass
+            }
+        }
+        else
+        {
+            if (PosStackN) // deadend , backup
+            {
+                PosStackN--;
+                z += 3;
+            }
+            else // give up at start
+            {
+                return false;
+            }
+        }
     }
-  }
-  return false;			/* gone maxdis */
+
+    return false; // gone maxdis
 }
 
 
 /* comefrom: DoIndustrial DoCommercial DoResidential */
 int MakeTraf(int Zt)
 {
-  int xtem, ytem;
+    int xtem = SMapX;
+    int ytem = SMapY;
+    Zsource = Zt;
+    PosStackN = 0;
 
-  xtem = SMapX;
-  ytem = SMapY;
-  Zsource = Zt;
-  PosStackN = 0;
-
-  if (FindPRoad()) {		/* look for road on zone perimeter */
-    if (TryDrive()) {		/* attempt to drive somewhere */
-      SetTrafMem();		/* if sucessful, inc trafdensity */
-      SMapX = xtem;
-      SMapY = ytem;
-      return 1;		/* traffic passed */
+    if (FindPRoad()) // look for road on zone perimeter
+    {
+        if (TryDrive()) // attempt to drive somewhere
+        {
+            SetTrafMem(); // if sucessful, inc trafdensity
+            SMapX = xtem;
+            SMapY = ytem;
+            return 1; // traffic passed
+        }
+        SMapX = xtem;
+        SMapY = ytem;
+        return 0; // traffic failed
     }
-    SMapX = xtem;
-    SMapY = ytem;
-    return 0;		/* traffic failed */
-  }
-  else return -1;		/* no road found */
+    else // no road found
+    {
+        return -1;
+    }
 }

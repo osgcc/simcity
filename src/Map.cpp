@@ -89,6 +89,12 @@ unsigned int tileValue(const int x, const int y)
 }
 
 
+unsigned int maskedTileValue(const int x, const int y)
+{
+	return tileValue(x, y) & LOMASK;
+}
+
+
 unsigned int maskedTileValue(unsigned int tile)
 {
 	return tile & LOMASK;
