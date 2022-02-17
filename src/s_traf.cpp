@@ -115,13 +115,13 @@ void SetTrafMem()
                 SimSprite* sprite;
 
                 /* check for rail */
-                z = TrfDensity[SMapX >> 1][SMapY >> 1];
+                z = TrfDensity[SMapX / 2][SMapY / 2];
                 z += 50;
-                if ((z > 240) && (!RandomRange(0, 5)))
+                if ((z > 240) && (RandomRange(0, 5) == 0))
                 {
                     z = 240;
-                    TrafMaxX = SMapX << 4;
-                    TrafMaxY = SMapY << 4;
+                    TrafMaxX = SMapX * 16;
+                    TrafMaxY = SMapY * 16;
                     if (((sprite = GetSprite(COP)) != NULL) && (sprite->control == -1))
                     {
                         sprite->dest_x = TrafMaxX;
