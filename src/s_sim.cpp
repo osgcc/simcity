@@ -378,8 +378,6 @@ bool DoBridge()
 
 void DoRoad()
 {
-    int tden, z;
-    
     static int DensityTable[3] =
     {
         ROADBASE,   // No Traffic
@@ -421,30 +419,32 @@ void DoRoad()
         }
     }
 
+    int trafficDensity{};
+
     if (CChr9 < LTRFBASE)
     {
-        tden = 0;
+        trafficDensity = 0;
     }
     else if (CChr9 < HTRFBASE)
     {
-        tden = 1;
+        trafficDensity = 1;
     }
     else
     {
         RoadTotal++;
-        tden = 2;
+        trafficDensity = 2;
     }
 
-    int Density = (TrfDensity[SMapX / 2][SMapY / 2]) / 64;  // Set Traf Density
+    int Density = TrfDensity[SMapX / 2][SMapY / 2] / 64;  // Set Traf Density
    
-    if (Density > 1)
+    if (Density > 2)
     {
-        --Density;
+        Density = 2;
     }
 
-    if (tden != Density) /* tden 0..2   */
+    if (trafficDensity != Density) /* tden 0..2   */
     {
-        z = ((CChr9 - ROADBASE) & 15) + DensityTable[Density];
+        int z = ((CChr9 - ROADBASE) & 15) + DensityTable[Density];
         
         z += CChr & (ALLBITS - ANIMBIT);
         
@@ -1216,8 +1216,7 @@ void DoNilPower()
 
 /* tends to empty TrfDensity   */
 void DecTrafficMem()
-{
-    
+{   
     for (int x = 0; x < HalfWorldWidth; x++)
     {
         for (int y = 0; y < HalfWorldHeight; y++)
@@ -1416,7 +1415,7 @@ void Simulate(int mod16)
         {
             DecROGMem();
         }
-        //DecTrafficMem();
+        DecTrafficMem();
         NewMapFlags[TDMAP] = 1;
         NewMapFlags[RDMAP] = 1;
         NewMapFlags[ALMAP] = 1;
