@@ -59,6 +59,8 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
+#include "Map.h"
+
 #include "w_tool.h"
 
 #include "s_alloc.h"

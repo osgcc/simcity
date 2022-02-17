@@ -64,6 +64,8 @@
 
 #include "main.h"
 
+#include "Map.h"
+
 #include "s_alloc.h"
 #include "s_msg.h"
 #include "s_sim.h"

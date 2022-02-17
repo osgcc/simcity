@@ -3,9 +3,6 @@
 #include "main.h"
 #include <array>
 
-extern std::array<std::array<int, SimHeight>, SimWidth> Map; // Main Map 120 x 100
-
-
 
 // 2X2 Maps  60 x 50
 extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PopDensity;
@@ -46,3 +43,5 @@ extern int IndHisMax;
 
 
 void initMapArrays();
+
+

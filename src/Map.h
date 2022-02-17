@@ -1,9 +1,14 @@
 #pragma once
 
+#include "main.h"
+
 #include "Point.h"
 #include "Vector.h"
 
-//void DrawBigMap(const Point<int>& drawOrigin, const Point<int>& offset, const Vector<int>& loops);
+#include <array>
+
+extern std::array<std::array<int, SimHeight>, SimWidth> Map; // Main Map 120 x 100
+
 void DrawBigMapSegment(const Point<int>& begin, const Point<int>& end);
 void DrawBigMap();
 
@@ -14,3 +19,4 @@ unsigned int maskedTileValue(unsigned int tile);
 bool tilePowered(const unsigned int tile);
 bool tileIsZoned(const unsigned int tile);
 bool blink();
+void ResetMap();

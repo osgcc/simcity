@@ -92,8 +92,6 @@ int CityTime;
 int StartingYear;
 
 
-std::array<std::array<int, SimHeight>, SimWidth> Map;
-
 int ResHisMax, Res2HisMax;
 int ComHisMax, Com2HisMax;
 int IndHisMax, Ind2HisMax;
@@ -165,17 +163,6 @@ namespace
         }
     }
 
-    void resetMapArray()
-    {
-        for (int x = 0; x < SimWidth; x++)
-        {
-            for (int y = 0; y < SimHeight; y++)
-            {
-                Map[x][y] = 0;
-            }
-        }
-    }
-
     void resetHistoryArrays()
     {
         for (int i = 0; i < HistoryLength; ++i)
@@ -193,8 +180,6 @@ namespace
 
 void initMapArrays()
 {
-
-    resetMapArray();
     resetHalfArrays();
     resetQuarterArrays();
     resetHistoryArrays();

@@ -61,7 +61,8 @@
  */
 #include "animtab.h"
 
-#include "s_alloc.h"
+#include "main.h"
+#include "Map.h"
 
 #include <iostream>
 

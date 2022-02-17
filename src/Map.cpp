@@ -69,7 +69,7 @@
 #include "SmallMaps.h"
 #include "Sprite.h"
 
-
+#include <array>
 #include <SDL2/SDL.h>
 
 extern SDL_Renderer* MainWindowRenderer;
@@ -77,10 +77,26 @@ extern SDL_Renderer* MainWindowRenderer;
 extern Texture BigTileset;
 extern Texture MainMapTexture;
 
+
+std::array<std::array<int, SimHeight>, SimWidth> Map;
+
+
 namespace
 {
 	SDL_Rect tileRect{ 0, 0, 16, 16 };
 };
+
+
+void ResetMap()
+{
+	for (int row = 0; row < SimWidth; ++row)
+	{
+		for (int col = 0; col < SimHeight; ++col)
+		{
+			Map[row][col] = 0;
+		}
+	}
+}
 
 
 unsigned int tileValue(const int x, const int y)
