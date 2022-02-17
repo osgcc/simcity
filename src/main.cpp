@@ -424,7 +424,7 @@ void drawString(Font& font, std::string_view text, Point<int> position, SDL_Colo
 
 void buildBigTileset()
 {
-    SDL_Surface* srcSurface = IMG_Load("images/tiles1.bmp");
+    SDL_Surface* srcSurface = IMG_Load("images/tiles.xpm");
     SDL_Surface* dstSurface = SDL_CreateRGBSurface(srcSurface->flags,
         512, 512, 24,
         srcSurface->format->Rmask,
@@ -443,8 +443,6 @@ void buildBigTileset()
     }
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(MainWindowRenderer, dstSurface);
-
-    SDL_SaveBMP(dstSurface, "tset2.bmp");
 
     SDL_FreeSurface(srcSurface);
     SDL_FreeSurface(dstSurface);
