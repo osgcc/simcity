@@ -78,6 +78,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <map>
 #include <string>
 #include <stdexcept>
 
@@ -972,91 +973,27 @@ ToolResult network_tool(int x, int y)
 }
 
 
-ToolResult do_tool(Tool state, int mapX, int mapY)
+std::map<Tool, ToolResult(*)(int, int)> ToolFunctionTable =
 {
-    switch (state)
-    {
-    case Tool::Residential:
-        return residential_tool(mapX, mapY);
-        break;
-
-    case Tool::Commercial:
-        return commercial_tool(mapX, mapY);
-        break;
-
-    case Tool::Industrial:
-        return industrial_tool(mapX, mapY);
-        break;
-
-    case Tool::Fire:
-        return fire_dept_tool(mapX, mapY);
-        break;
-
-    case Tool::Query:
-        return query_tool(mapX, mapY);
-        break;
-
-    case Tool::Police:
-        return police_dept_tool(mapX, mapY);
-        break;
-
-    case Tool::Wire:
-        return wire_tool(mapX, mapY);
-        break;
-
-    case Tool::Bulldoze:
-        return bulldozer_tool(mapX, mapY);
-        break;
-
-    case Tool::Rail:
-        return rail_tool(mapX, mapY);
-        break;
-
-    case Tool::Road:
-        return road_tool(mapX, mapY);
-        break;
-
-    case Tool::Stadium:
-        return stadium_tool(mapX, mapY);
-        break;
-
-    case Tool::Park:
-        return park_tool(mapX, mapY);
-        break;
-
-    case Tool::Seaport:
-        return seaport_tool(mapX, mapY);
-        break;
-
-    case Tool::Coal:
-        return coal_power_plant_tool(mapX, mapY);
-        break;
-
-    case Tool::Nuclear:
-        return nuclear_power_plant_tool(mapX, mapY);
-        break;
-
-    case Tool::Airport:
-        return airport_tool(mapX, mapY);
-        break;
-
-    case Tool::Network:
-        return network_tool(mapX, mapY);
-        break;
-
-    default:
-        return ToolResult::InvalidOperation;
-        break;
-    }
-
-    return ToolResult::InvalidOperation;
-}
-
-
-ToolResult current_tool(int x, int y)
-{
-    return do_tool(PendingTool, x, y);
-}
+    { Tool::Residential, &residential_tool },
+    { Tool::Commercial, &commercial_tool },
+    { Tool::Industrial, &industrial_tool },
+    { Tool::Fire, &fire_dept_tool },
+    { Tool::Query, &query_tool },
+    { Tool::Police, &police_dept_tool },
+    { Tool::Wire, &wire_tool },
+    { Tool::Bulldoze, &bulldozer_tool },
+    { Tool::Rail, &rail_tool },
+    { Tool::Road, &road_tool },
+    { Tool::Stadium, &stadium_tool },
+    { Tool::Park, &park_tool },
+    { Tool::Seaport, &seaport_tool },
+    { Tool::Coal, &coal_power_plant_tool },
+    { Tool::Nuclear, &nuclear_power_plant_tool },
+    { Tool::Airport, &airport_tool },
+    { Tool::Network, &network_tool },
+    { Tool::None, nullptr }
+};
 
 
 /**
@@ -1072,7 +1009,7 @@ void ToolDown(int mapX, int mapY)
         return;
     }
 
-    ToolResult result = current_tool(mapX, mapY);
+    ToolResult result = ToolFunctionTable.at(PendingTool)(mapX, mapY);
 
     if (result == ToolResult::RequiresBulldozing)
     {
