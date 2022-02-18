@@ -672,66 +672,42 @@ void doZoneStatus(int x, int y)
 }
 
 
-void put3x3Rubble(int x, int y)
+void putRubble(const int mapX, const int mapY, const int size)
 {
-    for (int xx = x - 1; xx < x + 2; xx++)
+    for (int x = mapX - 1; x < mapX + size - 1; x++)
     {
-        for (int yy = y - 1; yy < y + 2; yy++)
+        for (int y = mapY - 1; y < mapY + size - 1; y++)
         {
-            if (CoordinatesValid(xx, yy, SimWidth, SimHeight))
+            if (CoordinatesValid(x, y, SimWidth, SimHeight))
             {
-                int zz = Map[xx][yy] & LOMASK;
-                if ((zz != RADTILE) && (zz != 0))
+                int cellValue = Map[x][y] & LOMASK;
+                if ((cellValue != RADTILE) && (cellValue != 0))
                 {
-                    Map[xx][yy] = (DoAnimation ? (TINYEXP + RandomRange(0, 2)) : SOMETINYEXP) | ANIMBIT | BULLBIT;
+                    Map[x][y] = (DoAnimation ? (TINYEXP + RandomRange(0, 2)) : SOMETINYEXP) | ANIMBIT | BULLBIT;
                 }
             }
         }
     }
+}
+
+
+void put3x3Rubble(int x, int y)
+{
+    putRubble(x, y, 3);
 }
 
 
 /* comefrom: processWand */
 void put4x4Rubble(int x, int y)
 {
-    int xx, yy, zz;
-
-    for (xx = x - 1; xx < x + 3; xx++)
-    {
-        for (yy = y - 1; yy < y + 3; yy++)
-        {
-            if (CoordinatesValid(xx, yy, SimWidth, SimHeight))
-            {
-                zz = Map[xx][yy] & LOMASK;
-                if ((zz != RADTILE) && (zz != 0))
-                {
-                    Map[xx][yy] = (DoAnimation ? (TINYEXP + RandomRange(0, 2)) : SOMETINYEXP) | ANIMBIT | BULLBIT;
-                }
-            }
-        }
-    }
+    putRubble(x, y, 4);
 }
 
 
 /* comefrom: processWand */
 void put6x6Rubble(int x, int y)
 {
-    int xx, yy, zz;
-
-    for (xx = x - 1; xx < x + 5; xx++)
-    {
-        for (yy = y - 1; yy < y + 5; yy++)
-        {
-            if (CoordinatesValid(xx, yy, SimWidth, SimHeight))
-            {
-                zz = Map[xx][yy] & LOMASK;
-                if ((zz != RADTILE) && (zz != 0))
-                {
-                    Map[xx][yy] = (DoAnimation ? (TINYEXP + RandomRange(0, 2)) : SOMETINYEXP) | ANIMBIT | BULLBIT;
-                }
-            }
-        }
-    }
+    putRubble(x, y, 6);
 }
 
 
