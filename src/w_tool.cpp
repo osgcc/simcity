@@ -357,39 +357,36 @@ void doConnectTile(const int x, const int y, const int w, const int h)
 }
 
 
-
-/* 3x3 */
-void check3x3border(int xMap, int yMap)
+void checkBorder(const int mapX, const int mapY, const int count)
 {
-    int xPos, yPos;
-    //int cnt;
+    int xPos{}, yPos{};
 
-    xPos = xMap; yPos = yMap - 1;
-    for (int cnt = 0; cnt < 3; cnt++)
+    xPos = mapX; yPos = mapY - 1;
+    for (int cnt = 0; cnt < count; cnt++)
     {
         /*** this will do the upper bordering row ***/
         doConnectTile(xPos, yPos, SimWidth, SimHeight);
         xPos++;
     }
 
-    xPos = xMap - 1; yPos = yMap;
-    for (int cnt = 0; cnt < 3; cnt++)
+    xPos = mapX - 1; yPos = mapY;
+    for (int cnt = 0; cnt < count; cnt++)
     {
         /*** this will do the left bordering row ***/
         doConnectTile(xPos, yPos, SimWidth, SimHeight);
         yPos++;
     }
 
-    xPos = xMap; yPos = yMap + 3;
-    for (int cnt = 0; cnt < 3; cnt++)
+    xPos = mapX; yPos = mapY + count;
+    for (int cnt = 0; cnt < count; cnt++)
     {
         /*** this will do the bottom bordering row ***/
         doConnectTile(xPos, yPos, SimWidth, SimHeight);
         xPos++;
     }
 
-    xPos = xMap + 3; yPos = yMap;
-    for (int cnt = 0; cnt < 3; cnt++)
+    xPos = mapX + count; yPos = mapY;
+    for (int cnt = 0; cnt < count; cnt++)
     {
         /*** this will do the right bordering row ***/
         doConnectTile(xPos, yPos, SimWidth, SimHeight);
@@ -497,48 +494,8 @@ ToolResult check3x3(int mapH, int mapV, int base, Tool tool)
         mapV++;
     }
 
-    check3x3border(xPos, yPos);
+    checkBorder(xPos, yPos, 3);
     return ToolResult::Success;
-}
-
-
-/* 4x4 */
-void check4x4border(int xMap, int yMap)
-{
-    //Ptr tilePtr;
-    int xPos, yPos;
-
-    xPos = xMap; yPos = yMap - 1;
-    for (int cnt = 0; cnt < 4; cnt++)
-    {
-        /* this will do the upper bordering row */
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
-        xPos++;
-    }
-
-    xPos = xMap - 1; yPos = yMap;
-    for (int cnt = 0; cnt < 4; cnt++)
-    {
-        /* this will do the left bordering row */
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
-        yPos++;
-    }
-
-    xPos = xMap; yPos = yMap + 4;
-    for (int cnt = 0; cnt < 4; cnt++)
-    {
-        /* this will do the bottom bordering row */
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
-        xPos++;
-    }
-
-    xPos = xMap + 4; yPos = yMap;
-    for (int cnt = 0; cnt < 4; cnt++)
-    {
-        /* this will do the right bordering row */
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
-        yPos++;
-    }
 }
 
 
@@ -647,48 +604,8 @@ ToolResult check4x4(int mapH, int mapV, int base, int aniFlag, Tool tool)
         mapV++;
     }
 
-    check4x4border(xMap, yMap);
+    checkBorder(xMap, yMap, 4);
     return ToolResult::Success;
-}
-
-
-/* 6x6 */
-void check6x6border(int xMap, int yMap)
-{
-    int xPos, yPos;
-    int cnt;
-
-    xPos = xMap; yPos = yMap - 1;
-    for (cnt = 0; cnt < 6; cnt++)
-    {
-        /* this will do the upper bordering row */
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
-        xPos++;
-    }
-
-    xPos = xMap - 1; yPos = yMap;
-    for (cnt = 0; cnt < 6; cnt++)
-    {
-        /* this will do the left bordering row */
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
-        yPos++;
-    }
-
-    xPos = xMap; yPos = yMap + 6;
-    for (cnt = 0; cnt < 6; cnt++)
-    {
-        /* this will do the bottom bordering row */
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
-        xPos++;
-    }
-
-    xPos = xMap + 6; yPos = yMap;
-    for (cnt = 0; cnt < 6; cnt++)
-    {
-        /* this will do the right bordering row */
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
-        yPos++;
-    }
 }
 
 
@@ -791,7 +708,7 @@ ToolResult check6x6(int mapH, int mapV, int base, Tool tool)
         mapV++;
     }
 
-    check6x6border(xMap, yMap);
+    checkBorder(xMap, yMap, 6);
     return ToolResult::Success;
 }
 
