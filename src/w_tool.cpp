@@ -650,7 +650,7 @@ const std::string& queryString(int tileValue)
 
 void doZoneStatus(int x, int y)
 {
-    int tileNum = Map[x][y] & LOMASK;
+    int tileNum = maskedTileValue(x, y);
     if (tileNum >= COALSMOKE1 && tileNum < FOOTBALLGAME1)
     {
         tileNum = COALBASE;
@@ -680,7 +680,7 @@ void putRubble(const int mapX, const int mapY, const int size)
         {
             if (CoordinatesValid(x, y, SimWidth, SimHeight))
             {
-                int cellValue = Map[x][y] & LOMASK;
+                int cellValue = maskedTileValue(x, y);
                 if ((cellValue != RADTILE) && (cellValue != 0))
                 {
                     Map[x][y] = (DoAnimation ? (TINYEXP + RandomRange(0, 2)) : SOMETINYEXP) | ANIMBIT | BULLBIT;
