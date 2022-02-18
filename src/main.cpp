@@ -927,7 +927,7 @@ void startGame()
 
         drawTopUi();
 
-        //drawMiniMapUi();
+        drawMiniMapUi();
 
         if (MouseClicked)
         {
@@ -936,7 +936,7 @@ void startGame()
         }
         toolPalette.draw();
 
-        //drawDebug();
+        drawDebug();
 
         SDL_RenderPresent(MainWindowRenderer);
     }

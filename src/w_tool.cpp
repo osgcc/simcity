@@ -348,6 +348,16 @@ int checkSize(int temp)
 }
 
 
+void doConnectTile(const int x, const int y, const int w, const int h)
+{
+    if (CoordinatesValid(x, y, w, h))
+    {
+        ConnecTile(x, y, &Map[x][y], 0);
+    }
+}
+
+
+
 /* 3x3 */
 void check3x3border(int xMap, int yMap)
 {
@@ -358,7 +368,7 @@ void check3x3border(int xMap, int yMap)
     for (int cnt = 0; cnt < 3; cnt++)
     {
         /*** this will do the upper bordering row ***/
-        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         xPos++;
     }
 
@@ -366,7 +376,7 @@ void check3x3border(int xMap, int yMap)
     for (int cnt = 0; cnt < 3; cnt++)
     {
         /*** this will do the left bordering row ***/
-        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         yPos++;
     }
 
@@ -374,7 +384,7 @@ void check3x3border(int xMap, int yMap)
     for (int cnt = 0; cnt < 3; cnt++)
     {
         /*** this will do the bottom bordering row ***/
-        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         xPos++;
     }
 
@@ -382,7 +392,7 @@ void check3x3border(int xMap, int yMap)
     for (int cnt = 0; cnt < 3; cnt++)
     {
         /*** this will do the right bordering row ***/
-        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         yPos++;
     }
 }
@@ -504,8 +514,7 @@ void check4x4border(int xMap, int yMap)
     for (cnt = 0; cnt < 4; cnt++)
     {
         /* this will do the upper bordering row */
-        tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
-        ConnecTile(xPos, yPos, tilePtr, 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         xPos++;
     }
 
@@ -513,8 +522,7 @@ void check4x4border(int xMap, int yMap)
     for (cnt = 0; cnt < 4; cnt++)
     {
         /* this will do the left bordering row */
-        tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
-        ConnecTile(xPos, yPos, tilePtr, 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         yPos++;
     }
 
@@ -522,8 +530,7 @@ void check4x4border(int xMap, int yMap)
     for (cnt = 0; cnt < 4; cnt++)
     {
         /* this will do the bottom bordering row */
-        tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
-        ConnecTile(xPos, yPos, tilePtr, 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         xPos++;
     }
 
@@ -531,8 +538,7 @@ void check4x4border(int xMap, int yMap)
     for (cnt = 0; cnt < 4; cnt++)
     {
         /* this will do the right bordering row */
-        tilePtr = /*(Ptr)*/ &Map[xPos][yPos];
-        ConnecTile(xPos, yPos, tilePtr, 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         yPos++;
     }
 }
@@ -658,7 +664,7 @@ void check6x6border(int xMap, int yMap)
     for (cnt = 0; cnt < 6; cnt++)
     {
         /* this will do the upper bordering row */
-        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         xPos++;
     }
 
@@ -666,7 +672,7 @@ void check6x6border(int xMap, int yMap)
     for (cnt = 0; cnt < 6; cnt++)
     {
         /* this will do the left bordering row */
-        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         yPos++;
     }
 
@@ -674,7 +680,7 @@ void check6x6border(int xMap, int yMap)
     for (cnt = 0; cnt < 6; cnt++)
     {
         /* this will do the bottom bordering row */
-        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         xPos++;
     }
 
@@ -682,7 +688,7 @@ void check6x6border(int xMap, int yMap)
     for (cnt = 0; cnt < 6; cnt++)
     {
         /* this will do the right bordering row */
-        ConnecTile(xPos, yPos, &Map[xPos][yPos], 0);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight);
         yPos++;
     }
 }

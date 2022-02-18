@@ -594,16 +594,9 @@ ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command)
 {
     int Tile;
 
-    /* make sure the array subscripts are in bounds */
-    if (!CoordinatesValid(x, y, SimWidth, SimHeight))
-    {
-        return ToolResult::OutOfBounds;
-    }
-
     /* AutoDoze */
     if ((Command >= 2) && (Command <= 4))
     {
-
         if ((autoBulldoze != 0) &&
             (TotalFunds() > 0) &&
             ((Tile = (*TileAdrPtr)) & BULLBIT))
