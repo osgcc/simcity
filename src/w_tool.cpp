@@ -170,23 +170,22 @@ ToolResult putDownNetwork(int mapH, int mapV)
         Spend(1);
     }
 
-    if (tile == 0)
+    if (tile != 0)
     {
-        if ((TotalFunds() - Tools.at(Tool::Network).cost) >= 0)
-        {
-            Map[mapH][mapV] = TELEBASE | CONDBIT | BURNBIT | BULLBIT | ANIMBIT;
-            Spend(Tools.at(Tool::Network).cost);
-            return ToolResult::Success;
-        }
-        else
-        {
-            return ToolResult::InsufficientFunds;
-        }
+        return ToolResult::RequiresBulldozing;
+    }
+
+    if ((TotalFunds() - Tools.at(Tool::Network).cost) >= 0)
+    {
+        Map[mapH][mapV] = TELEBASE | CONDBIT | BURNBIT | BULLBIT | ANIMBIT;
+        Spend(Tools.at(Tool::Network).cost);
+        return ToolResult::Success;
     }
     else
     {
-        return ToolResult::InvalidLocation;
+        return ToolResult::InsufficientFunds;
     }
+
 }
 
 
