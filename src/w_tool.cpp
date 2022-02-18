@@ -494,26 +494,7 @@ ToolResult checkArea(const int mapH, const int mapV, const int base, const int s
 }
 
 
-ToolResult check3x3(const int mapH, const int mapV, const int base, const Tool tool)
-{
-    return checkArea(mapH, mapV, base, 3, false, tool);
-}
-
-
-ToolResult check4x4(int mapH, int mapV, int base, int aniFlag, Tool tool)
-{
-    return checkArea(mapH, mapV, base, 4, aniFlag == 1, tool);
-}
-
-
-ToolResult check6x6(int mapH, int mapV, int base, Tool tool)
-{
-    return checkArea(mapH, mapV, base, 6, false, tool);
-}
-
-
 /* QUERY */
-
 /* search table for zone status string match */
 static int idArray[28] =
 {
@@ -921,7 +902,7 @@ ToolResult residential_tool(int x, int y)
         return ToolResult::OutOfBounds;
     }
 
-    return check3x3(x, y, RESBASE, Tool::Residential);
+    return checkArea(x, y, RESBASE, 3, false, Tool::Residential);
 }
 
 
@@ -932,7 +913,7 @@ ToolResult commercial_tool(int x, int y)
         return ToolResult::OutOfBounds;
     }
 
-    return check3x3(x, y, COMBASE, Tool::Commercial);
+    return checkArea(x, y, COMBASE, 3, false, Tool::Commercial);
 }
 
 
@@ -943,7 +924,7 @@ ToolResult industrial_tool(int x, int y)
         return ToolResult::OutOfBounds;
     }
 
-    return check3x3(x, y, INDBASE, Tool::Industrial);
+    return checkArea(x, y, INDBASE, 3, false, Tool::Industrial);
 }
 
 
@@ -954,7 +935,7 @@ ToolResult police_dept_tool(int x, int y)
         return ToolResult::OutOfBounds;
     }
 
-    return check3x3(x, y, POLICESTBASE, Tool::Police);
+    return checkArea(x, y, POLICESTBASE, 3, false, Tool::Police);
 }
 
 
@@ -965,7 +946,7 @@ ToolResult fire_dept_tool(int x, int y)
         return ToolResult::OutOfBounds;
     }
 
-    return check3x3(x, y, FIRESTBASE, Tool::Fire);
+    return checkArea(x, y, FIRESTBASE, 3, false , Tool::Fire);
 }
 
 
@@ -976,7 +957,7 @@ ToolResult stadium_tool(int x, int y)
         return ToolResult::OutOfBounds;
     }
 
-    return check4x4(x, y, STADIUMBASE, 0, Tool::Stadium);
+    return checkArea(x, y, STADIUMBASE, 4, false, Tool::Stadium);
 }
 
 
@@ -987,7 +968,7 @@ ToolResult coal_power_plant_tool(int x, int y)
         return ToolResult::OutOfBounds;
     }
 
-    return check4x4(x, y, COALBASE, 1, Tool::Coal);
+    return checkArea(x, y, COALBASE, 4, false, Tool::Coal);
 }
 
 
@@ -998,7 +979,7 @@ ToolResult nuclear_power_plant_tool(int x, int y)
         return ToolResult::OutOfBounds;
     }
 
-    return check4x4(x, y, NUCLEARBASE, 1, Tool::Nuclear);
+    return checkArea(x, y, NUCLEARBASE, 4, true, Tool::Nuclear);
 }
 
 
@@ -1009,7 +990,7 @@ ToolResult seaport_tool(int x, int y)
         return ToolResult::OutOfBounds;
     }
 
-    return check4x4(x, y, PORTBASE, 0, Tool::Seaport);
+    return checkArea(x, y, PORTBASE, 4, false, Tool::Seaport);
 }
 
 
@@ -1020,7 +1001,7 @@ ToolResult airport_tool(int x, int y)
         return ToolResult::OutOfBounds;
     }
 
-    return check6x6(x, y, AIRPORTBASE, Tool::Airport);
+    return checkArea(x, y, AIRPORTBASE, 6, false, Tool::Airport);
 }
 
 
