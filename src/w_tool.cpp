@@ -691,26 +691,6 @@ void putRubble(const int mapX, const int mapY, const int size)
 }
 
 
-void put3x3Rubble(int x, int y)
-{
-    putRubble(x, y, 3);
-}
-
-
-/* comefrom: processWand */
-void put4x4Rubble(int x, int y)
-{
-    putRubble(x, y, 4);
-}
-
-
-/* comefrom: processWand */
-void put6x6Rubble(int x, int y)
-{
-    putRubble(x, y, 6);
-}
-
-
 /************************************************************************/
 /* TOOLS */
 
@@ -751,18 +731,18 @@ ToolResult bulldozer_tool(int x, int y)
             {
             case 3:
                 MakeSound("city", "Explosion-High");
-                put3x3Rubble(x, y);
+                putRubble(x, y, 3);
                 break;
 
             case 4:
-                put4x4Rubble(x, y);
+                putRubble(x, y, 4);
                 MakeSound("city", "Explosion-Low");
                 break;
 
             case 6:
                 MakeSound("city", "Explosion-High");
                 MakeSound("city", "Explosion-Low");
-                put6x6Rubble(x, y);
+                putRubble(x, y, 6);
                 break;
 
             default:
@@ -783,13 +763,13 @@ ToolResult bulldozer_tool(int x, int y)
 
             case 4:
                 MakeSound("city", "Explosion-Low");
-                put4x4Rubble(x + deltaH, y + deltaV);
+                putRubble(x + deltaH, y + deltaV, 4);
                 break;
 
             case 6:
                 MakeSound("city", "Explosion-High");
                 MakeSound("city", "Explosion-Low");
-                put6x6Rubble(x + deltaH, y + deltaV);
+                putRubble(x + deltaH, y + deltaV, 6);
                 break;
             }
         }
