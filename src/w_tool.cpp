@@ -1059,12 +1059,6 @@ ToolResult current_tool(int x, int y)
 }
 
 
-void DoPendTool(Tool tool, int x, int y)
-{
-    Eval(std::string("DoPendTool: ") + "'winId' " + Tools.at(tool).name + " " + std::to_string(x) + " " + std::to_string(y));
-}
-
-
 /**
  * Performs tool action
  * 
@@ -1091,10 +1085,6 @@ void ToolDown(int mapX, int mapY)
         ClearMes();
         SendMes(NotificationId::InsufficientFunds);
         MakeSoundOn(nullptr, "edit", "Sorry");
-    }
-    else
-    {
-        DoPendTool(PendingTool, mapX, mapY);
     }
 
     sim_skip = 0;
