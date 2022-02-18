@@ -395,23 +395,23 @@ void checkBorder(const int mapX, const int mapY, const int count)
 }
 
 
-ToolResult check3x3(const int mapH, const int mapV, const int base, const Tool tool)
+ToolResult checkArea(const int mapH, const int mapV, const int base, const int size, const bool animate, const Tool tool)
 {
-    if (!CoordinatesValid(mapH - 1, mapV - 1, SimWidth - 3, SimHeight - 3))
+    if (!CoordinatesValid(mapH - 1, mapV - 1, SimWidth - size, SimHeight - size))
     {
         return ToolResult::OutOfBounds;
     }
 
     bool needsBulldozing{ false };
-    
+
     int totalCost{ Tools.at(tool).cost };
-    
+
     int mapY{ mapV - 1 };
-    for (int row = 0; row <= 2; ++row)
+    for (int row = 0; row < size; ++row)
     {
         int mapX{ mapH - 1 };
 
-        for (int col = 0; col <= 2; ++col)
+        for (int col = 0; col < size; ++col)
         {
             const unsigned int tileValue{ maskedTileValue(mapX, mapY) };
 
@@ -458,21 +458,26 @@ ToolResult check3x3(const int mapH, const int mapV, const int base, const Tool t
     {
         return ToolResult::NetworkVotedNo;
     }
-    
+
     Spend(totalCost);
     UpdateFunds();
 
     int tileBase = base;
     mapY = mapV - 1;
-    for (int row = 0; row <= 2; ++row)
+    for (int row = 0; row < size; ++row)
     {
         int mapX = mapH - 1;
 
-        for (int col = 0; col <= 2; ++col)
+        for (int col = 0; col < size; ++col)
         {
             if (col == 1 && row == 1)
             {
                 Map[mapX][mapY] = tileBase + BNCNBIT + ZONEBIT;
+            }
+            // special case to get nuclear plant animation working
+            else if (animate && col == 1 && row == 2)
+            {
+                Map[mapX][mapY] = tileBase + BNCNBIT + ANIMBIT;
             }
             else
             {
@@ -484,222 +489,26 @@ ToolResult check3x3(const int mapH, const int mapV, const int base, const Tool t
         ++mapY;
     }
 
-    checkBorder(mapH - 1, mapV - 1, 3);
+    checkBorder(mapH - 1, mapV - 1, size);
     return ToolResult::Success;
+}
+
+
+ToolResult check3x3(const int mapH, const int mapV, const int base, const Tool tool)
+{
+    return checkArea(mapH, mapV, base, 3, false, tool);
 }
 
 
 ToolResult check4x4(int mapH, int mapV, int base, int aniFlag, Tool tool)
 {
-    int rowNum, columnNum;
-    int h, v;
-    int holdMapH;
-    int xMap, yMap;
-    int tileValue;
-    int flag;
-    int cost = 0;
-
-    mapH--; mapV--;
-    if ((mapH < 0) || (mapH > (SimWidth - 4)) ||
-        (mapV < 0) || (mapV > (SimHeight - 4)))
-    {
-        return ToolResult::OutOfBounds;
-    }
-
-    h = xMap = holdMapH = mapH;
-    v = yMap = mapV;
-
-    flag = 1;
-
-    for (rowNum = 0; rowNum <= 3; rowNum++)
-    {
-        mapH = holdMapH;
-
-        for (columnNum = 0; columnNum <= 3; columnNum++)
-        {
-            tileValue = Map[mapH++][mapV] & LOMASK;
-
-            if (autoBulldoze)
-            {
-                /* if autoDoze is enabled, add up the cost of bulldozed tiles */
-                if (tileValue != 0)
-                {
-                    if (tally(tileValue))
-                    {
-                        cost++;
-                    }
-                    else
-                    {
-                        flag = 0;
-                    }
-                }
-            }
-            else
-            {
-                /* check and see if the tile is clear or not  */
-                if (tileValue != 0)
-                {
-                    flag = 0;
-                }
-            }
-        }
-        mapV++;
-    }
-
-    if (flag == 0)
-    {
-        return ToolResult::RequiresBulldozing;
-    }
-
-    cost += Tools.at(tool).cost;
-
-    if ((TotalFunds() - cost) < 0)
-    {
-        return ToolResult::InsufficientFunds;
-    }
-
-    if ((Players > 1) &&
-        (OverRide == 0) &&
-        (cost >= Expensive))
-    {
-        return ToolResult::NetworkVotedNo;
-    }
-
-    /* take care of the money situtation here */
-    Spend(cost);
-    UpdateFunds();
-
-    mapV = v; holdMapH = h;
-
-    for (rowNum = 0; rowNum <= 3; rowNum++)
-    {
-        mapH = holdMapH;
-
-        for (columnNum = 0; columnNum <= 3; columnNum++)
-        {
-            if (columnNum == 1 && rowNum == 1)
-            {
-                Map[mapH++][mapV] = base + BNCNBIT + ZONEBIT;
-            }
-            else if (columnNum == 1 && rowNum == 2 && aniFlag)
-            {
-                Map[mapH++][mapV] = base + BNCNBIT + ANIMBIT;
-            }
-            else
-            {
-                Map[mapH++][mapV] = base + BNCNBIT;
-            }
-            base++;
-        }
-        mapV++;
-    }
-
-    checkBorder(xMap, yMap, 4);
-    return ToolResult::Success;
+    return checkArea(mapH, mapV, base, 4, aniFlag == 1, tool);
 }
 
 
 ToolResult check6x6(int mapH, int mapV, int base, Tool tool)
 {
-    int rowNum, columnNum;
-    int h, v;
-    int holdMapH;
-    int xMap, yMap;
-    int flag;
-    int tileValue;
-    int cost = 0;
-
-    mapH--; mapV--;
-    if ((mapH < 0) || (mapH > (SimWidth - 6)) ||
-        (mapV < 0) || (mapV > (SimHeight - 6)))
-    {
-        return ToolResult::OutOfBounds;
-    }
-
-    h = xMap = holdMapH = mapH;
-    v = yMap = mapV;
-
-    flag = 1;
-
-    for (rowNum = 0; rowNum <= 5; rowNum++)
-    {
-        mapH = holdMapH;
-
-
-        for (columnNum = 0; columnNum <= 5; columnNum++) {
-            tileValue = Map[mapH++][mapV] & LOMASK;
-
-            if (autoBulldoze)
-            {
-                /* if autoDoze is enabled, add up the cost of bulldozed tiles */
-                if (tileValue != 0)
-                    if (tally(tileValue))
-                    {
-                        cost++;
-                    }
-                    else
-                    {
-                        flag = 0;
-                    }
-            }
-            else
-            {
-                /* check and see if the tile is clear or not  */
-                if (tileValue != 0)
-                {
-                    flag = 0;
-                }
-            }
-        }
-        mapV++;
-    }
-
-    if (flag == 0)
-    {
-        return ToolResult::RequiresBulldozing;
-    }
-
-    cost += Tools.at(tool).cost;
-
-    if ((TotalFunds() - cost) < 0)
-    {
-        return ToolResult::InsufficientFunds;
-    }
-
-    if ((Players > 1) &&
-        (OverRide == 0) &&
-        (cost >= Expensive))
-    {
-        return ToolResult::NetworkVotedNo;
-    }
-
-    /* take care of the money situtation here */
-    Spend(cost);
-    UpdateFunds();
-
-    mapV = v; holdMapH = h;
-
-    for (rowNum = 0; rowNum <= 5; rowNum++)
-    {
-        mapH = holdMapH;
-
-        for (columnNum = 0; columnNum <= 5; columnNum++)
-        {
-            if (columnNum == 1 && rowNum == 1)
-            {
-                Map[mapH++][mapV] = base + BNCNBIT + ZONEBIT;
-            }
-            else
-            {
-                Map[mapH++][mapV] = base + BNCNBIT;
-            }
-            base++;
-        }
-        mapV++;
-    }
-
-    checkBorder(xMap, yMap, 6);
-    return ToolResult::Success;
+    return checkArea(mapH, mapV, base, 6, false, tool);
 }
 
 
