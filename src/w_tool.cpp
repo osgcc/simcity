@@ -107,7 +107,7 @@ std::map<Tool, ToolProperties> Tools =
     { Tool::Seaport, { 3000, 4, 1, "Seaport" }},
     { Tool::Coal, { 3000, 4, 1, "Coal Power" }},
     { Tool::Nuclear, { 5000, 4, 1, "Nuclear Power" }},
-    { Tool::Airport, { 10000, 6, 3, "Airport" }},
+    { Tool::Airport, { 10000, 6, 1, "Airport" }},
     { Tool::Network, { 100, 1, 0, "Network" }},
     { Tool::None, { 0, 0, 0, "No Tool" } }
 };
@@ -506,12 +506,10 @@ ToolResult check3x3(int mapH, int mapV, int base, Tool tool)
 void check4x4border(int xMap, int yMap)
 {
     //Ptr tilePtr;
-    int* tilePtr;
     int xPos, yPos;
-    int cnt;
 
     xPos = xMap; yPos = yMap - 1;
-    for (cnt = 0; cnt < 4; cnt++)
+    for (int cnt = 0; cnt < 4; cnt++)
     {
         /* this will do the upper bordering row */
         doConnectTile(xPos, yPos, SimWidth, SimHeight);
@@ -519,7 +517,7 @@ void check4x4border(int xMap, int yMap)
     }
 
     xPos = xMap - 1; yPos = yMap;
-    for (cnt = 0; cnt < 4; cnt++)
+    for (int cnt = 0; cnt < 4; cnt++)
     {
         /* this will do the left bordering row */
         doConnectTile(xPos, yPos, SimWidth, SimHeight);
@@ -527,7 +525,7 @@ void check4x4border(int xMap, int yMap)
     }
 
     xPos = xMap; yPos = yMap + 4;
-    for (cnt = 0; cnt < 4; cnt++)
+    for (int cnt = 0; cnt < 4; cnt++)
     {
         /* this will do the bottom bordering row */
         doConnectTile(xPos, yPos, SimWidth, SimHeight);
@@ -535,7 +533,7 @@ void check4x4border(int xMap, int yMap)
     }
 
     xPos = xMap + 4; yPos = yMap;
-    for (cnt = 0; cnt < 4; cnt++)
+    for (int cnt = 0; cnt < 4; cnt++)
     {
         /* this will do the right bordering row */
         doConnectTile(xPos, yPos, SimWidth, SimHeight);
