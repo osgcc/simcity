@@ -85,11 +85,6 @@ int Cycle;
 
 std::vector<SimSprite> Sprites;
 
-#define TRA_GROOVE_X -39
-#define TRA_GROOVE_Y 6
-#define BUS_GROOVE_X -39
-#define BUS_GROOVE_Y 6
-
 
 void GetObjectXpms(int id, int frames, std::vector<Texture>& frameList)
 {
@@ -1615,7 +1610,7 @@ void GenerateTrain(int x, int y)
 {
     if (TotalPop > 20 && GetSprite(TRA) == nullptr && RandomRange(0, 25) == 0)
     {
-        MakeSprite(TRA, (x * 16) /* + TRA_GROOVE_X*/, (y * 16) /* + TRA_GROOVE_Y*/);
+        MakeSprite(TRA, x * 16, y * 16);
     }
 }
 
