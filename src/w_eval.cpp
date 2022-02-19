@@ -147,11 +147,11 @@ void SetEvaluation(const Strings& strings)
 		strings.pop + "} {" +
 		strings.delta + "} {" +
 		strings.assessed_dollars + "} {" +
-		strings.cityclass + "} {" +
-		strings.citylevel + "} {" +
-		strings.goodyes + "} {" +
-		strings.goodno + "} {" +
-		strings.title + "}";
+		"City Class: " + strings.cityclass + "} {" +
+		"City Level: " + strings.citylevel + "} {" +
+		"GoodYes: " + strings.goodyes + "} {" +
+		"GoodNo: " + strings.goodno + "} {" +
+		"Title: " + strings.title + "}";
 
 
 	Eval(evalMessage);
@@ -160,7 +160,8 @@ void SetEvaluation(const Strings& strings)
 
 void doScoreCard()
 {
-	const Strings strings{
+	const Strings strings
+	{
 		std::to_string(deltaCityScore),
 		std::to_string(CityScore),
 		ProblemVotes[ProblemOrder[0]] ? probStr[ProblemOrder[0]] : " ",
@@ -178,7 +179,7 @@ void doScoreCard()
 		cityLevelStr[GameLevel()],
 		std::to_string(CityYes) + "%",
 		std::to_string(CityNo) + "%",
-		"City Evaluation  " + std::to_string(CurrentYear())
+		std::to_string(CurrentYear())
 	};
 
 	SetEvaluation(strings);
