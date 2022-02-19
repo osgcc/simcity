@@ -62,6 +62,8 @@
 
 #pragma once
 
+#include "Point.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -76,6 +78,8 @@
 #include <io.h>
 
 #include <string>
+
+#include <SDL2/SDL.h>
 
  /* Constants */
 
@@ -468,5 +472,8 @@ extern int NeedRest;
 extern int FlushStyle;
 extern int GotXError;
 
+extern SDL_Renderer* MainWindowRenderer;
+
 void sim_exit();
 void sim_update_editors();
+const Point<int>& viewOffset();

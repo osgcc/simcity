@@ -74,14 +74,16 @@
 #include "w_tool.h"
 #include "w_util.h"
 
+#include <string>
+
+#include <SDL2/SDL.h>
+
 
 int CrashX, CrashY;
 int absDist;
 int Cycle;
 
-SimSprite* GlobalSprites[OBJN];
-SimSprite* FreeSprites = NULL;
-
+std::vector<SimSprite> Sprites;
 
 #define TRA_GROOVE_X -39
 #define TRA_GROOVE_Y 6
@@ -89,294 +91,259 @@ SimSprite* FreeSprites = NULL;
 #define BUS_GROOVE_Y 6
 
 
-void sprite_command_init()
+void GetObjectXpms(int id, int frames, std::vector<Texture>& frameList)
 {
-    for (int i = 0; i < OBJN; i++)
+    std::string name;
+
+    for (int i = 0; i < frames; i++)
     {
-        GlobalSprites[i] = NULL;
+        name = std::string("images/obj") + std::to_string(id) + "-" + std::to_string(i) + ".xpm";
+        frameList.push_back(loadTexture(MainWindowRenderer, name));
     }
 }
 
 
-void InitSprite(SimSprite* sprite, int x, int y)
+void InitSprite(SimSprite& sprite, int x, int y)
 {
-    sprite->x = x; sprite->y = y;
-    sprite->frame = 0;
-    sprite->orig_x = sprite->orig_y = 0;
-    sprite->dest_x = sprite->dest_y = 0;
-    sprite->count = sprite->sound_count = 0;
-    sprite->dir = sprite->new_dir = 0;
-    sprite->step = sprite->flag = 0;
-    sprite->control = -1;
-    sprite->turn = 0;
-    sprite->accel = 0;
-    sprite->speed = 100;
+    sprite.x = x;
+    sprite.y = y;
+    sprite.frame = 0;
+    sprite.orig_x = 0;
+    sprite.orig_y = 0;
+    sprite.dest_x = 0;
+    sprite.dest_y = 0;
+    sprite.count = 0;
+    sprite.sound_count = 0;
+    sprite.dir = 0;
+    sprite.new_dir = 0;
+    sprite.step = 0;
+    sprite.flag = 0;
+    sprite.control = -1;
+    sprite.turn = 0;
+    sprite.accel = 0;
+    sprite.speed = 100;
+    sprite.active = true;
 
-    if (GlobalSprites[sprite->type] == NULL)
-    {
-        GlobalSprites[sprite->type] = sprite;
-    }
+    /*
+    pm[0] = NULL; // no object number 0
+    pm[TRA] = GetObjectXpms(TRA, 5);
+    pm[COP] = GetObjectXpms(COP, 8);
+    pm[AIR] = GetObjectXpms(AIR, 11);
+    pm[SHI] = GetObjectXpms(SHI, 8);
+    pm[GOD] = GetObjectXpms(GOD, 16);
+    pm[TOR] = GetObjectXpms(TOR, 3);
+    pm[EXP] = GetObjectXpms(EXP, 6);
+    pm[BUS] = GetObjectXpms(BUS, 4);
+    */
 
-    switch (sprite->type)
+    switch (sprite.type)
     {
 
     case TRA:
-        sprite->width = sprite->height = 32;
-        sprite->x_offset = 32; sprite->y_offset = -16;
-        sprite->x_hot = 40; sprite->y_hot = -8;
-        sprite->frame = 1;
-        sprite->dir = 4;
+        sprite.width = 32;
+        sprite.height = 32;
+        sprite.x_offset = 32;
+        sprite.y_offset = -16;
+        sprite.x_hot = 40;
+        sprite.y_hot = -8;
+        sprite.frame = 1;
+        sprite.dir = 4;
+        GetObjectXpms(TRA, 5, sprite.frames);
         break;
 
     case SHI:
-        sprite->width = sprite->height = 48;
-        sprite->x_offset = 32; sprite->y_offset = -16;
-        sprite->x_hot = 48; sprite->y_hot = 0;
-        if (x < (4 << 4)) sprite->frame = 3;
-        else if (x >= ((SimWidth - 4) << 4)) sprite->frame = 7;
-        else if (y < (4 << 4)) sprite->frame = 5;
-        else if (y >= ((SimHeight - 4) << 4)) sprite->frame = 1;
-        else sprite->frame = 3;
-        sprite->new_dir = sprite->frame;
-        sprite->dir = 10;
-        sprite->count = 1;
+        sprite.width = sprite.height = 48;
+        sprite.x_offset = 32; sprite.y_offset = -16;
+        sprite.x_hot = 48; sprite.y_hot = 0;
+
+        if (x < (4 << 4))
+        {
+            sprite.frame = 3;
+        }
+        else if (x >= ((SimWidth - 4) << 4))
+        {
+            sprite.frame = 7;
+        }
+        else if (y < (4 << 4))
+        {
+            sprite.frame = 5;
+        }
+        else if (y >= ((SimHeight - 4) << 4))
+        {
+            sprite.frame = 1;
+        }
+        else
+        {
+            sprite.frame = 3;
+        }
+
+        sprite.new_dir = sprite.frame;
+        sprite.dir = 10;
+        sprite.count = 1;
         break;
 
     case GOD:
-        sprite->width = sprite->height = 48;
-        sprite->x_offset = 24; sprite->y_offset = 0;
-        sprite->x_hot = 40; sprite->y_hot = 16;
-        if (x > ((SimWidth << 4) / 2)) {
-            if (y > ((SimHeight << 4) / 2)) sprite->frame = 10;
-            else sprite->frame = 7;
+        sprite.width = sprite.height = 48;
+        sprite.x_offset = 24; sprite.y_offset = 0;
+        sprite.x_hot = 40; sprite.y_hot = 16;
+        if (x > ((SimWidth << 4) / 2))
+        {
+            if (y > ((SimHeight << 4) / 2)) sprite.frame = 10;
+            else sprite.frame = 7;
         }
-        else if (y > ((SimHeight << 4) / 2)) sprite->frame = 1;
-        else sprite->frame = 4;
-        sprite->count = 1000;
-        sprite->dest_x = PolMaxX << 4;
-        sprite->dest_y = PolMaxY << 4;
-        sprite->orig_x = sprite->x;
-        sprite->orig_y = sprite->y;
+        else if (y > ((SimHeight << 4) / 2))
+        {
+            sprite.frame = 1;
+        }
+        else
+        {
+            sprite.frame = 4;
+        }
+        sprite.count = 1000;
+        sprite.dest_x = PolMaxX << 4;
+        sprite.dest_y = PolMaxY << 4;
+        sprite.orig_x = sprite.x;
+        sprite.orig_y = sprite.y;
         break;
 
     case COP:
-        sprite->width = sprite->height = 32;
-        sprite->x_offset = 32; sprite->y_offset = -16;
-        sprite->x_hot = 40; sprite->y_hot = -8;
-        sprite->frame = 5;
-        sprite->count = 1500;
-        sprite->dest_x = RandomRange(0, SimWidth - 1);
-        sprite->dest_y = RandomRange(0, SimHeight - 1);
-        sprite->orig_x = x - 30;
-        sprite->orig_y = y;
+        sprite.width = sprite.height = 32;
+        sprite.x_offset = 32; sprite.y_offset = -16;
+        sprite.x_hot = 40; sprite.y_hot = -8;
+        sprite.frame = 5;
+        sprite.count = 1500;
+        sprite.dest_x = RandomRange(0, SimWidth - 1);
+        sprite.dest_y = RandomRange(0, SimHeight - 1);
+        sprite.orig_x = x - 30;
+        sprite.orig_y = y;
         break;
 
     case AIR:
-        sprite->width = sprite->height = 48;
-        sprite->x_offset = 24; sprite->y_offset = 0;
-        sprite->x_hot = 48; sprite->y_hot = 16;
-        if (x > ((SimWidth - 20) << 4)) {
-            sprite->x -= 100 + 48;
-            sprite->dest_x = sprite->x - 200;
-            sprite->frame = 7;
+        sprite.width = sprite.height = 48;
+        sprite.x_offset = 24; sprite.y_offset = 0;
+        sprite.x_hot = 48; sprite.y_hot = 16;
+        if (x > ((SimWidth - 20) << 4))
+        {
+            sprite.x -= 100 + 48;
+            sprite.dest_x = sprite.x - 200;
+            sprite.frame = 7;
         }
-        else {
-            sprite->dest_x = sprite->x + 200;
-            sprite->frame = 11;
+        else
+        {
+            sprite.dest_x = sprite.x + 200;
+            sprite.frame = 11;
         }
-        sprite->dest_y = sprite->y;
+        sprite.dest_y = sprite.y;
         break;
 
     case TOR:
-        sprite->width = sprite->height = 48;
-        sprite->x_offset = 24; sprite->y_offset = 0;
-        sprite->x_hot = 40; sprite->y_hot = 36;
-        sprite->frame = 1;
-        sprite->count = 200;
+        sprite.width = sprite.height = 48;
+        sprite.x_offset = 24; sprite.y_offset = 0;
+        sprite.x_hot = 40; sprite.y_hot = 36;
+        sprite.frame = 1;
+        sprite.count = 200;
         break;
 
     case EXP:
-        sprite->width = sprite->height = 48;
-        sprite->x_offset = 24; sprite->y_offset = 0;
-        sprite->x_hot = 40; sprite->y_hot = 16;
-        sprite->frame = 1;
+        sprite.width = sprite.height = 48;
+        sprite.x_offset = 24; sprite.y_offset = 0;
+        sprite.x_hot = 40; sprite.y_hot = 16;
+        sprite.frame = 1;
         break;
 
     case BUS:
-        sprite->width = sprite->height = 32;
-        sprite->x_offset = 30; sprite->y_offset = -18;
-        sprite->x_hot = 40; sprite->y_hot = -8;
-        sprite->frame = 1;
-        sprite->dir = 1;
+        sprite.width = sprite.height = 32;
+        sprite.x_offset = 30; sprite.y_offset = -18;
+        sprite.x_hot = 40; sprite.y_hot = -8;
+        sprite.frame = 1;
+        sprite.dir = 1;
         break;
 
     }
-}
-
-
-SimSprite* NewSprite(const std::string& name, int type, int x, int y)
-{
-    SimSprite* sprite;
-
-    if (FreeSprites)
-    {
-        sprite = FreeSprites;
-        FreeSprites = sprite->next;
-    }
-    else
-    {
-        sprite = (SimSprite*)malloc(sizeof(SimSprite));
-    }
-
-    sprite->name = name;
-    sprite->type = type;
-
-    InitSprite(sprite, x, y);
-
-    //sim->sprites++; sprite->next = sim->sprite; sim->sprite = sprite;
-
-    return sprite;
 }
 
 
 void DestroyAllSprites()
 {
-    /*
-    SimSprite* sprite;
-
-    for (sprite = sim->sprite; sprite != NULL; sprite = sprite->next)
-    {
-        sprite->frame = 0;
-    }
-    */
+    Sprites.clear();
 }
 
 
-void DestroySprite(SimSprite* sprite)
+void DestroySprite(SimSprite& sprite)
 {
-    /*
-    SimView* view;
-    SimSprite** sp;
-
-    for (view = sim->editor; view != NULL; view = view->next)
+    for (size_t i = 0; i < Sprites.size(); ++i)
     {
-        if (view->follow == sprite)
+        auto& existing = Sprites[i];
+        if (existing.type == sprite.type)
         {
-            view->follow = NULL;
+            Sprites.erase(Sprites.begin() + i);
+            return;
         }
     }
-
-    if (GlobalSprites[sprite->type] == sprite)
-    {
-        GlobalSprites[sprite->type] = (SimSprite*)NULL;
-    }
-
-    for (sp = &sim->sprite; *sp != NULL; sp = &((*sp)->next))
-    {
-        if (sprite == (*sp))
-        {
-            *sp = sprite->next;
-            break;
-        }
-    }
-
-    sprite->next = FreeSprites;
-    FreeSprites = sprite;
-    */
 }
 
 
 SimSprite* GetSprite(int type)
 {
-    SimSprite* sprite;
 
-    if (((sprite = GlobalSprites[type]) == NULL) || (sprite->frame == 0))
+    for (size_t i = 0; i < Sprites.size(); ++i)
     {
-        return nullptr;
+        auto& sprite = Sprites[i];
+        if (sprite.type == type)
+        {
+            return &sprite;
+        }
     }
-    else
-    {
-        return sprite;
-    }
-}
 
-
-SimSprite* MakeSprite(int type, int x, int y)
-{
-    /*
-    SimSprite* sprite;
-
-    if ((sprite = GlobalSprites[type]) == NULL)
-    {
-        sprite = NewSprite("", type, x, y);
-    }
-    else
-    {
-        InitSprite(sprite, x, y);
-    }
-    return sprite;
-    */
     return nullptr;
 }
 
 
-SimSprite* MakeNewSprite(int type, int x, int y)
+void MakeSprite(int type, int x, int y)
 {
-    /*
-    SimSprite* sprite;
+    for (size_t i = 0; i < Sprites.size(); ++i)
+    {
+        auto& sprite = Sprites[i];
+        if (sprite.type == type)
+        {
+            sprite.active = true;
+            return;
+        }
+    }
 
-    sprite = NewSprite("", type, x, y);
-    return sprite;
-    */
-    return nullptr;
+    Sprites.push_back({});
+    Sprites.back().type = type;
+    InitSprite(Sprites.back(), x, y);
 }
 
 
-void DrawSprite(SimView* view, SimSprite* sprite)
+void DrawSprite(SimSprite& sprite)
 {
-    /*
-    Pixmap pict, mask;
-
-    if (sprite->frame == 0)
+    if(!sprite.active)
     {
         return;
     }
 
-    const int i = (sprite->frame - 1) * 2;
-    //pict = view->x->objects[sprite->type][i];
-    //mask = view->x->objects[sprite->type][i + 1];
+    const auto& spriteFrame = sprite.frames[sprite.frame];
 
-    const int x = sprite->x - ((view->tile_x << 4) - view->screen_x) + sprite->x_offset;
-    const int y = sprite->y - ((view->tile_y << 4) - view->screen_y) + sprite->y_offset;
+    const SDL_Rect dstRect
+    {
+        sprite.x - viewOffset().x + sprite.x_offset,
+        sprite.y - viewOffset().y + sprite.y_offset,
+        spriteFrame.dimensions.x,
+        spriteFrame.dimensions.y
+    };
 
-    //XSetClipMask(view->x->dpy, view->x->gc, mask);
-    //XSetClipOrigin(view->x->dpy, view->x->gc, x, y);
-    //XCopyArea(view->x->dpy, pict, view->pixmap2, view->x->gc, 0, 0, sprite->width, sprite->height, x, y);
-    //XSetClipMask(view->x->dpy, view->x->gc, None);
-    //XSetClipOrigin(view->x->dpy, view->x->gc, 0, 0);
-    */
+    SDL_RenderCopy(MainWindowRenderer, spriteFrame.texture, &spriteFrame.area, &dstRect);
 }
 
 
-void DrawObjects(SimView* view)
+void DrawObjects()
 {
-    /* XXX: sort these by layer */
-  /*
-    if (z = Oframe[TRA]) DrawTrain(view, z);
-    if (z = Oframe[SHI]) DrawBoat(view, z);
-    if (z = Oframe[GOD]) DrawMonster(view, z);
-    if (z = Oframe[COP]) DrawCopter(view, z);
-    if (z = Oframe[AIR]) DrawPlane(view, z);
-    if (z = Oframe[TOR]) DrawTor(view, z);
-    if (z = Oframe[EXP]) DrawExp(view, z);
-  */
-
-    /*
-    for (SimSprite* sprite = sim->sprite; sprite != NULL; sprite = sprite->next)
+    for (size_t i = 0; i < Sprites.size(); ++i)
     {
-        DrawSprite(view, sprite);
+        DrawSprite(Sprites[i]);
     }
-    */
 }
 
 
@@ -705,58 +672,81 @@ void ExplodeSprite(SimSprite* sprite)
 }
 
 
-void DoTrainSprite(SimSprite *sprite)
+void DoTrainSprite(SimSprite& sprite)
 {
-  static int Cx[4] = {   0,  16,   0, -16 };
-  static int Cy[4] = { -16,   0,  16,   0 };
-  static int Dx[5] = {   0,   4,   0,  -4,   0 };
-  static int Dy[5] = {  -4,   0,   4,   0,   0 };
-  static int TrainPic2[5] = { 1, 2, 1, 2, 5 };
-  int z, dir, dir2;
-  int c;
+    static int Cx[4] = { 0,  16,   0, -16 };
+    static int Cy[4] = { -16,   0,  16,   0 };
+    static int Dx[5] = { 0,   4,   0,  -4,   0 };
+    static int Dy[5] = { -4,   0,   4,   0,   0 };
 
-  if ((sprite->frame == 3) || (sprite->frame == 4))
-    sprite->frame = TrainPic2[sprite->dir];
-  sprite->x += Dx[sprite->dir];
-  sprite->y += Dy[sprite->dir];
-  if (!(Cycle & 3)) {
-    dir = Rand16() & 3;
-    for (z = dir; z < (dir + 4); z++) {
-      dir2 = z & 3;
-      if (sprite->dir != 4) {
-	if (dir2 == ((sprite->dir + 2) & 3)) continue;
-      }
-      c = GetChar(sprite->x + Cx[dir2] + 48,
-		  sprite->y + Cy[dir2]);
-      if (((c >= RAILBASE) && (c <= LASTRAIL)) || /* track? */
-	  (c == RAILVPOWERH) ||
-	  (c == RAILHPOWERV)) {
-	if ((sprite->dir != dir2) &&
-	    (sprite->dir != 4)) {
-	  if ((sprite->dir + dir2) == 3)
-	    sprite->frame = 3;
-	  else
-	    sprite->frame = 4;
-	} else
-	  sprite->frame = TrainPic2[dir2];
+    static int TrainPic2[5] = { 0, 1, 0, 1, 4 };
 
-	if ((c == RAILBASE) || (c == (RAILBASE + 1)))
-	  sprite->frame = 5;
-	sprite->dir = dir2;
-	return;
-      }
+    if ((sprite.frame == 3) || (sprite.frame == 4))
+    {
+        sprite.frame = TrainPic2[sprite.dir];
     }
-    if (sprite->dir == 4) {
-      sprite->frame = 0;
-      return;
+
+    sprite.x += Dx[sprite.dir];
+    sprite.y += Dy[sprite.dir];
+
+    int dir = RandomRange(0, 4);
+    for (int z = dir; z < (dir + 4); z++)
+    {
+        int dir2 = z % 4;
+
+        if (sprite.dir != 4)
+        {
+            if (dir2 == ((sprite.dir + 2) % 4))
+            {
+                continue;
+            }
+        }
+
+        int c = GetChar(sprite.x + Cx[dir2] + 48, sprite.y + Cy[dir2]);
+
+        if (((c >= RAILBASE) && (c <= LASTRAIL)) || /* track? */
+            (c == RAILVPOWERH) ||
+            (c == RAILHPOWERV))
+        {
+            if ((sprite.dir != dir2) && (sprite.dir != 4))
+            {
+                if ((sprite.dir + dir2) == 3)
+                {
+                    sprite.frame = 3;
+                }
+                else
+                {
+                    sprite.frame = 4;
+                }
+            }
+            else
+            {
+                sprite.frame = TrainPic2[dir2];
+            }
+
+            if ((c == RAILBASE) || (c == (RAILBASE + 1)))
+            {
+                sprite.frame = 5;
+            }
+
+            sprite.dir = dir2;
+            return;
+        }
     }
-    sprite->dir = 4;
-  }
+
+    if (sprite.dir == 4)
+    {
+        sprite.frame = 0;
+        return;
+    }
+
+    sprite.dir = 4;
 }
 
 
 void DoCopterSprite(SimSprite* sprite)
 {
+    /*
     static int CDx[9] = { 0,  0,  3,  5,  3,  0, -3, -5, -3 };
     static int CDy[9] = { 0, -5, -3,  0,  3,  5,  3,  0, -3 };
     int z, d, x, y;
@@ -768,7 +758,7 @@ void DoCopterSprite(SimSprite* sprite)
         if (sprite->count > 0) sprite->count--;
 
         if (!sprite->count) {
-            /* Attract copter to monster and tornado so it blows up more often */
+            // Attract copter to monster and tornado so it blows up more often
             SimSprite* s = GetSprite(GOD);
             if (s != NULL) {
                 sprite->dest_x = s->x;
@@ -786,7 +776,7 @@ void DoCopterSprite(SimSprite* sprite)
                 }
             }
         }
-        if (!sprite->count) { /* land */
+        if (!sprite->count) { // land
             GetDir(sprite->x, sprite->y, sprite->orig_x, sprite->orig_y);
             if (absDist < 30) {
                 sprite->frame = 0;
@@ -803,17 +793,17 @@ void DoCopterSprite(SimSprite* sprite)
         }
     }
 
-    if (!sprite->sound_count) { /* send report  */
+    if (!sprite->sound_count) { // send report
         x = (sprite->x + 48) >> 5;
         y = sprite->y >> 5;
         if ((x >= 0) &&
             (x < (SimWidth >> 1)) &&
             (y >= 0) &&
             (y < (SimHeight >> 1))) {
-            /* Don changed from 160 to 170 to shut the #$%#$% thing up! */
+            // Don changed from 160 to 170 to shut the #$%#$% thing up!
             if ((TrfDensity[x][y] > 170) && ((Rand16() & 7) == 0)) {
                 SendMesAt(NotificationId::HeavyTrafficReported, (x << 1) + 1, (y << 1) + 1);
-                MakeSound("city", "HeavyTraffic"); /* chopper */
+                MakeSound("city", "HeavyTraffic"); // chopper
                 sprite->sound_count = 200;
             }
         }
@@ -827,6 +817,7 @@ void DoCopterSprite(SimSprite* sprite)
 
     sprite->x += CDx[z];
     sprite->y += CDy[z];
+    */
 }
 
 
@@ -1576,80 +1567,67 @@ void MoveObjects()
 
     Cycle++;
 
-    /*
-    for (SimSprite* sprite = sim->sprite; sprite != nullptr;)
+    for (size_t i = 0; i < Sprites.size(); ++i)
     {
-        if (sprite->frame)
+        auto& sprite = Sprites[i];
+        if (sprite.active)
         {
-            switch (sprite->type)
+            switch (sprite.type)
             {
             case TRA:
                 DoTrainSprite(sprite);
                 break;
 
             case COP:
-                DoCopterSprite(sprite);
+                DoCopterSprite(&sprite);
                 break;
 
             case AIR:
-                DoAirplaneSprite(sprite);
+                DoAirplaneSprite(&sprite);
                 break;
 
             case SHI:
-                DoShipSprite(sprite);
+                DoShipSprite(&sprite);
                 break;
 
             case GOD:
-                DoMonsterSprite(sprite);
+                DoMonsterSprite(&sprite);
                 break;
 
             case TOR:
-                DoTornadoSprite(sprite);
+                DoTornadoSprite(&sprite);
                 break;
 
             case EXP:
-                DoExplosionSprite(sprite);
+                DoExplosionSprite(&sprite);
                 break;
 
             case BUS:
-                DoBusSprite(sprite);
+                DoBusSprite(&sprite);
                 break;
-            }
-            sprite = sprite->next;
-        }
-        else
-        {
-            if (sprite->name[0] == '\0')
-            {
-                SimSprite* s = sprite;
-                sprite = sprite->next;
-                DestroySprite(s);
-            }
-            else
-            {
-                sprite = sprite->next;
             }
         }
     }
-    */
 }
 
 
 void GenerateTrain(int x, int y)
 {
-    if ((TotalPop > 20) && (GetSprite(TRA) == NULL) && (!RandomRange(0, 25)))
+    if (TotalPop > 20 && GetSprite(TRA) == nullptr && RandomRange(0, 25) == 0)
     {
-        MakeSprite(TRA, (x << 4) + TRA_GROOVE_X, (y << 4) + TRA_GROOVE_Y);
+        MakeSprite(TRA, (x * 16) /* + TRA_GROOVE_X*/, (y * 16) /* + TRA_GROOVE_Y*/);
     }
 }
 
 
 void GenerateBus(int x, int y)
 {
+    /*
     if ((GetSprite(BUS) == NULL) && (!RandomRange(0, 25)))
     {
         MakeSprite(BUS, (x << 4) + BUS_GROOVE_X, (y << 4) + BUS_GROOVE_Y);
     }
+    */
 }
 
 
@@ -1721,6 +1699,7 @@ void MonsterHere(int x, int y)
 
 void MakeMonster()
 {
+    /*
     bool done = false;
 
     SimSprite* sprite;
@@ -1750,32 +1729,38 @@ void MakeMonster()
     {
         MonsterHere(60, 50);
     }
+    */
 }
 
 void GenerateCopter(int x, int y)
 {
+    /*
     if (GetSprite(COP) != nullptr)
     {
         return;
     }
 
     MakeSprite(COP, (x << 4), (y << 4) + 30);
+    */
 }
 
 
 void GeneratePlane(int x, int y)
 {
+    /*
     if (GetSprite(AIR) != nullptr)
     {
         return;
     }
 
     MakeSprite(AIR, (x << 4) + 48, (y << 4) + 12);
+    */
 }
 
 
 void MakeTornado()
 {
+    /*
     int x, y;
     SimSprite* sprite;
 
@@ -1792,12 +1777,13 @@ void MakeTornado()
 
     ClearMes();
     SendMesAt(NotificationId::TornadoReported, (x >> 4) + 3, (y >> 4) + 2);
+    */
 }
 
 
 void MakeExplosionAt(int x, int y)
 {
-    MakeNewSprite(EXP, x - 40, y - 16);
+    //MakeNewSprite(EXP, x - 40, y - 16);
 }
 
 

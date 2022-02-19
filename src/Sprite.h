@@ -1,11 +1,14 @@
 #pragma once
 
+#include "Texture.h"
+
 #include <string>
+#include <vector>
 
 struct SimSprite
 {
-	struct SimSprite* next{ nullptr };
 	std::string name{};
+
 	int type{ 0 };
 	int frame{ 0 };
 	int x{ 0 }, y{ 0 };
@@ -20,12 +23,18 @@ struct SimSprite
 	int turn{ 0 };
 	int accel{ 0 };
 	int speed{ 0 };
+
+	bool active{ false };
+
+	std::vector<Texture> frames;
 };
+
+extern std::vector<SimSprite> Sprites;
 
 SimSprite* GetSprite(int type);
 
 void MoveObjects();
-void DoTrainSprite(SimSprite* sprite);
+void DoTrainSprite(SimSprite& sprite);
 void DestroyAllSprites();
 
 void GenerateCopter(int x, int y);

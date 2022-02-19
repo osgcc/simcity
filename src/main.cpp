@@ -163,6 +163,11 @@ namespace
 };
 
 
+const Point<int>& viewOffset()
+{
+    return MapViewOffset;
+}
+
 constexpr SDL_Color ColorResidential{ 0, 165, 0, 255 };
 constexpr SDL_Color ColorCommercial{ 79, 79, 255, 255 };
 constexpr SDL_Color ColorIndustrial{ 255, 255, 0, 255 };
@@ -315,8 +320,6 @@ void sim_loop(bool doSim)
         SimFrame();
     }
 
-    MoveObjects();
-
     const int tick = TickCount();
 
     if (tick % 100 == 0)
@@ -325,6 +328,8 @@ void sim_loop(bool doSim)
 
         const Point<int> begin{ MapViewOffset.x / 16, MapViewOffset.y / 16 };
         const Point<int> end{ (MapViewOffset.x + WindowSize.x) / 16, (MapViewOffset.y + WindowSize.y) / 16 };
+
+        MoveObjects();
 
         DrawBigMapSegment(begin, end);
     }
@@ -937,6 +942,7 @@ void startGame()
         toolPalette.draw();
 
         drawDebug();
+        DrawObjects();
 
         SDL_RenderPresent(MainWindowRenderer);
     }
