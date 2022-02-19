@@ -391,8 +391,6 @@ void drawString(Font& font, std::string_view text, Point<int> position, SDL_Colo
 {
     if (text.empty()) { return; }
 
-    //SDL_SetRenderDrawColor(MainWindowRenderer, color.r, color.g, color.b, color.a);
-
     SDL_SetTextureColorMod(font.texture(), color.r, color.g, color.b);
 
     const auto& gml = font.metrics();
@@ -597,6 +595,10 @@ void handleKeyEvent(SDL_Event& event)
     case SDLK_3:
         if (Paused()) { Resume(); }
         SimSpeed(SimulationSpeed::Fast);
+        break;
+
+    case SDLK_F5:
+        //MakeTornado();
         break;
 
     default:

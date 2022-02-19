@@ -235,8 +235,9 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.width = sprite.height = 48;
         sprite.x_offset = 24; sprite.y_offset = 0;
         sprite.x_hot = 40; sprite.y_hot = 36;
-        sprite.frame = 1;
+        sprite.frame = 0;
         sprite.count = 200;
+        GetObjectXpms(TOR, 3, sprite.frames);
         break;
 
     case EXP:
@@ -302,6 +303,8 @@ void MakeSprite(int type, int x, int y)
         if (sprite.type == type)
         {
             sprite.active = true;
+            sprite.x = x;
+            sprite.y = y;
             return;
         }
     }
@@ -1190,45 +1193,23 @@ void DoMonsterSprite(SimSprite* sprite)
 }
 
 
-void DoTornadoSprite(SimSprite* sprite)
+void DoTornadoSprite(SimSprite& sprite)
 {
     static int CDx[9] = { 2,  3,  2,  0, -2, -3 };
     static int CDy[9] = { -2,  0,  2,  3,  2,  0 };
-    int z;
 
-    z = sprite->frame;
-
-    if (z == 2) /* cycle animation... post Rel */
+    ++sprite.frame;
+    if (sprite.frame >= sprite.frames.size())
     {
-        if (sprite->flag)
-        {
-            z = 3;
-        }
-        else
-        {
-            z = 1;
-        }
-    }
-    else
-    {
-        if (z == 1)
-        {
-            sprite->flag = 1;
-        }
-        else
-        {
-            sprite->flag = 0;
-        }
-        z = 2;
+        sprite.frame = 0;
     }
 
-    if (sprite->count > 0)
+    sprite.count--;
+
+    if (sprite.count <= 0)
     {
-        sprite->count--;
+        sprite.active = false;
     }
-
-    sprite->frame = z;
-
 
     /*
     for (SimSprite* s = sim->sprite; s != NULL; s = s->next)
@@ -1245,18 +1226,20 @@ void DoTornadoSprite(SimSprite* sprite)
     }
     */
 
-
-    z = RandomRange(0, 5);
-    sprite->x += CDx[z];
-    sprite->y += CDy[z];
-    if (SpriteNotInBounds(sprite)) sprite->frame = 0;
-
-    if ((sprite->count != 0) && (!RandomRange(0, 500)))
+    const int newDirection = RandomRange(0, 5);
+    sprite.x += CDx[newDirection];
+    sprite.y += CDy[newDirection];
+    if (SpriteNotInBounds(&sprite))
     {
-        sprite->frame = 0;
+        sprite.active = false;
     }
 
-    Destroy(sprite->x + 48, sprite->y + 40);
+    if ((sprite.count != 0) && RandomRange(0, 500) == 0)
+    {
+        sprite.active = false;
+    }
+
+    Destroy(sprite.x + 48, sprite.y + 40);
 }
 
 
@@ -1590,7 +1573,7 @@ void MoveObjects()
                 break;
 
             case TOR:
-                DoTornadoSprite(&sprite);
+                DoTornadoSprite(sprite);
                 break;
 
             case EXP:
@@ -1755,24 +1738,22 @@ void GeneratePlane(int x, int y)
 
 void MakeTornado()
 {
-    /*
-    int x, y;
-    SimSprite* sprite;
+    SimSprite* sprite{ GetSprite(TOR) };
 
-    if ((sprite = GetSprite(TOR)) != NULL)
+    if (sprite != nullptr)
     {
         sprite->count = 200;
-        return;
+        sprite->active = true;
+        //return;
     }
 
-    x = RandomRange(0, SimWidth);
-    y = RandomRange(0, SimHeight);
+    int x = RandomRange(1, SimWidth - 2);
+    int y = RandomRange(1, SimHeight - 2);
 
-    MakeSprite(TOR, x, y);
-
+    MakeSprite(TOR, x * 16, y * 16);
     ClearMes();
-    SendMesAt(NotificationId::TornadoReported, (x >> 4) + 3, (y >> 4) + 2);
-    */
+    SendMesAt(NotificationId::TornadoReported, x, y);
+    
 }
 
 
