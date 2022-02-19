@@ -386,7 +386,7 @@ void DoDisasters()
         return;
     }
     
-    int disasterChance = DisChance[std::clamp(GameLevel(), 0, 2)];
+    int disasterChance = RandomRange(0, DisChance[GameLevel()]);
     if (disasterChance == 0)
     {
         int disasterType = RandomRange(0, 8);
