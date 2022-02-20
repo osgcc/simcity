@@ -6,3 +6,4 @@ void DoFlood();
 void MakeEarthquake();
 void MakeFire();
 void MakeFlood();
+void MakeMeltdown();
