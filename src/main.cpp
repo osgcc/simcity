@@ -368,10 +368,12 @@ void sim_loop(bool doSim)
         DrawBigMapSegment(begin, end);
     }
 
+    
     if (tick % 1000 == 0)
     {
         DrawMiniMap();
     }
+    
 
     sim_update();
 }
@@ -971,7 +973,7 @@ void startGame()
 
         drawTopUi();
 
-        drawMiniMapUi();
+        //drawMiniMapUi();
 
         if (MouseClicked)
         {
@@ -980,7 +982,7 @@ void startGame()
         }
         toolPalette.draw();
 
-        drawDebug();
+        //drawDebug();
 
         SDL_RenderPresent(MainWindowRenderer);
     }

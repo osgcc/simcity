@@ -169,7 +169,6 @@ const Point<int>& MessageLocation()
 
 void ClearMes()
 {
-    //MessagePort = 0;
     MessageId(NotificationId::None);
     MessageLocation({ 0, 0 });
     LastPictureId = 0;
@@ -356,7 +355,6 @@ void CheckGrowth()
 }
 
 
-
 void SendMessages()
 {
     if ((ScenarioID) && (ScoreType) && (ScoreWait))
@@ -452,10 +450,6 @@ void SendMessages()
     {
         float TM = static_cast<float>(unPwrdZCnt + PwrdZCnt);
 
-        /**
-         * \fixme   This should use fuzzy comparisons here due to
-         *          floating point drift.
-         */
         if (TM)
         {
             if ((PwrdZCnt / TM) < .7)
@@ -467,7 +461,7 @@ void SendMessages()
         break;
 
     case 35:
-        if (PolluteAverage > /* 80 */ 60)
+        if (PolluteAverage > 80 /*60*/)
         {
             SendMes(NotificationId::PollutionHigh);
         }
