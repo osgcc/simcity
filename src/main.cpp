@@ -153,14 +153,27 @@ namespace
 
     std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 20, 37 };
 
-    unsigned int currentTick{};
-    unsigned int lastTick{};
-    unsigned int accumulator{};
-    unsigned int accumulatorAdjust{};
 
     std::string currentBudget{};
 
     std::vector<const SDL_Rect*> UiRects{};
+
+    namespace timing
+    {
+        unsigned int currentTick{};
+        unsigned int lastTick{};
+        unsigned int tickDelta{};
+
+        unsigned int accumulator{};
+        unsigned int accumulatorAdjust{};
+
+        void updateTiming()
+        {
+            lastTick = currentTick;
+            currentTick = SDL_GetTicks();
+            tickDelta = currentTick - lastTick;
+        }
+    };
 };
 
 
@@ -314,6 +327,22 @@ void DrawMiniMap()
 }
 
 
+unsigned int animationAccumulator{};
+unsigned int animationSpeed{ 125 };
+
+bool animationTick()
+{
+    animationAccumulator += timing::tickDelta;
+    if (animationAccumulator > animationSpeed)
+    {
+        animationAccumulator -= animationSpeed;
+        return true;
+    }
+
+    return false;
+}
+
+
 void sim_loop(bool doSim)
 {
     if (doSim)
@@ -323,7 +352,7 @@ void sim_loop(bool doSim)
 
     const int tick = TickCount();
 
-    if (tick % 100 == 0)
+    if (animationTick())
     {
         animateTiles();
 
@@ -881,16 +910,13 @@ unsigned int speedModifier()
 }
 
 
-bool timerTick()
+bool simulationTick()
 {
-    lastTick = currentTick;
-    currentTick = SDL_GetTicks();
-
-    accumulatorAdjust = 40 - speedModifier();
-    accumulator += currentTick - lastTick;
-    if (accumulator > accumulatorAdjust)
+    timing::accumulatorAdjust = 40 - speedModifier();
+    timing::accumulator += timing::tickDelta;
+    if (timing::accumulator > timing::accumulatorAdjust)
     {
-        accumulator -= accumulatorAdjust;
+        timing::accumulator -= timing::accumulatorAdjust;
         return true;
     }
 
@@ -927,8 +953,10 @@ void startGame()
 
     while (!Exit)
     {
+        timing::updateTiming();
+
         PendingTool = toolPalette.tool();
-        sim_loop(timerTick());
+        sim_loop(simulationTick());
         pumpEvents();
 
         currentBudget = NumberToDollarDecimal(TotalFunds());
