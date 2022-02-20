@@ -244,7 +244,8 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.width = sprite.height = 48;
         sprite.x_offset = 24; sprite.y_offset = 0;
         sprite.x_hot = 40; sprite.y_hot = 16;
-        sprite.frame = 1;
+        sprite.frame = 0;
+        GetObjectXpms(EXP, 6, sprite.frames);
         break;
 
     case BUS:
@@ -1243,30 +1244,32 @@ void DoTornadoSprite(SimSprite& sprite)
 }
 
 
-void DoExplosionSprite(SimSprite *sprite)
+void DoExplosionSprite(SimSprite& sprite)
 {
-  int x, y;
-
-  if (!(Cycle & 1)) {
-    if (sprite->frame == 1) {
-      MakeSound("city", "Explosion-High"); /* explosion */
-      x = (sprite->x >>4) + 3;
-      y = (sprite->y >>4);
-      SendMesAt(NotificationId::ExplosionReported, x, y);
+    if (sprite.frame == 0)
+    {
+        MakeSound("city", "Explosion-High"); // explosion
+            
+        int x = (sprite.x / 16) + 3;
+        int y = (sprite.y / 16);
+            
+        SendMesAt(NotificationId::ExplosionReported, x, y);
     }
-    sprite->frame++;
-  }
 
-  if (sprite->frame > 6) {
-    sprite->frame = 0;
+    sprite.frame++;
 
-    StartFire(sprite->x + 48 - 8, sprite->y + 16);
-    StartFire(sprite->x + 48 - 24, sprite->y);
-    StartFire(sprite->x + 48 + 8, sprite->y);
-    StartFire(sprite->x + 48 - 24, sprite->y + 32);
-    StartFire(sprite->x + 48 + 8, sprite->y + 32);
-    return;
-  }
+    if (sprite.frame > 5)
+    {
+        sprite.frame = 0;
+        sprite.active = false;
+
+        StartFire(sprite.x + 48 - 8, sprite.y + 16);
+        StartFire(sprite.x + 48 - 24, sprite.y);
+        StartFire(sprite.x + 48 + 8, sprite.y);
+        StartFire(sprite.x + 48 - 24, sprite.y + 32);
+        StartFire(sprite.x + 48 + 8, sprite.y + 32);
+        return;
+    }
 }
 
 
@@ -1577,7 +1580,7 @@ void MoveObjects()
                 break;
 
             case EXP:
-                DoExplosionSprite(&sprite);
+                DoExplosionSprite(sprite);
                 break;
 
             case BUS:
@@ -1760,6 +1763,7 @@ void MakeTornado()
 void MakeExplosionAt(int x, int y)
 {
     //MakeNewSprite(EXP, x - 40, y - 16);
+    MakeSprite(EXP, x - 40, y - 16);
 }
 
 
