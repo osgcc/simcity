@@ -328,7 +328,11 @@ void sim_loop(bool doSim)
         animateTiles();
 
         const Point<int> begin{ MapViewOffset.x / 16, MapViewOffset.y / 16 };
-        const Point<int> end{ (MapViewOffset.x + WindowSize.x) / 16, (MapViewOffset.y + WindowSize.y) / 16 };
+        const Point<int> end
+        {
+            std::clamp((MapViewOffset.x + WindowSize.x) / 16 + 1, 0, SimWidth),
+            std::clamp((MapViewOffset.y + WindowSize.y) / 16 + 1, 0, SimHeight)
+        };
 
         MoveObjects();
 
@@ -601,7 +605,7 @@ void handleKeyEvent(SDL_Event& event)
     case SDLK_F5:
         //MakeTornado();
         //MakeFlood();
-        MakeMeltdown();
+        //MakeMeltdown();
         //MakeFire();
         break;
 
