@@ -725,7 +725,7 @@ void DoTrainSprite(SimSprite& sprite)
 
             if ((c == RAILBASE) || (c == (RAILBASE + 1)))
             {
-                sprite.frame = 5;
+                sprite.frame = 4;
             }
 
             sprite.dir = dir2;
