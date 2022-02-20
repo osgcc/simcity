@@ -194,41 +194,20 @@ void MakeEarthquake()
 }
 
 
-void SetFire()
-{
-    int x = RandomRange(0, SimWidth - 1);
-    int y = RandomRange(0, SimHeight - 1);
-    int z = Map[x][y];
-
-    /* TILE_IS_ARSONABLE(z) */
-    if (!(z & ZONEBIT))
-    {
-        z = z & LOMASK;
-        if ((z > LHTHR) && (z < LASTZONE))
-        {
-            Map[x][y] = FIRE + ANIMBIT + (Rand16() & 7);
-            CrashX = x;
-            CrashY = y;
-            SendMesAt(NotificationId::FireReported, x, y);
-        }
-    }
-}
-
-
 void MakeFire()
 {
     for (int t = 0; t < 40; t++)
     {
-        int x = RandomRange(0, SimWidth - 1);
-        int y = RandomRange(0, SimHeight - 1);
-        int z = Map[x][y];
+        const int x = RandomRange(0, SimWidth - 1);
+        const int y = RandomRange(0, SimHeight - 1);
+        const int cell = Map[x][y];
         /* !(z & BURNBIT) && TILE_IS_ARSONABLE(z) */
-        if ((!(z & ZONEBIT)) && (z & BURNBIT))
+        if ((cell & ZONEBIT) == 0 && (cell & BURNBIT))
         {
-            z = z & LOMASK;
-            if ((z > 21) && (z < LASTZONE))
+            const int tile = maskedTileValue(x, y);
+            if ((tile > LASTRIVEDGE) && (tile < LASTZONE))
             {
-                Map[x][y] = FIRE + ANIMBIT + (Rand16() & 7);
+                Map[x][y] = FIRE + (Rand16() & 7) | ANIMBIT;
                 SendMesAt(NotificationId::FireReported, x, y);
                 return;
             }
@@ -394,7 +373,7 @@ void DoDisasters()
         {
         case 0:
         case 1:
-            SetFire();
+            MakeFire();
             break;
         case 2:
         case 3:
