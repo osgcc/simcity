@@ -74,40 +74,44 @@
 #include <algorithm>
 
 
-
-#define TILE_IS_NUCLEAR(tile) \
-	((tile & LOMASK) == NUCLEAR)
-
-#define TILE_IS_VULNERABLE(tile) \
-	(!(tile & ZONEBIT) && \
-	 ((tile & LOMASK) >= RBRDR) && \
-	 ((tile & LOMASK) <= LASTZONE))
-
-#define TILE_IS_ARSONABLE(tile) \
-	(!(tile & ZONEBIT) && \
-	 ((tile & LOMASK) >= RBRDR) && \
-	 ((tile & LOMASK) <= LASTZONE))
-
-#define TILE_IS_RIVER_EDGE(tile) \
-	(((tile & LOMASK) >= FIRSTRIVEDGE) && \
-	 ((tile & LOMASK) <= LASTRIVEDGE))
-
-#define TILE_IS_FLOODABLE(tile) \
-	((tile == DIRT) || \
-	 ((tile & BULLBIT) && \
-	  (tile & BURNBIT)))
-
-#define TILE_IS_RUBBLE(tile) \
-	 (((tile & LOMASK) >= RUBBLE) && \
-	  ((tile & LOMASK) <= LASTRUBBLE)))
-
-#define TILE_IS_FLOODABLE2(tile) \
-	((tile == 0) || \
-	 (tile & BURNBIT) || \
-         TILE_IS_RUBBLE(tile))
+bool tileIsNuclear(const int tile)
+{
+    return ((tile & LOMASK) == NUCLEAR);
+}
 
 
+bool tileIsArsonable(const int tile)
+{
+    return !(tile & ZONEBIT) && (tile & BURNBIT);
+}
 
+
+bool tileIsRiverEdge(const int tile)
+{
+    const int masked = tile & LOMASK;
+    return masked >= FIRSTRIVEDGE && masked <= LASTRIVEDGE;
+}
+
+
+bool tileIsFloodable(const int tile)
+{
+    const int masked = tile & LOMASK;
+    return masked == DIRT || ((tile & BULLBIT) || (tile & BURNBIT));
+}
+
+
+bool canSpreadFloodTo(const int tile)
+{
+    const int masked = tile & LOMASK;
+    return (masked == DIRT) || (tile & BURNBIT) || (masked >= RUBBLE && (masked <= LASTRUBBLE));
+}
+
+
+bool tileIsVulnerable(const int tile)
+{
+    const unsigned int unmasked = tile & LOMASK;
+    return !(unmasked < RESBASE) || (unmasked > LASTZONE) || (tile & ZONEBIT);
+}
 
 
 int ShakeNow;
@@ -156,13 +160,6 @@ void FireBomb()
 }
 
 
-bool Vulnerable(int tem)
-{
-    int tem2 = tem & LOMASK;
-    return !(tem2 < RESBASE) || (tem2 > LASTZONE) || (tem & ZONEBIT);
-}
-
-
 void MakeEarthquake()
 {
     DoEarthQuake();
@@ -174,12 +171,13 @@ void MakeEarthquake()
     {
         int x = RandomRange(0, SimWidth - 1);
         int y = RandomRange(0, SimHeight - 1);
+
         if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
         {
             continue;
         }
-        /* TILE_IS_VULNERABLE(Map[x][y]) */
-        if (Vulnerable(Map[x][y]))
+
+        if (tileIsVulnerable(Map[x][y]))
         {
             if (z & 0x3)
             {
@@ -201,8 +199,8 @@ void MakeFire()
         const int x = RandomRange(0, SimWidth - 1);
         const int y = RandomRange(0, SimHeight - 1);
         const int cell = Map[x][y];
-        /* !(z & BURNBIT) && TILE_IS_ARSONABLE(z) */
-        if ((cell & ZONEBIT) == 0 && (cell & BURNBIT))
+
+        if(tileIsArsonable(cell))
         {
             const int tile = maskedTileValue(x, y);
             if ((tile > LASTRIVEDGE) && (tile < LASTZONE))
@@ -218,33 +216,30 @@ void MakeFire()
 
 void MakeFlood()
 {
-    static int Dx[4] = { 0, 1, 0,-1 };
-    static int Dy[4] = { -1, 0, 1, 0 };
+    static const int Dx[4] = { 0, 1, 0,-1 };
+    static const int Dy[4] = { -1, 0, 1, 0 };
 
     for (int iteration = 0; iteration < 300; ++iteration)
     {
-        int x = RandomRange(0, SimWidth - 1);
-        int y = RandomRange(0, SimHeight - 1);
-        int cell = maskedTileValue(x, y);
+        const int cellX = RandomRange(0, SimWidth - 1);
+        const int cellY = RandomRange(0, SimHeight - 1);
+        const int cell = tileValue(cellX, cellY);
 
-        /* TILE_IS_RIVER_EDGE(c) */
-        if ((cell > CHANNEL) && (cell < TREEBASE))		/* if riveredge  */
+        if (tileIsRiverEdge(cell))
         {
             for (int t = 0; t < 4; t++)
             {
-                int xx = x + Dx[t];
-                int yy = y + Dy[t];
-                if (CoordinatesValid(xx, yy, SimWidth, SimHeight))
+                const int floodX = cellX + Dx[t];
+                const int floodY = cellY + Dy[t];
+                if (CoordinatesValid(floodX, floodY, SimWidth, SimHeight))
                 {
-                    cell = maskedTileValue(xx, yy);
-                    /* TILE_IS_FLOODABLE(c) */
-                    if ((cell == DIRT) || ((cell & BULLBIT) && (cell & BURNBIT)))
+                    if(tileIsFloodable(cell))
                     {
-                        Map[xx][yy] = FLOOD;
+                        Map[floodX][floodY] = FLOOD;
                         FloodCount = 30;
-                        SendMesAt(NotificationId::FloodingReported, xx, yy);
-                        FloodX = xx;
-                        FloodY = yy;
+                        SendMesAt(NotificationId::FloodingReported, floodX, floodY);
+                        FloodX = floodX;
+                        FloodY = floodY;
                         return;
                     }
                 }
@@ -261,25 +256,23 @@ void DoFlood()
 
     if (FloodCount)
     {
-        for (int z = 0; z < 4; z++)
+        for (int i = 0; i < 4; ++i)
         {
-            if (!(Rand16() & 7))
+            if (RandomRange(0, 7) == 0)
             {
-                int xx = SMapX + Dx[z];
-                int yy = SMapY + Dy[z];
-                if (CoordinatesValid(xx, yy, SimWidth, SimHeight))
+                int x = SMapX + Dx[i];
+                int y = SMapY + Dy[i];
+                if (CoordinatesValid(x, y, SimWidth, SimHeight))
                 {
-                    int cell = Map[xx][yy];
-                    int terrain = cell & LOMASK;
+                    int cell = Map[x][y];
 
-                    /* TILE_IS_FLOODABLE2(c) */
-                    if ((cell & BURNBIT) || (cell == 0) || ((terrain >= WOODS5 /* XXX */) && (terrain < FLOOD)))
+                    if(canSpreadFloodTo(cell))
                     {
                         if (cell & ZONEBIT)
                         {
-                            FireZone(xx, yy, cell);
+                            FireZone(x, y, cell);
                         }
-                        Map[xx][yy] = FLOOD + RandomRange(0, 2);
+                        Map[x][y] = FLOOD + RandomRange(0, 2);
                     }
                 }
             }
@@ -287,7 +280,7 @@ void DoFlood()
     }
     else
     {
-        if (!(Rand16() & 15))
+        if (RandomRange(0, 15) == 0)
         {
             Map[SMapX][SMapY] = 0;
         }
@@ -301,31 +294,38 @@ void ScenarioDisaster()
     {
     case 1:	// Dullsville
         break;
+
     case 2: // San Francisco
         if (DisasterWait == 1)
         {
             MakeEarthquake();
         }
         break;
+
     case 3: // Hamburg
         DropFireBombs();
         break;
+
     case 4: // Bern
         break;
+
     case 5: // Tokyo
         if (DisasterWait == 1)
         {
             MakeMonster();
         }
         break;
+
     case 6:	// Detroit
         break;
+
     case 7: // Boston
         if (DisasterWait == 1)
         {
             MakeMeltdown();
         }
         break;
+
     case 8:	// Rio
         if ((DisasterWait % 24) == 0)
         {
@@ -375,18 +375,23 @@ void DoDisasters()
         case 1:
             MakeFire();
             break;
+
         case 2:
         case 3:
             MakeFlood();
             break;
+
         case 4:
             break;
+
         case 5:
             MakeTornado();
             break;
+
         case 6:
             MakeEarthquake();
             break;
+
         case 7:
         case 8:
             if (PolluteAverage > /* 80 */ 60)
