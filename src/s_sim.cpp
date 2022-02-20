@@ -174,50 +174,44 @@ void DoAirport()
 }
 
 
-void DoMeltdown(int SX, int SY)
+void DoMeltdown(const int x, const int y)
 {
-    MeltX = SX; MeltY = SY;
+    MakeExplosion(x, y);
 
-    MakeExplosion(SX - 1, SY - 1);
-    MakeExplosion(SX - 1, SY + 2);
-    MakeExplosion(SX + 2, SY - 1);
-    MakeExplosion(SX + 2, SY + 2);
-
-    for (int x = (SX - 1); x < (SX + 3); x++)
+    for (int row = (x - 1); row < (x + 3); ++row)
     {
-        for (int y = (SY - 1); y < (SY + 3); y++)
+        for (int col = (y - 1); col < (y + 3); ++col)
         {
-            Map[x][y] = FIRE + (Rand16() & 3) + ANIMBIT;
+            Map[row][col] = FIRE + RandomRange(0, 3) | ANIMBIT;
         }
     }
 
     for (int i = 0; i < 200; ++i)
     {
-        int x = SX - 20 + RandomRange(0, 40);
-        int y = SY - 15 + RandomRange(0, 30);
+        const int radiationX = x - 20 + RandomRange(0, 40);
+        const int radiationY = y - 15 + RandomRange(0, 30);
 
-        if ((x < 0) || (x >= SimWidth) || (y < 0) || (y >= SimHeight))
+        if(!CoordinatesValid(radiationX, radiationY, SimWidth, SimHeight))
         {
             continue;
         }
 
-        int t = Map[x][y];
+        const int tile = Map[radiationX][radiationY];
 
-        if (t & ZONEBIT)
+        if (tile & ZONEBIT)
         {
             continue;
         }
 
-        if ((t & BURNBIT) || (t == 0))
+        if ((tile & BURNBIT) || tile == DIRT)
         {
-            Map[x][y] = RADTILE;
+            Map[radiationX][radiationY] = RADTILE;
         }
     }
 
     ClearMes();
-    SendMesAt(NotificationId::NuclearMeltdownReported, SX, SY);
+    SendMesAt(NotificationId::NuclearMeltdownReported, x, y);
 }
-
 
 
 void DoRail()
