@@ -207,7 +207,7 @@ void MakeFire()
             const int tile = maskedTileValue(x, y);
             if ((tile > LASTRIVEDGE) && (tile < LASTZONE))
             {
-                Map[x][y] = FIRE + (Rand16() & 7) | ANIMBIT;
+                Map[x][y] = FIRE + RandomRange(0, 7) | ANIMBIT;
                 SendMesAt(NotificationId::FireReported, x, y);
                 return;
             }
