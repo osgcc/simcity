@@ -134,6 +134,9 @@ bool blink()
 }
 
 
+/**
+ * Assumes \c begin and \c end are in a valid range
+ */
 void DrawBigMapSegment(const Point<int>& begin, const Point<int>& end)
 {
 	SDL_SetRenderTarget(MainWindowRenderer, MainMapTexture.texture);
