@@ -247,7 +247,7 @@ void DoRadTile()
 {
     if (RandomRange(0, 4095) == 0) // Radioactive decay
     {
-        Map[SMapX][SMapY] = 0;
+        Map[SMapX][SMapY] = DIRT;
     }
 }
 

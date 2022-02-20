@@ -68,6 +68,7 @@
 #include "g_map.h"
 
 #include "s_alloc.h"
+#include "s_disast.h"
 #include "s_gen.h"
 #include "s_init.h"
 #include "s_msg.h"
@@ -599,6 +600,9 @@ void handleKeyEvent(SDL_Event& event)
 
     case SDLK_F5:
         //MakeTornado();
+        //MakeFlood();
+        MakeMeltdown();
+        //MakeFire();
         break;
 
     default:
@@ -929,6 +933,7 @@ void startGame()
 
         // Map
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
+        DrawObjects();
 
         DrawPendingTool(toolPalette);
 
@@ -944,7 +949,6 @@ void startGame()
         toolPalette.draw();
 
         drawDebug();
-        DrawObjects();
 
         SDL_RenderPresent(MainWindowRenderer);
     }
