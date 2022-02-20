@@ -139,8 +139,7 @@ void MakeMeltdown()
     {
         for (int y = 0; y < (SimHeight - 1); y++)
         {
-            /* TILE_IS_NUCLEAR(Map[x][y]) */
-            if ((Map[x][y] & LOMASK) == NUCLEAR)
+            if(tileIsNuclear(tileValue(x, y)))
             {
                 DoMeltdown(x, y);
                 return;
