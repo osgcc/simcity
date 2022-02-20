@@ -242,14 +242,14 @@ void MakeFlood()
     static int Dx[4] = { 0, 1, 0,-1 };
     static int Dy[4] = { -1, 0, 1, 0 };
 
-    for (int z = 0; z < 300; z++)
+    for (int iteration = 0; iteration < 300; ++iteration)
     {
         int x = RandomRange(0, SimWidth - 1);
         int y = RandomRange(0, SimHeight - 1);
-        int cell = Map[x][y] & LOMASK; /* XXX: & LOMASK */
+        int cell = maskedTileValue(x, y);
 
         /* TILE_IS_RIVER_EDGE(c) */
-        if ((cell > 4) && (cell < 21))		/* if riveredge  */
+        if ((cell > CHANNEL) && (cell < TREEBASE))		/* if riveredge  */
         {
             for (int t = 0; t < 4; t++)
             {
@@ -257,9 +257,9 @@ void MakeFlood()
                 int yy = y + Dy[t];
                 if (CoordinatesValid(xx, yy, SimWidth, SimHeight))
                 {
-                    cell = Map[xx][yy];
+                    cell = maskedTileValue(xx, yy);
                     /* TILE_IS_FLOODABLE(c) */
-                    if ((cell == 0) || ((cell & BULLBIT) && (cell & BURNBIT)))
+                    if ((cell == DIRT) || ((cell & BULLBIT) && (cell & BURNBIT)))
                     {
                         Map[xx][yy] = FLOOD;
                         FloodCount = 30;
