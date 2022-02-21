@@ -680,7 +680,7 @@ void DoTrainSprite(SimSprite& sprite)
 
     static int TrainPic2[5] = { 0, 1, 0, 1, 4 };
 
-    if ((sprite.frame == 3) || (sprite.frame == 4))
+    if ((sprite.frame == 2) || (sprite.frame == 3))
     {
         sprite.frame = TrainPic2[sprite.dir];
     }
@@ -711,11 +711,11 @@ void DoTrainSprite(SimSprite& sprite)
             {
                 if ((sprite.dir + dir2) == 3)
                 {
-                    sprite.frame = 3;
+                    sprite.frame = 2;
                 }
                 else
                 {
-                    sprite.frame = 4;
+                    sprite.frame = 3;
                 }
             }
             else

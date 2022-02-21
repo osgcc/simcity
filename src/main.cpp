@@ -254,13 +254,15 @@ void sim_update_maps()
             }
         }
     }
-    */
 
     NewMap = false;
     for (int i = 0; i < NMAPS; i++)
     {
         NewMapFlags[i] = 0;
     }
+    */
+
+    DoUpdateMap();
 }
 
 
@@ -293,14 +295,7 @@ void sim_update_evaluations()
 
 void sim_update()
 {
-    /* -- blink speed of 0.5 seconds */
-    //gettimeofday(&now_time, nullptr);
-
-    //flagBlink = (TickCount() % 500) ? 1 : -1;
-    
-
     sim_update_editors();
-
     sim_update_maps();
     sim_update_graphs();
     sim_update_budgets();
@@ -973,7 +968,7 @@ void startGame()
 
         drawTopUi();
 
-        //drawMiniMapUi();
+        drawMiniMapUi();
 
         if (MouseClicked)
         {
