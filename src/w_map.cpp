@@ -60,11 +60,12 @@
  * NOT APPLY TO YOU.
  */
 
-#include "main.h"
 
-#include "g_map.h"
 
-#include "s_sim.h"
+namespace
+{
+    
+};
 
 
 void map_command_init()
@@ -126,7 +127,7 @@ int DoMapCmd(ClientData clientData, Tcl_Interp* interp, int argc, char** argv)
 void DoNewMap()
 {
     //sim->maps++; view->next = sim->map; sim->map = view;
-    NewMap = 1;
+    //NewMap = 1;
     //view->invalid = 1;
 }
 
@@ -208,6 +209,7 @@ int CompareColor(struct Pix* p1, struct Pix* p2)
 
 int DoUpdateMap()
 {
+    // Frame skips?
     /*
     int dx, dy, i;
 
@@ -279,6 +281,13 @@ int DoUpdateMap()
     if (view->show_editors)
     {
         DrawMapEditorViews(view);
+    }
+    */
+
+    /*
+    MemDrawMap(SimView *view)
+    {
+        (*mapProcs[view->map_state])(view);
     }
     */
 

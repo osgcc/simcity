@@ -2,4 +2,4 @@
 
 struct SimView;
 
-int DoUpdateMap(SimView* view);
+int DoUpdateMap();
