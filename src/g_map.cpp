@@ -85,6 +85,11 @@ namespace
 	constexpr auto VAL_MINUS = 7;
 	constexpr auto VAL_VERYMINUS = 8;
 
+
+	constexpr auto UNPOWERED = 0;
+	constexpr auto POWERED = 1;
+	constexpr auto CONDUCTIVE = 2;
+
 	Texture CrimeOverlayTexture;
 };
 
@@ -97,8 +102,17 @@ namespace Colors
 	constexpr SDL_Color Red{ 255, 0, 0, 255 };
 	constexpr SDL_Color DarkGreen{ 0, 100, 0, 255 };
 	constexpr SDL_Color LightGreen{ 50, 205, 50, 255 };
+	constexpr SDL_Color LightBlue{ 0, 191, 255, 255 };
 	constexpr SDL_Color Clear{ 0, 0, 0, 0 };
 };
+
+
+std::array<SDL_Color, 3> PowerColorTable =
+{ {
+	Colors::LightGrey,
+	Colors::Red,
+	Colors::LightGrey
+} };
 
 
 std::array<SDL_Color, 9> OverlayColorTable =
