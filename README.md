@@ -11,7 +11,7 @@ This project is licensed under the GPL as required by the original code. See COP
 * Eliminate dependency on TCL/Tk
 
 ## Why?
-After recovering from a COVID-19 infection, I was left with serious long-term effects notably brain fog and fatigue. I couldn't focus on my other project (OPHD) because of the brain fog and decided I needed something to challenge my mind a bit and shake off the funk. I came across Micropolis while browsing the available apps in Snap for Manjaro and I thought why not?
+After recovering from a COVID-19 infection, I was left with serious long-term effects notably brain fog and fatigue. I couldn't focus on my other project (OPHD) because of the brain fog and decided I needed something to challenge my mind a bit and shake off the funk. I came across Micropolis while browsing the available apps in Snap for Manjaro and I thought it would be an interesting challenge to have this building and running without native GUI's on Windows and other platforms.
 
 ## Platforms
 My main development machine is Windows based so the current development efforts are for Windows. With some minor changes (notably in the filesystem handling code) this code base should work on all major platforms.
