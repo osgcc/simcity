@@ -232,37 +232,7 @@ void sim_update_editors()
 
 void sim_update_maps()
 {
-    /*
-    for (SimView* view = Simulation.map; view != nullptr; view = view->next)
-    {
-        bool mustUpdateMap = NewMapFlags[view->map_state] || NewMap || ShakeNow;
-        if (mustUpdateMap)
-        {
-            view->invalid = 1;
-        }
-        if (view->invalid)
-        {
-            if (mustUpdateMap)
-            {
-                //fprintf(stderr, "sim_update_maps mustUpdateMap\n");
-                view->skip = 0;
-            }
-            if (DoUpdateMap(view))
-            {
-                CancelRedrawView(view);
-                view->invalid = 1;
-            }
-        }
-    }
-
-    NewMap = false;
-    for (int i = 0; i < NMAPS; i++)
-    {
-        NewMapFlags[i] = 0;
-    }
-    */
     drawCrimeMap();
-
     DoUpdateMap();
 }
 
