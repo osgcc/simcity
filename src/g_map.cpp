@@ -91,6 +91,7 @@ namespace
 	constexpr auto CONDUCTIVE = 2;
 
 	Texture CrimeOverlayTexture;
+	Texture PopulationDensityTexture;
 };
 
 
@@ -132,6 +133,12 @@ std::array<SDL_Color, 9> OverlayColorTable =
 const Texture& crimeOverlayTexture()
 {
 	return CrimeOverlayTexture;
+}
+
+
+const Texture& populationDensityTexture()
+{
+	return PopulationDensityTexture;
 }
 
 
@@ -187,16 +194,45 @@ int GetColorIndex(int x)
 }
 
 
-void drawPopDensity()
+void drawOverlay(Texture& overlay, const std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth>& arr)
 {
-	drawAll();
+	SDL_SetRenderTarget(MainWindowRenderer, overlay.texture);
+	turnOffBlending(overlay);
+	clearOverlay();
+
 	for (int x = 0; x < HalfWorldWidth; x++)
 	{
 		for (int y = 0; y < HalfWorldHeight; y++)
 		{
-			maybeDrawRect(GetColorIndex(PopDensity[x][y]), x * 6, y * 6, 6, 6);
+			drawPointToCurrentOverlay(x, y, GetColorIndex(arr[x][y]));
 		}
 	}
+
+	turnOnBlending(overlay);
+	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
+}
+
+
+void drawPopDensity()
+{
+	drawOverlay(PopulationDensityTexture, PopDensity);
+
+	/*
+	SDL_SetRenderTarget(MainWindowRenderer, PopulationDensityTexture.texture);
+	turnOffBlending(PopulationDensityTexture);
+	clearOverlay();
+
+	for (int x = 0; x < HalfWorldWidth; x++)
+	{
+		for (int y = 0; y < HalfWorldHeight; y++)
+		{
+			drawPointToCurrentOverlay(x, y, GetColorIndex(PopDensity[x][y]));
+		}
+	}
+
+	turnOnBlending(PopulationDensityTexture);
+	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
+	*/
 }
 
 
@@ -274,20 +310,7 @@ void drawPollutionMap()
 
 void drawCrimeMap()
 {
-	SDL_SetRenderTarget(MainWindowRenderer, CrimeOverlayTexture.texture);
-	turnOffBlending(CrimeOverlayTexture);
-	clearOverlay();
-
-	for (int x = 0; x < HalfWorldWidth; x++)
-	{
-		for (int y = 0; y < HalfWorldHeight; y++)
-		{
-			drawPointToCurrentOverlay(x, y, GetColorIndex(CrimeMem[x][y]));
-		}
-	}
-	
-	turnOnBlending(CrimeOverlayTexture);
-	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
+	drawOverlay(CrimeOverlayTexture, CrimeMem);
 }
 
 
@@ -342,6 +365,7 @@ void initTexture(Texture& texture)
 void initOverlayTexture()
 {
 	initTexture(CrimeOverlayTexture);
+	initTexture(PopulationDensityTexture);
 }
 
 
