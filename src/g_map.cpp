@@ -60,46 +60,94 @@
  * NOT APPLY TO YOU.
  */
 
-#include "main.h"
-
-#include "SmallMaps.h"
-
 #include "g_map.h"
 
+#include "SmallMaps.h"
 #include "s_alloc.h"
 
+#include "Texture.h"
 
+#include <array>
 #include <stdexcept>
 
-#define VAL_NONE	0
-#define VAL_LOW		1
-#define VAL_MEDIUM	2
-#define VAL_HIGH	3
-#define VAL_VERYHIGH	4
-#define VAL_PLUS	5
-#define VAL_VERYPLUS	6
-#define VAL_MINUS	7
-#define VAL_VERYMINUS	8
+#include <SDL2/SDL.h>
 
-int valMap[] =
+
+namespace
 {
-  -1, COLOR_LIGHTGRAY, COLOR_YELLOW, COLOR_ORANGE, COLOR_RED,
-  COLOR_DARKGREEN, COLOR_LIGHTGREEN, COLOR_ORANGE, COLOR_YELLOW
+	constexpr auto VAL_NONE = 0;
+	constexpr auto VAL_LOW = 1;
+	constexpr auto VAL_MEDIUM = 2;
+	constexpr auto VAL_HIGH = 3;
+	constexpr auto VAL_VERYHIGH = 4;
+	constexpr auto VAL_PLUS = 5;
+	constexpr auto VAL_VERYPLUS = 6;
+	constexpr auto VAL_MINUS = 7;
+	constexpr auto VAL_VERYMINUS = 8;
+
+	Texture CrimeOverlayTexture;
 };
 
 
-//void (*mapProcs[NMAPS])(SimView*);
+namespace Colors
+{
+	constexpr SDL_Color LightGrey{ 211, 211, 211, 255 };
+	constexpr SDL_Color Yellow{ 255, 255, 0, 255 };
+	constexpr SDL_Color Orange{ 255, 165, 0, 255 };
+	constexpr SDL_Color Red{ 255, 0, 0, 255 };
+	constexpr SDL_Color DarkGreen{ 0, 100, 0, 255 };
+	constexpr SDL_Color LightGreen{ 50, 205, 50, 255 };
+	constexpr SDL_Color Clear{ 0, 0, 0, 0 };
+};
 
-//void maybeDrawRect(SimView* view, int val, int x, int y, int w, int h);
 
-//int drawPopDensity(SimView *view);
-//int drawRateOfGrowth(SimView *view);
-//int drawTrafMap(SimView *view);
-//int drawPolMap(SimView *view);
-//int drawCrimeMap(SimView *view);
-//int drawLandMap(SimView *view);
-//int drawFireRadius(SimView *view);
-//int drawPoliceRadius(SimView *view);
+std::array<SDL_Color, 9> OverlayColorTable =
+{ {
+	Colors::Clear,
+	Colors::LightGrey,
+	Colors::Yellow,
+	Colors::Orange,
+	Colors::Red,
+	Colors::DarkGreen,
+	Colors::LightGreen,
+	Colors::Orange,
+	Colors::Yellow
+} };
+
+
+const Texture& crimeOverlayTexture()
+{
+	return CrimeOverlayTexture;
+}
+
+
+void turnOffBlending(const Texture& texture)
+{
+	SDL_SetRenderDrawBlendMode(MainWindowRenderer, SDL_BLENDMODE_NONE);
+	SDL_SetTextureBlendMode(texture.texture, SDL_BLENDMODE_NONE);
+}
+
+
+void turnOnBlending(const Texture& texture)
+{
+	SDL_SetRenderDrawBlendMode(MainWindowRenderer, SDL_BLENDMODE_BLEND);
+	SDL_SetTextureBlendMode(texture.texture, SDL_BLENDMODE_BLEND);
+}
+
+
+void clearOverlay()
+{
+	SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 0);
+	SDL_RenderClear(MainWindowRenderer);
+}
+
+
+void drawPointToCurrentOverlay(const int x, const int y, const int colorIndex)
+{
+	const auto& color = OverlayColorTable[colorIndex];
+	SDL_SetRenderDrawColor(MainWindowRenderer, color.r, color.g, color.b, color.a);
+	SDL_RenderDrawPoint(MainWindowRenderer, x, y);
+}
 
 
 int GetColorIndex(int x)
@@ -212,15 +260,20 @@ void drawPollutionMap()
 
 void drawCrimeMap()
 {
-	drawAll();
+	SDL_SetRenderTarget(MainWindowRenderer, CrimeOverlayTexture.texture);
+	turnOffBlending(CrimeOverlayTexture);
+	clearOverlay();
 
 	for (int x = 0; x < HalfWorldWidth; x++)
 	{
 		for (int y = 0; y < HalfWorldHeight; y++)
 		{
-			maybeDrawRect(GetColorIndex(CrimeMem[x][y]), x * 6, y * 6, 6, 6);
+			drawPointToCurrentOverlay(x, y, GetColorIndex(CrimeMem[x][y]));
 		}
 	}
+	
+	turnOnBlending(CrimeOverlayTexture);
+	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
 
 
@@ -264,209 +317,21 @@ void drawPoliceRadius()
 }
 
 
-/**
- * \c pixel	Maps to a given color. See table above (valMap) for mapping.
- */
-void drawRect(int pixel, int solid, int x, int y, int w, int h)
+void initTexture(Texture& texture)
 {
-	/*
-	int W = view->m_width, H = view->m_height;
+	texture.texture = SDL_CreateTexture(MainWindowRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, HalfWorldWidth, HalfWorldHeight);
+	SDL_QueryTexture(texture.texture, nullptr, nullptr, &texture.dimensions.x, &texture.dimensions.y);
+	texture.area = { 0, 0, texture.dimensions.x, texture.dimensions.y };
+}
 
-	if (x < 0)
-	{
-		if ((w += x) < 0) w = 0;
-		x = 0;
-	}
-	else if (x > W)
-	{
-		x = 0; w = 0;
-	}
-	if (x + w > W)
-	{
-		w = W - x;
-	}
-	if (y < 0)
-	{
-		if ((h += y) < 0) h = 0;
-		y = 0;
-	}
-	else if (y > H)
-	{
-		y = 0; h = 0;
-	}
-	if (y + h > H)
-	{
-		h = H - y;
-	}
 
-	if (w && h)
-	{
-		int i, j, stipple = (x ^ y) & 1;
-		//unsigned char* data = view->x->color ? view->data : view->data8;
-		unsigned char* data = view->data;
-
-		// In the case of black and white, we use an 8 bit buffer and dither it.
-		//int pixelBytes = view->x->color ? view->pixel_bytes : 1;
-		//int line = view->x->color ? view->line_bytes : view->line_bytes8;
-		int pixelBytes = view->pixel_bytes;
-		int line = view->line_bytes;
-
-		unsigned char* image = &(data[(line * y) + (x * pixelBytes)]);
-
-		switch (pixelBytes)
-		{
-
-		case 1:
-		{
-			unsigned char* data = view->data8;
-			unsigned char* image = &data[(line * y) + (x * pixelBytes)];
-
-			if (solid)
-			{
-				for (i = h; i > 0; i--)
-				{
-					for (j = w; j > 0; j--)
-					{
-						*image = pixel;
-						image++;
-					}
-					image += line - w;
-				}
-			}
-			else
-			{
-				for (i = h; i > 0; i--)
-				{
-					for (j = w; j > 0; j--)
-					{
-						if (stipple++ & 1)
-						{
-							*image = pixel;
-						}
-						image++;
-					}
-					if (!(w & 1))
-					{
-						stipple++;
-					}
-					image += line - w;
-				}
-			}
-			throw std::runtime_error("black and white");
-		}
-		break;
-
-		case 2:
-		{
-			unsigned int* data = (unsigned int*)view->data;
-			unsigned int* image;
-			line >>= 1; // Convert from byte offset to int offset
-			image = &data[(line * y) + x];
-
-			if (solid)
-			{
-				for (i = h; i > 0; i--)
-				{
-					for (j = w; j > 0; j--)
-					{
-						*image = pixel;
-						image++;
-					}
-					image += line - w;
-				}
-			}
-			else
-			{
-				for (i = h; i > 0; i--)
-				{
-					for (j = w; j > 0; j--)
-					{
-						if (stipple++ & 1)
-						{
-							*image = pixel;
-						}
-						image++;
-					}
-					if (!(w & 1))
-					{
-						stipple++;
-					}
-					image += line - w;
-				}
-			}
-			throw std::runtime_error("2-byte color? 16bit?");
-		}
-		break;
-
-		case 3:
-		case 4:
-		{
-			unsigned char* data = (unsigned char*)view->data;
-			unsigned char* image;
-			int bitmapPad = view->x->small_tile_image->bitmap_pad;
-			int rowBytes = view->x->small_tile_image->bytes_per_line;
-			line = rowBytes >> 1; // Convert from byte offset to int offset
-			image = &data[(line * y) + x];
-
-			if (solid)
-			{
-				for (i = h; i > 0; i--)
-				{
-					for (j = w; j > 0; j--)
-					{
-						*(image++) = (pixel >> 0) & 0xff;
-						*(image++) = (pixel >> 8) & 0xff;
-						*(image++) = (pixel >> 16) & 0xff;
-						if (bitmapPad == 32)
-						{
-							image++;
-						}
-					}
-					image += line - w;
-				}
-			}
-			else
-			{
-				for (i = h; i > 0; i--)
-				{
-					for (j = w; j > 0; j--)
-					{
-						if (stipple++ & 1)
-						{
-							*(image++) = (pixel >> 0) & 0xff;
-							*(image++) = (pixel >> 8) & 0xff;
-							*(image++) = (pixel >> 16) & 0xff;
-							if (bitmapPad == 32)
-							{
-								image++;
-							}
-						}
-					}
-					if (!(w & 1))
-					{
-						stipple++;
-					}
-					image += line - w;
-				}
-			}
-		}
-		break;
-
-		default:
-			assert(0); // Undefined depth
-			break;
-		}
-	}
-	*/
+void initOverlayTexture()
+{
+	initTexture(CrimeOverlayTexture);
 }
 
 
 void maybeDrawRect(int val, int x, int y, int w, int h)
 {
-	if (val == VAL_NONE)
-	{
-		return;
-	}
-
-	//drawRect(view->pixels[valMap[val]], 0, x, y, w, h);
+	throw std::runtime_error("maybeDrawRect(): Replace with call to drawPointToCurrentOverlay()");
 }
