@@ -435,14 +435,16 @@ void drawString(Font& font, std::string_view text, Point<int> position, SDL_Colo
         const auto glyphCellSize = font.glyphCellSize().to<float>();
         const auto adjustX = (gm.minX < 0) ? gm.minX : 0;
 
-        SDL_Rect srcRect{
+        const SDL_Rect srcRect
+        {
             static_cast<int>(gm.uvRect.x),
             static_cast<int>(gm.uvRect.y),
             static_cast<int>(glyphCellSize.x),
             static_cast<int>(glyphCellSize.y)
         };
 
-        SDL_Rect dstRect{
+        const SDL_Rect dstRect
+        {
             position.x + offset + adjustX,
             position.y,
             static_cast<int>(glyphCellSize.x),
