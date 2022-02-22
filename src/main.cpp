@@ -232,7 +232,10 @@ void sim_update_editors()
 
 void sim_update_maps()
 {
-    drawCrimeMap();
+    //drawCrimeMap();
+    //drawPopDensity();
+    drawTrafficMap();
+
     DoUpdateMap();
 }
 
@@ -805,7 +808,9 @@ void drawMiniMapUi()
     SDL_RenderCopy(MainWindowRenderer, MiniMapTexture.texture, nullptr, &MiniMapDestination);
 
     // \todo Make this only draw when an overlay flag is set
-    SDL_RenderCopy(MainWindowRenderer, crimeOverlayTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, crimeOverlayTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, populationDensityTexture().texture, nullptr, &MiniMapDestination);
+    SDL_RenderCopy(MainWindowRenderer, trafficDensityTexture().texture, nullptr, &MiniMapDestination);
 
     SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 150);
     SDL_RenderDrawRect(MainWindowRenderer, &MiniMapSelector);

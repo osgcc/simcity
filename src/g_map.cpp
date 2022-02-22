@@ -92,6 +92,7 @@ namespace
 
 	Texture CrimeOverlayTexture;
 	Texture PopulationDensityTexture;
+	Texture TrafficDensityTexture;
 };
 
 
@@ -139,6 +140,12 @@ const Texture& crimeOverlayTexture()
 const Texture& populationDensityTexture()
 {
 	return PopulationDensityTexture;
+}
+
+
+const Texture& trafficDensityTexture()
+{
+	return TrafficDensityTexture;
 }
 
 
@@ -216,23 +223,6 @@ void drawOverlay(Texture& overlay, const std::array<std::array<int, HalfWorldHei
 void drawPopDensity()
 {
 	drawOverlay(PopulationDensityTexture, PopDensity);
-
-	/*
-	SDL_SetRenderTarget(MainWindowRenderer, PopulationDensityTexture.texture);
-	turnOffBlending(PopulationDensityTexture);
-	clearOverlay();
-
-	for (int x = 0; x < HalfWorldWidth; x++)
-	{
-		for (int y = 0; y < HalfWorldHeight; y++)
-		{
-			drawPointToCurrentOverlay(x, y, GetColorIndex(PopDensity[x][y]));
-		}
-	}
-
-	turnOnBlending(PopulationDensityTexture);
-	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
-	*/
 }
 
 
@@ -283,14 +273,7 @@ void drawRateOfGrowth()
 void drawTrafficMap()
 {
 	drawLilTransMap();
-
-	for (int x = 0; x < HalfWorldWidth; x++)
-	{
-		for (int y = 0; y < HalfWorldHeight; y++)
-		{
-			maybeDrawRect(GetColorIndex(TrfDensity[x][y]), x * 6, y * 6, 6, 6);
-		}
-	}
+	drawOverlay(TrafficDensityTexture, TrfDensity);
 }
 
 
@@ -366,6 +349,7 @@ void initOverlayTexture()
 {
 	initTexture(CrimeOverlayTexture);
 	initTexture(PopulationDensityTexture);
+	initTexture(TrafficDensityTexture);
 }
 
 
