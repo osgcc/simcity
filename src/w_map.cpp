@@ -59,12 +59,11 @@
  * CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS MAY
  * NOT APPLY TO YOU.
  */
-
-
+#include "w_map.h"
 
 namespace
 {
-    
+    MiniMapOverlay miniMapOverlay{ MiniMapOverlay::All };
 };
 
 
