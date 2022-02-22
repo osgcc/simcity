@@ -117,9 +117,12 @@ std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
 int RateOGMem[SmX][SmY];
 int FireStMap[SmX][SmY];
 int PoliceMap[SmX][SmY];
-int PoliceMapEffect[SmX][SmY];
 
-int FireRate[SmX][SmY];
+
+//int PoliceMapEffect[SmX][SmY];
+std::array<std::array<int, EightWorldHeight>, EightWorldWidth> PoliceMapEffect{};
+std::array<std::array<int, EightWorldHeight>, EightWorldWidth> FireRate{};
+
 int ComRate[SmX][SmY];
 int STem[SmX][SmY];
 

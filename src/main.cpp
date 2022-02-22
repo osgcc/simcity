@@ -236,7 +236,9 @@ void sim_update_maps()
     //drawPopDensity();
     //drawTrafficMap();
     //drawPollutionMap();
-    drawLandMap();
+    //drawLandMap();
+    //drawPoliceRadius();
+    drawFireRadius();
 
     DoUpdateMap();
 }
@@ -814,7 +816,9 @@ void drawMiniMapUi()
     //SDL_RenderCopy(MainWindowRenderer, populationDensityTexture().texture, nullptr, &MiniMapDestination);
     //SDL_RenderCopy(MainWindowRenderer, trafficDensityTexture().texture, nullptr, &MiniMapDestination);
     //SDL_RenderCopy(MainWindowRenderer, pollutionTexture().texture, nullptr, &MiniMapDestination);
-    SDL_RenderCopy(MainWindowRenderer, landValueTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, landValueTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, policeRadiusTexture().texture, nullptr, &MiniMapDestination);
+    SDL_RenderCopy(MainWindowRenderer, fireRadiusTexture().texture, nullptr, &MiniMapDestination);
 
     SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 150);
     SDL_RenderDrawRect(MainWindowRenderer, &MiniMapSelector);

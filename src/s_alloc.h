@@ -20,9 +20,11 @@ extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem;
 extern int RateOGMem[SmX][SmY];
 extern int FireStMap[SmX][SmY];
 extern int PoliceMap[SmX][SmY];
-extern int PoliceMapEffect[SmX][SmY];
+
+extern std::array<std::array<int, EightWorldHeight>, EightWorldWidth> PoliceMapEffect;
+extern std::array<std::array<int, EightWorldHeight>, EightWorldWidth> FireRate;
+
 extern int ComRate[SmX][SmY];
-extern int FireRate[SmX][SmY];
 extern int STem[SmX][SmY];
 
 

@@ -92,6 +92,9 @@ constexpr auto HalfWorldHeight = SimHeight / 2;
 constexpr auto QuarterWorldWidth = SimWidth / 4;
 constexpr auto QuarterWorldHeight = SimHeight / 4;
 
+constexpr auto EightWorldWidth = SimWidth / 8;
+constexpr auto EightWorldHeight = (SimHeight + 7) / 8;
+
 constexpr auto SmX = SimWidth / 8;
 constexpr auto SmY = (SimHeight + 7) / 8;
 

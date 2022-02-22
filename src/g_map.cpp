@@ -85,7 +85,6 @@ namespace
 	constexpr auto VAL_MINUS = 7;
 	constexpr auto VAL_VERYMINUS = 8;
 
-
 	constexpr auto UNPOWERED = 0;
 	constexpr auto POWERED = 1;
 	constexpr auto CONDUCTIVE = 2;
@@ -95,6 +94,8 @@ namespace
 	Texture TrafficDensity;
 	Texture Pollution;
 	Texture LandValue;
+	Texture PoliceRadius;
+	Texture FireRadius;
 };
 
 
@@ -163,6 +164,18 @@ const Texture& landValueTexture()
 }
 
 
+const Texture& policeRadiusTexture()
+{
+	return PoliceRadius;
+}
+
+
+const Texture& fireRadiusTexture()
+{
+	return FireRadius;
+}
+
+
 void turnOffBlending(const Texture& texture)
 {
 	SDL_SetRenderDrawBlendMode(MainWindowRenderer, SDL_BLENDMODE_NONE);
@@ -192,6 +205,15 @@ void drawPointToCurrentOverlay(const int x, const int y, const int colorIndex)
 }
 
 
+void drawRectToCurrentOverlay(const int x, const int y, const int size, const int colorIndex)
+{
+	const auto& color = OverlayColorTable[colorIndex];
+	SDL_SetRenderDrawColor(MainWindowRenderer, color.r, color.g, color.b, color.a);
+	const SDL_Rect rect{ x - size / 2, y - size / 2, size, size };
+	SDL_RenderFillRect(MainWindowRenderer, &rect);
+}
+
+
 int GetColorIndex(int x)
 {
 	if (x < 50)
@@ -215,7 +237,7 @@ int GetColorIndex(int x)
 }
 
 
-void drawOverlay(Texture& overlay, const std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth>& arr)
+void drawOverlayPoints(Texture& overlay, const std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth>& arr)
 {
 	SDL_SetRenderTarget(MainWindowRenderer, overlay.texture);
 	turnOffBlending(overlay);
@@ -234,9 +256,28 @@ void drawOverlay(Texture& overlay, const std::array<std::array<int, HalfWorldHei
 }
 
 
+void drawOverlayPointsSm(Texture& overlay, const std::array<std::array<int, EightWorldHeight>, EightWorldWidth>& arr)
+{
+	SDL_SetRenderTarget(MainWindowRenderer, overlay.texture);
+	turnOffBlending(overlay);
+	clearOverlay();
+
+	for (int x = 0; x < EightWorldWidth; x++)
+	{
+		for (int y = 0; y < EightWorldHeight; y++)
+		{
+			drawPointToCurrentOverlay(x, y, GetColorIndex(arr[x][y]));
+		}
+	}
+
+	turnOnBlending(overlay);
+	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
+}
+
+
 void drawPopDensity()
 {
-	drawOverlay(PopulationDensity, PopDensity);
+	drawOverlayPoints(PopulationDensity, PopDensity);
 }
 
 
@@ -287,57 +328,43 @@ void drawRateOfGrowth()
 void drawTrafficMap()
 {
 	drawLilTransMap();
-	drawOverlay(TrafficDensity, TrfDensity);
+	drawOverlayPoints(TrafficDensity, TrfDensity);
 }
 
 
 void drawPollutionMap()
 {
-	drawOverlay(Pollution, PollutionMem);
+	drawOverlayPoints(Pollution, PollutionMem);
 }
 
 
 void drawCrimeMap()
 {
-	drawOverlay(CrimeOverlay, CrimeMem);
+	drawOverlayPoints(CrimeOverlay, CrimeMem);
 }
 
 
 void drawLandMap()
 {
-	drawOverlay(LandValue, LandValueMem);
+	drawOverlayPoints(LandValue, LandValueMem);
 }
 
 
 void drawFireRadius()
 {
-	drawAll();
-	for (int x = 0; x < SmY; x++)
-	{
-		for (int y = 0; y < SmY; y++)
-		{
-			maybeDrawRect(GetColorIndex(FireRate[x][y]), x * 24, y * 24, 24, 24);
-		}
-	}
+	drawOverlayPointsSm(FireRadius, FireRate);
 }
 
 
 void drawPoliceRadius()
 {
-	drawAll();
-	for (int x = 0; x < SmX; x++)
-	{
-		for (int y = 0; y < SmY; y++)
-		{
-			maybeDrawRect(GetColorIndex(PoliceMapEffect[x][y]), x * 24, y * 24, 24, 24);
-		}
-	}
+	drawOverlayPointsSm(PoliceRadius, PoliceMapEffect);
 }
 
 
-void initTexture(Texture& texture)
+void initTexture(Texture& texture, const int width, const int height)
 {
-	texture.texture = SDL_CreateTexture(MainWindowRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, HalfWorldWidth, HalfWorldHeight);
+	texture.texture = SDL_CreateTexture(MainWindowRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
 	SDL_QueryTexture(texture.texture, nullptr, nullptr, &texture.dimensions.x, &texture.dimensions.y);
 	texture.area = { 0, 0, texture.dimensions.x, texture.dimensions.y };
 }
@@ -345,11 +372,14 @@ void initTexture(Texture& texture)
 
 void initOverlayTexture()
 {
-	initTexture(CrimeOverlay);
-	initTexture(PopulationDensity);
-	initTexture(TrafficDensity);
-	initTexture(Pollution);
-	initTexture(LandValue);
+	initTexture(CrimeOverlay, HalfWorldWidth, HalfWorldHeight);
+	initTexture(PopulationDensity, HalfWorldWidth, HalfWorldHeight);
+	initTexture(TrafficDensity, HalfWorldWidth, HalfWorldHeight);
+	initTexture(Pollution, HalfWorldWidth, HalfWorldHeight);
+	initTexture(LandValue, HalfWorldWidth, HalfWorldHeight);
+
+	initTexture(PoliceRadius, EightWorldWidth, EightWorldHeight);
+	initTexture(FireRadius, EightWorldWidth, EightWorldHeight);
 }
 
 
