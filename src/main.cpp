@@ -261,6 +261,7 @@ void sim_update_maps()
         NewMapFlags[i] = 0;
     }
     */
+    drawCrimeMap();
 
     DoUpdateMap();
 }
@@ -296,7 +297,6 @@ void sim_update_evaluations()
 void sim_update()
 {
     sim_update_editors();
-    sim_update_maps();
     sim_update_graphs();
     sim_update_budgets();
     sim_update_evaluations();
@@ -343,6 +343,7 @@ void sim_loop(bool doSim)
     if (doSim)
     {
         SimFrame();
+        sim_update_maps();
     }
 
     const int tick = TickCount();
@@ -367,8 +368,7 @@ void sim_loop(bool doSim)
     if (tick % 1000 == 0)
     {
         DrawMiniMap();
-    }
-    
+    }  
 
     sim_update();
 }
@@ -832,6 +832,9 @@ void drawMiniMapUi()
 
     SDL_RenderCopy(MainWindowRenderer, MiniMapTexture.texture, nullptr, &MiniMapDestination);
 
+    // \todo Make this only draw when an overlay flag is set
+    SDL_RenderCopy(MainWindowRenderer, crimeOverlayTexture().texture, nullptr, &MiniMapDestination);
+
     SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 150);
     SDL_RenderDrawRect(MainWindowRenderer, &MiniMapSelector);
     SDL_RenderDrawRect(MainWindowRenderer, &TileMiniHighlight);
@@ -948,6 +951,8 @@ void startGame()
     UiRects.push_back(&toolPalette.rect());
     UiRects.push_back(&UiHeaderRect);
 
+    initOverlayTexture();
+
     while (!Exit)
     {
         timing::updateTiming();
@@ -962,12 +967,19 @@ void startGame()
 
         // Map
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
+        
+        /** Tint full size map
+        const SDL_Rect mapArea{ -MapViewOffset.x, -MapViewOffset.y, SimWidth * 16, SimHeight * 16 };
+        SDL_SetTextureAlphaMod(crimeOverlayTexture().texture, 50);
+        SDL_RenderCopy(MainWindowRenderer, crimeOverlayTexture().texture, nullptr, &mapArea);
+        SDL_SetTextureAlphaMod(crimeOverlayTexture().texture, 255);
+        */
+        
         DrawObjects();
 
         DrawPendingTool(toolPalette);
 
         drawTopUi();
-
         drawMiniMapUi();
 
         if (MouseClicked)
