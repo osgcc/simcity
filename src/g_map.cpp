@@ -90,9 +90,11 @@ namespace
 	constexpr auto POWERED = 1;
 	constexpr auto CONDUCTIVE = 2;
 
-	Texture CrimeOverlayTexture;
-	Texture PopulationDensityTexture;
-	Texture TrafficDensityTexture;
+	Texture CrimeOverlay;
+	Texture PopulationDensity;
+	Texture TrafficDensity;
+	Texture Pollution;
+	Texture LandValue;
 };
 
 
@@ -133,19 +135,31 @@ std::array<SDL_Color, 9> OverlayColorTable =
 
 const Texture& crimeOverlayTexture()
 {
-	return CrimeOverlayTexture;
+	return CrimeOverlay;
 }
 
 
 const Texture& populationDensityTexture()
 {
-	return PopulationDensityTexture;
+	return PopulationDensity;
 }
 
 
 const Texture& trafficDensityTexture()
 {
-	return TrafficDensityTexture;
+	return TrafficDensity;
+}
+
+
+const Texture& pollutionTexture()
+{
+	return Pollution;
+}
+
+
+const Texture& landValueTexture()
+{
+	return LandValue;
 }
 
 
@@ -222,7 +236,7 @@ void drawOverlay(Texture& overlay, const std::array<std::array<int, HalfWorldHei
 
 void drawPopDensity()
 {
-	drawOverlay(PopulationDensityTexture, PopDensity);
+	drawOverlay(PopulationDensity, PopDensity);
 }
 
 
@@ -273,41 +287,25 @@ void drawRateOfGrowth()
 void drawTrafficMap()
 {
 	drawLilTransMap();
-	drawOverlay(TrafficDensityTexture, TrfDensity);
+	drawOverlay(TrafficDensity, TrfDensity);
 }
 
 
 void drawPollutionMap()
 {
-	drawAll();
-
-	for (int x = 0; x < HalfWorldWidth; x++)
-	{
-		for (int y = 0; y < HalfWorldHeight; y++)
-		{
-			maybeDrawRect(GetColorIndex(10 + PollutionMem[x][y]), x * 6, y * 6, 6, 6);
-		}
-	}
+	drawOverlay(Pollution, PollutionMem);
 }
 
 
 void drawCrimeMap()
 {
-	drawOverlay(CrimeOverlayTexture, CrimeMem);
+	drawOverlay(CrimeOverlay, CrimeMem);
 }
 
 
 void drawLandMap()
 {
-	drawAll();
-
-	for (int x = 0; x < HalfWorldWidth; x++)
-	{
-		for (int y = 0; y < HalfWorldHeight; y++)
-		{
-			maybeDrawRect(GetColorIndex(LandValueMem[x][y]), x * 6, y * 6, 6, 6);
-		}
-	}
+	drawOverlay(LandValue, LandValueMem);
 }
 
 
@@ -347,9 +345,11 @@ void initTexture(Texture& texture)
 
 void initOverlayTexture()
 {
-	initTexture(CrimeOverlayTexture);
-	initTexture(PopulationDensityTexture);
-	initTexture(TrafficDensityTexture);
+	initTexture(CrimeOverlay);
+	initTexture(PopulationDensity);
+	initTexture(TrafficDensity);
+	initTexture(Pollution);
+	initTexture(LandValue);
 }
 
 
