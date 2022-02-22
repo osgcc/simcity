@@ -110,8 +110,8 @@ std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> LandValueMem{};
 std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> CrimeMem{};
 
 
-std::array<std::array<int, QuarterWorldWidth>, QuarterWorldWidth> TerrainMem{};
-std::array<std::array<int, QuarterWorldWidth>, QuarterWorldWidth> Qtem{};
+std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem{};
+std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
 
 
 int RateOGMem[SmX][SmY];

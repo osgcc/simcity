@@ -12,8 +12,8 @@ extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> LandValueMem
 extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> CrimeMem;
 
 // 4X4 Maps  30 x 25
-extern std::array<std::array<int, QuarterWorldWidth>, QuarterWorldWidth> TerrainMem;
-extern std::array<std::array<int, QuarterWorldWidth>, QuarterWorldWidth> Qtem;
+extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem;
+extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem;
 
 
 /* 8X8 Maps  15 x 13 */
