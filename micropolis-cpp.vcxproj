@@ -22,10 +22,9 @@
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\g_ani.cpp" />
     <ClCompile Include="src\g_map.cpp" />
-    <ClCompile Include="src\g_smmaps.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Map.cpp" />
-    <ClCompile Include="src\SmallMaps.h" />
+    <ClCompile Include="src\SmallMaps.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\s_alloc.cpp" />
     <ClCompile Include="src\s_disast.cpp" />
@@ -63,6 +62,7 @@
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\PointInRectangleRange.h" />
+    <ClInclude Include="src\SmallMaps.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\s_disast.h" />
     <ClInclude Include="src\s_eval.h" />
