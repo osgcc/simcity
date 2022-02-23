@@ -103,6 +103,7 @@ namespace
     Point<int> MouseClickPosition{};
 
     bool MouseClicked{};
+    bool DrawDebug{ false };
 
     SDL_Rect TileHighlight{ 0, 0, 16, 16 };
     SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
@@ -571,6 +572,10 @@ void handleKeyEvent(SDL_Event& event)
         //MakeFire();
         break;
 
+    case SDLK_F11:
+        DrawDebug = !DrawDebug;
+        break;
+
     default:
         break;
 
@@ -932,7 +937,7 @@ void startGame()
         }
         toolPalette.draw();
 
-        //drawDebug();
+        if (DrawDebug) { drawDebug(); }
 
         SDL_RenderPresent(MainWindowRenderer);
     }
@@ -972,8 +977,8 @@ int main(int argc, char* argv[])
         initRenderer();
         loadGraphics();
 
-        MainFont = new Font("res/open-sans-medium.ttf", 12);
-        MainBigFont = new Font("res/open-sans-medium.ttf", 14);
+        MainFont = new Font("res/raleway-medium.ttf", 12);
+        MainBigFont = new Font("res/raleway-medium.ttf", 14);
 
         initViewParamters();
         updateMapDrawParameters();
