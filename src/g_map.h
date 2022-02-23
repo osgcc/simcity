@@ -21,6 +21,7 @@ void drawPollutionMap();
 void drawLandMap();
 void drawPoliceRadius();
 void drawFireRadius();
+void drawRateOfGrowth();
 
 const Texture& crimeOverlayTexture();
 const Texture& populationDensityTexture();
@@ -29,3 +30,4 @@ const Texture& pollutionTexture();
 const Texture& landValueTexture();
 const Texture& policeRadiusTexture();
 const Texture& fireRadiusTexture();
+const Texture& rateOfGrowthTexture();

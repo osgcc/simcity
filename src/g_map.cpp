@@ -44,6 +44,7 @@ namespace
 	Texture LandValue;
 	Texture PoliceRadius;
 	Texture FireRadius;
+	Texture RateOfGrowth;
 };
 
 
@@ -121,6 +122,12 @@ const Texture& policeRadiusTexture()
 const Texture& fireRadiusTexture()
 {
 	return FireRadius;
+}
+
+
+const Texture& rateOfGrowthTexture()
+{
+	return RateOfGrowth;
 }
 
 
@@ -229,47 +236,49 @@ void drawPopDensity()
 }
 
 
+int rateOfGrowthColorIndex(int value)
+{
+	if (value > 100)
+	{
+		return VAL_VERYPLUS;
+	}
+
+	if (value > 20)
+	{
+		return VAL_PLUS;
+	}
+
+	if (value < -100)
+	{
+		return VAL_VERYMINUS;
+	}
+
+	if (value < -20)
+	{
+		return VAL_MINUS;
+	}
+
+	return VAL_NONE;
+}
+
+
 void drawRateOfGrowth()
 {
-	drawAll();
-	for (int x = 0; x < SmX; x++)
-	{
-		for (int y = 0; y < SmY; y++)
-		{
-			int val, z = RateOGMem[x][y];
+	SDL_SetRenderTarget(MainWindowRenderer, RateOfGrowth.texture);
+	turnOffBlending(RateOfGrowth);
+	clearOverlay();
 
-			if (z > 100)
-			{
-				val = VAL_VERYPLUS;
-			}
-			else
-			{
-				if (z > 20)
-				{
-					val = VAL_PLUS;
-				}
-				else
-				{
-					if (z < -100)
-					{
-						val = VAL_VERYMINUS;
-					}
-					else
-					{
-						if (z < -20)
-						{
-							val = VAL_MINUS;
-						}
-						else
-						{
-							val = VAL_NONE;
-						}
-					}
-				}
-			}
-			maybeDrawRect(val, x * 24, y * 24, 24, 24);
+	for (int x = 0; x < EightWorldWidth; x++)
+	{
+		for (int y = 0; y < EightWorldHeight; y++)
+		{
+			const int index = rateOfGrowthColorIndex(RateOGMem[x][y]);
+			drawPointToCurrentOverlay(x, y, index);
 		}
 	}
+
+	turnOnBlending(RateOfGrowth);
+	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
 
 
@@ -328,6 +337,7 @@ void initOverlayTexture()
 
 	initTexture(PoliceRadius, EightWorldWidth, EightWorldHeight);
 	initTexture(FireRadius, EightWorldWidth, EightWorldHeight);
+	initTexture(RateOfGrowth, EightWorldWidth, EightWorldHeight);
 }
 
 
