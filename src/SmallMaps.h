@@ -18,3 +18,7 @@ void drawCom();
 void drawInd();
 void drawDynamic();
 void drawPower();
+
+const Texture& transitMapTexture();
+
+void initMapTextures();
