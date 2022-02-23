@@ -39,6 +39,7 @@
 #include "Texture.h"
 #include "ToolPalette.h"
 
+
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -49,6 +50,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <Windows.h>
+#undef NOMINMAX
+#undef WIN32_LEAN_AND_MEAN
 
 const std::string MicropolisVersion = "4.0";
 
@@ -952,29 +959,37 @@ int main(int argc, char* argv[])
     std::cout << "Starting Micropolis-SDL2 version " << MicropolisVersion << " originally by Will Wright and Don Hopkins." << std::endl;
     std::cout << "Original code Copyright (C) 2002 by Electronic Arts, Maxis. Released under the GPL v3" << std::endl;
     std::cout << "Modifications Copyright (C) 2022 by Leeor Dicker. Available under the terms of the GPL v3" << std::endl << std::endl;
+    
     std::cout << "Micropolis-SDL2 is not afiliated with Electronic Arts." << std::endl;
 
-    if (SDL_Init(SDL_INIT_EVERYTHING))
+    try
     {
-        std::cout << "Unable to initialize SDL: " << SDL_GetError();
-        return 1;
+        if (SDL_Init(SDL_INIT_EVERYTHING))
+        {
+            throw std::runtime_error(std::string("Unable to initialize SDL: ") + SDL_GetError());
+        }
+
+        initRenderer();
+        loadGraphics();
+
+        MainFont = new Font("res/open-sans-medium.ttf", 12);
+        MainBigFont = new Font("res/open-sans-medium.ttf", 14);
+
+        initViewParamters();
+        updateMapDrawParameters();
+
+        env_init();
+        startGame();
+
+        cleanUp();
+
+        SDL_Quit();
     }
-
-    initRenderer();
-    loadGraphics();
-
-    MainFont = new Font("res/open-sans-medium.ttf", 12);
-    MainBigFont = new Font("res/open-sans-medium.ttf", 14);
-
-    initViewParamters();
-    updateMapDrawParameters();
-
-    env_init();
-    startGame();
-
-    cleanUp();
-
-    SDL_Quit();
+    catch(std::exception e)
+    {
+        std::string message(std::string(e.what()) + "\n\nMicropolis-SDL2PP will now close.");
+        MessageBoxA(nullptr, message.c_str(), "Unrecoverable Error", MB_ICONERROR | MB_OK);
+    }
 
     return 0;
 }

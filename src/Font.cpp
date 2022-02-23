@@ -155,14 +155,14 @@ namespace {
 		{
 			if (TTF_Init() != 0)
 			{
-				throw std::runtime_error("Font load function failed: " + std::string{TTF_GetError()});
+				throw std::runtime_error("Unable to load font: " + std::string{TTF_GetError()});
 			}
 		}
 
 		TTF_Font* font = TTF_OpenFont(path.c_str(), ptSize);
 		if (!font)
 		{
-			throw std::runtime_error("Font load function failed: " + std::string{TTF_GetError()});
+			throw std::runtime_error("Unable to load font: " + std::string{TTF_GetError()});
 		}
 
 		Font::FontInfo fontInfo;
@@ -271,12 +271,10 @@ namespace {
 
 	void fillInCharacterDimensions(TTF_Font* font, std::vector<Font::GlyphMetrics>& glyphMetricsList)
 	{
-		// Build table of character sizes
 		for (Uint16 i = 0; i < ASCII_TABLE_COUNT; i++)
 		{
 			auto& metrics = glyphMetricsList.emplace_back();
 			TTF_GlyphMetrics(font, i, &metrics.minX, &metrics.maxX, &metrics.minY, &metrics.maxY, &metrics.advance);
-			//std::cout << metrics.advance << " " << metrics.maxX << " " << metrics.maxY << " " << metrics.minX << " " << metrics.minY << std::endl;
 		}
 	}
 
@@ -292,8 +290,6 @@ namespace {
 
 			auto& uvRect = glyphMetricsList[glyph].uvRect;
 			uvRect = { uvStart.x, uvStart.y, glyphSize.x, glyphSize.y };
-
-			//std::cout << uvRect.x << " " << uvRect.y << " " << uvRect.width << " " << uvRect.height << std::endl;
 		}
 	}
 }
