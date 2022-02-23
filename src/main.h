@@ -11,6 +11,7 @@
 #pragma once
 
 #include "Point.h"
+#include "Texture.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -424,7 +425,10 @@ extern int FlushStyle;
 extern int GotXError;
 
 extern SDL_Renderer* MainWindowRenderer;
+extern Texture SmallTileset;
 
 void sim_exit();
 void sim_update_editors();
 const Point<int>& viewOffset();
+
+SDL_Rect& miniMapTileRect();
