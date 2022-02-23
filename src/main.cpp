@@ -23,6 +23,7 @@
 #include "s_msg.h"
 #include "s_sim.h"
 
+#include "SmallMaps.h"
 #include "Sprite.h"
 
 #include "w_budget.h"
@@ -159,6 +160,12 @@ Font* MainFont{ nullptr };
 Font* MainBigFont{ nullptr };
 
 
+SDL_Rect& miniMapTileRect()
+{
+    return MiniMapTileRect;
+}
+
+
 void sim_exit()
 {
     Exit = true;
@@ -191,12 +198,12 @@ void sim_update_maps()
 {
     //drawCrimeMap();
     //drawPopDensity();
-    //drawTrafficMap();
+    drawTrafficMap();
     //drawPollutionMap();
     //drawLandMap();
     //drawPoliceRadius();
     //drawFireRadius();
-    drawRateOfGrowth();
+    //drawRateOfGrowth();
 
     DoUpdateMap();
 }
@@ -613,6 +620,7 @@ void handleMouseEvent(SDL_Event& event)
             }
 
             ToolDown(TilePointedAt.x, TilePointedAt.y);
+            drawLilTransMap();
         }
         break;
 
@@ -776,12 +784,15 @@ void drawMiniMapUi()
     // \todo Make this only draw when an overlay flag is set
     //SDL_RenderCopy(MainWindowRenderer, crimeOverlayTexture().texture, nullptr, &MiniMapDestination);
     //SDL_RenderCopy(MainWindowRenderer, populationDensityTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, trafficDensityTexture().texture, nullptr, &MiniMapDestination);
     //SDL_RenderCopy(MainWindowRenderer, pollutionTexture().texture, nullptr, &MiniMapDestination);
     //SDL_RenderCopy(MainWindowRenderer, landValueTexture().texture, nullptr, &MiniMapDestination);
     //SDL_RenderCopy(MainWindowRenderer, policeRadiusTexture().texture, nullptr, &MiniMapDestination);
     //SDL_RenderCopy(MainWindowRenderer, fireRadiusTexture().texture, nullptr, &MiniMapDestination);
-    SDL_RenderCopy(MainWindowRenderer, rateOfGrowthTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, rateOfGrowthTexture().texture, nullptr, &MiniMapDestination);
+
+    // traffic map
+    //SDL_RenderCopy(MainWindowRenderer, transitMapTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, trafficDensityTexture().texture, nullptr, &MiniMapDestination);
 
     SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 150);
     SDL_RenderDrawRect(MainWindowRenderer, &MiniMapSelector);
@@ -900,6 +911,7 @@ void startGame()
     UiRects.push_back(&UiHeaderRect);
 
     initOverlayTexture();
+    initMapTextures();
 
     while (!Exit)
     {
