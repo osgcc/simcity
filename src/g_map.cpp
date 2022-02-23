@@ -48,19 +48,6 @@ namespace
 };
 
 
-namespace Colors
-{
-	constexpr SDL_Color LightGrey{ 211, 211, 211, 255 };
-	constexpr SDL_Color Yellow{ 255, 255, 0, 255 };
-	constexpr SDL_Color Orange{ 255, 165, 0, 255 };
-	constexpr SDL_Color Red{ 255, 0, 0, 255 };
-	constexpr SDL_Color DarkGreen{ 0, 100, 0, 255 };
-	constexpr SDL_Color LightGreen{ 50, 205, 50, 255 };
-	constexpr SDL_Color LightBlue{ 0, 191, 255, 255 };
-	constexpr SDL_Color Clear{ 0, 0, 0, 0 };
-};
-
-
 std::array<SDL_Color, 3> PowerColorTable =
 { {
 	Colors::LightGrey,
@@ -284,7 +271,6 @@ void drawRateOfGrowth()
 
 void drawTrafficMap()
 {
-	drawLilTransMap();
 	drawOverlayPoints(TrafficDensity, TrfDensity);
 }
 
