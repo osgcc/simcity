@@ -15,42 +15,6 @@
 int DynamicData[32];
 
 
-void drawAll()
-{
-    /*
-    int lineBytes = view->line_bytes;
-    int pixelBytes = view->pixel_bytes;
-
-    int* mp = &Map[0][0];
-    unsigned char* imageBase = view->data;
-
-    for (int col = 0; col < SimWidth; col++)
-    {
-        unsigned char* image = imageBase + (3 * pixelBytes * col);
-        for (int row = 0; row < SimHeight; row++)
-        {
-
-            unsigned int tile = *(mp++) & LOMASK;
-            if (tile >= TILE_COUNT)
-            {
-                tile -= TILE_COUNT;
-            }
-
-            unsigned int* mem = (unsigned int*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
-            for (int i = 0; i < 3; ++i)
-            {
-                unsigned int l = mem[i];
-                image[0] = l >> 24;
-                image[1] = l >> 16;
-                image[2] = l >> 8;
-                image += lineBytes;
-            }
-        }
-    }
-    */
-}
-
-
 void drawRes()
 {
     /*
