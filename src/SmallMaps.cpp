@@ -24,6 +24,7 @@ int DynamicData[32];
 namespace
 {
     Texture TransitMapTexture;
+    Texture PowerMapTexture;
 };
 
 
@@ -32,10 +33,16 @@ const Texture& transitMapTexture()
     return TransitMapTexture;
 }
 
+const Texture& powerMapTexture()
+{
+    return PowerMapTexture;
+}
+
 
 void initMapTextures()
 {
     initTexture(TransitMapTexture, SimWidth * 3, SimHeight * 3);
+    initTexture(PowerMapTexture, SimWidth * 3, SimHeight * 3);
 }
 
 
@@ -202,94 +209,60 @@ void drawLilTransMap()
 }
 
 
-/* color pixel values */
-#define UNPOWERED	COLOR_LIGHTBLUE
-#define POWERED		COLOR_RED
-#define CONDUCTIVE	COLOR_LIGHTGRAY
-
-
 void drawPower()
 {
-    /*
-    int lineBytes = view->line_bytes;
-    int pixelBytes = view->pixel_bytes;
+    SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
 
-    int pix = 0;
+    SDL_Color tileColor{};
 
-    int powered = view->pixels[POWERED];
-    int unpowered = view->pixels[UNPOWERED];
-    int conductive = view->pixels[CONDUCTIVE];
-
-    int* mp = &Map[0][0];
-    unsigned char* imageBase = view->data;
-
-    for (int col = 0; col < SimWidth; col++)
+    SDL_SetRenderTarget(MainWindowRenderer, PowerMapTexture.texture);
+    for (int row = 0; row < SimWidth; row++)
     {
-        unsigned char* image = imageBase + (3 * pixelBytes * col);
-        for (int row = 0; row < SimHeight; row++)
+        for (int col = 0; col < SimHeight; col++)
         {
-            unsigned int tile = *(mp++);
+            miniMapDrawRect = { row * 3, col * 3, miniMapDrawRect.w, miniMapDrawRect.h };
 
-            if ((tile & LOMASK) >= TILE_COUNT)
-            {
-                tile -= TILE_COUNT;
-            }
+            const unsigned int unmaskedTile = tileValue(row, col);
+            unsigned int tile = maskedTileValue(unmaskedTile);
 
-            if ((unsigned int)(tile & LOMASK) <= (unsigned int)63)
+            bool colored{ true };
+
+            if (tile <= LASTFIRE)
             {
-                tile &= LOMASK;
-                pix = -1;
+                colored = false;
             }
-            else if (tile & ZONEBIT)
+            else if (unmaskedTile & ZONEBIT)
             {
-                pix = (tile & PWRBIT) ? powered : unpowered;
+                tileColor = (unmaskedTile & PWRBIT) ? Colors::Red : Colors::LightBlue;
             }
             else
             {
-                if (tile & CONDBIT)
+                if (unmaskedTile & CONDBIT)
                 {
-                    pix = conductive;
+                    tileColor = Colors::LightGrey;
                 }
                 else
                 {
-                    tile = 0;
-                    pix = -1;
+                    tile = DIRT;
+                    colored = false;
                 }
             }
 
-            if (pix < 0)
+            if (colored)
             {
-                unsigned int* mem = (unsigned int*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
-                for (int i = 0; i < 3; ++i)
-                {
-                    unsigned int l = mem[i];
-                    image[0] = l >> 24;
-                    image[1] = l >> 16;
-                    image[2] = l >> 8;
-                    image += lineBytes;
-                }
+                SDL_SetRenderDrawColor(MainWindowRenderer, tileColor.r, tileColor.g, tileColor.b, 255);
+                SDL_RenderFillRect(MainWindowRenderer, &miniMapDrawRect);
             }
             else
             {
-                for (int y = 0; y < 3; y++)
-                {
-                    unsigned char* img = image;
-                    for (int x = 0; x < 4; x++)
-                    {
-                        *(img++) = (pix >> 0) & 0xff;
-                        *(img++) = (pix >> 8) & 0xff;
-                        *(img++) = (pix >> 16) & 0xff;
-                        if (pixelBytes == 4)
-                        {
-                            img++;
-                        }
-                    }
-                    image += lineBytes;
-                }
+                miniMapTileRect().y = tile * 3;
+                SDL_RenderCopy(MainWindowRenderer, SmallTileset.texture, &miniMapTileRect(), &miniMapDrawRect);
             }
         }
     }
-    */
+    SDL_RenderPresent(MainWindowRenderer);
+
+    SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
 
 

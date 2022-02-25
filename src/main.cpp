@@ -198,7 +198,8 @@ void sim_update_maps()
 {
     //drawCrimeMap();
     //drawPopDensity();
-    drawTrafficMap();
+    //drawTrafficMap();
+    //drawPower();
     //drawPollutionMap();
     //drawLandMap();
     //drawPoliceRadius();
@@ -621,6 +622,7 @@ void handleMouseEvent(SDL_Event& event)
 
             ToolDown(TilePointedAt.x, TilePointedAt.y);
             drawLilTransMap();
+            drawPower();
         }
         break;
 
@@ -780,6 +782,7 @@ void drawMiniMapUi()
     SDL_RenderDrawRect(MainWindowRenderer, &MiniMapBorder);
 
     SDL_RenderCopy(MainWindowRenderer, MiniMapTexture.texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, powerMapTexture().texture, nullptr, &MiniMapDestination);
 
     // \todo Make this only draw when an overlay flag is set
     //SDL_RenderCopy(MainWindowRenderer, crimeOverlayTexture().texture, nullptr, &MiniMapDestination);

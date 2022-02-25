@@ -20,5 +20,6 @@ void drawDynamic();
 void drawPower();
 
 const Texture& transitMapTexture();
+const Texture& powerMapTexture();
 
 void initMapTextures();
