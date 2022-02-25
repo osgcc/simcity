@@ -28,7 +28,6 @@ namespace Colors
 
 void initTexture(Texture& texture, const int width, const int height);
 void initOverlayTexture();
-void maybeDrawRect(int val, int x, int y, int w, int h);
 
 void drawPopDensity();
 void drawCrimeMap();

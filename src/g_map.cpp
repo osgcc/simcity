@@ -325,9 +325,3 @@ void initOverlayTexture()
 	initTexture(FireRadius, EightWorldWidth, EightWorldHeight);
 	initTexture(RateOfGrowth, EightWorldWidth, EightWorldHeight);
 }
-
-
-void maybeDrawRect(int val, int x, int y, int w, int h)
-{
-	throw std::runtime_error("maybeDrawRect(): Replace with call to drawPointToCurrentOverlay()");
-}
