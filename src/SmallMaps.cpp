@@ -93,52 +93,33 @@ void drawRes()
 
 void drawCom()
 {
-    /*
-    int lineBytes = view->line_bytes;
-    int pixelBytes = view->pixel_bytes;
-
-    int* mp = &Map[0][0];
-    unsigned char* imageBase = view->data;
-
-    for (int col = 0; col < SimWidth; col++)
+    SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
+    SDL_SetRenderTarget(MainWindowRenderer, MiniMapTexture.texture);
+    for (int row = 0; row < SimWidth; row++)
     {
-        unsigned char* image = imageBase + (3 * pixelBytes * col);
-        for (int row = 0; row < SimHeight; row++)
+        for (int col = 0; col < SimHeight; col++)
         {
+            miniMapDrawRect = { row * 3, col * 3, miniMapDrawRect.w, miniMapDrawRect.h };
 
-            unsigned int tile = *(mp++) & LOMASK;
-            if (tile >= TILE_COUNT)
-            {
-                tile -= TILE_COUNT;
-            }
+            unsigned int tile = maskedTileValue(row, col);
 
-            ////////
             if ((tile > 609) || ((tile >= 232) && (tile < 423)))
             {
                 tile = 0;
             }
-            ////////
 
-            unsigned int* mem = (unsigned int*)&view->smalltiles[tile * 4 * 4 * pixelBytes];
-            for (int i = 0; i < 3; ++i)
-            {
-                unsigned int l = mem[i];
-                image[0] = l >> 24;
-                image[1] = l >> 16;
-                image[2] = l >> 8;
-                image += lineBytes;
-            }
+            miniMapTileRect().y = tile * 3;
+            SDL_RenderCopy(MainWindowRenderer, SmallTileset.texture, &miniMapTileRect(), &miniMapDrawRect);
         }
     }
-    */
+    SDL_RenderPresent(MainWindowRenderer);
+    SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
 
 
 void drawInd()
 {
-
     SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
-
     SDL_SetRenderTarget(MainWindowRenderer, MiniMapTexture.texture);
     for (int row = 0; row < SimWidth; row++)
     {
@@ -161,7 +142,6 @@ void drawInd()
         }
     }
     SDL_RenderPresent(MainWindowRenderer);
-
     SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
 
@@ -169,7 +149,6 @@ void drawInd()
 void drawLilTransMap()
 {
     SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
-
     SDL_SetRenderTarget(MainWindowRenderer, TransitMapTexture.texture);
     for (int row = 0; row < SimWidth; row++)
     {
@@ -192,7 +171,6 @@ void drawLilTransMap()
         }
     }
     SDL_RenderPresent(MainWindowRenderer);
-
     SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
 
@@ -249,7 +227,6 @@ void drawPower()
         }
     }
     SDL_RenderPresent(MainWindowRenderer);
-
     SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
 
