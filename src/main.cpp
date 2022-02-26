@@ -311,6 +311,7 @@ void sim_loop(bool doSim)
     if (tick % 1000 == 0)
     {
         DrawMiniMap();
+        //drawRes();
     }  
 
     sim_update();
@@ -621,8 +622,6 @@ void handleMouseEvent(SDL_Event& event)
             }
 
             ToolDown(TilePointedAt.x, TilePointedAt.y);
-            drawLilTransMap();
-            drawPower();
         }
         break;
 
