@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "BudgetWindow.h"
+
 #include "Font.h"
 #include "Map.h"
 
@@ -25,6 +27,7 @@
 
 #include "SmallMaps.h"
 #include "Sprite.h"
+#include "StringRender.h"
 
 #include "w_budget.h"
 #include "w_eval.h"
@@ -39,7 +42,6 @@
 
 #include "Texture.h"
 #include "ToolPalette.h"
-
 
 #include <algorithm>
 #include <iostream>
@@ -105,16 +107,19 @@ namespace
 
     bool MouseClicked{};
     bool DrawDebug{ false };
+    bool BudgetWindowShown{ false };
 
     SDL_Rect TileHighlight{ 0, 0, 16, 16 };
     SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
 
     std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 20, 37 };
 
-
     std::string currentBudget{};
 
     std::vector<const SDL_Rect*> UiRects{};
+
+    BudgetWindow* budgetWindow{ nullptr };
+    StringRender* stringRenderer{ nullptr };
 
     namespace timing
     {
@@ -283,6 +288,9 @@ bool animationTick()
 
 void sim_loop(bool doSim)
 {
+    // \fixme Find a better way to do this
+    if (BudgetWindowShown) { return; }
+
     if (doSim)
     {
         SimFrame();
@@ -359,46 +367,6 @@ void sim_init()
     SetGameLevelFunds(StartupGameLevel);
     SimSpeed(SimulationSpeed::Paused);
     setSkips(0);
-}
-
-
-void drawString(Font& font, std::string_view text, Point<int> position, SDL_Color color)
-{
-    if (text.empty()) { return; }
-
-    SDL_SetTextureColorMod(font.texture(), color.r, color.g, color.b);
-
-    const auto& gml = font.metrics();
-    if (gml.empty()) { return; }
-
-    int offset = 0;
-    for (auto character : text)
-    {
-        const auto& gm = gml[std::clamp<std::size_t>((uint8_t)(character), 0, 255)];
-
-        const auto glyphCellSize = font.glyphCellSize().to<float>();
-        const auto adjustX = (gm.minX < 0) ? gm.minX : 0;
-
-        const SDL_Rect srcRect
-        {
-            static_cast<int>(gm.uvRect.x),
-            static_cast<int>(gm.uvRect.y),
-            static_cast<int>(glyphCellSize.x),
-            static_cast<int>(glyphCellSize.y)
-        };
-
-        const SDL_Rect dstRect
-        {
-            position.x + offset + adjustX,
-            position.y,
-            static_cast<int>(glyphCellSize.x),
-            static_cast<int>(glyphCellSize.y)
-        };
-
-        SDL_RenderCopy(MainWindowRenderer, font.texture(), &srcRect, &dstRect);
-
-        offset += gm.advance;
-    }
 }
 
 
@@ -507,6 +475,12 @@ void setMiniMapSelectorSize()
 }
 
 
+void centerBudgetWindow()
+{
+    budgetWindow->position({ WindowSize.x / 2 - budgetWindow->rect().w / 2, WindowSize.y / 2 - budgetWindow->rect().h / 2 });
+}
+
+
 void windowResized(const Vector<int>& size)
 {
     getWindowSize();
@@ -515,6 +489,7 @@ void windowResized(const Vector<int>& size)
     setMiniMapSelectorSize();
 
     updateMapDrawParameters();
+    centerBudgetWindow();
 
     UiHeaderRect.w = WindowSize.x - 20;
 }
@@ -581,6 +556,10 @@ void handleKeyEvent(SDL_Event& event)
         //MakeFire();
         break;
 
+    case SDLK_F10:
+        BudgetWindowShown = !BudgetWindowShown;
+        break;
+
     case SDLK_F11:
         DrawDebug = !DrawDebug;
         break;
@@ -613,6 +592,7 @@ void handleMouseEvent(SDL_Event& event)
         if (event.button.button == SDL_BUTTON_LEFT)
         {
             SDL_Point mp{ event.button.x, event.button.y };
+
             for (auto rect : UiRects)
             {
                 if (SDL_PointInRect(&mp, rect))
@@ -621,7 +601,11 @@ void handleMouseEvent(SDL_Event& event)
                 }
             }
 
-            ToolDown(TilePointedAt.x, TilePointedAt.y);
+            if (!BudgetWindowShown)
+            {
+                ToolDown(TilePointedAt.x, TilePointedAt.y);
+            }
+
         }
         break;
 
@@ -762,13 +746,13 @@ void drawTopUi()
     SDL_RenderCopy(MainWindowRenderer, RCI_Indicator.texture, nullptr, &RciDestination);
     drawValve();
 
-    drawString(*MainBigFont, MonthString(static_cast<Month>(LastCityMonth())), {UiHeaderRect.x + 5, UiHeaderRect.y + 5}, {255, 255, 255, 255});
-    drawString(*MainBigFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 35, UiHeaderRect.y + 5}, {255, 255, 255, 255});
+    stringRenderer->drawString(*MainBigFont, MonthString(static_cast<Month>(LastCityMonth())), {UiHeaderRect.x + 5, UiHeaderRect.y + 5}, {255, 255, 255, 255});
+    stringRenderer->drawString(*MainBigFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 35, UiHeaderRect.y + 5}, {255, 255, 255, 255});
 
-    drawString(*MainBigFont, LastMessage(), {100, UiHeaderRect.y + 5}, {255, 255, 255, 255});
+    stringRenderer->drawString(*MainBigFont, LastMessage(), {100, UiHeaderRect.y + 5}, {255, 255, 255, 255});
 
     const Point<int> budgetPosition{ UiHeaderRect.x + UiHeaderRect.w - 5 - MainBigFont->width(currentBudget), UiHeaderRect.y + 5 };
-    drawString(*MainBigFont, currentBudget, budgetPosition, { 255, 255, 255, 255 });
+    stringRenderer->drawString(*MainBigFont, currentBudget, budgetPosition, { 255, 255, 255, 255 });
 }
 
 
@@ -835,33 +819,30 @@ void DrawPendingTool(const ToolPalette& palette)
 
 void drawDebug()
 {
-    drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 200, 100 }, { 255, 255, 255, 100 });
-    drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 200, 100 + MainFont->height() }, { 255, 255, 255, 150 });
+    stringRenderer->drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 200, 100 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 200, 100 + MainFont->height() }, { 255, 255, 255, 150 });
     
-    drawString(*MainFont, "Speed: " + SpeedString(SimSpeed()), { 200, 100 + MainFont->height() * 3}, {255, 255, 255, 100});
-    drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 200, 100 + MainFont->height() * 4 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, "Speed: " + SpeedString(SimSpeed()), { 200, 100 + MainFont->height() * 3}, {255, 255, 255, 100});
+    stringRenderer->drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 200, 100 + MainFont->height() * 4 }, { 255, 255, 255, 100 });
 
-    drawString(*MainFont, "RValve: " + std::to_string(RValve), { 200, 100 + MainFont->height() * 6 }, { 255, 255, 255, 100 });
-    drawString(*MainFont, "CValve: " + std::to_string(CValve), { 200, 100 + MainFont->height() * 7 }, { 255, 255, 255, 100 });
-    drawString(*MainFont, "IValve: " + std::to_string(IValve), { 200, 100 + MainFont->height() * 8 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, "RValve: " + std::to_string(RValve), { 200, 100 + MainFont->height() * 6 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, "CValve: " + std::to_string(CValve), { 200, 100 + MainFont->height() * 7 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, "IValve: " + std::to_string(IValve), { 200, 100 + MainFont->height() * 8 }, { 255, 255, 255, 100 });
 
-    drawString(*MainFont, "TotalPop: " + std::to_string(TotalPop), { 200, 100 + MainFont->height() * 10 }, { 255, 255, 255, 100 });
-    
+    stringRenderer->drawString(*MainFont, "TotalPop: " + std::to_string(TotalPop), { 200, 100 + MainFont->height() * 10 }, { 255, 255, 255, 100 });   
     
     std::stringstream sstream;
 
     sstream << "Res: " << ResPop << " Com: " << ComPop << " Ind: " << IndPop << " Tot: " << TotalPop << " LastTot: " << LastTotalPop;
-    drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 11 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 11 }, { 255, 255, 255, 100 });
 
     sstream.str("");
     sstream << "TotalZPop: " << TotalZPop << " ResZ: " << ResZPop << " ComZ: " << ComZPop << " IndZ: " << IndZPop;
-    drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 12 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 12 }, { 255, 255, 255, 100 });
 
     sstream.str("");
     sstream << "PolicePop: " << PolicePop << " FireStPop: " << FireStPop;
-    drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 13 }, { 255, 255, 255, 100 });
-
-
+    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 13 }, { 255, 255, 255, 100 });
 }
 
 
@@ -906,8 +887,13 @@ void startGame()
 
     SDL_TimerID zonePowerBlink = SDL_AddTimer(500, zonePowerBlinkFlag, nullptr);
 
+    stringRenderer = new StringRender(MainWindowRenderer);
+
     ToolPalette toolPalette(MainWindowRenderer);
     toolPalette.position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
+
+    budgetWindow = new BudgetWindow(MainWindowRenderer, *stringRenderer);
+    centerBudgetWindow();
 
     UiRects.push_back(&toolPalette.rect());
     UiRects.push_back(&UiHeaderRect);
@@ -918,40 +904,42 @@ void startGame()
     while (!Exit)
     {
         timing::updateTiming();
-
         PendingTool = toolPalette.tool();
+
         sim_loop(simulationTick());
+        
         pumpEvents();
 
         currentBudget = NumberToDollarDecimal(TotalFunds());
 
         SDL_RenderClear(MainWindowRenderer);
 
-        // Map
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
-        
-        /** Tint full size map
-        const SDL_Rect mapArea{ -MapViewOffset.x, -MapViewOffset.y, SimWidth * 16, SimHeight * 16 };
-        SDL_SetTextureAlphaMod(crimeOverlayTexture().texture, 50);
-        SDL_RenderCopy(MainWindowRenderer, crimeOverlayTexture().texture, nullptr, &mapArea);
-        SDL_SetTextureAlphaMod(crimeOverlayTexture().texture, 255);
-        */
-        
         DrawObjects();
 
-        DrawPendingTool(toolPalette);
-
-        drawTopUi();
-        drawMiniMapUi();
-
-        if (MouseClicked)
+        if (BudgetWindowShown)
         {
-            MouseClicked = false;
-            toolPalette.injectMouseClickPosition(MouseClickPosition);
+            SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 100);
+            SDL_RenderFillRect(MainWindowRenderer, nullptr);
+            budgetWindow->draw();
         }
-        toolPalette.draw();
+        else
+        {
 
-        if (DrawDebug) { drawDebug(); }
+            DrawPendingTool(toolPalette);
+
+            drawTopUi();
+            drawMiniMapUi();
+
+            if (MouseClicked)
+            {
+                MouseClicked = false;
+                toolPalette.injectMouseClickPosition(MouseClickPosition);
+            }
+            toolPalette.draw();
+
+            if (DrawDebug) { drawDebug(); }
+        }
 
         SDL_RenderPresent(MainWindowRenderer);
     }
@@ -964,6 +952,8 @@ void cleanUp()
 {
     delete MainFont;
     delete MainBigFont;
+    delete budgetWindow;
+    delete stringRenderer;
 
     SDL_DestroyTexture(BigTileset.texture);
     SDL_DestroyTexture(RCI_Indicator.texture);
