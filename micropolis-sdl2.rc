@@ -60,7 +60,7 @@ IDB_PNG1                PNG                     "Micropolis.png"
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_ICON1               ICON                    "C:\\Users\\leeor\\Desktop\\Micropolis-SDL2PP\\micropolis.ico"
+IDI_ICON1               ICON                    "micropolis.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
