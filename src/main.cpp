@@ -919,9 +919,16 @@ void startGame()
 
         if (BudgetWindowShown)
         {
-            SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 100);
+            SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 175);
             SDL_RenderFillRect(MainWindowRenderer, nullptr);
             budgetWindow->draw();
+
+            if (budgetWindow->accepted())
+            {
+                budgetWindow->reset();
+                BudgetWindowShown = false;
+            }
+
         }
         else
         {

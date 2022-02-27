@@ -10,10 +10,24 @@
 // file, included in this distribution, for details.
 #include "BudgetWindow.h"
 
+
+namespace
+{
+	const SDL_Rect bgRect{ 0, 0, 456, 422 };
+
+	const SDL_Rect mainButtonArea{ 11, 373, 432, 35 };
+	const SDL_Rect mainButtonDown{ 2, 426, 434, 36 };
+	const SDL_Rect mainButtonUp{ 0, 438, 456, 60 };
+
+	const SDL_Rect upButtonDown{ 470, 7, 13, 13 };
+	const SDL_Rect downButtonDown{ 485, 7, 13, 13 };
+};
+
+
 BudgetWindow::BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRenderer) :
 	mRenderer(renderer),
 	mStringRenderer(stringRenderer),
-	mTitleFont(new Font("res/raleway-black.ttf", 18)),
+	mTitleFont(new Font("res/raleway-medium.ttf", 14)),
 	mTexture(loadTexture(renderer, "images/budget.png"))
 {}
 
@@ -21,6 +35,11 @@ BudgetWindow::BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRen
 BudgetWindow::~BudgetWindow()
 {
 	delete mTitleFont;
+}
+
+void BudgetWindow::reset()
+{
+	mAccepted = false;
 }
 
 
@@ -32,10 +51,16 @@ void BudgetWindow::position(const Point<int> pos)
 
 void BudgetWindow::draw()
 {
-	const SDL_Rect bgRect{ 0, 0, 456, 344 };
 	SDL_RenderCopy(mRenderer, mTexture.texture, &bgRect, &mRect);
 
-	const Point<int> drawPoint{ mRect.x + mRect.w / 2 - mTitleFont->width(Title) / 2, mRect.y + 5 };
+	SDL_Point mousePosition{};
+	Uint32 leftButtonDown = SDL_GetMouseState(&mousePosition.x, &mousePosition.y) & SDL_BUTTON_LMASK;
 
-	mStringRenderer.drawString(*mTitleFont, Title, drawPoint, { 12, 64, 154, 255 });
+	const SDL_Rect buttonArea{ mainButtonArea.x + mRect.x, mainButtonArea.y + mRect.y, mainButtonDown.w, mainButtonDown.h };
+
+	if (SDL_PointInRect(&mousePosition, &buttonArea) && leftButtonDown)
+	{
+		SDL_RenderCopy(mRenderer, mTexture.texture, &mainButtonDown, &buttonArea);
+		mAccepted = true;
+	}
 }

@@ -32,13 +32,18 @@ public:
 
 	const SDL_Rect& rect() const { return mRect; }
 
+	void reset();
+
 	void position(const Point<int> pos);
+
+	bool accepted() const { return mAccepted; }
 
 	void draw();
 
 private:
 
-	SDL_Rect mRect{ 0, 0, 456, 344 };
+	bool mAccepted{ false };
+	SDL_Rect mRect{ 0, 0, 456, 422 };
 
 	SDL_Renderer* mRenderer{ nullptr };
 	const StringRender& mStringRenderer;
