@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BudgetWindow.cpp" />
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\g_ani.cpp" />
     <ClCompile Include="src\g_map.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\SmallMaps.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
+    <ClCompile Include="src\StringRender.cpp" />
     <ClCompile Include="src\s_alloc.cpp" />
     <ClCompile Include="src\s_disast.cpp" />
     <ClCompile Include="src\s_eval.cpp" />
@@ -56,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="src\BudgetWindow.h" />
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Graph.h" />
     <ClInclude Include="src\g_ani.h" />
@@ -64,6 +67,7 @@
     <ClInclude Include="src\PointInRectangleRange.h" />
     <ClInclude Include="src\SmallMaps.h" />
     <ClInclude Include="src\Sprite.h" />
+    <ClInclude Include="src\StringRender.h" />
     <ClInclude Include="src\s_disast.h" />
     <ClInclude Include="src\s_eval.h" />
     <ClInclude Include="src\s_fileio.h" />
