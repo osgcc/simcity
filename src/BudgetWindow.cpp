@@ -102,7 +102,7 @@ void BudgetWindow::reset()
 }
 
 
-void BudgetWindow::position(const Point<int> pos)
+void BudgetWindow::position(const Point<int>& pos)
 {
 	mRect = { pos.x, pos.y, mRect.w, mRect.h };
 
@@ -119,21 +119,22 @@ void BudgetWindow::position(const Point<int> pos)
 }
 
 
+void BudgetWindow::injectMouseDown(const SDL_Point& pos)
+{
+	if (SDL_PointInRect(&pos, &buttonRects[ButtonId::Accept]))
+	{
+		SDL_RenderCopy(mRenderer, mTexture.texture, &mainButtonDown, &buttonRects[ButtonId::Accept]);
+		mAccepted = true;
+	}
+}
+
+
 void BudgetWindow::draw()
 {
 	SDL_RenderCopy(mRenderer, mTexture.texture, &bgRect, &mRect);
 
-	SDL_Point mousePosition{};
-	Uint32 leftButtonDown = SDL_GetMouseState(&mousePosition.x, &mousePosition.y) & SDL_BUTTON_LMASK;
-
 	for (auto id : ids)
 	{
 		SDL_RenderDrawRect(mRenderer, &buttonRects[id]);
-	}
-
-	if (SDL_PointInRect(&mousePosition, &buttonRects[ButtonId::Accept]) && leftButtonDown)
-	{
-		SDL_RenderCopy(mRenderer, mTexture.texture, &mainButtonDown, &buttonRects[ButtonId::Accept]);
-		mAccepted = true;
 	}
 }

@@ -601,6 +601,11 @@ void handleMouseEvent(SDL_Event& event)
                 }
             }
 
+            if (SDL_PointInRect(&mp, &budgetWindow->rect()))
+            {
+                budgetWindow->injectMouseDown(mp);
+            }
+
             if (!BudgetWindowShown)
             {
                 ToolDown(TilePointedAt.x, TilePointedAt.y);

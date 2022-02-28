@@ -34,9 +34,11 @@ public:
 
 	void reset();
 
-	void position(const Point<int> pos);
+	void position(const Point<int>& pos);
 
 	bool accepted() const { return mAccepted; }
+
+	void injectMouseDown(const SDL_Point& pos);
 
 	void draw();
 
