@@ -928,7 +928,6 @@ void startGame()
                 budgetWindow->reset();
                 BudgetWindowShown = false;
             }
-
         }
         else
         {
