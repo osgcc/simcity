@@ -10,17 +10,75 @@
 // file, included in this distribution, for details.
 #include "BudgetWindow.h"
 
+#include <map>
 
 namespace
 {
 	const SDL_Rect bgRect{ 0, 0, 456, 422 };
 
-	const SDL_Rect mainButtonArea{ 11, 373, 432, 35 };
 	const SDL_Rect mainButtonDown{ 2, 426, 434, 36 };
 	const SDL_Rect mainButtonUp{ 0, 438, 456, 60 };
 
-	const SDL_Rect upButtonDown{ 470, 7, 13, 13 };
-	const SDL_Rect downButtonDown{ 485, 7, 13, 13 };
+	const SDL_Rect upArrowButtonDown{ 470, 7, 13, 13 };
+	const SDL_Rect downArrowButtonDown{ 485, 7, 13, 13 };
+
+	SDL_Rect TaxRateBox{ 138, 39, 285, 21 };
+	const SDL_Rect TaxRateBoxPosition = TaxRateBox;
+
+	SDL_Rect TaxCollectedBox{ 138, 70, 285, 21 };
+	const SDL_Rect TaxCollectedBoxPosition = TaxCollectedBox;
+
+	enum class ButtonId
+	{
+		TaxRateUp,
+		TaxRateDown,
+		TransportUp,
+		TransportDown,
+		PoliceUp,
+		PoliceDown,
+		FireUp,
+		FireDown,
+		Accept
+	};
+
+	const ButtonId ids[] =
+	{
+		ButtonId::TaxRateUp,
+		ButtonId::TaxRateDown,
+		ButtonId::TransportUp,
+		ButtonId::TransportDown,
+		ButtonId::PoliceUp,
+		ButtonId::PoliceDown,
+		ButtonId::FireUp,
+		ButtonId::FireDown,
+		ButtonId::Accept
+	};
+
+	std::map<ButtonId, const SDL_Rect> buttonPositions
+	{
+		{ ButtonId::TaxRateUp, { 431, 36, 13, 13 } },
+		{ ButtonId::TaxRateDown, { 431, 50, 13, 13 } },
+		{ ButtonId::TransportUp, { 431, 137, 13, 13 } },
+		{ ButtonId::TransportDown, { 431, 151, 13, 13 } },
+		{ ButtonId::PoliceUp, { 431, 168, 13, 13 } },
+		{ ButtonId::PoliceDown, { 431, 182, 13, 13 } },
+		{ ButtonId::FireUp, { 431, 200, 13, 13 } },
+		{ ButtonId::FireDown, { 431, 214, 13, 13 } },
+		{ ButtonId::Accept, { 11, 373, 434, 36 } }
+	};
+
+	std::map<ButtonId, SDL_Rect> buttonRects
+	{
+		{ ButtonId::TaxRateUp, buttonPositions[ButtonId::TaxRateUp] },
+		{ ButtonId::TaxRateDown, buttonPositions[ButtonId::TaxRateDown] },
+		{ ButtonId::TransportUp, buttonPositions[ButtonId::TransportUp] },
+		{ ButtonId::TransportDown, buttonPositions[ButtonId::TransportDown] },
+		{ ButtonId::PoliceUp, buttonPositions[ButtonId::PoliceUp] },
+		{ ButtonId::PoliceDown, buttonPositions[ButtonId::PoliceDown] },
+		{ ButtonId::FireUp, buttonPositions[ButtonId::FireUp] },
+		{ ButtonId::FireDown, buttonPositions[ButtonId::FireDown] },
+		{ ButtonId::Accept, buttonPositions[ButtonId::Accept] }
+	};
 };
 
 
@@ -37,6 +95,7 @@ BudgetWindow::~BudgetWindow()
 	delete mTitleFont;
 }
 
+
 void BudgetWindow::reset()
 {
 	mAccepted = false;
@@ -46,6 +105,17 @@ void BudgetWindow::reset()
 void BudgetWindow::position(const Point<int> pos)
 {
 	mRect = { pos.x, pos.y, mRect.w, mRect.h };
+
+	for (auto id : ids)
+	{
+		buttonRects[id] =
+		{
+			buttonPositions[id].x + pos.x,
+			buttonPositions[id].y + pos.y,
+			buttonPositions[id].w,
+			buttonPositions[id].h
+		};
+	}
 }
 
 
@@ -56,11 +126,14 @@ void BudgetWindow::draw()
 	SDL_Point mousePosition{};
 	Uint32 leftButtonDown = SDL_GetMouseState(&mousePosition.x, &mousePosition.y) & SDL_BUTTON_LMASK;
 
-	const SDL_Rect buttonArea{ mainButtonArea.x + mRect.x, mainButtonArea.y + mRect.y, mainButtonDown.w, mainButtonDown.h };
-
-	if (SDL_PointInRect(&mousePosition, &buttonArea) && leftButtonDown)
+	for (auto id : ids)
 	{
-		SDL_RenderCopy(mRenderer, mTexture.texture, &mainButtonDown, &buttonArea);
+		SDL_RenderDrawRect(mRenderer, &buttonRects[id]);
+	}
+
+	if (SDL_PointInRect(&mousePosition, &buttonRects[ButtonId::Accept]) && leftButtonDown)
+	{
+		SDL_RenderCopy(mRenderer, mTexture.texture, &mainButtonDown, &buttonRects[ButtonId::Accept]);
 		mAccepted = true;
 	}
 }
