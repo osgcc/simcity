@@ -360,7 +360,7 @@ enum class ScenarioName
 };
 
 
-void LoadScenario(int s, const Budget& budget)
+void LoadScenario(int s, Budget& budget)
 {
     std::string name;
     std::string fname;

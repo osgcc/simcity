@@ -1021,7 +1021,7 @@ void Take2Census()
 
 
 
-void CollectTax(const Budget& budget)
+void CollectTax(Budget& budget)
 {
     static float RLevels[3] = { 0.7f, 0.9f, 1.2f };
     static float FLevels[3] = { 1.4f, 1.2f, 0.8f };
@@ -1035,12 +1035,12 @@ void CollectTax(const Budget& budget)
         PoliceFund = PolicePop * 100;
         FireFund = FireStPop * 100;
         RoadFund = static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel()]);
-        TaxFund = static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * budget.TaxRate() * FLevels[GameLevel()]); //yuck
+        budget.TaxFund(static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * budget.TaxRate() * FLevels[GameLevel()])); //yuck
 
         if (TotalPop) // if there are people to tax
         {
-            CashFlow = TaxFund - (PoliceFund + FireFund + RoadFund);
-            DoBudget();
+            CashFlow = budget.TaxFund() - (PoliceFund + FireFund + RoadFund);
+            DoBudget(budget);
         }
         else
         {
@@ -1095,7 +1095,7 @@ void SetCommonInits()
     PoliceEffect = 1000;
     FireEffect = 1000;
     TaxFlag = 0;
-    TaxFund = 0;
+    //TaxFund = 0;
     /*
       if ((GameLevel > 2) || (GameLevel < 0)) GameLevel = 0;
       setGameLevel(GameLevel);
@@ -1279,7 +1279,7 @@ namespace
 };
 
 
-void Simulate(int mod16, const Budget& budget)
+void Simulate(int mod16, Budget& budget)
 {
     int speed = static_cast<int>(SimulationSpeed()); // ew, find a better way to do this
 
@@ -1411,7 +1411,7 @@ void Simulate(int mod16, const Budget& budget)
 }
 
 
-void SimFrame(const Budget& budget)
+void SimFrame(Budget& budget)
 {
     if (SimSpeed() == SimulationSpeed::Paused)
     {
@@ -1427,7 +1427,7 @@ void SimFrame(const Budget& budget)
 }
 
 
-void DoSimInit(const Budget& budget)
+void DoSimInit(Budget& budget)
 {
     Fcycle = 0;
     Scycle = 0;

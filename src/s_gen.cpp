@@ -570,7 +570,7 @@ void GenerateMap(int r)
 #include <iostream>
 #include "s_alloc.h"
 
-void GenerateSomeCity(int seed, const Budget& budget)
+void GenerateSomeCity(int seed, Budget& budget)
 {
     ScenarioID = 0;
     CityTime = 0;
@@ -590,7 +590,7 @@ void GenerateSomeCity(int seed, const Budget& budget)
 }
 
 
-void GenerateNewCity(const Budget& budget)
+void GenerateNewCity(Budget& budget)
 {
     GenerateSomeCity(RandomRange(0, std::numeric_limits<int>::max()), budget);
 }

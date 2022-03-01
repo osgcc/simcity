@@ -35,8 +35,6 @@ int roadMaxValue;
 int policeMaxValue;
 int fireMaxValue;
 
-int TaxFund;
-
 int MustDrawCurrPercents = 0;
 int MustDrawBudgetWindow = 0;
 
@@ -73,7 +71,7 @@ void ShowBudgetWindowAndStartWaiting()
 }
 
 
-void DoBudgetNow(int fromMenu)
+void DoBudgetNow(int fromMenu, Budget& budget)
 {
     int fireInt = static_cast<int>(FireFund * firePercent);
     int policeInt = static_cast<int>(PoliceFund * policePercent);
@@ -81,7 +79,7 @@ void DoBudgetNow(int fromMenu)
 
     int total = fireInt + policeInt + roadInt;
 
-    int yumDuckets = TaxFund + TotalFunds();
+    int yumDuckets = budget.TaxFund() + TotalFunds();
     int moreDough{};
 
     if (yumDuckets > total)
@@ -174,7 +172,7 @@ noMoney:
             RoadSpend = roadValue;
 
             total = FireSpend + PoliceSpend + RoadSpend;
-            moreDough = (int)(TaxFund - total);
+            moreDough = (int)(budget.TaxFund() - total);
             Spend(-moreDough);
         }
 
@@ -186,7 +184,7 @@ noMoney:
     else /* autoBudget & !fromMenu */
     {
         if ((yumDuckets) > total) {
-            moreDough = (int)(TaxFund - total);
+            moreDough = (int)(budget.TaxFund() - total);
             Spend(-moreDough);
             FireSpend = FireFund;
             PoliceSpend = PoliceFund;
@@ -207,15 +205,15 @@ noMoney:
 }
 
 
-void DoBudget()
+void DoBudget(Budget& budget)
 {
-    DoBudgetNow(0);
+    DoBudgetNow(0, budget);
 }
 
 
-void DoBudgetFromMenu()
+void DoBudgetFromMenu(Budget& budget)
 {
-  DoBudgetNow(1);
+  DoBudgetNow(1, budget);
 }
 
 
@@ -227,12 +225,12 @@ void SetBudget(const std::string& flowStr, const std::string& previousStr, const
 
 void ReallyDrawBudgetWindow(const Budget& budget)
 {
-    const int cashFlow = TaxFund - fireValue - policeValue - roadValue;
+    const int cashFlow = budget.TaxFund() - fireValue - policeValue - roadValue;
 
     const std::string cashFlowString = ((cashFlow < 0) ? "-" : "+") + NumberToDollarDecimal(cashFlow);
     const std::string previousFundsString = NumberToDollarDecimal(TotalFunds());
     const std::string currentFundsString = NumberToDollarDecimal(cashFlow + TotalFunds());
-    const std::string taxesCollectedString = NumberToDollarDecimal(TaxFund);
+    const std::string taxesCollectedString = NumberToDollarDecimal(budget.TaxFund());
 
     SetBudget(cashFlowString, previousFundsString, currentFundsString, taxesCollectedString, budget.TaxRate());
 }

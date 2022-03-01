@@ -111,7 +111,7 @@ int TickCount()
 }
 
 
-void DoPlayNewCity(const Budget& budget)
+void DoPlayNewCity(Budget& budget)
 {
     Eval("UIPlayNewCity");
 
@@ -188,7 +188,7 @@ void InitGame()
 }
 
 
-void GameStarted(const Budget& budget)
+void GameStarted(Budget& budget)
 {
     InvalidateMaps();
     InvalidateEditors();

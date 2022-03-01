@@ -22,8 +22,8 @@ void LastFunds(const int funds);
 int TickCount();
 
 void InitGame();
-void GameStarted(const Budget&);
-void DoPlayNewCity(const Budget&);
+void GameStarted(Budget&);
+void DoPlayNewCity(Budget&);
 
 void CityName(const std::string&);
 const std::string& CityName();

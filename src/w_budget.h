@@ -14,5 +14,5 @@ void InitFundingLevel();
 void UpdateBudgetWindow(const Budget& budget);
 void UpdateBudget();
 void ShowBudgetWindowAndStartWaiting();
-void DoBudget();
+void DoBudget(Budget&);
 void drawCurrPercents();

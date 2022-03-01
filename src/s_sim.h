@@ -12,9 +12,9 @@
 
 class Budget;
 
-void SimFrame(const Budget&);
+void SimFrame(Budget&);
 void FireZone(int Xloc, int Yloc, int ch);
-void DoSimInit(const Budget&);
+void DoSimInit(Budget&);
 void DoSPZone(int PwrOn);
 void RepairZone(int ZCent, int zsize);
 

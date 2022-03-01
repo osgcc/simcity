@@ -13,4 +13,4 @@
 class Budget;
 
 void ClearMap();
-void GenerateNewCity(const Budget&);
+void GenerateNewCity(Budget&);

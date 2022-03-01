@@ -34,6 +34,8 @@ public:
 	int AverageTax() const { return mAverageTax; }
 
 	int TaxFund() const { return mTaxFund; }
+	void TaxFund(int fund) { mTaxFund = fund; }
+
 	int RoadFund() const { return mRoadFund; }
 	int PoliceFund() const { return mPoliceFund; }
 	int FireFund() const { return mFireFund; }
@@ -41,6 +43,7 @@ public:
 private:
 	int mCurrentFunds{};
 	int mPreviousFunds{};
+	int mTaxFund{};
 	int mTaxRate{ DefaultTaxRate };
 	int mAverageTax{};
 
@@ -55,8 +58,6 @@ private:
 	int mRoadMaxValue{};
 	int mPoliceMaxValue{};
 	int mFireMaxValue{};
-
-	int mTaxFund{};
 
 	int mRoadFund{};
 	int mPoliceFund{};
