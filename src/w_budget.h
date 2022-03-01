@@ -11,7 +11,7 @@
 #pragma once
 
 void InitFundingLevel();
-void UpdateBudgetWindow();
+void UpdateBudgetWindow(const Budget& budget);
 void UpdateBudget();
 void ShowBudgetWindowAndStartWaiting();
 void DoBudget();

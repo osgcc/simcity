@@ -13,8 +13,10 @@
 #include "Point.h"
 #include "w_resrc.h"
 
+class Budget;
+
 int SendMes(NotificationId);
-void SendMessages();
+void SendMessages(const Budget&);
 void ClearMes();
 void SendMesAt(NotificationId, int x, int y);
 void doMessage();

@@ -16,10 +16,11 @@ public:
 	const int MaxTaxRate = 20;
 	const int MinTaxRate = 0;
 
+	const int DefaultTaxRate = 7;
+
 public:
 	Budget() = default;
 	~Budget() = default;
-
 
 	int CurrentFunds() const { return mCurrentFunds; }
 	void CurrentFunds(const int funds);
@@ -30,11 +31,18 @@ public:
 	int TaxRate() const { return mTaxRate; }
 	void TaxRate(const int rate);
 
+	int AverageTax() const { return mAverageTax; }
+
+	int TaxFund() const { return mTaxFund; }
+	int RoadFund() const { return mRoadFund; }
+	int PoliceFund() const { return mPoliceFund; }
+	int FireFund() const { return mFireFund; }
 
 private:
 	int mCurrentFunds{};
 	int mPreviousFunds{};
-	int mTaxRate{};
+	int mTaxRate{ DefaultTaxRate };
+	int mAverageTax{};
 
 	float mRroadPercent{ 0.0f };
 	float mRolicePercent{ 0.0f };
@@ -48,4 +56,9 @@ private:
 	int mPoliceMaxValue{};
 	int mFireMaxValue{};
 
+	int mTaxFund{};
+
+	int mRoadFund{};
+	int mPoliceFund{};
+	int mFireFund{};
 };

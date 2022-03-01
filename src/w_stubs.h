@@ -11,6 +11,7 @@
 #pragma once
 
 extern int autoGo;
+class Budget;
 
 void Spend(int dollars);
 void SetFunds(int dollars);
@@ -21,10 +22,10 @@ void LastFunds(const int funds);
 int TickCount();
 
 void InitGame();
-void GameStarted();
-void DoPlayNewCity();
+void GameStarted(const Budget&);
+void DoPlayNewCity(const Budget&);
 
-void CityName(const std::string& name);
+void CityName(const std::string&);
 const std::string& CityName();
 
 void GameLevel(const int level);

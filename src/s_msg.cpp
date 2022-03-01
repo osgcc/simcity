@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "Budget.h"
+
 #include "s_sim.h"
 
 #include "w_resrc.h"
@@ -304,7 +306,7 @@ void CheckGrowth()
 }
 
 
-void SendMessages()
+void SendMessages(const Budget& budget)
 {
     if ((ScenarioID) && (ScoreType) && (ScoreWait))
     {
@@ -438,7 +440,7 @@ void SendMessages()
         break;
 
     case 51:
-        if (CityTax > 12)
+        if (budget.TaxRate() > 12)
         {
             SendMes(NotificationId::TaxesHigh);
         }

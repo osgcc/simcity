@@ -10,5 +10,7 @@
 // file, included in this distribution, for details.
 #pragma once
 
+class Budget;
+
 void ClearMap();
-void GenerateNewCity();
+void GenerateNewCity(const Budget&);

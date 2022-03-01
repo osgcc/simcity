@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "s_sim.h"
 
+#include "Budget.h"
+
 #include "main.h"
 #include "Map.h"
 
@@ -671,7 +673,7 @@ void MapScan(int x1, int x2)
 }
 
 
-void SetValves()
+void SetValves(const Budget& budget)
 {
     static int TaxTable[21] = {
       200, 150, 120, 100, 80, 50, 30, 0, -10, -40, -100,
@@ -787,7 +789,7 @@ void SetValves()
     if (Cratio > 2) { Cratio = 2; }
     if (Iratio > 2) { Iratio = 2; }
 
-    int index = std::clamp(CityTax + GameLevel(), 0, 20);
+    int index = std::clamp(budget.TaxRate() + GameLevel(), 0, 20);
 
     Rratio = ((Rratio - 1) * 600) + TaxTable[index]; /* global tax/Glevel effects */
     Cratio = ((Cratio - 1) * 600) + TaxTable[index];
@@ -1019,7 +1021,7 @@ void Take2Census()
 
 
 
-void CollectTax()
+void CollectTax(const Budget& budget)
 {
     static float RLevels[3] = { 0.7f, 0.9f, 1.2f };
     static float FLevels[3] = { 1.4f, 1.2f, 0.8f };
@@ -1033,7 +1035,7 @@ void CollectTax()
         PoliceFund = PolicePop * 100;
         FireFund = FireStPop * 100;
         RoadFund = static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel()]);
-        TaxFund = static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * CityTax * FLevels[GameLevel()]); //yuck
+        TaxFund = static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * budget.TaxRate() * FLevels[GameLevel()]); //yuck
 
         if (TotalPop) // if there are people to tax
         {
@@ -1277,7 +1279,7 @@ namespace
 };
 
 
-void Simulate(int mod16)
+void Simulate(int mod16, const Budget& budget)
 {
     int speed = static_cast<int>(SimulationSpeed()); // ew, find a better way to do this
 
@@ -1289,15 +1291,15 @@ void Simulate(int mod16)
         if (DoInitialEval)
         {
             DoInitialEval = 0;
-            CityEvaluation();
+            CityEvaluation(budget);
         }
         
         CityTime++;
-        AvCityTax += CityTax; // post <-- ?
+        AvCityTax += budget.TaxRate(); // post <-- ?
         
         if (!(Scycle % 2))
         {
-            SetValves();
+            SetValves(budget);
         }
         
         ClearCensus();
@@ -1347,8 +1349,8 @@ void Simulate(int mod16)
 
         if (!(CityTime % TAXFREQ))
         {
-            CollectTax();
-            CityEvaluation();
+            CollectTax(budget);
+            CityEvaluation(budget);
         }
         break;
 
@@ -1365,7 +1367,7 @@ void Simulate(int mod16)
         NewMapFlags[COMAP] = 1;
         NewMapFlags[INMAP] = 1;
         NewMapFlags[DYMAP] = 1;
-        SendMessages();
+        SendMessages(budget);
         break;
 
     case 11:
@@ -1409,7 +1411,7 @@ void Simulate(int mod16)
 }
 
 
-void SimFrame()
+void SimFrame(const Budget& budget)
 {
     if (SimSpeed() == SimulationSpeed::Paused)
     {
@@ -1421,11 +1423,11 @@ void SimFrame()
         Fcycle = 0;
     }
     
-    Simulate(Fcycle % 16);
+    Simulate(Fcycle % 16, budget);
 }
 
 
-void DoSimInit()
+void DoSimInit(const Budget& budget)
 {
     Fcycle = 0;
     Scycle = 0;
@@ -1440,7 +1442,7 @@ void DoSimInit()
         SimLoadInit();
     }
 
-    SetValves();
+    SetValves(budget);
     ClearCensus();
     MapScan(0, SimWidth); /* XXX are you sure ??? */
     DoPowerScan();

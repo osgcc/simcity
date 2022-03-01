@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "Budget.h"
 #include "BudgetWindow.h"
 
 #include "Font.h"
@@ -117,6 +118,8 @@ namespace
     std::string currentBudget{};
 
     std::vector<const SDL_Rect*> UiRects{};
+
+    Budget budget{};
 
     BudgetWindow* budgetWindow{ nullptr };
     StringRender* stringRenderer{ nullptr };
@@ -228,7 +231,7 @@ void sim_update_budgets()
         return;
     }
 
-    UpdateBudgetWindow();
+    UpdateBudgetWindow(budget);
 }
 
 
@@ -293,7 +296,7 @@ void sim_loop(bool doSim)
 
     if (doSim)
     {
-        SimFrame();
+        SimFrame(budget);
         sim_update_maps();
     }
 
@@ -338,7 +341,6 @@ void sim_init()
     tileSynch = 0x01;
     sim_skips = sim_skip = 0;
     AutoGotoMessageLocation(true);
-    CityTax = 7;
     CityTime = 50;
     NoDisasters = 0;
     PunishCnt = 0;
@@ -890,7 +892,7 @@ void startGame()
 
     Startup = -1;
 
-    GameStarted();
+    GameStarted(budget);
 
     DrawMiniMap();
     DrawBigMap();

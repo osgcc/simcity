@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "Budget.h"
+
 #include "s_fileio.h"
 #include "s_gen.h"
 #include "s_sim.h"
@@ -109,14 +111,14 @@ int TickCount()
 }
 
 
-void DoPlayNewCity()
+void DoPlayNewCity(const Budget& budget)
 {
     Eval("UIPlayNewCity");
 
     GameLevel(0);
     CityName("NowHere");
     if (GameLevel() == -1) { GameLevel(0); }
-    GenerateNewCity();
+    GenerateNewCity(budget);
 
     /*
     proc UIPlayGame {}
@@ -186,7 +188,7 @@ void InitGame()
 }
 
 
-void GameStarted()
+void GameStarted(const Budget& budget)
 {
     InvalidateMaps();
     InvalidateEditors();
@@ -211,7 +213,7 @@ void GameStarted()
         {
             CityName("NowHere");
         }
-        DoPlayNewCity();
+        DoPlayNewCity(budget);
         break;
 
     case 0:

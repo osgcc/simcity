@@ -10,5 +10,7 @@
 // file, included in this distribution, for details.
 #pragma once
 
-void CityEvaluation();
+class Budget;
+
+void CityEvaluation(const Budget& budget);
 void EvalInit();

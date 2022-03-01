@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "Budget.h"
+
 #include "s_alloc.h"
 #include "s_sim.h"
 
@@ -187,7 +189,7 @@ int GetFire()
 }
 
 
-void GetScore()
+void GetScore(const Budget& budget)
 {
     int x, z;
     int OldCityScore;
@@ -245,7 +247,7 @@ void GetScore()
     }
     z = static_cast<int>(z * SM);
     z = z - GetFire();		/* dec score for fires */
-    z = z - (CityTax);
+    z = z - (budget.TaxRate());
 
     TM = static_cast<float>(unPwrdZCnt + PwrdZCnt);	/* dec score for unpowered zones */
     if (TM) { SM = PwrdZCnt / TM; }
@@ -281,7 +283,7 @@ void DoVotes()
 }
 
 
-void DoProblems()
+void DoProblems(const Budget& budget)
 {
     int x, z;
     int ThisProb, Max;
@@ -294,7 +296,7 @@ void DoProblems()
     ProblemTable[0] = CrimeAverage; /* Crime */
     ProblemTable[1] = PolluteAverage; /* Pollution */
     ProblemTable[2] = static_cast<int>(LVAverage * .7); /* Housing */
-    ProblemTable[3] = CityTax * 10; /* Taxes */
+    ProblemTable[3] = budget.TaxRate() * 10; /* Taxes */
     ProblemTable[4] = AverageTrf(); /* Traffic */
     ProblemTable[5] = GetUnemployment(); /* Unemployment */
     ProblemTable[6] = GetFire(); /* Fire */
@@ -331,15 +333,15 @@ void DoProblems()
 }
 
 
-void CityEvaluation()
+void CityEvaluation(const Budget& budget)
 {
     EvalValid = 0;
     if (TotalPop)
     {
         GetAssessedValue();
         DoPopNum();
-        DoProblems();
-        GetScore();
+        DoProblems(budget);
+        GetScore(budget);
         DoVotes();
         ChangeEval();
     }

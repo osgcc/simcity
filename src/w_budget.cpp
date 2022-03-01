@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "Budget.h"
 
 #include "s_msg.h"
 
@@ -33,6 +34,8 @@ int fireValue;
 int roadMaxValue;
 int policeMaxValue;
 int fireMaxValue;
+
+int TaxFund;
 
 int MustDrawCurrPercents = 0;
 int MustDrawBudgetWindow = 0;
@@ -72,117 +75,135 @@ void ShowBudgetWindowAndStartWaiting()
 
 void DoBudgetNow(int fromMenu)
 {
-  int yumDuckets;
-  int total;
-  int moreDough;
-  int fireInt, policeInt, roadInt;
+    int fireInt = static_cast<int>(FireFund * firePercent);
+    int policeInt = static_cast<int>(PoliceFund * policePercent);
+    int roadInt = static_cast<int>(RoadFund * roadPercent);
 
-  fireInt = (int)(((float)FireFund) * firePercent);
-  policeInt = (int)(((float)PoliceFund) * policePercent);
-  roadInt = (int)(((float)RoadFund) * roadPercent);
+    int total = fireInt + policeInt + roadInt;
 
-  total = fireInt + policeInt + roadInt;
+    int yumDuckets = TaxFund + TotalFunds();
+    int moreDough{};
 
-  yumDuckets = TaxFund + TotalFunds();
-
-  if (yumDuckets > total) {
-    fireValue = fireInt;
-    policeValue = policeInt;
-    roadValue = roadInt;
-  } else if (total > 0) {
-    if (yumDuckets > roadInt) {
-      roadValue = roadInt;
-      yumDuckets -= roadInt;
-
-      if (yumDuckets > fireInt) {
-	fireValue = fireInt;
-	yumDuckets -= fireInt;
-
-	if (yumDuckets > policeInt) {
-	  policeValue = policeInt;
-	  yumDuckets -= policeInt;
-	} else {
-	  policeValue = yumDuckets;
-	  if (yumDuckets > 0)
-	    policePercent = ((float)yumDuckets) / ((float)PoliceFund);
-	  else
-	    policePercent = 0.0;
-	}
-      } else {
-	fireValue = yumDuckets;
-	policeValue = 0;
-	policePercent = 0.0;
-	if (yumDuckets > 0)
-	  firePercent = ((float)yumDuckets) / ((float)FireFund);
-	else
-	  firePercent = 0.0;
-      }
-    } else {
-      roadValue = yumDuckets;
-      if (yumDuckets > 0)
-	roadPercent = ((float)yumDuckets) / ((float)RoadFund);
-      else
-	roadPercent = 0.0;
-
-      fireValue = 0;
-      policeValue = 0;
-      firePercent = 0.0;
-      policePercent = 0.0;
+    if (yumDuckets > total)
+    {
+        fireValue = fireInt;
+        policeValue = policeInt;
+        roadValue = roadInt;
     }
-  } else {
-    fireValue = 0;
-    policeValue = 0;
-    roadValue = 0;
-    firePercent = 1.0;
-    policePercent = 1.0;
-    roadPercent = 1.0;
-  }
+    else if (total > 0)
+    {
+        if (yumDuckets > roadInt)
+        {
+            roadValue = roadInt;
+            yumDuckets -= roadInt;
 
-  fireMaxValue = FireFund;
-  policeMaxValue = PoliceFund;
-  roadMaxValue = RoadFund;
+            if (yumDuckets > fireInt)
+            {
+                fireValue = fireInt;
+                yumDuckets -= fireInt;
 
-  drawCurrPercents();
+                if (yumDuckets > policeInt)
+                {
+                    policeValue = policeInt;
+                    yumDuckets -= policeInt;
+                }
+                else
+                {
+                    policeValue = yumDuckets;
+                    if (yumDuckets > 0)
+                        policePercent = ((float)yumDuckets) / ((float)PoliceFund);
+                    else
+                        policePercent = 0.0;
+                }
+            }
+            else
+            {
+                fireValue = yumDuckets;
+                policeValue = 0;
+                policePercent = 0.0;
+                if (yumDuckets > 0)
+                    firePercent = ((float)yumDuckets) / ((float)FireFund);
+                else
+                    firePercent = 0.0;
+            }
+        }
+        else
+        {
+            roadValue = yumDuckets;
+            if (yumDuckets > 0)
+                roadPercent = ((float)yumDuckets) / ((float)RoadFund);
+            else
+                roadPercent = 0.0;
 
- noMoney:	
-  if ((!autoBudget) || fromMenu) {
-    if (!autoBudget) {
-      /* TODO: append the the current year to the budget string */
+            fireValue = 0;
+            policeValue = 0;
+            firePercent = 0.0;
+            policePercent = 0.0;
+        }
+    }
+    else
+    {
+        fireValue = 0;
+        policeValue = 0;
+        roadValue = 0;
+        firePercent = 1.0;
+        policePercent = 1.0;
+        roadPercent = 1.0;
     }
 
-    ShowBudgetWindowAndStartWaiting();
+    fireMaxValue = FireFund;
+    policeMaxValue = PoliceFund;
+    roadMaxValue = RoadFund;
 
-    if (!fromMenu) {
-      FireSpend = fireValue;
-      PoliceSpend = policeValue;
-      RoadSpend = roadValue;
-
-      total = FireSpend + PoliceSpend + RoadSpend;
-      moreDough = (int)(TaxFund - total);
-      Spend(-moreDough);
-    }
-    drawBudgetWindow();
     drawCurrPercents();
-    sim_update_editors();
 
-  } else { /* autoBudget & !fromMenu */
-    if ((yumDuckets) > total) {
-      moreDough = (int)(TaxFund - total);
-      Spend(-moreDough);
-      FireSpend = FireFund;
-      PoliceSpend = PoliceFund;
-      RoadSpend = RoadFund;
-      drawBudgetWindow();
-      drawCurrPercents();
-      sim_update_editors();
-    } else {
-      autoBudget = 0; /* XXX: force autobudget */
-      MustUpdateOptions = 1;
-      ClearMes();
-      SendMes(NotificationId::CoffersEmpty);
-      goto noMoney;
+noMoney:
+    if ((!autoBudget) || fromMenu)
+    {
+        if (!autoBudget)
+        {
+            /* TODO: append the the current year to the budget string */
+        }
+
+        ShowBudgetWindowAndStartWaiting();
+
+        if (!fromMenu)
+        {
+            FireSpend = fireValue;
+            PoliceSpend = policeValue;
+            RoadSpend = roadValue;
+
+            total = FireSpend + PoliceSpend + RoadSpend;
+            moreDough = (int)(TaxFund - total);
+            Spend(-moreDough);
+        }
+
+        drawBudgetWindow();
+        drawCurrPercents();
+        sim_update_editors();
+
     }
-  }
+    else /* autoBudget & !fromMenu */
+    {
+        if ((yumDuckets) > total) {
+            moreDough = (int)(TaxFund - total);
+            Spend(-moreDough);
+            FireSpend = FireFund;
+            PoliceSpend = PoliceFund;
+            RoadSpend = RoadFund;
+            drawBudgetWindow();
+            drawCurrPercents();
+            sim_update_editors();
+        }
+        else
+        {
+            autoBudget = 0; /* XXX: force autobudget */
+            MustUpdateOptions = 1;
+            ClearMes();
+            SendMes(NotificationId::CoffersEmpty);
+            goto noMoney;
+        }
+    }
 }
 
 
@@ -204,7 +225,7 @@ void SetBudget(const std::string& flowStr, const std::string& previousStr, const
 }
 
 
-void ReallyDrawBudgetWindow()
+void ReallyDrawBudgetWindow(const Budget& budget)
 {
     const int cashFlow = TaxFund - fireValue - policeValue - roadValue;
 
@@ -213,7 +234,7 @@ void ReallyDrawBudgetWindow()
     const std::string currentFundsString = NumberToDollarDecimal(cashFlow + TotalFunds());
     const std::string taxesCollectedString = NumberToDollarDecimal(TaxFund);
 
-    SetBudget(cashFlowString, previousFundsString, currentFundsString, taxesCollectedString, CityTax);
+    SetBudget(cashFlowString, previousFundsString, currentFundsString, taxesCollectedString, budget.TaxRate());
 }
 
 
@@ -236,7 +257,7 @@ void ReallyDrawCurrPercents()
 }
 
 
-void UpdateBudgetWindow()
+void UpdateBudgetWindow(const Budget& budget)
 {
     if (MustDrawCurrPercents)
     {
@@ -245,7 +266,7 @@ void UpdateBudgetWindow()
     }
     if (MustDrawBudgetWindow)
     {
-        ReallyDrawBudgetWindow();
+        ReallyDrawBudgetWindow(budget);
         MustDrawBudgetWindow = 0;
     }
 }

@@ -570,7 +570,7 @@ void GenerateMap(int r)
 #include <iostream>
 #include "s_alloc.h"
 
-void GenerateSomeCity(int seed)
+void GenerateSomeCity(int seed, const Budget& budget)
 {
     ScenarioID = 0;
     CityTime = 0;
@@ -583,14 +583,14 @@ void GenerateSomeCity(int seed)
     InvalidateEditors();
     InvalidateMaps();
     UpdateFunds();
-    DoSimInit();
+    DoSimInit(budget);
     Eval("UIDidGenerateNewCity");
 
     GenerateMap(seed);
 }
 
 
-void GenerateNewCity()
+void GenerateNewCity(const Budget& budget)
 {
-    GenerateSomeCity(RandomRange(0, std::numeric_limits<int>::max()));
+    GenerateSomeCity(RandomRange(0, std::numeric_limits<int>::max()), budget);
 }

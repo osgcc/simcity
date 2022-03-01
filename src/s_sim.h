@@ -10,9 +10,11 @@
 // file, included in this distribution, for details.
 #pragma once
 
-void SimFrame();
+class Budget;
+
+void SimFrame(const Budget&);
 void FireZone(int Xloc, int Yloc, int ch);
-void DoSimInit();
+void DoSimInit(const Budget&);
 void DoSPZone(int PwrOn);
 void RepairZone(int ZCent, int zsize);
 

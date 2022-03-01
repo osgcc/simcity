@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "Budget.h"
+
 #include "s_alloc.h"
 #include "s_init.h"
 #include "s_sim.h"
@@ -358,7 +360,7 @@ enum class ScenarioName
 };
 
 
-void LoadScenario(int s)
+void LoadScenario(int s, const Budget& budget)
 {
     std::string name;
     std::string fname;
@@ -439,7 +441,6 @@ void LoadScenario(int s)
     InvalidateMaps();
     InvalidateEditors();
     SimSpeed(SimulationSpeed::Normal);
-    CityTax = 7;
 
     _load_file(fname, ResroucesDirectory);
 
@@ -450,6 +451,6 @@ void LoadScenario(int s)
     InvalidateMaps();
     InitSimLoad = 1;
     DoInitialEval = 0;
-    DoSimInit();
+    DoSimInit(budget);
     DidLoadScenario();
 }

@@ -320,7 +320,7 @@ extern int DoOverlay;
 extern int RoadSpend, PoliceSpend, FireSpend;
 extern int TaxFund, RoadFund, PoliceFund, FireFund;
 extern int RoadEffect, PoliceEffect, FireEffect;
-extern int TaxFlag, CityTax;
+extern int TaxFlag;
 
 extern int costOf[];
 
