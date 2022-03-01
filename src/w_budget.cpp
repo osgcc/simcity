@@ -25,12 +25,15 @@
 float roadPercent = 0.0;
 float policePercent = 0.0;
 float firePercent = 0.0;
+
 int roadValue;
 int policeValue;
 int fireValue;
+
 int roadMaxValue;
 int policeMaxValue;
 int fireMaxValue;
+
 int MustDrawCurrPercents = 0;
 int MustDrawBudgetWindow = 0;
 

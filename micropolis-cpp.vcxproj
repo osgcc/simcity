@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Budget.cpp" />
     <ClCompile Include="src\BudgetWindow.cpp" />
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\g_ani.cpp" />
@@ -58,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="src\Budget.h" />
     <ClInclude Include="src\BudgetWindow.h" />
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Graph.h" />
