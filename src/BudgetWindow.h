@@ -17,10 +17,28 @@
 #include "StringRender.h"
 #include "Texture.h"
 
+
 class BudgetWindow
 {
 public:
 	const std::string Title{ "Annual Fiscal Budget" };
+
+	enum class ButtonId
+	{
+		None,
+		TaxRateUp,
+		TaxRateDown,
+		TransportUp,
+		TransportDown,
+		PoliceUp,
+		PoliceDown,
+		FireUp,
+		FireDown,
+		Accept
+	};
+
+	const int ButtonStateNormal = 0;
+	const int ButtonStatePressed = 1;
 
 public:
 	BudgetWindow() = delete;
@@ -38,11 +56,13 @@ public:
 
 	bool accepted() const { return mAccepted; }
 
-	void injectMouseDown(const SDL_Point& pos);
+	void injectMouseClickPosition(const SDL_Point& pos);
+	void injectMouseUp();
 
 	void draw();
 
 private:
+	void handleMouseDown(const ButtonId id);
 
 	bool mAccepted{ false };
 	SDL_Rect mRect{ 0, 0, 456, 422 };
@@ -53,4 +73,6 @@ private:
 	Font* mTitleFont;
 
 	Texture mTexture{};
+
+	ButtonId mButtonDownId{ ButtonId::None };
 };
