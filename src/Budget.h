@@ -54,8 +54,8 @@ private:
 	int mTaxRate{ DefaultTaxRate };
 	int mAverageTax{};
 
-	float mRroadPercent{ 0.0f };
-	float mRolicePercent{ 0.0f };
+	float mRoadPercent{ 0.0f };
+	float mPolicePercent{ 0.0f };
 	float mFirePercent{ 0.0f };
 
 	int mRoadValue{};
