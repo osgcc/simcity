@@ -268,11 +268,3 @@ void UpdateBudgetWindow(const Budget& budget)
         MustDrawBudgetWindow = 0;
     }
 }
-
-
-void UpdateBudget()
-{
-    drawCurrPercents();
-    drawBudgetWindow();
-    Eval("UIUpdateBudget");
-}
