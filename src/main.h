@@ -317,9 +317,7 @@ extern int ShakeNow;
 extern int DonDither;
 extern int DoOverlay;
 
-extern float roadPercent, policePercent, firePercent;
 extern int RoadSpend, PoliceSpend, FireSpend;
-extern int roadMaxValue, policeMaxValue, fireMaxValue;
 extern int TaxFund, RoadFund, PoliceFund, FireFund;
 extern int RoadEffect, PoliceEffect, FireEffect;
 extern int TaxFlag, CityTax;
