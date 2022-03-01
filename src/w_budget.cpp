@@ -73,9 +73,9 @@ void ShowBudgetWindowAndStartWaiting()
 
 void DoBudgetNow(int fromMenu, Budget& budget)
 {
-    int fireInt = static_cast<int>(FireFund * firePercent);
-    int policeInt = static_cast<int>(PoliceFund * policePercent);
-    int roadInt = static_cast<int>(RoadFund * roadPercent);
+    int fireInt = static_cast<int>(budget.FireFund() * firePercent);
+    int policeInt = static_cast<int>(budget.PoliceFund() * policePercent);
+    int roadInt = static_cast<int>(budget.RoadFund() * roadPercent);
 
     int total = fireInt + policeInt + roadInt;
 
@@ -109,7 +109,7 @@ void DoBudgetNow(int fromMenu, Budget& budget)
                 {
                     policeValue = yumDuckets;
                     if (yumDuckets > 0)
-                        policePercent = ((float)yumDuckets) / ((float)PoliceFund);
+                        policePercent = ((float)yumDuckets) / ((float)budget.PoliceFund());
                     else
                         policePercent = 0.0;
                 }
@@ -120,7 +120,7 @@ void DoBudgetNow(int fromMenu, Budget& budget)
                 policeValue = 0;
                 policePercent = 0.0;
                 if (yumDuckets > 0)
-                    firePercent = ((float)yumDuckets) / ((float)FireFund);
+                    firePercent = ((float)yumDuckets) / ((float)budget.FireFund());
                 else
                     firePercent = 0.0;
             }
@@ -129,7 +129,7 @@ void DoBudgetNow(int fromMenu, Budget& budget)
         {
             roadValue = yumDuckets;
             if (yumDuckets > 0)
-                roadPercent = ((float)yumDuckets) / ((float)RoadFund);
+                roadPercent = ((float)yumDuckets) / ((float)budget.RoadFund());
             else
                 roadPercent = 0.0;
 
@@ -149,9 +149,9 @@ void DoBudgetNow(int fromMenu, Budget& budget)
         roadPercent = 1.0;
     }
 
-    fireMaxValue = FireFund;
-    policeMaxValue = PoliceFund;
-    roadMaxValue = RoadFund;
+    fireMaxValue = budget.FireFund();
+    policeMaxValue = budget.PoliceFund();
+    roadMaxValue = budget.RoadFund();
 
     drawCurrPercents();
 
@@ -186,9 +186,9 @@ noMoney:
         if ((yumDuckets) > total) {
             moreDough = (int)(budget.TaxFund() - total);
             Spend(-moreDough);
-            FireSpend = FireFund;
-            PoliceSpend = PoliceFund;
-            RoadSpend = RoadFund;
+            FireSpend = budget.FireFund();
+            PoliceSpend = budget.PoliceFund();
+            RoadSpend = budget.RoadFund();
             drawBudgetWindow();
             drawCurrPercents();
             sim_update_editors();

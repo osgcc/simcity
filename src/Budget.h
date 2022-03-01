@@ -34,11 +34,18 @@ public:
 	int AverageTax() const { return mAverageTax; }
 
 	int TaxFund() const { return mTaxFund; }
-	void TaxFund(int fund) { mTaxFund = fund; }
+	void TaxFund(const int value) { mTaxFund = value; }
 
 	int RoadFund() const { return mRoadFund; }
+	void RoadFund(const int value) { mRoadFund = value; }
+
 	int PoliceFund() const { return mPoliceFund; }
+	void PoliceFund(const int value) { mPoliceFund = value; }
+
 	int FireFund() const { return mFireFund; }
+	void FireFund(const int value) { mFireFund = value; }
+
+	int CashFlow() const;
 
 private:
 	int mCurrentFunds{};

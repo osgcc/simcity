@@ -19,3 +19,9 @@ void Budget::TaxRate(const int rate)
 {
 	mTaxRate = std::clamp(rate, MinTaxRate, MaxTaxRate);
 }
+
+
+int Budget::CashFlow() const
+{
+	return TaxFund() - (PoliceFund() + FireFund() + RoadFund());
+}

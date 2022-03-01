@@ -1030,14 +1030,14 @@ void CollectTax(Budget& budget)
     // XXX: do something with z
     int z = AvCityTax / 48;  // post
     AvCityTax = 0;
-    PoliceFund = PolicePop * 100;
-    FireFund = FireStPop * 100;
-    RoadFund = static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel()]);
+    budget.PoliceFund( PolicePop * 100);
+    budget.FireFund(FireStPop * 100);
+    budget.RoadFund(static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel()]));
     budget.TaxFund(static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * budget.TaxRate() * FLevels[GameLevel()])); //yuck
 
     if (TotalPop) // if there are people to tax
     {
-        CashFlow = budget.TaxFund() - (PoliceFund + FireFund + RoadFund);
+        CashFlow = budget.CashFlow();
         DoBudget(budget);
     }
     else
@@ -1455,29 +1455,29 @@ void DoSimInit(Budget& budget)
 }
 
 
-void UpdateFundEffects()
+void UpdateFundEffects(const Budget& budget)
 {
-    if (RoadFund)
+    if (budget.RoadFund())
     {
-        RoadEffect = (int)(((float)RoadSpend / (float)RoadFund) * 32.0);
+        RoadEffect = (int)(((float)RoadSpend / (float)budget.RoadFund()) * 32.0);
     }
     else
     {
         RoadEffect = 32;
     }
 
-    if (PoliceFund)
+    if (budget.PoliceFund())
     {
-        PoliceEffect = (int)(((float)PoliceSpend / (float)PoliceFund) * 1000.0);
+        PoliceEffect = (int)(((float)PoliceSpend / (float)budget.PoliceFund()) * 1000.0);
     }
     else
     {
         PoliceEffect = 1000;
     }
 
-    if (FireFund)
+    if (budget.FireFund())
     {
-        FireEffect = (int)(((float)FireSpend / (float)FireFund) * 1000.0);
+        FireEffect = (int)(((float)FireSpend / (float)budget.FireFund()) * 1000.0);
     }
     else
     {
