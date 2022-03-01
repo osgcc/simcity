@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "Budget.h"
+
 #include "w_stubs.h"
 #include "w_tool.h"
 #include "w_util.h"
@@ -46,11 +48,11 @@ int _WireTable[16] = {
 
 /* comefrom: ConnecTile */
 ToolResult
-_LayDoze(int x, int y, int *TileAdrPtr)
+_LayDoze(int x, int y, int *TileAdrPtr, Budget& budget)
 {
   int Tile;
 
-  if (!(TotalFunds())) {
+  if (budget.Broke()) {
     return ToolResult::InsufficientFunds;			/* no mas dinero. */
   }
 
@@ -87,19 +89,19 @@ _LayDoze(int x, int y, int *TileAdrPtr)
     break;
   }
 
-  Spend(1);			/* Costs $1.00....*/
+  budget.Spend(1);			/* Costs $1.00....*/
   return ToolResult::Success;
 }
 
 
 /* comefrom: ConnecTile */
 ToolResult
-_LayRoad(int x, int y, int *TileAdrPtr)
+_LayRoad(int x, int y, int *TileAdrPtr, Budget& budget)
 {
   int Tile;
   int cost = 10;
 
-  if (TotalFunds() < 10) {
+  if (budget.CurrentFunds() < 10) {
     return ToolResult::InsufficientFunds;
   }
 
@@ -114,7 +116,7 @@ _LayRoad(int x, int y, int *TileAdrPtr)
   case RIVER:			/* Road on Water */
   case REDGE:
   case CHANNEL:			/* Check how to build bridges, if possible. */
-    if (TotalFunds() < 50) {
+    if (budget.CurrentFunds() < 50) {
       return ToolResult::InsufficientFunds;
     }
 
@@ -192,7 +194,7 @@ _LayRoad(int x, int y, int *TileAdrPtr)
 
   }
 
-  Spend(cost);
+  budget.Spend(cost);
 
   return ToolResult::Success;
 }
@@ -200,12 +202,12 @@ _LayRoad(int x, int y, int *TileAdrPtr)
 
 /* comefrom: ConnecTile */
 ToolResult
-_LayRail(int x, int y, int *TileAdrPtr)
+_LayRail(int x, int y, int *TileAdrPtr, Budget& budget)
 {
   int Tile;
   int cost = 20;
 
-  if (TotalFunds() < 20) {
+  if (budget.CurrentFunds() < 20) {
     return ToolResult::InsufficientFunds;
   }
 
@@ -220,7 +222,7 @@ _LayRail(int x, int y, int *TileAdrPtr)
   case 2:			/* Rail on Water */
   case 3:
   case 4:			/* Check how to build underwater tunnel, if possible. */
-    if (TotalFunds() < 100) {
+    if (budget.CurrentFunds() < 100) {
       return ToolResult::InsufficientFunds;
     }
     cost = 100;
@@ -284,19 +286,19 @@ _LayRail(int x, int y, int *TileAdrPtr)
     return ToolResult::InvalidOperation;
   }
 
-  Spend(cost);
+  budget.Spend(cost);
   return ToolResult::Success;
 }
 
 
 /* comefrom: ConnecTile */
 ToolResult
-_LayWire(int x, int y, int *TileAdrPtr)
+_LayWire(int x, int y, int *TileAdrPtr, Budget& budget)
 {
   int Tile;
   int cost = 5;
 
-  if (TotalFunds() < 5) {
+  if (budget.CurrentFunds() < 5) {
     return ToolResult::InsufficientFunds;
   }
 
@@ -311,7 +313,7 @@ _LayWire(int x, int y, int *TileAdrPtr)
   case 2:			/* Wire on Water */
   case 3:
   case 4:			/* Check how to lay underwater wire, if possible. */
-    if (TotalFunds() < 25)
+    if (budget.CurrentFunds() < 25)
       return ToolResult::InsufficientFunds;
     cost = 25;
 
@@ -382,7 +384,7 @@ _LayWire(int x, int y, int *TileAdrPtr)
     return ToolResult::InvalidOperation;
   }
 
-  Spend(cost);
+  budget.Spend(cost);
   return ToolResult::Success;
 }
 
@@ -539,7 +541,7 @@ void _FixZone(int x, int y, int *TileAdrPtr)
 
 
 /* comefrom: check3Border check4Border check5Border processWand */
-ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command)
+ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command, Budget& budget)
 {
     int Tile;
 
@@ -547,14 +549,14 @@ ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command)
     if ((Command >= 2) && (Command <= 4))
     {
         if ((autoBulldoze != 0) &&
-            (TotalFunds() > 0) &&
+            (budget.CurrentFunds() > 0) &&
             ((Tile = (*TileAdrPtr)) & BULLBIT))
         {
             NeutralizeRoad(Tile);
             /* Maybe this should check BULLBIT instead of checking tile values? */
             if (((Tile >= TINYEXP) && (Tile <= LASTTINYEXP)) || ((Tile < 64) && (Tile != 0)))
             {
-                Spend(1);
+                budget.Spend(1);
                 (*TileAdrPtr) = 0;
             }
         }
@@ -568,22 +570,22 @@ ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command)
         break;
 
     case 1:	/* Doze zone */
-        result = _LayDoze(x, y, TileAdrPtr);
+        result = _LayDoze(x, y, TileAdrPtr, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 
     case 2:	/* Lay Road */
-        result = _LayRoad(x, y, TileAdrPtr);
+        result = _LayRoad(x, y, TileAdrPtr, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 
     case 3:	/* Lay Rail */
-        result = _LayRail(x, y, TileAdrPtr);
+        result = _LayRail(x, y, TileAdrPtr, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 
     case 4:	/* Lay Wire */
-        result = _LayWire(x, y, TileAdrPtr);
+        result = _LayWire(x, y, TileAdrPtr, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 

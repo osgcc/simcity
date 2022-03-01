@@ -13,9 +13,6 @@
 extern int autoGo;
 class Budget;
 
-void Spend(int dollars);
-void SetFunds(int dollars);
-int TotalFunds();
 int LastFunds();
 void LastFunds(const int funds);
 

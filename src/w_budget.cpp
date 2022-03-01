@@ -71,7 +71,7 @@ void ShowBudgetWindowAndStartWaiting()
 }
 
 
-void DoBudgetNow(int fromMenu, Budget& budget)
+void DoBudget(Budget& budget)
 {
     int fireInt = static_cast<int>(budget.FireFund() * firePercent);
     int policeInt = static_cast<int>(budget.PoliceFund() * policePercent);
@@ -79,7 +79,7 @@ void DoBudgetNow(int fromMenu, Budget& budget)
 
     int total = fireInt + policeInt + roadInt;
 
-    int yumDuckets = budget.TaxFund() + TotalFunds();
+    int yumDuckets = budget.TaxFund() + budget.CurrentFunds();
     int moreDough{};
 
     if (yumDuckets > total)
@@ -156,7 +156,7 @@ void DoBudgetNow(int fromMenu, Budget& budget)
     drawCurrPercents();
 
 noMoney:
-    if ((!autoBudget) || fromMenu)
+    if (!autoBudget)
     {
         if (!autoBudget)
         {
@@ -165,16 +165,14 @@ noMoney:
 
         ShowBudgetWindowAndStartWaiting();
 
-        if (!fromMenu)
-        {
-            FireSpend = fireValue;
-            PoliceSpend = policeValue;
-            RoadSpend = roadValue;
+        FireSpend = fireValue;
+        PoliceSpend = policeValue;
+        RoadSpend = roadValue;
 
-            total = FireSpend + PoliceSpend + RoadSpend;
-            moreDough = (int)(budget.TaxFund() - total);
-            Spend(-moreDough);
-        }
+        total = FireSpend + PoliceSpend + RoadSpend;
+        moreDough = (int)(budget.TaxFund() - total);
+        budget.Spend(-moreDough);
+
 
         drawBudgetWindow();
         drawCurrPercents();
@@ -185,7 +183,7 @@ noMoney:
     {
         if ((yumDuckets) > total) {
             moreDough = (int)(budget.TaxFund() - total);
-            Spend(-moreDough);
+            budget.Spend(-moreDough);
             FireSpend = budget.FireFund();
             PoliceSpend = budget.PoliceFund();
             RoadSpend = budget.RoadFund();
@@ -205,18 +203,6 @@ noMoney:
 }
 
 
-void DoBudget(Budget& budget)
-{
-    DoBudgetNow(0, budget);
-}
-
-
-void DoBudgetFromMenu(Budget& budget)
-{
-  DoBudgetNow(1, budget);
-}
-
-
 void SetBudget(const std::string& flowStr, const std::string& previousStr, const std::string& currentStr, const std::string& collectedStr, int tax)
 {
     Eval("UISetBudget {" + flowStr + "} {" + previousStr + "} {" + currentStr + "} {" + collectedStr + "} {" + std::to_string(tax) + "}");
@@ -228,8 +214,8 @@ void ReallyDrawBudgetWindow(const Budget& budget)
     const int cashFlow = budget.TaxFund() - fireValue - policeValue - roadValue;
 
     const std::string cashFlowString = ((cashFlow < 0) ? "-" : "+") + NumberToDollarDecimal(cashFlow);
-    const std::string previousFundsString = NumberToDollarDecimal(TotalFunds());
-    const std::string currentFundsString = NumberToDollarDecimal(cashFlow + TotalFunds());
+    const std::string previousFundsString = NumberToDollarDecimal(budget.CurrentFunds());
+    const std::string currentFundsString = NumberToDollarDecimal(cashFlow + budget.CurrentFunds());
     const std::string taxesCollectedString = NumberToDollarDecimal(budget.TaxFund());
 
     SetBudget(cashFlowString, previousFundsString, currentFundsString, taxesCollectedString, budget.TaxRate());

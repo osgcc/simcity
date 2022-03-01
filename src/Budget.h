@@ -24,6 +24,10 @@ public:
 
 	int CurrentFunds() const { return mCurrentFunds; }
 	void CurrentFunds(const int funds);
+	bool Broke() const;
+	bool CanAfford(const int amount) const;
+
+	void Spend(const int amount);
 
 	int PreviousFunds() const { return mPreviousFunds; }
 	void PreviousFunds(const int funds);
@@ -46,6 +50,8 @@ public:
 	void FireFund(const int value) { mFireFund = value; }
 
 	int CashFlow() const;
+
+	void update();
 
 private:
 	int mCurrentFunds{};

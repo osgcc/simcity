@@ -376,7 +376,7 @@ void LoadScenario(int s, Budget& budget)
         fname = "snro.111";
         ScenarioID = 1;
         CityTime = ((1900 - 1900) * 48) + 2;
-        SetFunds(5000);
+        budget.CurrentFunds(5000);
         break;
 
     case 2:
@@ -384,7 +384,7 @@ void LoadScenario(int s, Budget& budget)
         fname = "snro.222";
         ScenarioID = 2;
         CityTime = ((1906 - 1900) * 48) + 2;
-        SetFunds(20000);
+        budget.CurrentFunds(20000);
         break;
 
     case 3:
@@ -392,7 +392,7 @@ void LoadScenario(int s, Budget& budget)
         fname = "snro.333";
         ScenarioID = 3;
         CityTime = ((1944 - 1900) * 48) + 2;
-        SetFunds(20000);
+        budget.CurrentFunds(20000);
         break;
 
     case 4:
@@ -400,7 +400,7 @@ void LoadScenario(int s, Budget& budget)
         fname = "snro.444";
         ScenarioID = 4;
         CityTime = ((1965 - 1900) * 48) + 2;
-        SetFunds(20000);
+        budget.CurrentFunds(20000);
         break;
 
     case 5:
@@ -408,7 +408,7 @@ void LoadScenario(int s, Budget& budget)
         fname = "snro.555";
         ScenarioID = 5;
         CityTime = ((1957 - 1900) * 48) + 2;
-        SetFunds(20000);
+        budget.CurrentFunds(20000);
         break;
 
     case 6:
@@ -416,7 +416,7 @@ void LoadScenario(int s, Budget& budget)
         fname = "snro.666";
         ScenarioID = 6;
         CityTime = ((1972 - 1900) * 48) + 2;
-        SetFunds(20000);
+        budget.CurrentFunds(20000);
         break;
 
     case 7:
@@ -424,7 +424,7 @@ void LoadScenario(int s, Budget& budget)
         fname = "snro.777";
         ScenarioID = 7;
         CityTime = ((2010 - 1900) * 48) + 2;
-        SetFunds(20000);
+        budget.CurrentFunds(20000);
         break;
 
     case 8:
@@ -432,7 +432,7 @@ void LoadScenario(int s, Budget& budget)
         fname = "snro.888";
         ScenarioID = 8;
         CityTime = ((2047 - 1900) * 48) + 2;
-        SetFunds(20000);
+        budget.CurrentFunds(20000);
         break;
     }
 
@@ -446,7 +446,7 @@ void LoadScenario(int s, Budget& budget)
 
     InitWillStuff();
     InitFundingLevel();
-    UpdateFunds();
+    UpdateFunds(budget);
     InvalidateEditors();
     InvalidateMaps();
     InitSimLoad = 1;

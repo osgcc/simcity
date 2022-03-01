@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "Map.h"
 
+#include "Budget.h"
+
 #include "w_tool.h"
 
 #include "s_alloc.h"
@@ -76,11 +78,11 @@ std::map<ToolResult, std::string> ToolResultStringTable =
 };
 
 
-ToolResult putDownPark(int mapH, int mapV)
+ToolResult putDownPark(int mapH, int mapV, Budget& budget)
 {
     int tile{};
 
-    if (TotalFunds() - Tools.at(Tool::Park).cost >= 0)
+    if (budget.CanAfford(Tools.at(Tool::Park).cost))
     {
         int value = RandomRange(0, 4);
 
@@ -95,8 +97,8 @@ ToolResult putDownPark(int mapH, int mapV)
 
         if (Map[mapH][mapV] == 0)
         {
-            Spend(Tools.at(Tool::Park).cost);
-            UpdateFunds();
+            budget.Spend(Tools.at(Tool::Park).cost);
+            UpdateFunds(budget);
             Map[mapH][mapV] = tile;
             return ToolResult::Success;
         }
@@ -109,14 +111,14 @@ ToolResult putDownPark(int mapH, int mapV)
 
 
 // Radar?
-ToolResult putDownNetwork(int mapH, int mapV)
+ToolResult putDownNetwork(int mapH, int mapV, Budget& budget)
 {
     int tile = Map[mapH][mapV] & LOMASK;
 
-    if ((TotalFunds() > 0) && tally(tile))
+    if ((budget.CurrentFunds() > 0) && tally(tile))
     {
         Map[mapH][mapV] = tile = 0;
-        Spend(1);
+        budget.Spend(1);
     }
 
     if (tile != 0)
@@ -124,10 +126,10 @@ ToolResult putDownNetwork(int mapH, int mapV)
         return ToolResult::RequiresBulldozing;
     }
 
-    if ((TotalFunds() - Tools.at(Tool::Network).cost) >= 0)
+    if (budget.CanAfford(Tools.at(Tool::Network).cost))
     {
         Map[mapH][mapV] = TELEBASE | CONDBIT | BURNBIT | BULLBIT | ANIMBIT;
-        Spend(Tools.at(Tool::Network).cost);
+        budget.Spend(Tools.at(Tool::Network).cost);
         return ToolResult::Success;
     }
     else
@@ -297,16 +299,16 @@ int checkSize(int temp)
 }
 
 
-void doConnectTile(const int x, const int y, const int w, const int h)
+void doConnectTile(const int x, const int y, const int w, const int h, Budget& budget)
 {
     if (CoordinatesValid(x, y, w, h))
     {
-        ConnecTile(x, y, &Map[x][y], 0);
+        ConnecTile(x, y, &Map[x][y], 0, budget);
     }
 }
 
 
-void checkBorder(const int mapX, const int mapY, const int count)
+void checkBorder(const int mapX, const int mapY, const int count, Budget& budget)
 {
     int xPos{}, yPos{};
 
@@ -314,7 +316,7 @@ void checkBorder(const int mapX, const int mapY, const int count)
     for (int cnt = 0; cnt < count; cnt++)
     {
         /*** this will do the upper bordering row ***/
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight, budget);
         xPos++;
     }
 
@@ -322,7 +324,7 @@ void checkBorder(const int mapX, const int mapY, const int count)
     for (int cnt = 0; cnt < count; cnt++)
     {
         /*** this will do the left bordering row ***/
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight, budget);
         yPos++;
     }
 
@@ -330,7 +332,7 @@ void checkBorder(const int mapX, const int mapY, const int count)
     for (int cnt = 0; cnt < count; cnt++)
     {
         /*** this will do the bottom bordering row ***/
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight, budget);
         xPos++;
     }
 
@@ -338,13 +340,13 @@ void checkBorder(const int mapX, const int mapY, const int count)
     for (int cnt = 0; cnt < count; cnt++)
     {
         /*** this will do the right bordering row ***/
-        doConnectTile(xPos, yPos, SimWidth, SimHeight);
+        doConnectTile(xPos, yPos, SimWidth, SimHeight, budget);
         yPos++;
     }
 }
 
 
-ToolResult checkArea(const int mapH, const int mapV, const int base, const int size, const bool animate, const Tool tool)
+ToolResult checkArea(const int mapH, const int mapV, const int base, const int size, const bool animate, const Tool tool, Budget& budget)
 {
     if (!CoordinatesValid(mapH - 1, mapV - 1, SimWidth - size, SimHeight - size))
     {
@@ -398,7 +400,7 @@ ToolResult checkArea(const int mapH, const int mapV, const int base, const int s
         return ToolResult::RequiresBulldozing;
     }
 
-    if ((TotalFunds() - totalCost) < 0)
+    if (!budget.CanAfford(totalCost))
     {
         return ToolResult::InsufficientFunds;
     }
@@ -408,8 +410,8 @@ ToolResult checkArea(const int mapH, const int mapV, const int base, const int s
         return ToolResult::NetworkVotedNo;
     }
 
-    Spend(totalCost);
-    UpdateFunds();
+    budget.Spend(totalCost);
+    UpdateFunds(budget);
 
     int tileBase = base;
     mapY = mapV - 1;
@@ -438,7 +440,7 @@ ToolResult checkArea(const int mapH, const int mapV, const int base, const int s
         ++mapY;
     }
 
-    checkBorder(mapH - 1, mapV - 1, size);
+    checkBorder(mapH - 1, mapV - 1, size, budget);
     return ToolResult::Success;
 }
 
@@ -644,7 +646,7 @@ void putRubble(const int mapX, const int mapY, const int size)
 /* TOOLS */
 
 
-ToolResult query_tool(int x, int y)
+ToolResult query_tool(int x, int y, Budget&)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
@@ -656,7 +658,7 @@ ToolResult query_tool(int x, int y)
 }
 
 
-ToolResult bulldozer_tool(int x, int y)
+ToolResult bulldozer_tool(int x, int y, Budget& budget)
 {
     unsigned int currTile, temp;
     int zoneSize, deltaH, deltaV;
@@ -673,9 +675,9 @@ ToolResult bulldozer_tool(int x, int y)
 
     if (currTile & ZONEBIT)
     { /* zone center bit is set */
-        if (TotalFunds() > 0)
+        if (!budget.Broke())
         {
-            Spend(1);
+            budget.Spend(1);
             switch (checkSize(temp))
             {
             case 3:
@@ -701,9 +703,9 @@ ToolResult bulldozer_tool(int x, int y)
     }
     else if ((zoneSize = checkBigZone(temp, &deltaH, &deltaV)))
     {
-        if (TotalFunds() > 0)
+        if (!budget.Broke())
         {
-            Spend(1);
+            budget.Spend(1);
             switch (zoneSize)
             {
             case 3:
@@ -727,12 +729,12 @@ ToolResult bulldozer_tool(int x, int y)
     {
         if (temp == RIVER || temp == REDGE || temp == CHANNEL)
         {
-            if (TotalFunds() >= 6)
+            if (budget.CanAfford(5)) /// \fixme Magic Number
             {
-                result = ConnecTile(x, y, &Map[x][y], 1);
+                result = ConnecTile(x, y, &Map[x][y], 1, budget);
                 if (temp != (Map[x][y] & LOMASK))
                 {
-                    Spend(5);
+                    budget.Spend(5);
                 }
             }
             else
@@ -742,186 +744,186 @@ ToolResult bulldozer_tool(int x, int y)
         }
         else
         {
-            result = ConnecTile(x, y, &Map[x][y], 1);
+            result = ConnecTile(x, y, &Map[x][y], 1, budget);
         }
     }
-    UpdateFunds();
+    UpdateFunds(budget);
     return result;
 }
 
 
-ToolResult road_tool(int x, int y)
+ToolResult road_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnecTile(x, y, &Map[x][y], 2);
-    UpdateFunds();
+    ToolResult result = ConnecTile(x, y, &Map[x][y], 2, budget);
+    UpdateFunds(budget);
     return result;
 }
 
 
-ToolResult rail_tool(int x, int y)
+ToolResult rail_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnecTile(x, y, &Map[x][y], 3);
-    UpdateFunds();
+    ToolResult result = ConnecTile(x, y, &Map[x][y], 3, budget);
+    UpdateFunds(budget);
     return result;
 }
 
 
-ToolResult wire_tool(int x, int y)
+ToolResult wire_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnecTile(x, y, &Map[x][y], 4);
-    UpdateFunds();
+    ToolResult result = ConnecTile(x, y, &Map[x][y], 4, budget);
+    UpdateFunds(budget);
     return result;
 }
 
 
-ToolResult park_tool(int x, int y)
+ToolResult park_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return putDownPark(x, y);
+    return putDownPark(x, y, budget);
 }
 
 
-ToolResult residential_tool(int x, int y)
+ToolResult residential_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, RESBASE, 3, false, Tool::Residential);
+    return checkArea(x, y, RESBASE, 3, false, Tool::Residential, budget);
 }
 
 
-ToolResult commercial_tool(int x, int y)
+ToolResult commercial_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, COMBASE, 3, false, Tool::Commercial);
+    return checkArea(x, y, COMBASE, 3, false, Tool::Commercial, budget);
 }
 
 
-ToolResult industrial_tool(int x, int y)
+ToolResult industrial_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, INDBASE, 3, false, Tool::Industrial);
+    return checkArea(x, y, INDBASE, 3, false, Tool::Industrial, budget);
 }
 
 
-ToolResult police_dept_tool(int x, int y)
+ToolResult police_dept_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, POLICESTBASE, 3, false, Tool::Police);
+    return checkArea(x, y, POLICESTBASE, 3, false, Tool::Police, budget);
 }
 
 
-ToolResult fire_dept_tool(int x, int y)
+ToolResult fire_dept_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, FIRESTBASE, 3, false , Tool::Fire);
+    return checkArea(x, y, FIRESTBASE, 3, false , Tool::Fire, budget);
 }
 
 
-ToolResult stadium_tool(int x, int y)
+ToolResult stadium_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, STADIUMBASE, 4, false, Tool::Stadium);
+    return checkArea(x, y, STADIUMBASE, 4, false, Tool::Stadium, budget);
 }
 
 
-ToolResult coal_power_plant_tool(int x, int y)
+ToolResult coal_power_plant_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, COALBASE, 4, false, Tool::Coal);
+    return checkArea(x, y, COALBASE, 4, false, Tool::Coal, budget);
 }
 
 
-ToolResult nuclear_power_plant_tool(int x, int y)
+ToolResult nuclear_power_plant_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, NUCLEARBASE, 4, true, Tool::Nuclear);
+    return checkArea(x, y, NUCLEARBASE, 4, true, Tool::Nuclear, budget);
 }
 
 
-ToolResult seaport_tool(int x, int y)
+ToolResult seaport_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, PORTBASE, 4, false, Tool::Seaport);
+    return checkArea(x, y, PORTBASE, 4, false, Tool::Seaport, budget);
 }
 
 
-ToolResult airport_tool(int x, int y)
+ToolResult airport_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, AIRPORTBASE, 6, false, Tool::Airport);
+    return checkArea(x, y, AIRPORTBASE, 6, false, Tool::Airport, budget);
 }
 
 
-ToolResult network_tool(int x, int y)
+ToolResult network_tool(int x, int y, Budget& budget)
 {
     if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
     {
         return ToolResult::OutOfBounds;
     }
 
-    return putDownNetwork(x, y);
+    return putDownNetwork(x, y, budget);
 }
 
 
-std::map<Tool, ToolResult(*)(int, int)> ToolFunctionTable =
+std::map<Tool, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
 {
     { Tool::Residential, &residential_tool },
     { Tool::Commercial, &commercial_tool },
@@ -950,14 +952,14 @@ std::map<Tool, ToolResult(*)(int, int)> ToolFunctionTable =
  * Coordinates expected to be in tile coords,
  * not screen coords.
  */
-void ToolDown(int mapX, int mapY)
+void ToolDown(int mapX, int mapY, Budget& budget)
 {
     if (PendingTool == Tool::None)
     {
         return;
     }
 
-    ToolResult result = ToolFunctionTable.at(PendingTool)(mapX, mapY);
+    ToolResult result = ToolFunctionTable.at(PendingTool)(mapX, mapY, budget);
 
     if (result == ToolResult::RequiresBulldozing)
     {

@@ -12,6 +12,8 @@
 
 #include <string>
 
+class Budget;
+
 enum class Month
 {
 	Jan,
@@ -33,7 +35,7 @@ void UpdateMaps();
 void UpdateGraphs();
 void UpdateEvaluation();
 void UpdateHeads();
-void UpdateFunds();
+void UpdateFunds(Budget&);
 void updateOptions();
 void updateDate();
 

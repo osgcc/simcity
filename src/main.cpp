@@ -197,7 +197,7 @@ void signal_init()
 void sim_update_editors()
 {
     updateDate();
-    UpdateFunds();
+    budget.update();
     updateOptions();
 }
 
@@ -365,8 +365,8 @@ void sim_init()
     ResetEditorState();
     ClearMap();
     InitWillStuff();
-    SetFunds(5000);
-    SetGameLevelFunds(StartupGameLevel);
+    budget.CurrentFunds(5000);
+    SetGameLevelFunds(StartupGameLevel, budget);
     SimSpeed(SimulationSpeed::Paused);
     setSkips(0);
 }
@@ -610,7 +610,7 @@ void handleMouseEvent(SDL_Event& event)
 
             if (!BudgetWindowShown)
             {
-                ToolDown(TilePointedAt.x, TilePointedAt.y);
+                ToolDown(TilePointedAt.x, TilePointedAt.y, budget);
             }
 
         }
@@ -922,7 +922,7 @@ void startGame()
         
         pumpEvents();
 
-        currentBudget = NumberToDollarDecimal(TotalFunds());
+        currentBudget = NumberToDollarDecimal(budget.CurrentFunds());
 
         SDL_RenderClear(MainWindowRenderer);
 

@@ -13,6 +13,8 @@
 #include <map>
 #include <string>
 
+class Budget;
+
 enum class Tool
 {
     Residential,
@@ -58,7 +60,7 @@ enum class ToolResult
 };
 
 
-void ToolDown(int mapX, int mapY);
+void ToolDown(int mapX, int mapY, Budget& budget);
 bool tally(int tileValue);
 
 extern std::map<Tool, ToolProperties> Tools;

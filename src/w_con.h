@@ -12,4 +12,6 @@
 
 #include "w_tool.h"
 
-ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command);
+class Budget;
+
+ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command, Budget&);

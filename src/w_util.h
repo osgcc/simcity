@@ -14,6 +14,8 @@
 
 #include <string>
 
+class Budget;
+
 enum class SimulationSpeed
 {
 	Paused,
@@ -38,7 +40,7 @@ bool Paused();
 
 int CurrentYear();
 void SetYear(int year);
-void SetGameLevelFunds(int level);
+void SetGameLevelFunds(int level, Budget&);
 void setSkips(int skips);
 bool CoordinatesValid(int x, int y, int width, int height);
 Point<int> PositionToCell(const Point<int>& position, const Point<int>& offset);

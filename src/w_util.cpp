@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "w_util.h"
 
+#include "Budget.h"
+
 #include "main.h"
 
 #include "w_stubs.h"
@@ -119,23 +121,23 @@ void setSkips(int skips)
     sim_skip = 0;
 }
 
-void SetGameLevelFunds(int level)
+void SetGameLevelFunds(int level, Budget& budget)
 {
     switch (level)
     {
     default:
     case 0:
-        SetFunds(20000);
+        budget.CurrentFunds(20000);
         GameLevel(0);
         break;
 
     case 1:
-        SetFunds(10000);
+        budget.CurrentFunds(10000);
         GameLevel(1);
         break;
 
     case 2:
-        SetFunds(5000);
+        budget.CurrentFunds(5000);
         GameLevel(2);
         break;
     }

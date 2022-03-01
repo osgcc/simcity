@@ -60,7 +60,7 @@ void doKeyDown(SimView* view, int charCode)
     LastKeys[3] = tolower(charCode);
 
     if (strcmp(LastKeys, "fund") == 0) {
-        Spend(-10000);
+        //Spend(-10000);
         PunishCnt++;				/* punish for cheating */
         if (PunishCnt == 5) {
             PunishCnt = 0;
@@ -109,7 +109,7 @@ void doKeyDown(SimView* view, int charCode)
         LastKeys[0] = '\0';
     }
     else if (strcmp(LastKeys, "olpc") == 0) {
-        Spend(-1000000);
+        //Spend(-1000000);
     }
 
     switch (charCode) {

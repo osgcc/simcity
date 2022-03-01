@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "w_update.h"
 
+#include "Budget.h"
+
 #include "main.h"
 
 #include "s_msg.h"
@@ -207,8 +209,10 @@ void UpdateHeads()
 }
 
 
-void UpdateFunds()
+void UpdateFunds(Budget& budget)
 {
-    SetFunds(std::clamp(TotalFunds(), 0, std::numeric_limits<int>::max()));
-    LastFunds(TotalFunds());
+    //SetFunds(std::clamp(TotalFunds(), 0, std::numeric_limits<int>::max()));
+    budget.CurrentFunds(std::clamp(budget.CurrentFunds(), 0, std::numeric_limits<int>::max()));
+    //LastFunds(TotalFunds());
+    budget.PreviousFunds(budget.CurrentFunds());
 }

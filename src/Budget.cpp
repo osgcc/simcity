@@ -25,3 +25,27 @@ int Budget::CashFlow() const
 {
 	return TaxFund() - (PoliceFund() + FireFund() + RoadFund());
 }
+
+
+void Budget::Spend(const int amount)
+{
+	mCurrentFunds -= amount;
+}
+
+
+bool Budget::Broke() const
+{
+	return mCurrentFunds <= 0;
+}
+
+
+bool Budget::CanAfford(const int amount) const
+{
+	return mCurrentFunds >= amount;
+}
+
+
+void Budget::update()
+{
+
+}
