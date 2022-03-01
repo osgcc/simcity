@@ -1027,27 +1027,24 @@ void CollectTax(Budget& budget)
     static float FLevels[3] = { 1.4f, 1.2f, 0.8f };
 
     CashFlow = 0;
-    if (!TaxFlag) // if the Tax Port is clear
-    {
-        // XXX: do something with z
-        int z = AvCityTax / 48;  // post
-        AvCityTax = 0;
-        PoliceFund = PolicePop * 100;
-        FireFund = FireStPop * 100;
-        RoadFund = static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel()]);
-        budget.TaxFund(static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * budget.TaxRate() * FLevels[GameLevel()])); //yuck
+    // XXX: do something with z
+    int z = AvCityTax / 48;  // post
+    AvCityTax = 0;
+    PoliceFund = PolicePop * 100;
+    FireFund = FireStPop * 100;
+    RoadFund = static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel()]);
+    budget.TaxFund(static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * budget.TaxRate() * FLevels[GameLevel()])); //yuck
 
-        if (TotalPop) // if there are people to tax
-        {
-            CashFlow = budget.TaxFund() - (PoliceFund + FireFund + RoadFund);
-            DoBudget(budget);
-        }
-        else
-        {
-            RoadEffect = 32;
-            PoliceEffect = 1000;
-            FireEffect = 1000;
-        }
+    if (TotalPop) // if there are people to tax
+    {
+        CashFlow = budget.TaxFund() - (PoliceFund + FireFund + RoadFund);
+        DoBudget(budget);
+    }
+    else
+    {
+        RoadEffect = 32;
+        PoliceEffect = 1000;
+        FireEffect = 1000;
     }
 }
 
@@ -1094,7 +1091,6 @@ void SetCommonInits()
     RoadEffect = 32;
     PoliceEffect = 1000;
     FireEffect = 1000;
-    TaxFlag = 0;
     //TaxFund = 0;
     /*
       if ((GameLevel > 2) || (GameLevel < 0)) GameLevel = 0;

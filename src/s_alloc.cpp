@@ -48,8 +48,6 @@ int RoadSpend, PoliceSpend, FireSpend;
 int RoadFund, PoliceFund, FireFund;
 int RoadEffect, PoliceEffect, FireEffect;
 
-int TaxFlag;
-
 unsigned char tileSynch = 0x01;
 
 std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PopDensity{};

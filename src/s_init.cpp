@@ -49,7 +49,6 @@ void InitWillStuff()
     DestroyAllSprites();
 
     DisasterEvent = 0;
-    TaxFlag = 0;
 
     initMapArrays();
 
