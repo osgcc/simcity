@@ -13,10 +13,10 @@
 class Budget
 {
 public:
-	const int MaxTaxRate = 20;
-	const int MinTaxRate = 0;
+	static constexpr auto MaxTaxRate = 20;
+	static constexpr auto MinTaxRate = 0;
 
-	const int DefaultTaxRate = 7;
+	static constexpr auto DefaultTaxRate = 7;
 
 public:
 	Budget() = default;
