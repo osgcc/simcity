@@ -165,11 +165,11 @@ noMoney:
 
         ShowBudgetWindowAndStartWaiting();
 
-        FireSpend = fireValue;
-        PoliceSpend = policeValue;
-        RoadSpend = roadValue;
+        budget.FireSpend(fireValue);
+        budget.PoliceSpend(policeValue);
+        budget.RoadSpend(roadValue);
 
-        total = FireSpend + PoliceSpend + RoadSpend;
+        total = budget.FireSpend() + budget.PoliceSpend() + budget.RoadSpend();
         moreDough = (int)(budget.TaxFund() - total);
         budget.Spend(-moreDough);
 
@@ -181,12 +181,15 @@ noMoney:
     }
     else /* autoBudget & !fromMenu */
     {
-        if ((yumDuckets) > total) {
+        if ((yumDuckets) > total)
+        {
             moreDough = (int)(budget.TaxFund() - total);
             budget.Spend(-moreDough);
-            FireSpend = budget.FireFund();
-            PoliceSpend = budget.PoliceFund();
-            RoadSpend = budget.RoadFund();
+
+            budget.FireSpend(budget.FireFund());
+            budget.PoliceSpend(budget.PoliceFund());
+            budget.RoadSpend(budget.RoadFund());
+
             drawBudgetWindow();
             drawCurrPercents();
             sim_update_editors();

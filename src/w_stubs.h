@@ -13,9 +13,6 @@
 extern int autoGo;
 class Budget;
 
-int LastFunds();
-void LastFunds(const int funds);
-
 int TickCount();
 
 void InitGame();

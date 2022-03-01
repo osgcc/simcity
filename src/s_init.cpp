@@ -35,7 +35,6 @@ void InitWillStuff()
     LastCityTime(-1);
     LastCityYear(1);
     LastCityMonth(0);
-    LastFunds(-1);
     OverRide = 0;
     PendingTool = Tool::None;
 

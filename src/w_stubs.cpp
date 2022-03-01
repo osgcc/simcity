@@ -43,7 +43,6 @@ bool flagBlink;
 
 namespace
 {
-    int lastFunds{};
     int gameLevel{};
 
     std::string cityName{};
@@ -59,18 +58,6 @@ void GameLevel(const int level)
 int GameLevel()
 {
     return gameLevel;
-}
-
-
-void LastFunds(const int funds)
-{
-    lastFunds = funds;
-}
-
-
-int LastFunds()
-{
-    return lastFunds;
 }
 
 

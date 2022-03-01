@@ -44,7 +44,6 @@ int ResHisMax, Res2HisMax;
 int ComHisMax, Com2HisMax;
 int IndHisMax, Ind2HisMax;
 
-int RoadSpend, PoliceSpend, FireSpend;
 int RoadEffect, PoliceEffect, FireEffect;
 
 unsigned char tileSynch = 0x01;

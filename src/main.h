@@ -317,7 +317,6 @@ extern int ShakeNow;
 extern int DonDither;
 extern int DoOverlay;
 
-extern int RoadSpend, PoliceSpend, FireSpend;
 extern int RoadEffect, PoliceEffect, FireEffect;
 
 extern int costOf[];

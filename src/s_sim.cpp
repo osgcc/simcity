@@ -1459,7 +1459,7 @@ void UpdateFundEffects(const Budget& budget)
 {
     if (budget.RoadFund())
     {
-        RoadEffect = (int)(((float)RoadSpend / (float)budget.RoadFund()) * 32.0);
+        RoadEffect = (int)(((float)budget.RoadSpend() / (float)budget.RoadFund()) * 32.0);
     }
     else
     {
@@ -1468,7 +1468,7 @@ void UpdateFundEffects(const Budget& budget)
 
     if (budget.PoliceFund())
     {
-        PoliceEffect = (int)(((float)PoliceSpend / (float)budget.PoliceFund()) * 1000.0);
+        PoliceEffect = (int)(((float)budget.PoliceSpend() / (float)budget.PoliceFund()) * 1000.0);
     }
     else
     {
@@ -1477,7 +1477,7 @@ void UpdateFundEffects(const Budget& budget)
 
     if (budget.FireFund())
     {
-        FireEffect = (int)(((float)FireSpend / (float)budget.FireFund()) * 1000.0);
+        FireEffect = (int)(((float)budget.FireSpend() / (float)budget.FireFund()) * 1000.0);
     }
     else
     {

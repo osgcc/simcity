@@ -49,6 +49,16 @@ public:
 	int FireFund() const { return mFireFund; }
 	void FireFund(const int value) { mFireFund = value; }
 
+
+	int RoadSpend() const { return mRoadSpend; }
+	void RoadSpend(const int value) { mRoadSpend = value; }
+
+	int PoliceSpend() const { return mPoliceSpend; }
+	void PoliceSpend(const int value) { mPoliceSpend = value; }
+
+	int FireSpend() const { return mFireSpend; }
+	void FireSpend(const int value) { mFireSpend = value; }
+
 	int CashFlow() const;
 
 	void update();
@@ -75,4 +85,8 @@ private:
 	int mRoadFund{};
 	int mPoliceFund{};
 	int mFireFund{};
+
+	int mRoadSpend;
+	int mPoliceSpend;
+	int mFireSpend;
 };
