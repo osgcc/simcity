@@ -10,7 +10,6 @@
 // file, included in this distribution, for details.
 #pragma once
 
-void InitFundingLevel();
 void UpdateBudgetWindow(const Budget& budget);
 void ShowBudgetWindowAndStartWaiting();
 void DoBudget(Budget&);

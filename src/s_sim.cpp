@@ -42,7 +42,6 @@
 int CrimeRamp, PolluteRamp ;
 int RValve, CValve, IValve;
 int ResCap, ComCap, IndCap;
-int CashFlow;
 float EMarket = 4.0;
 int DisasterEvent;
 int DisasterWait;
@@ -892,7 +891,7 @@ void ClearCensus()
 }
 
 
-void TakeCensus()
+void TakeCensus(Budget& budget)
 {
     /* put census#s in Historical Graphs and scroll data  */
     ResHisMax = 0;
@@ -939,7 +938,7 @@ void TakeCensus()
 
     //int x = std::clamp((CashFlow / 20) + 128, 0, 255);
 
-    MoneyHis[0] = std::clamp((CashFlow / 20) + 128, 0, 255); // scale to 0..255
+    MoneyHis[0] = std::clamp((budget.CashFlow() / 20) + 128, 0, 255); // scale to 0..255
     CrimeHis[0] = std::clamp(CrimeHis[0], 0, 255);
     PollutionHis[0] = std::clamp(PollutionHis[0], 0, 255);
 
@@ -1026,19 +1025,19 @@ void CollectTax(Budget& budget)
     static float RLevels[3] = { 0.7f, 0.9f, 1.2f };
     static float FLevels[3] = { 1.4f, 1.2f, 0.8f };
 
-    CashFlow = 0;
     // XXX: do something with z
     int z = AvCityTax / 48;  // post
     AvCityTax = 0;
-    budget.PoliceFund( PolicePop * 100);
-    budget.FireFund(FireStPop * 100);
-    budget.RoadFund(static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel()]));
-    budget.TaxFund(static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * budget.TaxRate() * FLevels[GameLevel()])); //yuck
+    
+    budget.PoliceFundsNeeded(PolicePop * 100);
+    budget.FireFundsNeeded(FireStPop * 100);
+    budget.RoadFundsNeeded(static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel()]));
+
+    budget.TaxIncome(static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * budget.TaxRate() * FLevels[GameLevel()])); //yuck
 
     if (TotalPop) // if there are people to tax
     {
-        CashFlow = budget.CashFlow();
-        DoBudget(budget);
+        budget.update();
     }
     else
     {
@@ -1336,7 +1335,7 @@ void Simulate(int mod16, Budget& budget)
     case 9:
         if (!(CityTime % CENSUSRATE))
         {
-            TakeCensus();
+            TakeCensus(budget);
         }
         if (!(CityTime % (CENSUSRATE * 12)))
         {
@@ -1457,27 +1456,27 @@ void DoSimInit(Budget& budget)
 
 void UpdateFundEffects(const Budget& budget)
 {
-    if (budget.RoadFund())
+    if (budget.RoadFundsNeeded())
     {
-        RoadEffect = (int)(((float)budget.RoadSpend() / (float)budget.RoadFund()) * 32.0);
+        RoadEffect = (int)(((float)budget.RoadFundsGranted() / (float)budget.RoadFundsNeeded()) * 32.0);
     }
     else
     {
         RoadEffect = 32;
     }
 
-    if (budget.PoliceFund())
+    if (budget.PoliceFundsNeeded())
     {
-        PoliceEffect = (int)(((float)budget.PoliceSpend() / (float)budget.PoliceFund()) * 1000.0);
+        PoliceEffect = (int)(((float)budget.PoliceFundsGranted() / (float)budget.PoliceFundsNeeded()) * 1000.0);
     }
     else
     {
         PoliceEffect = 1000;
     }
 
-    if (budget.FireFund())
+    if (budget.FireFundsNeeded())
     {
-        FireEffect = (int)(((float)budget.FireSpend() / (float)budget.FireFund()) * 1000.0);
+        FireEffect = (int)(((float)budget.FireFundsGranted() / (float)budget.FireFundsNeeded()) * 1000.0);
     }
     else
     {

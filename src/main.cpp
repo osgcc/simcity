@@ -197,7 +197,6 @@ void signal_init()
 void sim_update_editors()
 {
     updateDate();
-    budget.update();
     updateOptions();
 }
 
@@ -359,7 +358,7 @@ void sim_init()
     InitializeSound();
     initMapArrays();
     initGraphs();
-    InitFundingLevel();
+    //InitFundingLevel();
     StopEarthquake();
     ResetMapState();
     ResetEditorState();

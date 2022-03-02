@@ -445,7 +445,7 @@ void LoadScenario(int s, Budget& budget)
     _load_file(fname, ResroucesDirectory);
 
     InitWillStuff();
-    InitFundingLevel();
+    //InitFundingLevel();
     UpdateFunds(budget);
     InvalidateEditors();
     InvalidateMaps();

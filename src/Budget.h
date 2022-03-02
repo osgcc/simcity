@@ -28,6 +28,7 @@ public:
 	bool CanAfford(const int amount) const;
 
 	void Spend(const int amount);
+	void Deposit(const int amount);
 
 	int PreviousFunds() const { return mPreviousFunds; }
 	void PreviousFunds(const int funds);
@@ -37,56 +38,52 @@ public:
 
 	int AverageTax() const { return mAverageTax; }
 
-	int TaxFund() const { return mTaxFund; }
-	void TaxFund(const int value) { mTaxFund = value; }
+	int TaxIncome() const { return mTaxIncome; }
+	void TaxIncome(const int value) { mTaxIncome = value; }
 
-	int RoadFund() const { return mRoadFund; }
-	void RoadFund(const int value) { mRoadFund = value; }
+	int RoadFundsNeeded() const { return mRoadFundsNeeded; }
+	void RoadFundsNeeded(const int value) { mRoadFundsNeeded = value; }
 
-	int PoliceFund() const { return mPoliceFund; }
-	void PoliceFund(const int value) { mPoliceFund = value; }
+	int PoliceFundsNeeded() const { return mPoliceFundsNeeded; }
+	void PoliceFundsNeeded(const int value) { mPoliceFundsNeeded = value; }
 
-	int FireFund() const { return mFireFund; }
-	void FireFund(const int value) { mFireFund = value; }
+	int FireFundsNeeded() const { return mFireFundsNeeded; }
+	void FireFundsNeeded(const int value) { mFireFundsNeeded = value; }
 
+	int RoadFundsGranted() const { return mRoadFundsGranted; }
+	int PoliceFundsGranted() const { return mPoliceFundsGranted; }
+	int FireFundsGranted() const { return mFireFundsGranted; }
 
-	int RoadSpend() const { return mRoadSpend; }
-	void RoadSpend(const int value) { mRoadSpend = value; }
+	int OperatingExpenses() const;
 
-	int PoliceSpend() const { return mPoliceSpend; }
-	void PoliceSpend(const int value) { mPoliceSpend = value; }
-
-	int FireSpend() const { return mFireSpend; }
-	void FireSpend(const int value) { mFireSpend = value; }
+	float RoadPercent() const { return mRoadPercent; }
+	float PolicePercent() const { return mPolicePercent; }
+	float FirePercent() const { return mFirePercent; }
 
 	int CashFlow() const;
+
+	bool NeedsAttention() const { return mBudgetNeedsAttention; }
 
 	void update();
 
 private:
 	int mCurrentFunds{};
 	int mPreviousFunds{};
-	int mTaxFund{};
+	int mTaxIncome{};
 	int mTaxRate{ DefaultTaxRate };
 	int mAverageTax{};
 
-	float mRoadPercent{ 0.0f };
-	float mPolicePercent{ 0.0f };
-	float mFirePercent{ 0.0f };
+	float mRoadPercent{ 1.0f };
+	float mPolicePercent{ 1.0f };
+	float mFirePercent{ 1.0f };
 
-	int mRoadValue{};
-	int mPoliceValue{};
-	int mFireValue{};
+	int mRoadFundsGranted{};
+	int mPoliceFundsGranted{};
+	int mFireFundsGranted{};
 
-	int mRoadMaxValue{};
-	int mPoliceMaxValue{};
-	int mFireMaxValue{};
+	int mRoadFundsNeeded{};
+	int mPoliceFundsNeeded{};
+	int mFireFundsNeeded{};
 
-	int mRoadFund{};
-	int mPoliceFund{};
-	int mFireFund{};
-
-	int mRoadSpend;
-	int mPoliceSpend;
-	int mFireSpend;
+	bool mBudgetNeedsAttention{ false };
 };
