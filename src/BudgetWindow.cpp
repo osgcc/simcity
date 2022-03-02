@@ -24,7 +24,47 @@ namespace
 	SDL_Rect TaxCollectedBox{ 138, 70, 285, 21 };
 	const SDL_Rect TaxCollectedBoxPosition = TaxCollectedBox;
 
-	const BudgetWindow::ButtonId ids[] =
+	enum class TextPanelId
+	{
+		TaxRate,
+		TaxesCollected,
+		TransportNeeded,
+		TransportAllocated,
+		TransportRate,
+		PoliceNeeded,
+		PoliceAllocated,
+		PoliceRate,
+		FireNeeded,
+		FireAllocated,
+		FireRate,
+		CashFlow,
+		PreviousFunds,
+		CurrentFunds
+	};
+
+
+	const TextPanelId panels[]
+	{
+		TextPanelId::TaxRate,
+		TextPanelId::TaxesCollected,
+		TextPanelId::TransportNeeded,
+		TextPanelId::TransportAllocated,
+		TextPanelId::TransportRate,
+		TextPanelId::PoliceNeeded,
+		TextPanelId::PoliceAllocated,
+		TextPanelId::PoliceRate,
+		TextPanelId::FireNeeded,
+		TextPanelId::FireAllocated,
+		TextPanelId::FireRate,
+		TextPanelId::CashFlow,
+		TextPanelId::PreviousFunds,
+		TextPanelId::CurrentFunds
+	};
+
+
+
+
+	const BudgetWindow::ButtonId ids[]
 	{
 		BudgetWindow::ButtonId::None,
 		BudgetWindow::ButtonId::TaxRateUp,
@@ -55,7 +95,7 @@ namespace
 		{ BudgetWindow::ButtonId::Accept, mainButtonDown }
 	};
 
-	std::map<BudgetWindow::ButtonId, const SDL_Rect> ButtonLayout
+	const std::map<BudgetWindow::ButtonId, const SDL_Rect> ButtonLayout
 	{
 		{ BudgetWindow::ButtonId::None, {} },
 		{ BudgetWindow::ButtonId::TaxRateUp, { 431, 36, 13, 13 } },
@@ -72,15 +112,15 @@ namespace
 	std::map<BudgetWindow::ButtonId, SDL_Rect> ButtonRects
 	{
 		{ BudgetWindow::ButtonId::None, {} },
-		{ BudgetWindow::ButtonId::TaxRateUp, ButtonLayout[BudgetWindow::ButtonId::TaxRateUp] },
-		{ BudgetWindow::ButtonId::TaxRateDown, ButtonLayout[BudgetWindow::ButtonId::TaxRateDown] },
-		{ BudgetWindow::ButtonId::TransportUp, ButtonLayout[BudgetWindow::ButtonId::TransportUp] },
-		{ BudgetWindow::ButtonId::TransportDown, ButtonLayout[BudgetWindow::ButtonId::TransportDown] },
-		{ BudgetWindow::ButtonId::PoliceUp, ButtonLayout[BudgetWindow::ButtonId::PoliceUp] },
-		{ BudgetWindow::ButtonId::PoliceDown, ButtonLayout[BudgetWindow::ButtonId::PoliceDown] },
-		{ BudgetWindow::ButtonId::FireUp, ButtonLayout[BudgetWindow::ButtonId::FireUp] },
-		{ BudgetWindow::ButtonId::FireDown, ButtonLayout[BudgetWindow::ButtonId::FireDown] },
-		{ BudgetWindow::ButtonId::Accept, ButtonLayout[BudgetWindow::ButtonId::Accept] }
+		{ BudgetWindow::ButtonId::TaxRateUp, ButtonLayout.at(BudgetWindow::ButtonId::TaxRateUp) },
+		{ BudgetWindow::ButtonId::TaxRateDown, ButtonLayout.at(BudgetWindow::ButtonId::TaxRateDown) },
+		{ BudgetWindow::ButtonId::TransportUp, ButtonLayout.at(BudgetWindow::ButtonId::TransportUp) },
+		{ BudgetWindow::ButtonId::TransportDown, ButtonLayout.at(BudgetWindow::ButtonId::TransportDown) },
+		{ BudgetWindow::ButtonId::PoliceUp, ButtonLayout.at(BudgetWindow::ButtonId::PoliceUp) },
+		{ BudgetWindow::ButtonId::PoliceDown, ButtonLayout.at(BudgetWindow::ButtonId::PoliceDown) },
+		{ BudgetWindow::ButtonId::FireUp, ButtonLayout.at(BudgetWindow::ButtonId::FireUp) },
+		{ BudgetWindow::ButtonId::FireDown, ButtonLayout.at(BudgetWindow::ButtonId::FireDown) },
+		{ BudgetWindow::ButtonId::Accept, ButtonLayout.at(BudgetWindow::ButtonId::Accept) }
 	};
 };
 
@@ -114,10 +154,10 @@ void BudgetWindow::position(const Point<int>& pos)
 	{
 		ButtonRects[id] =
 		{
-			ButtonLayout[id].x + pos.x,
-			ButtonLayout[id].y + pos.y,
-			ButtonLayout[id].w,
-			ButtonLayout[id].h
+			ButtonLayout.at(id).x + pos.x,
+			ButtonLayout.at(id).y + pos.y,
+			ButtonLayout.at(id).w,
+			ButtonLayout.at(id).h
 		};
 	}
 }
