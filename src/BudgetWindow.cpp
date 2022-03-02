@@ -61,6 +61,7 @@ namespace
 		TextPanelId::CurrentFunds
 	};
 
+
 	const std::map<TextPanelId, SDL_Rect> TextPanelLayout
 	{
 		{ TextPanelId::TaxRate, {138, 39, 285, 21} },
@@ -84,7 +85,7 @@ namespace
 	};
 
 
-	const BudgetWindow::ButtonId ids[]
+	const BudgetWindow::ButtonId buttons[]
 	{
 		BudgetWindow::ButtonId::None,
 		BudgetWindow::ButtonId::TaxRateUp,
@@ -170,7 +171,7 @@ void BudgetWindow::position(const Point<int>& pos)
 {
 	mRect = { pos.x, pos.y, mRect.w, mRect.h };
 
-	for (auto id : ids)
+	for (auto id : buttons)
 	{
 		ButtonRects[id] =
 		{
@@ -226,7 +227,7 @@ void BudgetWindow::handleMouseDown(const ButtonId id)
 
 void BudgetWindow::injectMouseClickPosition(const SDL_Point& pos)
 {
-	for (auto id : ids)
+	for (auto id : buttons)
 	{
 		if (id != ButtonId::None && SDL_PointInRect(&pos, &ButtonRects[id]))
 		{
@@ -250,7 +251,7 @@ void BudgetWindow::draw()
 
 	mStringRenderer.drawString(*mFont, std::to_string(mBudget.CurrentFunds()), { mRect.x + 10, mRect.y + 20 }, { 0, 0, 0, 255 });
 
-	for (auto id : ids)
+	for (auto id : buttons)
 	{
 		if (id == mButtonDownId)
 		{
