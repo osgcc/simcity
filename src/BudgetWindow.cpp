@@ -61,7 +61,27 @@ namespace
 		TextPanelId::CurrentFunds
 	};
 
+	const std::map<TextPanelId, SDL_Rect> TextPanelLayout
+	{
+		{ TextPanelId::TaxRate, {138, 39, 285, 21} },
+		{ TextPanelId::TaxesCollected, {138, 70, 285, 21} },
 
+		{ TextPanelId::TransportNeeded, {123, 135, 129, 31} },
+		{ TextPanelId::TransportAllocated, {253, 135, 129, 31} },
+		{ TextPanelId::TransportRate, {383, 135, 129, 31} },
+
+		{ TextPanelId::PoliceNeeded, {123, 167, 129, 31} },
+		{ TextPanelId::PoliceAllocated, {253, 167, 129, 31} },
+		{ TextPanelId::PoliceRate, {383, 167, 129, 31} },
+
+		{ TextPanelId::FireNeeded, {123, 199, 129, 3} },
+		{ TextPanelId::FireAllocated, {253, 199, 129, 31} },
+		{ TextPanelId::FireRate, {383, 199, 129, 31} },
+
+		{ TextPanelId::CashFlow, {138, 257, 285, 21} },
+		{ TextPanelId::PreviousFunds, {138, 287, 285, 21} },
+		{ TextPanelId::CurrentFunds, {138, 317, 285, 21} }
+	};
 
 
 	const BudgetWindow::ButtonId ids[]
