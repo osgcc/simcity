@@ -25,7 +25,7 @@ public:
 	StringRender(SDL_Renderer* renderer);
 	~StringRender() = default;
 
-	void drawString(Font& font, std::string_view text, Point<int> position, SDL_Color color) const;
+	void drawString(Font& font, std::string_view text, Point<int> position) const;
 
 private:
 

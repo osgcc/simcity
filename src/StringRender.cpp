@@ -19,11 +19,9 @@ StringRender::StringRender(SDL_Renderer* renderer) :
 {}
 
 
-void StringRender::drawString(Font& font, std::string_view text, Point<int> position, SDL_Color color) const
+void StringRender::drawString(Font& font, std::string_view text, Point<int> position) const
 {
     if (text.empty()) { return; }
-
-    SDL_SetTextureColorMod(font.texture(), color.r, color.g, color.b);
 
     const auto& gml = font.metrics();
     if (gml.empty()) { return; }

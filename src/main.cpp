@@ -559,6 +559,7 @@ void handleKeyEvent(SDL_Event& event)
 
     case SDLK_F10:
         BudgetWindowShown = !BudgetWindowShown;
+        if (BudgetWindowShown) { budgetWindow->update(); }
         break;
 
     case SDLK_F11:
@@ -757,13 +758,15 @@ void drawTopUi()
     SDL_RenderCopy(MainWindowRenderer, RCI_Indicator.texture, nullptr, &RciDestination);
     drawValve();
 
-    stringRenderer->drawString(*MainBigFont, MonthString(static_cast<Month>(LastCityMonth())), {UiHeaderRect.x + 5, UiHeaderRect.y + 5}, {255, 255, 255, 255});
-    stringRenderer->drawString(*MainBigFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 35, UiHeaderRect.y + 5}, {255, 255, 255, 255});
+    SDL_SetTextureColorMod(MainBigFont->texture(), 255, 255, 255);
 
-    stringRenderer->drawString(*MainBigFont, LastMessage(), {100, UiHeaderRect.y + 5}, {255, 255, 255, 255});
+    stringRenderer->drawString(*MainBigFont, MonthString(static_cast<Month>(LastCityMonth())), {UiHeaderRect.x + 5, UiHeaderRect.y + 5});
+    stringRenderer->drawString(*MainBigFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 35, UiHeaderRect.y + 5});
+
+    stringRenderer->drawString(*MainBigFont, LastMessage(), {100, UiHeaderRect.y + 5});
 
     const Point<int> budgetPosition{ UiHeaderRect.x + UiHeaderRect.w - 5 - MainBigFont->width(currentBudget), UiHeaderRect.y + 5 };
-    stringRenderer->drawString(*MainBigFont, currentBudget, budgetPosition, { 255, 255, 255, 255 });
+    stringRenderer->drawString(*MainBigFont, currentBudget, budgetPosition);
 }
 
 
@@ -830,30 +833,30 @@ void DrawPendingTool(const ToolPalette& palette)
 
 void drawDebug()
 {
-    stringRenderer->drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 200, 100 }, { 255, 255, 255, 100 });
-    stringRenderer->drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 200, 100 + MainFont->height() }, { 255, 255, 255, 150 });
+    stringRenderer->drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 200, 100 });
+    stringRenderer->drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 200, 100 + MainFont->height() });
     
-    stringRenderer->drawString(*MainFont, "Speed: " + SpeedString(SimSpeed()), { 200, 100 + MainFont->height() * 3}, {255, 255, 255, 100});
-    stringRenderer->drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 200, 100 + MainFont->height() * 4 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, "Speed: " + SpeedString(SimSpeed()), { 200, 100 + MainFont->height() * 3});
+    stringRenderer->drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 200, 100 + MainFont->height() * 4 });
 
-    stringRenderer->drawString(*MainFont, "RValve: " + std::to_string(RValve), { 200, 100 + MainFont->height() * 6 }, { 255, 255, 255, 100 });
-    stringRenderer->drawString(*MainFont, "CValve: " + std::to_string(CValve), { 200, 100 + MainFont->height() * 7 }, { 255, 255, 255, 100 });
-    stringRenderer->drawString(*MainFont, "IValve: " + std::to_string(IValve), { 200, 100 + MainFont->height() * 8 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, "RValve: " + std::to_string(RValve), { 200, 100 + MainFont->height() * 6 });
+    stringRenderer->drawString(*MainFont, "CValve: " + std::to_string(CValve), { 200, 100 + MainFont->height() * 7 });
+    stringRenderer->drawString(*MainFont, "IValve: " + std::to_string(IValve), { 200, 100 + MainFont->height() * 8 });
 
-    stringRenderer->drawString(*MainFont, "TotalPop: " + std::to_string(TotalPop), { 200, 100 + MainFont->height() * 10 }, { 255, 255, 255, 100 });   
+    stringRenderer->drawString(*MainFont, "TotalPop: " + std::to_string(TotalPop), { 200, 100 + MainFont->height() * 10 });   
     
     std::stringstream sstream;
 
     sstream << "Res: " << ResPop << " Com: " << ComPop << " Ind: " << IndPop << " Tot: " << TotalPop << " LastTot: " << LastTotalPop;
-    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 11 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 11 });
 
     sstream.str("");
     sstream << "TotalZPop: " << TotalZPop << " ResZ: " << ResZPop << " ComZ: " << ComZPop << " IndZ: " << IndZPop;
-    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 12 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 12 });
 
     sstream.str("");
     sstream << "PolicePop: " << PolicePop << " FireStPop: " << FireStPop;
-    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 13 }, { 255, 255, 255, 100 });
+    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 13 });
 }
 
 
