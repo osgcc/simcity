@@ -85,17 +85,18 @@ namespace
 };
 
 
-BudgetWindow::BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRenderer) :
+BudgetWindow::BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRenderer, Budget& budget) :
+	mBudget(budget),
 	mRenderer(renderer),
 	mStringRenderer(stringRenderer),
-	mTitleFont(new Font("res/raleway-medium.ttf", 14)),
+	mFont(new Font("res/raleway-medium.ttf", 14)),
 	mTexture(loadTexture(renderer, "images/budget.png"))
 {}
 
 
 BudgetWindow::~BudgetWindow()
 {
-	delete mTitleFont;
+	delete mFont;
 }
 
 
@@ -187,6 +188,8 @@ void BudgetWindow::draw()
 {
 	SDL_RenderCopy(mRenderer, mTexture.texture, &bgRect, &mRect);
 
+	mStringRenderer.drawString(*mFont, std::to_string(mBudget.CurrentFunds()), { mRect.x + 10, mRect.y + 20 }, { 0, 0, 0, 255 });
+
 	for (auto id : ids)
 	{
 		if (id == mButtonDownId)
@@ -194,4 +197,10 @@ void BudgetWindow::draw()
 			SDL_RenderCopy(mRenderer, mTexture.texture, &ButtonDownTable.at(id), &buttonRects[id]);
 		}
 	}
+}
+
+
+void BudgetWindow::update()
+{
+
 }

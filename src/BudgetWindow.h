@@ -12,6 +12,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "Budget.h"
 #include "Font.h"
 #include "Point.h"
 #include "StringRender.h"
@@ -45,7 +46,7 @@ public:
 	BudgetWindow(const BudgetWindow&) = delete;
 	const BudgetWindow& operator=(const BudgetWindow&) = delete;
 
-	BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRenderer);
+	BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRenderer, Budget& budget);
 	~BudgetWindow();
 
 	const SDL_Rect& rect() const { return mRect; }
@@ -61,16 +62,19 @@ public:
 
 	void draw();
 
+	void update();
+
 private:
 	void handleMouseDown(const ButtonId id);
 
+	const Budget& mBudget;
 	bool mAccepted{ false };
 	SDL_Rect mRect{ 0, 0, 456, 422 };
 
 	SDL_Renderer* mRenderer{ nullptr };
 	const StringRender& mStringRenderer;
 
-	Font* mTitleFont;
+	Font* mFont;
 
 	Texture mTexture{};
 
