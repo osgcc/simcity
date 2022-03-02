@@ -57,8 +57,13 @@ public:
 	int OperatingExpenses() const;
 
 	float RoadPercent() const { return mRoadPercent; }
+	void RoadPercent(const float value) { mRoadPercent = value; }
+
 	float PolicePercent() const { return mPolicePercent; }
+	void PolicePercent(const float value) { mPolicePercent = value; }
+
 	float FirePercent() const { return mFirePercent; }
+	void FirePercent(const float value) { mFirePercent = value; }
 
 	int CashFlow() const;
 
