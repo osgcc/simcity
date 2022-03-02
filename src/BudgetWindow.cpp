@@ -12,6 +12,7 @@
 
 #include "w_util.h"
 
+#include <algorithm>
 #include <map>
 
 namespace
@@ -209,9 +210,11 @@ void BudgetWindow::handleMouseDown(const ButtonId id)
 		break;
 
 	case ButtonId::TaxRateUp:
+		mBudget.TaxRate(std::clamp(mBudget.TaxRate() + 1, Budget::MinTaxRate, Budget::MaxTaxRate));
 		break;
 
 	case ButtonId::TaxRateDown:
+		mBudget.TaxRate(std::clamp(mBudget.TaxRate() - 1, Budget::MinTaxRate, Budget::MaxTaxRate));
 		break;
 
 	case ButtonId::TransportUp:
@@ -239,6 +242,8 @@ void BudgetWindow::handleMouseDown(const ButtonId id)
 	default:
 		break;
 	}
+
+	update();
 }
 
 
