@@ -903,7 +903,7 @@ void startGame()
     ToolPalette toolPalette(MainWindowRenderer);
     toolPalette.position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
 
-    budgetWindow = new BudgetWindow(MainWindowRenderer, *stringRenderer);
+    budgetWindow = new BudgetWindow(MainWindowRenderer, *stringRenderer, budget);
     centerBudgetWindow();
 
     UiRects.push_back(&toolPalette.rect());
@@ -928,7 +928,7 @@ void startGame()
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
         DrawObjects();
 
-        if (BudgetWindowShown)
+        if (budget.NeedsAttention() || BudgetWindowShown)
         {
             SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 175);
             SDL_RenderFillRect(MainWindowRenderer, nullptr);
@@ -942,7 +942,6 @@ void startGame()
         }
         else
         {
-
             DrawPendingTool(toolPalette);
 
             drawTopUi();
