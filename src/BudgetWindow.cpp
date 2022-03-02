@@ -55,7 +55,7 @@ namespace
 		{ BudgetWindow::ButtonId::Accept, mainButtonDown }
 	};
 
-	std::map<BudgetWindow::ButtonId, const SDL_Rect> buttonPositions
+	std::map<BudgetWindow::ButtonId, const SDL_Rect> ButtonLayout
 	{
 		{ BudgetWindow::ButtonId::None, {} },
 		{ BudgetWindow::ButtonId::TaxRateUp, { 431, 36, 13, 13 } },
@@ -69,18 +69,18 @@ namespace
 		{ BudgetWindow::ButtonId::Accept, { 11, 373, 434, 36 } }
 	};
 
-	std::map<BudgetWindow::ButtonId, SDL_Rect> buttonRects
+	std::map<BudgetWindow::ButtonId, SDL_Rect> ButtonRects
 	{
 		{ BudgetWindow::ButtonId::None, {} },
-		{ BudgetWindow::ButtonId::TaxRateUp, buttonPositions[BudgetWindow::ButtonId::TaxRateUp] },
-		{ BudgetWindow::ButtonId::TaxRateDown, buttonPositions[BudgetWindow::ButtonId::TaxRateDown] },
-		{ BudgetWindow::ButtonId::TransportUp, buttonPositions[BudgetWindow::ButtonId::TransportUp] },
-		{ BudgetWindow::ButtonId::TransportDown, buttonPositions[BudgetWindow::ButtonId::TransportDown] },
-		{ BudgetWindow::ButtonId::PoliceUp, buttonPositions[BudgetWindow::ButtonId::PoliceUp] },
-		{ BudgetWindow::ButtonId::PoliceDown, buttonPositions[BudgetWindow::ButtonId::PoliceDown] },
-		{ BudgetWindow::ButtonId::FireUp, buttonPositions[BudgetWindow::ButtonId::FireUp] },
-		{ BudgetWindow::ButtonId::FireDown, buttonPositions[BudgetWindow::ButtonId::FireDown] },
-		{ BudgetWindow::ButtonId::Accept, buttonPositions[BudgetWindow::ButtonId::Accept] }
+		{ BudgetWindow::ButtonId::TaxRateUp, ButtonLayout[BudgetWindow::ButtonId::TaxRateUp] },
+		{ BudgetWindow::ButtonId::TaxRateDown, ButtonLayout[BudgetWindow::ButtonId::TaxRateDown] },
+		{ BudgetWindow::ButtonId::TransportUp, ButtonLayout[BudgetWindow::ButtonId::TransportUp] },
+		{ BudgetWindow::ButtonId::TransportDown, ButtonLayout[BudgetWindow::ButtonId::TransportDown] },
+		{ BudgetWindow::ButtonId::PoliceUp, ButtonLayout[BudgetWindow::ButtonId::PoliceUp] },
+		{ BudgetWindow::ButtonId::PoliceDown, ButtonLayout[BudgetWindow::ButtonId::PoliceDown] },
+		{ BudgetWindow::ButtonId::FireUp, ButtonLayout[BudgetWindow::ButtonId::FireUp] },
+		{ BudgetWindow::ButtonId::FireDown, ButtonLayout[BudgetWindow::ButtonId::FireDown] },
+		{ BudgetWindow::ButtonId::Accept, ButtonLayout[BudgetWindow::ButtonId::Accept] }
 	};
 };
 
@@ -112,12 +112,12 @@ void BudgetWindow::position(const Point<int>& pos)
 
 	for (auto id : ids)
 	{
-		buttonRects[id] =
+		ButtonRects[id] =
 		{
-			buttonPositions[id].x + pos.x,
-			buttonPositions[id].y + pos.y,
-			buttonPositions[id].w,
-			buttonPositions[id].h
+			ButtonLayout[id].x + pos.x,
+			ButtonLayout[id].y + pos.y,
+			ButtonLayout[id].w,
+			ButtonLayout[id].h
 		};
 	}
 }
@@ -168,7 +168,7 @@ void BudgetWindow::injectMouseClickPosition(const SDL_Point& pos)
 {
 	for (auto id : ids)
 	{
-		if (id != ButtonId::None && SDL_PointInRect(&pos, &buttonRects[id]))
+		if (id != ButtonId::None && SDL_PointInRect(&pos, &ButtonRects[id]))
 		{
 			handleMouseDown(id);
 			mButtonDownId = id;
@@ -194,7 +194,7 @@ void BudgetWindow::draw()
 	{
 		if (id == mButtonDownId)
 		{
-			SDL_RenderCopy(mRenderer, mTexture.texture, &ButtonDownTable.at(id), &buttonRects[id]);
+			SDL_RenderCopy(mRenderer, mTexture.texture, &ButtonDownTable.at(id), &ButtonRects[id]);
 		}
 	}
 }
