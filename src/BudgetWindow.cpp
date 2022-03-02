@@ -218,21 +218,27 @@ void BudgetWindow::handleMouseDown(const ButtonId id)
 		break;
 
 	case ButtonId::TransportUp:
+		mBudget.RoadPercent(std::clamp(mBudget.RoadPercent() + Budget::FundingRateStep, Budget::MinFundingRate, Budget::MaxFundingRate));
 		break;
 
 	case ButtonId::TransportDown:
+		mBudget.RoadPercent(std::clamp(mBudget.RoadPercent() - Budget::FundingRateStep, Budget::MinFundingRate, Budget::MaxFundingRate));
 		break;
 
 	case ButtonId::PoliceUp:
+		mBudget.PolicePercent(std::clamp(mBudget.PolicePercent() + Budget::FundingRateStep, Budget::MinFundingRate, Budget::MaxFundingRate));
 		break;
 
 	case ButtonId::PoliceDown:
+		mBudget.PolicePercent(std::clamp(mBudget.PolicePercent() - Budget::FundingRateStep, Budget::MinFundingRate, Budget::MaxFundingRate));
 		break;
 
 	case ButtonId::FireUp:
+		mBudget.FirePercent(std::clamp(mBudget.FirePercent() + Budget::FundingRateStep, Budget::MinFundingRate, Budget::MaxFundingRate));
 		break;
 
 	case ButtonId::FireDown:
+		mBudget.FirePercent(std::clamp(mBudget.FirePercent() - Budget::FundingRateStep, Budget::MinFundingRate, Budget::MaxFundingRate));
 		break;
 
 	case ButtonId::Accept:

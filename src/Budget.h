@@ -18,6 +18,9 @@ public:
 
 	static constexpr auto DefaultTaxRate = 7;
 
+	static constexpr auto MaxFundingRate = 1.0f;
+	static constexpr auto MinFundingRate = 0.0f;
+
 	static constexpr auto FundingRateStep = 0.10f;
 
 public:
@@ -80,6 +83,7 @@ private:
 	int mTaxRate{ DefaultTaxRate };
 	int mAverageTax{};
 
+	/// \fixme Make these integer based instead of float
 	float mRoadPercent{ 1.0f };
 	float mPolicePercent{ 1.0f };
 	float mFirePercent{ 1.0f };
