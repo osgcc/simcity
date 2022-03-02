@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "BudgetWindow.h"
 
+#include "w_util.h"
+
 #include <map>
 
 namespace
@@ -69,20 +71,24 @@ namespace
 
 		{ TextPanelId::TransportNeeded, {123, 135, 129, 31} },
 		{ TextPanelId::TransportAllocated, {253, 135, 129, 31} },
-		{ TextPanelId::TransportRate, {383, 135, 129, 31} },
+		{ TextPanelId::TransportRate, {383, 135, 41, 31} },
 
 		{ TextPanelId::PoliceNeeded, {123, 167, 129, 31} },
 		{ TextPanelId::PoliceAllocated, {253, 167, 129, 31} },
-		{ TextPanelId::PoliceRate, {383, 167, 129, 31} },
+		{ TextPanelId::PoliceRate, {383, 167, 41, 31} },
 
-		{ TextPanelId::FireNeeded, {123, 199, 129, 3} },
+		{ TextPanelId::FireNeeded, {123, 199, 129, 31} },
 		{ TextPanelId::FireAllocated, {253, 199, 129, 31} },
-		{ TextPanelId::FireRate, {383, 199, 129, 31} },
+		{ TextPanelId::FireRate, {383, 199, 41, 31} },
 
 		{ TextPanelId::CashFlow, {138, 257, 285, 21} },
 		{ TextPanelId::PreviousFunds, {138, 287, 285, 21} },
 		{ TextPanelId::CurrentFunds, {138, 317, 285, 21} }
 	};
+
+
+	std::map<TextPanelId, SDL_Rect> TextPanelRects;
+	std::map<TextPanelId, std::string> TextPanelText;
 
 
 	const BudgetWindow::ButtonId buttons[]
@@ -145,6 +151,13 @@ BudgetWindow::BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRen
 	{
 		ButtonRects[id] = ButtonLayout.at(id);
 	}
+
+	for (auto id : panels)
+	{
+		TextPanelRects[id] = TextPanelLayout.at(id);
+	}
+
+	SDL_SetTextureColorMod(mFont->texture(), 0, 0, 0);
 }
 
 
@@ -172,6 +185,17 @@ void BudgetWindow::position(const Point<int>& pos)
 			ButtonLayout.at(id).y + pos.y,
 			ButtonLayout.at(id).w,
 			ButtonLayout.at(id).h
+		};
+	}
+
+	for (auto id : panels)
+	{
+		TextPanelRects[id] =
+		{
+			TextPanelLayout.at(id).x + pos.x,
+			TextPanelLayout.at(id).y + pos.y,
+			TextPanelLayout.at(id).w,
+			TextPanelLayout.at(id).h
 		};
 	}
 }
@@ -242,8 +266,6 @@ void BudgetWindow::draw()
 {
 	SDL_RenderCopy(mRenderer, mTexture.texture, &bgRect, &mRect);
 
-	mStringRenderer.drawString(*mFont, std::to_string(mBudget.CurrentFunds()), { mRect.x + 10, mRect.y + 20 }, { 0, 0, 0, 255 });
-
 	for (auto id : buttons)
 	{
 		if (id == mButtonDownId)
@@ -251,10 +273,36 @@ void BudgetWindow::draw()
 			SDL_RenderCopy(mRenderer, mTexture.texture, &ButtonDownTable.at(id), &ButtonRects[id]);
 		}
 	}
+
+	for (auto id : panels)
+	{
+		//SDL_RenderDrawRect(mRenderer, &TextPanelRects[id]);
+		const std::string str = TextPanelText[id];
+		const SDL_Rect& rect = TextPanelRects[id];
+
+		mStringRenderer.drawString(*mFont, str, { rect.x, rect.y });
+	}
 }
 
 
 void BudgetWindow::update()
 {
+	TextPanelText[TextPanelId::CashFlow] = NumberToDollarDecimal(mBudget.CashFlow());
+	TextPanelText[TextPanelId::CurrentFunds] = NumberToDollarDecimal(mBudget.CurrentFunds());
 
+	TextPanelText[TextPanelId::PreviousFunds] = NumberToDollarDecimal(mBudget.PreviousFunds());
+	TextPanelText[TextPanelId::TaxesCollected] = NumberToDollarDecimal(mBudget.TaxIncome());
+	TextPanelText[TextPanelId::TaxRate] = std::to_string(mBudget.TaxRate()) + "%";
+
+	TextPanelText[TextPanelId::FireAllocated] = NumberToDollarDecimal(mBudget.FireFundsGranted());
+	TextPanelText[TextPanelId::FireNeeded] = NumberToDollarDecimal(mBudget.FireFundsNeeded());
+	TextPanelText[TextPanelId::FireRate] = std::to_string(static_cast<int>(mBudget.FirePercent() * 100.0f)) + "%";
+
+	TextPanelText[TextPanelId::PoliceAllocated] = NumberToDollarDecimal(mBudget.PoliceFundsGranted());
+	TextPanelText[TextPanelId::PoliceNeeded] = NumberToDollarDecimal(mBudget.PoliceFundsNeeded());
+	TextPanelText[TextPanelId::PoliceRate] = std::to_string(static_cast<int>(mBudget.PolicePercent() * 100.0f)) + "%";
+
+	TextPanelText[TextPanelId::TransportAllocated] = NumberToDollarDecimal(mBudget.RoadFundsGranted());
+	TextPanelText[TextPanelId::TransportNeeded] = NumberToDollarDecimal(mBudget.RoadFundsNeeded());
+	TextPanelText[TextPanelId::TransportRate] = std::to_string(static_cast<int>(mBudget.RoadPercent() * 100.0f)) + "%";
 }
