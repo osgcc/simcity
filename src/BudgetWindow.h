@@ -38,8 +38,8 @@ public:
 		Accept
 	};
 
-	const int ButtonStateNormal = 0;
-	const int ButtonStatePressed = 1;
+	static constexpr auto ButtonStateNormal = 0;
+	static constexpr auto ButtonStatePressed = 1;
 
 public:
 	BudgetWindow() = delete;
@@ -67,7 +67,7 @@ public:
 private:
 	void handleMouseDown(const ButtonId id);
 
-	const Budget& mBudget;
+	Budget& mBudget;
 	bool mAccepted{ false };
 	SDL_Rect mRect{ 0, 0, 456, 422 };
 
