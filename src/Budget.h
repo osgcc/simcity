@@ -18,6 +18,8 @@ public:
 
 	static constexpr auto DefaultTaxRate = 7;
 
+	static constexpr auto FundingRateStep = 0.10f;
+
 public:
 	Budget() = default;
 	~Budget() = default;
