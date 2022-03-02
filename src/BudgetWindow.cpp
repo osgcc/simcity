@@ -130,19 +130,7 @@ namespace
 		{ BudgetWindow::ButtonId::Accept, { 11, 373, 434, 36 } }
 	};
 
-	std::map<BudgetWindow::ButtonId, SDL_Rect> ButtonRects
-	{
-		{ BudgetWindow::ButtonId::None, {} },
-		{ BudgetWindow::ButtonId::TaxRateUp, ButtonLayout.at(BudgetWindow::ButtonId::TaxRateUp) },
-		{ BudgetWindow::ButtonId::TaxRateDown, ButtonLayout.at(BudgetWindow::ButtonId::TaxRateDown) },
-		{ BudgetWindow::ButtonId::TransportUp, ButtonLayout.at(BudgetWindow::ButtonId::TransportUp) },
-		{ BudgetWindow::ButtonId::TransportDown, ButtonLayout.at(BudgetWindow::ButtonId::TransportDown) },
-		{ BudgetWindow::ButtonId::PoliceUp, ButtonLayout.at(BudgetWindow::ButtonId::PoliceUp) },
-		{ BudgetWindow::ButtonId::PoliceDown, ButtonLayout.at(BudgetWindow::ButtonId::PoliceDown) },
-		{ BudgetWindow::ButtonId::FireUp, ButtonLayout.at(BudgetWindow::ButtonId::FireUp) },
-		{ BudgetWindow::ButtonId::FireDown, ButtonLayout.at(BudgetWindow::ButtonId::FireDown) },
-		{ BudgetWindow::ButtonId::Accept, ButtonLayout.at(BudgetWindow::ButtonId::Accept) }
-	};
+	std::map<BudgetWindow::ButtonId, SDL_Rect> ButtonRects;
 };
 
 
@@ -152,7 +140,12 @@ BudgetWindow::BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRen
 	mStringRenderer(stringRenderer),
 	mFont(new Font("res/raleway-medium.ttf", 14)),
 	mTexture(loadTexture(renderer, "images/budget.png"))
-{}
+{
+	for (auto id : buttons)
+	{
+		ButtonRects[id] = ButtonLayout.at(id);
+	}
+}
 
 
 BudgetWindow::~BudgetWindow()
