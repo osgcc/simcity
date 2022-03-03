@@ -164,16 +164,10 @@ void sim_exit()
 }
 
 
-void sim_update_graphs()
-{
-    graphDoer();
-}
-
-
 void sim_update()
 {
     updateDate();
-    sim_update_graphs();
+    graphDoer();
     scoreDoer();
 }
 
