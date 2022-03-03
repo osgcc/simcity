@@ -39,11 +39,6 @@ void InitWillStuff()
     PendingTool = Tool::None;
 
     MessageId(NotificationId::None);
-    //MessagePort = 0;
-    //RoadFund = 0;
-    //PoliceFund = 0;
-    //FireFund = 0;
-    UpdateDelayed = 0;
 
     DestroyAllSprites();
 

@@ -15,19 +15,10 @@
 #include <iostream>
 #include <string>
 
-int sim_timer_idle = 0;
-int sim_timer_set = 0;
-
-int UpdateDelayed = 0;
-int AutoScrollEdge = 16;
-int AutoScrollStep = 16;
-int AutoScrollDelay = 10;
 
 int earthquake_timer_set = 0;
 int earthquake_delay = 3000;
 int PerformanceTiming;
-double FlushTime;
-int NeedRest = 0;
 
 
 bool Eval(const std::string& buf)

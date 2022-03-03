@@ -103,7 +103,6 @@ void DoPlayNewCity(Budget& budget)
 
     Resume();
     SimSpeed(SimulationSpeed::Normal);
-    NeedRest = 10;
 }
 
 

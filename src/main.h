@@ -378,13 +378,11 @@ extern int DoInitialEval;
 extern int Startup;
 extern int StartupGameLevel;
 extern int PerformanceTiming;
-extern double FlushTime;
 
 
 extern char *optarg;
 extern int optind;
 
-extern int UpdateDelayed;
 extern int DynamicData[32];
 extern int Players;
 extern int Votes;
@@ -402,10 +400,6 @@ extern int NewMapFlags[NMAPS];
 extern int NewGraph;
 extern int MustUpdateOptions;
 extern int MeltX, MeltY;
-extern int NeedRest;
-
-extern int FlushStyle;
-extern int GotXError;
 
 extern SDL_Renderer* MainWindowRenderer;
 extern Texture SmallTileset;
