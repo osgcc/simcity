@@ -18,7 +18,6 @@
 
 int earthquake_timer_set = 0;
 int earthquake_delay = 3000;
-int PerformanceTiming;
 
 
 bool Eval(const std::string& buf)

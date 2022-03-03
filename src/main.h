@@ -376,8 +376,6 @@ extern int CityAssessedValue;
 extern int InitSimLoad;
 extern int DoInitialEval;
 extern int Startup;
-extern int StartupGameLevel;
-extern int PerformanceTiming;
 
 extern int PunishCnt;
 
