@@ -201,21 +201,11 @@ void sim_update_graphs()
 }
 
 
-void sim_update_evaluations()
-{
-    if ((sim_skips != 0) && (sim_skip != 0))
-    {
-        return;
-    }
-    scoreDoer();
-}
-
-
 void sim_update()
 {
     updateDate();
     sim_update_graphs();
-    sim_update_evaluations();
+    scoreDoer();
 }
 
 
