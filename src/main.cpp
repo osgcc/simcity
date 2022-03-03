@@ -71,7 +71,6 @@ std::string FirstDisplay;
 
 int Startup = 0;
 int StartupGameLevel = 0;
-int WireMode = 0;
 int MultiPlayerMode = 0;
 int TilesAnimated = 0;
 int DoAnimation = 1;
