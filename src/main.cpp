@@ -62,8 +62,6 @@
 
 const std::string MicropolisVersion = "4.0";
 
-std::string CityFileName;
-std::string StartupName;
 
 int Startup = 0;
 int StartupGameLevel = 0;

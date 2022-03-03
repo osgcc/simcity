@@ -29,6 +29,8 @@
 std::string HomeDirectory;
 const std::string ResroucesDirectory;
 
+std::string CityFileName;
+
 
 static bool _load_int(int& buf, size_t len, FILE* f)
 {

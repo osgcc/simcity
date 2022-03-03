@@ -37,7 +37,11 @@ int autoGo;
 int InitSimLoad;
 int ScenarioID;
 int NoDisasters;
+
 bool flagBlink;
+
+
+std::string StartupName;
 
 
 namespace

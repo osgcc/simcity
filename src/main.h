@@ -291,13 +291,10 @@ constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 #define STATE_OVERLAYS 2
 #define STATE_GRAPHS 3
 
-typedef unsigned char Byte;
-
-extern int SpriteXOffset[OBJN];
-extern int SpriteYOffset[OBJN];
-extern int SMapX, SMapY;
 extern int CChr; // unmasked tile value
 extern int CChr9; // masked tile value
+
+extern int SMapX, SMapY;
 extern int RoadTotal, RailTotal, FirePop;
 extern int ResPop, ComPop, IndPop, TotalPop, LastTotalPop;
 extern int ResZPop, ComZPop, IndZPop, TotalZPop;
@@ -306,20 +303,13 @@ extern int PolicePop, FireStPop;
 extern int CoalPop, NuclearPop, PortPop, APortPop;
 extern int NeedHosp, NeedChurch;
 extern int CrimeAverage, PolluteAverage, LVAverage;
-extern const std::string MicropolisVersion;
-extern std::string CityFileName;
-extern std::string StartupName;
+
 extern int StartingYear;
 extern int CityTime;
-extern int Cycle;
 extern int ScenarioID;
 extern int ShakeNow;
-extern int DonDither;
-extern int DoOverlay;
 
 extern int RoadEffect, PoliceEffect, FireEffect;
-
-extern int costOf[];
 
 extern bool flagBlink;
 extern unsigned char tileSynch;
@@ -340,7 +330,6 @@ extern int unPwrdZCnt;
 
 extern int Graph10Max, Graph120Max;
 extern int Res2HisMax, Com2HisMax, Ind2HisMax;
-extern unsigned char *History10[HISTORIES], *History120[HISTORIES];
 extern int CityScore;
 extern int deltaCityScore;
 extern int ScoreType;
@@ -352,24 +341,10 @@ extern int TrafficAverage;
 extern int PosStackN;
 extern int SMapXStack[], SMapYStack[];
 extern int Zsource;
-extern int PdestX, PdestY;
-extern int CdestX, CdestY;
-extern int absDist;
-extern int CopFltCnt;
-extern int GodCnt;
-extern int GdestX, GdestY;
-extern int GorgX, GorgY;
-extern int GodControl;
-extern int CopControl;
-extern int CdestX, CdestY;
-extern int TrafMaxX, TrafMaxY;
-extern int CrimeMaxX, CrimeMaxY;
-extern int FloodX, FloodY;
 extern int CrashX, CrashY;
 extern int CCx, CCy;
 extern int CityPop, deltaCityPop;
 extern int CityYes, CityNo;
-extern int ProblemTable[PROBNUM];
 extern int ProblemOrder[4];
 extern int CityAssessedValue;
 
