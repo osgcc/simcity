@@ -62,21 +62,12 @@
 
 const std::string MicropolisVersion = "4.0";
 
-
 std::string CityFileName;
 std::string StartupName;
-std::string Displays;
-std::string FirstDisplay;
-
 
 int Startup = 0;
 int StartupGameLevel = 0;
-int TilesAnimated = 0;
 int DoAnimation = 1;
-int DoMessages = 1;
-int DoNotices = 1;
-bool Exit = false;
-
 
 namespace
 {
@@ -103,6 +94,7 @@ namespace
     bool MouseClicked{};
     bool DrawDebug{ false };
     bool BudgetWindowShown{ false };
+    bool Exit = false;
 
     SDL_Rect TileHighlight{ 0, 0, 16, 16 };
     SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };

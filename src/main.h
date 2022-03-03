@@ -323,10 +323,7 @@ extern int costOf[];
 
 extern bool flagBlink;
 extern unsigned char tileSynch;
-extern int TilesAnimated;
 extern int DoAnimation;
-extern int DoMessages;
-extern int DoNotices;
 extern unsigned char ColorIntensities[];
 
 extern int NoDisasters;
@@ -399,9 +396,6 @@ extern int LakeLevel;
 extern int CurveLevel;
 extern int specialBase;
 extern int PunishCnt;
-
-extern std::string Displays;
-extern std::string FirstDisplay;
 
 extern bool NewMap;
 extern int NewMapFlags[NMAPS];
