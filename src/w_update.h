@@ -36,7 +36,6 @@ void UpdateGraphs();
 void UpdateEvaluation();
 void UpdateHeads();
 void UpdateFunds(Budget&);
-void updateOptions();
 void updateDate();
 
 extern const std::string dateStr[12];

@@ -182,7 +182,6 @@ void sim_exit()
 void sim_update_editors()
 {
     updateDate();
-    updateOptions();
 }
 
 
