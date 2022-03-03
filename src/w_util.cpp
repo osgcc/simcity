@@ -115,12 +115,6 @@ bool Paused()
 }
 
 
-void setSkips(int skips)
-{
-    sim_skips = skips;
-    sim_skip = 0;
-}
-
 void SetGameLevelFunds(int level, Budget& budget)
 {
     switch (level)

@@ -149,16 +149,12 @@ void DropFireBombs()
 
 void InitGame()
 {
-    sim_skips = sim_skip = 0;
-    
     SimSpeed(SimulationSpeed::Paused);
 }
 
 
 void GameStarted(Budget& budget)
 {
-    InvalidateEditors();
-
     switch (Startup)
     {
     case -2: /* Load a city */

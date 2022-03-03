@@ -973,8 +973,6 @@ void ToolDown(int mapX, int mapY, Budget& budget)
         SendMes(NotificationId::InsufficientFunds);
         MakeSoundOn(nullptr, "edit", "Sorry");
     }
-
-    sim_skip = 0;
 }
 
 

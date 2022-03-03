@@ -59,67 +59,6 @@ bool Eval(const std::string& buf)
 }
 
 
-void InvalidateEditors()
-{
-    std::cout << "InvalidateEditors" << std::endl;
-
-    /*
-    for (SimView* view = sim->editor; view != NULL; view = view->next)
-    {
-        view->invalid = 1;
-        view->skip = 0;
-        EventuallyRedrawView(view);
-    }
-    */
-
-    sim_skip = 0;
-}
-
-
-void RedrawMaps()
-{
-    std::cout << "RedrawMaps" << std::endl;
-
-    /*
-    for (SimView* view = sim->map; view != NULL; view = view->next)
-    {
-        view->skip = 0;
-        EventuallyRedrawView(view);
-    }
-    */
-
-    sim_skip = 0;
-}
-
-
-void RedrawEditors()
-{
-    std::cout << "RedrawEditors" << std::endl;
-
-    /*
-    for (SimView* view = sim->editor; view != NULL; view = view->next)
-    {
-        view->skip = 0;
-        EventuallyRedrawView(view);
-    }
-    */
-
-    sim_skip = 0;
-}
-
-
-void CancelRedrawView(SimView* view)
-{
-    /*
-    if (view->flags & VIEW_REDRAW_PENDING)
-    {
-        Tk_CancelIdleCall(DisplayTileView, (ClientData)view);
-    }
-    view->flags &= ~VIEW_REDRAW_PENDING;
-    */
-}
-
-
 void DidStopPan(SimView* view)
 {
     /*

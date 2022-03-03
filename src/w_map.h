@@ -28,6 +28,3 @@ enum class MiniMapOverlay
 	PoliceRadius,
 	Dynamic
 };
-
-
-int DoUpdateMap();

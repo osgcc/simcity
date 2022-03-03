@@ -69,9 +69,6 @@ std::string Displays;
 std::string FirstDisplay;
 
 
-int sim_skips = 0;
-int sim_skip = 0;
-
 int Startup = 0;
 int StartupGameLevel = 0;
 int WireMode = 0;
@@ -179,22 +176,6 @@ void sim_exit()
 }
 
 
-void sim_update_maps()
-{
-    //drawCrimeMap();
-    //drawPopDensity();
-    //drawTrafficMap();
-    //drawPower();
-    //drawPollutionMap();
-    //drawLandMap();
-    //drawPoliceRadius();
-    //drawFireRadius();
-    //drawRateOfGrowth();
-
-    DoUpdateMap();
-}
-
-
 void sim_update_graphs()
 {
     graphDoer();
@@ -252,7 +233,6 @@ void sim_loop(bool doSim)
     if (doSim)
     {
         SimFrame(budget);
-        sim_update_maps();
     }
 
     const int tick = TickCount();
@@ -292,7 +272,6 @@ void sim_init()
     ScenarioID = 0;
     StartingYear = 1900;
     tileSynch = 0x01;
-    sim_skips = sim_skip = 0;
     AutoGotoMessageLocation(true);
     CityTime = 50;
     NoDisasters = 0;
@@ -321,7 +300,6 @@ void sim_init()
     budget.CurrentFunds(5000);
     SetGameLevelFunds(StartupGameLevel, budget);
     SimSpeed(SimulationSpeed::Paused);
-    setSkips(0);
 }
 
 

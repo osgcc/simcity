@@ -147,7 +147,6 @@ int loadFile(char *filename)
     SimSpeed = 3;
 
   setSpeed(SimSpeed);
-  setSkips(0);
 
   InitFundingLevel();
 
@@ -436,16 +435,12 @@ void LoadScenario(int s, Budget& budget)
     }
 
     setAnyCityName(name.c_str());
-    //  sim_skips = sim_skip = 0;
-    InvalidateEditors();
     SimSpeed(SimulationSpeed::Normal);
 
     _load_file(fname, ResroucesDirectory);
 
     InitWillStuff();
-    //InitFundingLevel();
     UpdateFunds(budget);
-    InvalidateEditors();
     InitSimLoad = 1;
     DoInitialEval = 0;
     DoSimInit(budget);
