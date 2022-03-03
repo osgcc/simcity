@@ -379,11 +379,6 @@ extern int Startup;
 extern int StartupGameLevel;
 extern int PerformanceTiming;
 
-
-extern char *optarg;
-extern int optind;
-
-extern int DynamicData[32];
 extern int Players;
 extern int Votes;
 extern int BobHeight;
