@@ -159,7 +159,7 @@ void UpdateEvaluation()
 void UpdateHeads()
 {
     lastCityTime = lastCityYear = lastCityMonth = -999999;
-    sim_update_editors();
+    //sim_update_editors();
 }
 
 

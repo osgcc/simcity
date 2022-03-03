@@ -179,12 +179,6 @@ void sim_exit()
 }
 
 
-void sim_update_editors()
-{
-    updateDate();
-}
-
-
 void sim_update_maps()
 {
     //drawCrimeMap();
@@ -219,7 +213,7 @@ void sim_update_evaluations()
 
 void sim_update()
 {
-    sim_update_editors();
+    updateDate();
     sim_update_graphs();
     sim_update_evaluations();
 }

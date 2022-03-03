@@ -423,7 +423,6 @@ extern SDL_Renderer* MainWindowRenderer;
 extern Texture SmallTileset;
 
 void sim_exit();
-void sim_update_editors();
 const Point<int>& viewOffset();
 
 SDL_Rect& miniMapTileRect();

@@ -53,7 +53,6 @@ void InitWillStuff()
 
     ResetLastKeys();
     DoNewGame();
-    sim_update_editors();
 }
 
 
