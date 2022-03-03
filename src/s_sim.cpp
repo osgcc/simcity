@@ -15,6 +15,8 @@
 #include "main.h"
 #include "Map.h"
 
+#include "Point.h"
+
 #include "s_alloc.h"
 #include "s_disast.h"
 #include "s_eval.h"
@@ -162,26 +164,27 @@ void DoMeltdown(const int x, const int y)
 }
 
 
-void DoRail()
+void DoRail(const Point<int>& position)
 {
     RailTotal++;
-    GenerateTrain(SMapX, SMapY);
+    GenerateTrain(position.x, position.y);
    
     if (RoadEffect < 30) // Deteriorating  Rail
     {
         if (RandomRange(0, 511) == 0)
         {
-            if (!(CChr & CONDBIT))
+            const unsigned int tile = tileValue(position.x, position.y);
+            if (!(tile & CONDBIT))
             {
                 if (RoadEffect < RandomRange(0, 31))
                 {
-                    if (CChr9 < (RAILBASE + 2))
+                    if (maskedTileValue(tile) < (RAILBASE + 2))
                     {
-                        Map[SMapX][SMapY] = RIVER;
+                        Map[position.x][position.y] = RIVER;
                     }
                     else
                     {
-                        Map[SMapX][SMapY] = RUBBLE + RandomRange(0, 3) + BULLBIT;
+                        Map[position.x][position.y] = RUBBLE + RandomRange(0, 3) + BULLBIT;
                     }
                     return;
                 }
@@ -612,6 +615,9 @@ void MapScan(int x1, int x2)
             if (CChr = Map[x][y])
             {
                 CChr9 = CChr & LOMASK;	// Mask off status bits
+
+                const int tile = maskedTileValue(x, y);
+
                 if (CChr9 >= FLOOD)
                 {
                     SMapX = x;
@@ -655,9 +661,9 @@ void MapScan(int x1, int x2)
                         continue;
                     }
 
-                    if ((CChr9 >= RAILBASE) && (CChr9 < RESBASE))
+                    if ((tile >= RAILBASE) && (tile < RESBASE))
                     {
-                        DoRail();
+                        DoRail({ x, y });
                         continue;
                     }
                     if ((CChr9 >= SOMETINYEXP) && (CChr9 <= LASTTINYEXP)) // clear AniRubble

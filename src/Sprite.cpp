@@ -1545,9 +1545,12 @@ void MoveObjects()
 
 void GenerateTrain(int x, int y)
 {
+    constexpr auto TRA_GROOVE_X = -39;
+    constexpr auto TRA_GROOVE_Y = 6;
+
     if (TotalPop > 20 && GetSprite(SimSprite::Type::Train) == nullptr && RandomRange(0, 25) == 0)
     {
-        MakeSprite(SimSprite::Type::Train, x * 16, y * 16);
+        MakeSprite(SimSprite::Type::Train, x * 16 + TRA_GROOVE_X, y * 16 + TRA_GROOVE_Y);
     }
 }
 
