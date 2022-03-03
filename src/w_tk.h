@@ -16,5 +16,3 @@ struct SimView;
 
 bool Eval(const std::string&);
 void StopEarthquake();
-void EventuallyRedrawView(SimView* view);
-void DidStopPan(SimView* view);

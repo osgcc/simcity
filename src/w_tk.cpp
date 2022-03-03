@@ -30,43 +30,10 @@ double FlushTime;
 int NeedRest = 0;
 
 
-void EventuallyRedrawView(SimView* view)
-{
-    /*
-    if (!(view->flags & VIEW_REDRAW_PENDING))
-    {
-        Tk_DoWhenIdle(DisplayTileView, (ClientData)view);
-        view->flags |= VIEW_REDRAW_PENDING;
-    }
-    */
-}
-
-
 bool Eval(const std::string& buf)
 {
     std::cout << "Eval: " << buf << std::endl;
-    /*
-    int result = Tcl_Eval(tk_mainInterp, buf, 0, (char**)NULL);
-    if (result != TCL_OK)
-    {
-        char* errorinfo = Tcl_GetVar(tk_mainInterp, "errorInfo", TCL_GLOBAL_ONLY);
-        if (errorinfo == NULL) errorinfo = "<no backtrace>";
-        fprintf(stderr, "Micropolis: error in TCL code: %s\n%s\n", tk_mainInterp->result, errorinfo);
-    }
-    */
-
     return false;
-}
-
-
-void DidStopPan(SimView* view)
-{
-    /*
-    char buf[256];
-    sprintf(buf, "UIDidStopPan %s", Tk_PathName(view->tkwin));
-
-    Eval(buf);
-    */
 }
 
 
