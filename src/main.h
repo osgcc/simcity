@@ -119,17 +119,6 @@ constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 #define BLBNCNBIT	(BULLBIT+BURNBIT+CONDBIT)
 #define BNCNBIT		(BURNBIT+CONDBIT)
 
-/* Object & Sound Numbers */
-
-#define TRA		1
-#define COP		2
-#define AIR		3
-#define SHI		4
-#define GOD		5
-#define TOR		6
-#define EXP		7
-#define BUS		8
-
 /* Max # of Objects */
 
 #define OBJN		9
@@ -311,8 +300,6 @@ extern int ShakeNow;
 
 extern int RoadEffect, PoliceEffect, FireEffect;
 
-extern bool flagBlink;
-extern unsigned char tileSynch;
 extern int DoAnimation;
 extern unsigned char ColorIntensities[];
 

@@ -259,7 +259,6 @@ void sim_init()
     MustUpdateOptions = 1;
     ScenarioID = 0;
     StartingYear = 1900;
-    tileSynch = 0x01;
     AutoGotoMessageLocation(true);
     CityTime = 50;
     NoDisasters = 0;
@@ -268,7 +267,6 @@ void sim_init()
     autoBudget = 1;
     MessageId(NotificationId::None);
     ClearMes();
-    flagBlink = true;
     SimSpeed(SimulationSpeed::Normal);
     ChangeEval();
     MessageLocation({ 0, 0 });
@@ -802,7 +800,7 @@ bool simulationTick()
 
 unsigned int zonePowerBlinkFlag(unsigned int interval, void* param)
 {
-    flagBlink = !flagBlink;
+    toggleBlinkFlag();
     return interval;
 }
 

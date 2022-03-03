@@ -61,8 +61,6 @@ void SetTrafMem()
             int z = maskedTileValue(SMapX, SMapY);
             if ((z >= ROADBASE) && (z < POWERBASE))
             {
-                SimSprite* sprite;
-
                 /* check for rail */
                 z = TrfDensity[SMapX / 2][SMapY / 2];
                 z += 50;
@@ -71,7 +69,9 @@ void SetTrafMem()
                     z = 240;
                     TrafMaxX = SMapX * 16;
                     TrafMaxY = SMapY * 16;
-                    if (((sprite = GetSprite(COP)) != NULL) && (sprite->control == -1))
+
+                    SimSprite* sprite = GetSprite(SimSprite::Type::Helicopter);
+                    if (sprite)
                     {
                         sprite->dest_x = TrafMaxX;
                         sprite->dest_y = TrafMaxY;

@@ -30,3 +30,5 @@ bool tilePowered(const unsigned int tile);
 bool tileIsZoned(const unsigned int tile);
 bool blink();
 void ResetMap();
+
+void toggleBlinkFlag();

@@ -593,7 +593,7 @@ void DoSPZone(int PwrOn)
             RepairZone(PORT, 4);
         }
         if (PwrOn &&
-            (GetSprite(SHI) == NULL))
+            (GetSprite(SimSprite::Type::Ship) == NULL))
         {
             GenerateShip();
         }

@@ -17,9 +17,21 @@
 
 struct SimSprite
 {
+	enum class Type
+	{
+		Train,
+		Helicopter,
+		Airplane,
+		Ship,
+		Monster,
+		Tornado,
+		Explosion,
+		Bus
+	};
+
 	std::string name{};
 
-	int type{ 0 };
+	Type type{ 0 };
 	int frame{ 0 };
 	int x{ 0 }, y{ 0 };
 	int width{ 0 }, height{ 0 };
@@ -41,7 +53,7 @@ struct SimSprite
 
 extern std::vector<SimSprite> Sprites;
 
-SimSprite* GetSprite(int type);
+SimSprite* GetSprite(SimSprite::Type type);
 
 void MoveObjects();
 void DoTrainSprite(SimSprite& sprite);

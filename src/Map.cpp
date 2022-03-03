@@ -33,7 +33,14 @@ std::array<std::array<int, SimHeight>, SimWidth> Map;
 namespace
 {
 	SDL_Rect tileRect{ 0, 0, 16, 16 };
+	bool flagBlink{ false };
 };
+
+
+void toggleBlinkFlag()
+{
+	flagBlink = !flagBlink;
+}
 
 
 void ResetMap()

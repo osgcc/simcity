@@ -10,8 +10,6 @@
 // file, included in this distribution, for details.
 #include "Sprite.h"
 
-#include "main.h"
-
 #include "Map.h"
 
 #include "s_alloc.h"
@@ -22,6 +20,7 @@
 #include "w_tool.h"
 #include "w_util.h"
 
+#include <map>
 #include <string>
 
 #include <SDL2/SDL.h>
@@ -31,16 +30,33 @@ int CrashX, CrashY;
 int absDist;
 int Cycle;
 
+
 std::vector<SimSprite> Sprites;
 
 
-void GetObjectXpms(int id, int frames, std::vector<Texture>& frameList)
+namespace
+{
+    const std::map<SimSprite::Type, std::string> SpriteTypeToId
+    {
+        { SimSprite::Type::Train, "1" },
+        { SimSprite::Type::Helicopter, "2" },
+        { SimSprite::Type::Airplane, "3" },
+        { SimSprite::Type::Ship, "4" },
+        { SimSprite::Type::Monster, "5" },
+        { SimSprite::Type::Tornado, "6" },
+        { SimSprite::Type::Explosion, "7" },
+        { SimSprite::Type::Bus, "8" }
+    };
+};
+
+
+void GetObjectXpms(SimSprite::Type type, int frames, std::vector<Texture>& frameList)
 {
     std::string name;
 
     for (int i = 0; i < frames; i++)
     {
-        name = std::string("images/obj") + std::to_string(id) + "-" + std::to_string(i) + ".xpm";
+        name = std::string("images/obj") + SpriteTypeToId.at(type) + "-" + std::to_string(i) + ".xpm";
         frameList.push_back(loadTexture(MainWindowRenderer, name));
     }
 }
@@ -67,22 +83,10 @@ void InitSprite(SimSprite& sprite, int x, int y)
     sprite.speed = 100;
     sprite.active = true;
 
-    /*
-    pm[0] = NULL; // no object number 0
-    pm[TRA] = GetObjectXpms(TRA, 5);
-    pm[COP] = GetObjectXpms(COP, 8);
-    pm[AIR] = GetObjectXpms(AIR, 11);
-    pm[SHI] = GetObjectXpms(SHI, 8);
-    pm[GOD] = GetObjectXpms(GOD, 16);
-    pm[TOR] = GetObjectXpms(TOR, 3);
-    pm[EXP] = GetObjectXpms(EXP, 6);
-    pm[BUS] = GetObjectXpms(BUS, 4);
-    */
-
     switch (sprite.type)
     {
 
-    case TRA:
+    case SimSprite::Type::Train:
         sprite.width = 32;
         sprite.height = 32;
         sprite.x_offset = 32;
@@ -91,10 +95,10 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.y_hot = -8;
         sprite.frame = 1;
         sprite.dir = 4;
-        GetObjectXpms(TRA, 5, sprite.frames);
+        GetObjectXpms(SimSprite::Type::Train, 5, sprite.frames);
         break;
 
-    case SHI:
+    case SimSprite::Type::Ship:
         sprite.width = sprite.height = 48;
         sprite.x_offset = 32; sprite.y_offset = -16;
         sprite.x_hot = 48; sprite.y_hot = 0;
@@ -125,7 +129,7 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.count = 1;
         break;
 
-    case GOD:
+    case SimSprite::Type::Monster:
         sprite.width = sprite.height = 48;
         sprite.x_offset = 24; sprite.y_offset = 0;
         sprite.x_hot = 40; sprite.y_hot = 16;
@@ -149,7 +153,7 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.orig_y = sprite.y;
         break;
 
-    case COP:
+    case SimSprite::Type::Helicopter:
         sprite.width = sprite.height = 32;
         sprite.x_offset = 32; sprite.y_offset = -16;
         sprite.x_hot = 40; sprite.y_hot = -8;
@@ -161,7 +165,7 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.orig_y = y;
         break;
 
-    case AIR:
+    case SimSprite::Type::Airplane:
         sprite.width = sprite.height = 48;
         sprite.x_offset = 24; sprite.y_offset = 0;
         sprite.x_hot = 48; sprite.y_hot = 16;
@@ -179,24 +183,24 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.dest_y = sprite.y;
         break;
 
-    case TOR:
+    case SimSprite::Type::Tornado:
         sprite.width = sprite.height = 48;
         sprite.x_offset = 24; sprite.y_offset = 0;
         sprite.x_hot = 40; sprite.y_hot = 36;
         sprite.frame = 0;
         sprite.count = 200;
-        GetObjectXpms(TOR, 3, sprite.frames);
+        GetObjectXpms(SimSprite::Type::Tornado, 3, sprite.frames);
         break;
 
-    case EXP:
+    case SimSprite::Type::Explosion:
         sprite.width = sprite.height = 48;
         sprite.x_offset = 24; sprite.y_offset = 0;
         sprite.x_hot = 40; sprite.y_hot = 16;
         sprite.frame = 0;
-        GetObjectXpms(EXP, 6, sprite.frames);
+        GetObjectXpms(SimSprite::Type::Explosion, 6, sprite.frames);
         break;
 
-    case BUS:
+    case SimSprite::Type::Bus:
         sprite.width = sprite.height = 32;
         sprite.x_offset = 30; sprite.y_offset = -18;
         sprite.x_hot = 40; sprite.y_hot = -8;
@@ -228,9 +232,8 @@ void DestroySprite(SimSprite& sprite)
 }
 
 
-SimSprite* GetSprite(int type)
+SimSprite* GetSprite(SimSprite::Type type)
 {
-
     for (size_t i = 0; i < Sprites.size(); ++i)
     {
         auto& sprite = Sprites[i];
@@ -244,7 +247,7 @@ SimSprite* GetSprite(int type)
 }
 
 
-void MakeSprite(int type, int x, int y)
+void MakeSprite(SimSprite::Type type, int x, int y)
 {
     for (size_t i = 0; i < Sprites.size(); ++i)
     {
@@ -258,7 +261,7 @@ void MakeSprite(int type, int x, int y)
         }
     }
 
-    Sprites.push_back({});
+    Sprites.push_back(SimSprite());
     Sprites.back().type = type;
     InitSprite(Sprites.back(), x, y);
 }
@@ -583,31 +586,31 @@ void ExplodeSprite(SimSprite* sprite)
 
     switch (sprite->type)
     {
-    case AIR:
+    case SimSprite::Type::Airplane:
         CrashX = x;
         CrashY = y;
         SendMesAt(NotificationId::PlaneCrashed, x, y);
         break;
 
-    case SHI:
+    case SimSprite::Type::Ship:
         CrashX = x;
         CrashY = y;
         SendMesAt(NotificationId::ShipWrecked, x, y);
         break;
 
-    case TRA:
+    case SimSprite::Type::Train:
         CrashX = x;
         CrashY = y;
         SendMesAt(NotificationId::TrainCrashed, x, y);
         break;
 
-    case COP:
+    case SimSprite::Type::Helicopter:
         CrashX = x;
         CrashY = y;
         SendMesAt(NotificationId::HelicopterCrashed, x, y);
         break;
 
-    case BUS:
+    case SimSprite::Type::Bus:
         CrashX = x;
         CrashY = y;
         SendMesAt(NotificationId::TrainCrashed, x, y); /* XXX for now */
@@ -1503,35 +1506,35 @@ void MoveObjects()
         {
             switch (sprite.type)
             {
-            case TRA:
+            case SimSprite::Type::Train:
                 DoTrainSprite(sprite);
                 break;
 
-            case COP:
+            case SimSprite::Type::Helicopter:
                 DoCopterSprite(&sprite);
                 break;
 
-            case AIR:
+            case SimSprite::Type::Airplane:
                 DoAirplaneSprite(&sprite);
                 break;
 
-            case SHI:
+            case SimSprite::Type::Ship:
                 DoShipSprite(&sprite);
                 break;
 
-            case GOD:
+            case SimSprite::Type::Monster:
                 DoMonsterSprite(&sprite);
                 break;
 
-            case TOR:
+            case SimSprite::Type::Tornado:
                 DoTornadoSprite(sprite);
                 break;
 
-            case EXP:
+            case SimSprite::Type::Explosion:
                 DoExplosionSprite(sprite);
                 break;
 
-            case BUS:
+            case SimSprite::Type::Bus:
                 DoBusSprite(&sprite);
                 break;
             }
@@ -1542,9 +1545,9 @@ void MoveObjects()
 
 void GenerateTrain(int x, int y)
 {
-    if (TotalPop > 20 && GetSprite(TRA) == nullptr && RandomRange(0, 25) == 0)
+    if (TotalPop > 20 && GetSprite(SimSprite::Type::Train) == nullptr && RandomRange(0, 25) == 0)
     {
-        MakeSprite(TRA, x * 16, y * 16);
+        MakeSprite(SimSprite::Type::Train, x * 16, y * 16);
     }
 }
 
@@ -1562,7 +1565,7 @@ void GenerateBus(int x, int y)
 
 void MakeShipHere(int x, int y, int z)
 {
-    MakeSprite(SHI, (x << 4) - (48 - 1), (y << 4));
+    MakeSprite(SimSprite::Type::Ship, (x << 4) - (48 - 1), (y << 4));
 }
 
 
@@ -1620,7 +1623,7 @@ void GenerateShip()
 
 void MonsterHere(int x, int y)
 {
-  MakeSprite(GOD, (x <<4) + 48, (y <<4));
+  MakeSprite(SimSprite::Type::Monster, (x <<4) + 48, (y <<4));
   ClearMes();
   SendMesAt(NotificationId::MonsterReported, x + 5, y);
 }
@@ -1689,7 +1692,7 @@ void GeneratePlane(int x, int y)
 
 void MakeTornado()
 {
-    SimSprite* sprite{ GetSprite(TOR) };
+    SimSprite* sprite{ GetSprite(SimSprite::Type::Tornado) };
 
     if (sprite != nullptr)
     {
@@ -1701,7 +1704,7 @@ void MakeTornado()
     int x = RandomRange(1, SimWidth - 2);
     int y = RandomRange(1, SimHeight - 2);
 
-    MakeSprite(TOR, x * 16, y * 16);
+    MakeSprite(SimSprite::Type::Tornado, x * 16, y * 16);
     ClearMes();
     SendMesAt(NotificationId::TornadoReported, x, y);
     
@@ -1711,7 +1714,7 @@ void MakeTornado()
 void MakeExplosionAt(int x, int y)
 {
     //MakeNewSprite(EXP, x - 40, y - 16);
-    MakeSprite(EXP, x - 40, y - 16);
+    MakeSprite(SimSprite::Type::Explosion, x - 40, y - 16);
 }
 
 

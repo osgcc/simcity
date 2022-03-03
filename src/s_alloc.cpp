@@ -39,14 +39,11 @@ int CrimeAverage, PolluteAverage, LVAverage;
 int CityTime;
 int StartingYear;
 
-
 int ResHisMax, Res2HisMax;
 int ComHisMax, Com2HisMax;
 int IndHisMax, Ind2HisMax;
 
 int RoadEffect, PoliceEffect, FireEffect;
-
-unsigned char tileSynch = 0x01;
 
 std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PopDensity{};
 std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> TrfDensity{};
