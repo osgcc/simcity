@@ -37,7 +37,6 @@ int autoGo;
 int InitSimLoad;
 int ScenarioID;
 int NoDisasters;
-int EvalChanged;
 bool flagBlink;
 
 

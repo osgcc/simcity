@@ -20,6 +20,12 @@
 
 extern int ProblemVotes[PROBNUM];
 
+
+namespace
+{
+	bool EvalChanged{ false };
+}
+
 const std::string cityClassStr[6] =
 {
   "VILLAGE",
@@ -137,7 +143,7 @@ void doScoreCard()
 
 void ChangeEval()
 {
-	EvalChanged = 1;
+	EvalChanged = true;
 }
 
 
@@ -146,6 +152,6 @@ void scoreDoer()
 	if (EvalChanged)
 	{
 		doScoreCard();
-		EvalChanged = 0;
+		EvalChanged = false;
 	}
 }

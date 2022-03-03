@@ -412,7 +412,6 @@ extern bool NewMap;
 extern int NewMapFlags[NMAPS];
 extern int NewGraph;
 extern int MustUpdateOptions;
-extern int EvalChanged;
 extern int MeltX, MeltY;
 extern int NeedRest;
 
