@@ -156,13 +156,6 @@ void UpdateEvaluation()
 }
 
 
-void UpdateHeads()
-{
-    lastCityTime = lastCityYear = lastCityMonth = -999999;
-    //sim_update_editors();
-}
-
-
 void UpdateFunds(Budget& budget)
 {
     //SetFunds(std::clamp(TotalFunds(), 0, std::numeric_limits<int>::max()));
