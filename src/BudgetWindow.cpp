@@ -90,6 +90,7 @@ namespace
 
 	std::map<TextPanelId, SDL_Rect> TextPanelRects;
 	std::map<TextPanelId, std::string> TextPanelText;
+	std::map<TextPanelId, Point<int>> TextPanelAdjust;
 
 
 	const BudgetWindow::ButtonId buttons[]
@@ -287,11 +288,9 @@ void BudgetWindow::draw()
 
 	for (auto id : panels)
 	{
-		//SDL_RenderDrawRect(mRenderer, &TextPanelRects[id]);
 		const std::string str = TextPanelText[id];
-		const SDL_Rect& rect = TextPanelRects[id];
-
-		mStringRenderer.drawString(*mFont, str, { rect.x, rect.y });
+		SDL_Rect& rect = TextPanelRects[id];
+		mStringRenderer.drawString(*mFont, str, { rect.x + TextPanelAdjust[id].x, rect.y + TextPanelAdjust[id].y });
 	}
 }
 
@@ -316,4 +315,9 @@ void BudgetWindow::update()
 	TextPanelText[TextPanelId::TransportAllocated] = NumberToDollarDecimal(mBudget.RoadFundsGranted());
 	TextPanelText[TextPanelId::TransportNeeded] = NumberToDollarDecimal(mBudget.RoadFundsNeeded());
 	TextPanelText[TextPanelId::TransportRate] = std::to_string(static_cast<int>(mBudget.RoadPercent() * 100.0f)) + "%";
+
+	for (auto id : panels)
+	{
+		TextPanelAdjust[id] = { TextPanelLayout.at(id).w - mFont->width(TextPanelText[id]), TextPanelLayout.at(id).h / 2 - mFont->height() / 2 };
+	}
 }
