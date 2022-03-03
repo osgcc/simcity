@@ -379,17 +379,12 @@ extern int Startup;
 extern int StartupGameLevel;
 extern int PerformanceTiming;
 
-extern int TreeLevel;
-extern int LakeLevel;
-extern int CurveLevel;
-extern int specialBase;
 extern int PunishCnt;
 
 extern bool NewMap;
 extern int NewMapFlags[NMAPS];
 extern int NewGraph;
 extern int MustUpdateOptions;
-extern int MeltX, MeltY;
 
 extern SDL_Renderer* MainWindowRenderer;
 extern Texture SmallTileset;
