@@ -100,26 +100,26 @@ void LastCityYear(int year)
 
 void updateDate()
 {
-    static int megalinium = 1000000;
+    constexpr auto megaannum = 1000000; // wierd place for this
 
     lastCityTime = CityTime / 4;
 
-    int y = (CityTime / 48) + StartingYear;
-    int m = (CityTime % 48) / 4;
+    int year = (CityTime / 48) + StartingYear;
+    int month = (CityTime % 48) / 4;
 
-    if (y >= megalinium)
+    if (year >= megaannum)
     {
         SetYear(StartingYear);
-        y = StartingYear;
+        year = StartingYear;
         SendMes(NotificationId::BrownoutsReported);
     }
 
     doMessage();
 
-    if ((LastCityYear() != y) || (LastCityMonth() != m))
+    if ((LastCityYear() != year) || (LastCityMonth() != month))
     {
-        lastCityYear = y;
-        lastCityMonth = m;
+        lastCityYear = year;
+        lastCityMonth = month;
     }
 }
 
