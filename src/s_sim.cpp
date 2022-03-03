@@ -24,7 +24,6 @@
 #include "s_traf.h"
 #include "s_zone.h"
 
-#include "w_budget.h"
 #include "w_graph.h"
 #include "w_stubs.h"
 #include "w_util.h"
@@ -1482,8 +1481,6 @@ void UpdateFundEffects(const Budget& budget)
     {
         FireEffect = 1000;
     }
-
-    drawCurrPercents();
 }
 
 

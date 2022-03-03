@@ -43,7 +43,6 @@
     <ClCompile Include="src\s_zone.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\ToolPalette.cpp" />
-    <ClCompile Include="src\w_budget.cpp" />
     <ClCompile Include="src\w_con.cpp" />
     <ClCompile Include="src\w_eval.cpp" />
     <ClCompile Include="src\w_graph.cpp" />
@@ -85,7 +84,6 @@
     <ClInclude Include="src\ToolPalette.h" />
     <ClInclude Include="src\Vector.h" />
     <ClInclude Include="src\VectorSizeRange.h" />
-    <ClInclude Include="src\w_budget.h" />
     <ClInclude Include="src\w_con.h" />
     <ClInclude Include="src\w_graph.h" />
     <ClInclude Include="src\animtab.h" />

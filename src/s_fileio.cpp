@@ -16,7 +16,6 @@
 #include "s_init.h"
 #include "s_sim.h"
 
-#include "w_budget.h"
 #include "w_graph.h"
 #include "w_stubs.h"
 #include "w_tk.h"

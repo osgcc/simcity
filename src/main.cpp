@@ -30,7 +30,6 @@
 #include "Sprite.h"
 #include "StringRender.h"
 
-#include "w_budget.h"
 #include "w_eval.h"
 #include "w_graph.h"
 #include "w_map.h"
@@ -223,17 +222,6 @@ void sim_update_graphs()
 }
 
 
-void sim_update_budgets()
-{
-    if ((sim_skips != 0) && (sim_skip != 0))
-    {
-        return;
-    }
-
-    UpdateBudgetWindow(budget);
-}
-
-
 void sim_update_evaluations()
 {
     if ((sim_skips != 0) && (sim_skip != 0))
@@ -248,7 +236,6 @@ void sim_update()
 {
     sim_update_editors();
     sim_update_graphs();
-    sim_update_budgets();
     sim_update_evaluations();
 }
 
