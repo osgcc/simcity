@@ -379,11 +379,6 @@ extern int Startup;
 extern int StartupGameLevel;
 extern int PerformanceTiming;
 
-extern int Players;
-extern int Votes;
-extern int BobHeight;
-extern int OverRide;
-extern int Expensive;
 extern int TreeLevel;
 extern int LakeLevel;
 extern int CurveLevel;

@@ -34,13 +34,8 @@
 #include <stdexcept>
 
 int specialBase = CHURCH;
-int OverRide = 0;
-int Expensive = 1000;
-int Players = 1;
-int Votes = 0;
 
 Tool PendingTool{ Tool::None };
-
 
 std::map<Tool, ToolProperties> Tools =
 {
@@ -403,11 +398,6 @@ ToolResult checkArea(const int mapH, const int mapV, const int base, const int s
     if (!budget.CanAfford(totalCost))
     {
         return ToolResult::InsufficientFunds;
-    }
-
-    if ((Players > 1) && (OverRide == 0) && (totalCost >= Expensive))
-    {
-        return ToolResult::NetworkVotedNo;
     }
 
     budget.Spend(totalCost);
