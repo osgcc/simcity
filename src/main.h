@@ -386,8 +386,6 @@ extern double FlushTime;
 
 extern char *optarg;
 extern int optind;
-//extern struct timeval now_time;
-extern int MultiPlayerMode;
 
 extern int UpdateDelayed;
 extern int DynamicData[32];
