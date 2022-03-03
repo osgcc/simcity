@@ -179,20 +179,6 @@ void sim_exit()
 }
 
 
-/**
- * Init filesystem environment/path
- */
-void env_init()
-{
-    // todo: set up search paths here
-}
-
-
-void signal_init()
-{
-}
-
-
 void sim_update_editors()
 {
     updateDate();
@@ -317,8 +303,6 @@ void sim_loop(bool doSim)
 
 void sim_init()
 {
-    signal_init();
-
     userSoundOn(true);
 
     MustUpdateOptions = 1;
@@ -993,7 +977,6 @@ int main(int argc, char* argv[])
         initViewParamters();
         updateMapDrawParameters();
 
-        env_init();
         startGame();
 
         cleanUp();
