@@ -437,7 +437,6 @@ void LoadScenario(int s, Budget& budget)
 
     setAnyCityName(name.c_str());
     //  sim_skips = sim_skip = 0;
-    InvalidateMaps();
     InvalidateEditors();
     SimSpeed(SimulationSpeed::Normal);
 
@@ -447,7 +446,6 @@ void LoadScenario(int s, Budget& budget)
     //InitFundingLevel();
     UpdateFunds(budget);
     InvalidateEditors();
-    InvalidateMaps();
     InitSimLoad = 1;
     DoInitialEval = 0;
     DoSimInit(budget);

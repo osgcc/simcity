@@ -158,7 +158,6 @@ void InitGame()
 
 void GameStarted(Budget& budget)
 {
-    InvalidateMaps();
     InvalidateEditors();
 
     switch (Startup)

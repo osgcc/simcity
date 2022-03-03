@@ -581,7 +581,6 @@ void GenerateSomeCity(int seed, Budget& budget)
     ResetMapState();
     ResetEditorState();
     InvalidateEditors();
-    InvalidateMaps();
     UpdateFunds(budget);
     DoSimInit(budget);
     Eval("UIDidGenerateNewCity");

@@ -59,22 +59,6 @@ bool Eval(const std::string& buf)
 }
 
 
-void InvalidateMaps()
-{
-    std::cout << "InvalidateMaps" << std::endl;
-
-    /*
-    for (SimView* view = sim->map; view != NULL; view = view->next)
-    {
-        view->invalid = 1;
-        view->skip = 0;
-        EventuallyRedrawView(view);
-    }
-    */
-    sim_skip = 0;
-}
-
-
 void InvalidateEditors()
 {
     std::cout << "InvalidateEditors" << std::endl;

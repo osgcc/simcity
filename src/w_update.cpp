@@ -138,12 +138,6 @@ void UpdateOptionsMenu(int options)
 }
 
 
-void UpdateMaps()
-{
-  InvalidateMaps();
-}
-
-
 void UpdateGraphs()
 {
   ChangeCensus();
