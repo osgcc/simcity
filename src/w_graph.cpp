@@ -17,6 +17,16 @@
 
 #include <algorithm>
 
+/* Graph Histories */
+#define RES_HIST	0
+#define COM_HIST	1
+#define IND_HIST	2
+#define MONEY_HIST	3
+#define CRIME_HIST	4
+#define POLLUTION_HIST	5
+
+#define HISTORIES	6
+#define ALL_HISTORIES	((1 <<HISTORIES) - 1)
 
 int NewGraph = 0;
 int AllMax;
