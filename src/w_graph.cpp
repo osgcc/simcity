@@ -30,11 +30,14 @@ constexpr auto ALL_HISTORIES = ((1 * 64) - 1);
 
 int NewGraph = 0;
 int AllMax;
-unsigned char *History10[HISTORIES];
-unsigned char *History120[HISTORIES];
-int HistoryInitialized = 0;
-int Graph10Max, Graph120Max;
-int GraphUpdateTime = 100;
+
+unsigned char* History10[HISTORIES]{};
+unsigned char* History120[HISTORIES]{};
+
+bool HistoryInitialized{ false };
+int Graph10Max{};
+int Graph120Max{};
+int GraphUpdateTime{ 100 };
 
 
 // Hist == histogram?
