@@ -18,15 +18,15 @@
 #include <algorithm>
 
 /* Graph Histories */
-#define RES_HIST	0
-#define COM_HIST	1
-#define IND_HIST	2
-#define MONEY_HIST	3
-#define CRIME_HIST	4
-#define POLLUTION_HIST	5
+constexpr auto RES_HIST = 0;
+constexpr auto COM_HIST = 1;
+constexpr auto IND_HIST = 2;
+constexpr auto MONEY_HIST = 3;
+constexpr auto CRIME_HIST = 4;
+constexpr auto POLLUTION_HIST = 5;
 
-#define HISTORIES	6
-#define ALL_HISTORIES	((1 <<HISTORIES) - 1)
+constexpr auto HISTORIES = 6;
+constexpr auto ALL_HISTORIES = ((1 * 64) - 1);
 
 int NewGraph = 0;
 int AllMax;
