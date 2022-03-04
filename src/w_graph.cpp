@@ -27,13 +27,6 @@ int Graph10Max, Graph120Max;
 int GraphUpdateTime = 100;
 
 
-#define DEF_GRAPH_FONT	"-Adobe-Helvetica-Bold-R-Normal-*-140-*"
-#define DEF_GRAPH_BG_COLOR	"#b0b0b0"
-#define DEF_GRAPH_BG_MONO	"#ffffff"
-#define DEF_GRAPH_BORDER_WIDTH	"0"
-#define DEF_GRAPH_RELIEF	"flat"
-
-
 // Hist == histogram?
 const char* HistName[] =
 {
@@ -239,27 +232,6 @@ int ConfigureSimGraph(Tcl_Interp* interp, Graph* graph, int argc, char** argv, i
     return TCL_OK;
 }
 */
-
-
-void graph_command_init()
-{
-    /*
-    int new;
-
-    Tcl_CreateCommand(tk_mainInterp, "graphview", GraphViewCmd, (ClientData)MainWindow, (void (*)()) NULL);
-
-    Tcl_InitHashTable(&GraphCmds, TCL_STRING_KEYS);
-
-#define GRAPH_CMD(name) HASHED_CMD(Graph, name)
-
-    GRAPH_CMD(configure);
-    GRAPH_CMD(position);
-    GRAPH_CMD(size);
-    GRAPH_CMD(Visible);
-    GRAPH_CMD(Range);
-    GRAPH_CMD(Mask);
-    */
-}
 
 
 void drawMonth(const std::array<int, HistoryLength>& history, unsigned char* s, float scale)
