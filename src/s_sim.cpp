@@ -34,6 +34,7 @@
 #include <SDL2/SDL.h>
 
 #include <algorithm>
+#include <iostream>
 #include <random>
 
 
@@ -898,39 +899,26 @@ void ClearCensus()
 void TakeCensus(Budget& budget)
 {
     /* put census#s in Historical Graphs and scroll data  */
-    ResHisMax = 0;
-    ComHisMax = 0;
-    IndHisMax = 0;
-    for (int x = 118; x >= 0; x--)
-    {
-        if ((ResHis[x + 1] = ResHis[x]) > ResHisMax)
-        {
-            ResHisMax = ResHis[x];
-        }
-        if ((ComHis[x + 1] = ComHis[x]) > ComHisMax)
-        {
-            ComHisMax = ComHis[x];
-        }
-        if ((IndHis[x + 1] = IndHis[x]) > IndHisMax)
-        {
-            IndHisMax = IndHis[x];
-        }
-        CrimeHis[x + 1] = CrimeHis[x];
-        PollutionHis[x + 1] = PollutionHis[x];
-        MoneyHis[x + 1] = MoneyHis[x];
-    }
+    std::rotate(ResHis.rbegin(), ResHis.rbegin() + 1, ResHis.rend());
+    std::rotate(ComHis.rbegin(), ComHis.rbegin() + 1, ComHis.rend());
+    std::rotate(IndHis.rbegin(), IndHis.rbegin() + 1, IndHis.rend());
+    std::rotate(CrimeHis.rbegin(), CrimeHis.rbegin() + 1, CrimeHis.rend());
+    std::rotate(PollutionHis.rbegin(), PollutionHis.rbegin() + 1, PollutionHis.rend());
+    std::rotate(MoneyHis.rbegin(), MoneyHis.rbegin() + 1, MoneyHis.rend());
 
-    ResHis[0] = ResPop / 8;
+    ResHisMax = *std::max_element(ResHis.begin(), ResHis.end());
+    ComHisMax = *std::max_element(ComHis.begin(), ComHis.end());
+    IndHisMax = *std::max_element(IndHis.begin(), IndHis.end());
+
+    ResHis[0] = ResPop / 8; // magic number
     ComHis[0] = ComPop;
     IndHis[0] = IndPop;
 
-    CrimeRamp += (CrimeAverage - CrimeRamp) / 4;
+    CrimeRamp += (CrimeAverage - CrimeRamp) / 4; // magic number
     CrimeHis[0] = CrimeRamp;
 
-    PolluteRamp += (PolluteAverage - PolluteRamp) / 4;
+    PolluteRamp += (PolluteAverage - PolluteRamp) / 4; // magic number
     PollutionHis[0] = PolluteRamp;
-
-    //int x = std::clamp((CashFlow / 20) + 128, 0, 255);
 
     MoneyHis[0] = std::clamp((budget.CashFlow() / 20) + 128, 0, 255); // scale to 0..255
     CrimeHis[0] = std::clamp(CrimeHis[0], 0, 255);
@@ -961,43 +949,30 @@ void TakeCensus(Budget& budget)
     {
         NeedChurch = 0;
     }
+
+    std::cout << "ResHis[0]: " << ResHis[0] <<
+        " ComHis[0]: " << ComHis[0] <<
+        " IndHis[0]: " << IndHis[0] <<
+        " CrimeHis[0]: " << CrimeHis[0] <<
+        " PollutionHis[0]: " << PollutionHis[0] <<
+        " MoneyHis[0]: " << MoneyHis[0] << std::endl;
 }
 
 
 // Long Term Graphs
 void Take2Census()
 {
-    Res2HisMax = 0;
-    Com2HisMax = 0;
-    Ind2HisMax = 0;
-    for (int x = 238; x >= 120; x--)
-    {
-        if ((ResHis[x + 1] = ResHis[x]) > Res2HisMax)
-        {
-            Res2HisMax = ResHis[x];
-        }
-        if ((ComHis[x + 1] = ComHis[x]) > Com2HisMax)
-        {
-            Com2HisMax = ComHis[x];
-        }
-        if ((IndHis[x + 1] = IndHis[x]) > Ind2HisMax)
-        {
-            Ind2HisMax = IndHis[x];
-        }
+    std::rotate(ResHis120Years.rbegin(), ResHis120Years.rbegin() + 1, ResHis120Years.rend());
+    std::rotate(ComHis120Years.rbegin(), ComHis120Years.rbegin() + 1, ComHis120Years.rend());
+    std::rotate(IndHis120Years.rbegin(), IndHis120Years.rbegin() + 1, IndHis120Years.rend());
+    std::rotate(CrimeHis120Years.rbegin(), CrimeHis120Years.rbegin() + 1, CrimeHis120Years.rend());
+    std::rotate(PollutionHis120Years.rbegin(), PollutionHis120Years.rbegin() + 1, PollutionHis120Years.rend());
+    std::rotate(MoneyHis120Years.rbegin(), MoneyHis120Years.rbegin() + 1, MoneyHis120Years.rend());
 
-        CrimeHis[x + 1] = CrimeHis[x];
-        PollutionHis[x + 1] = PollutionHis[x];
-        MoneyHis[x + 1] = MoneyHis[x];
-    }
-
-    ResHis[120] = ResPop / 8;
-    ComHis[120] = ComPop;
-    IndHis[120] = IndPop;
-    CrimeHis[120] = CrimeHis[0];
-    PollutionHis[120] = PollutionHis[0];
-    MoneyHis[120] = MoneyHis[0];
+    ResHis120Years[0] = ResPop / 8; // magic number
+    ComHis120Years[0] = ComPop;
+    IndHis120Years[0] = IndPop;
 }
-
 
 
 void CollectTax(Budget& budget)

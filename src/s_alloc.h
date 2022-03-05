@@ -41,12 +41,20 @@ extern int STem[SmX][SmY];
 extern std::array<int, HistoryLength> ResHis;
 extern std::array<int, HistoryLength> ComHis;
 extern std::array<int, HistoryLength> IndHis;
-
 extern std::array<int, HistoryLength> MoneyHis;
 extern std::array<int, HistoryLength> PollutionHis;
 extern std::array<int, HistoryLength> CrimeHis;
 extern std::array<int, HistoryLength> MiscHis;
+
 extern std::array<int, PWRMAPSIZE> PowerMap;
+
+extern std::array<int, HistoryLength> ResHis120Years;
+extern std::array<int, HistoryLength> ComHis120Years;
+extern std::array<int, HistoryLength> IndHis120Years;
+extern std::array<int, HistoryLength> MoneyHis120Years;
+extern std::array<int, HistoryLength> PollutionHis120Years;
+extern std::array<int, HistoryLength> CrimeHis120Years;
+extern std::array<int, HistoryLength> MiscHis120Years;
 
 
 extern int ResHisMax;

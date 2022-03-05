@@ -76,6 +76,16 @@ std::array<int, HistoryLength> MoneyHis{};
 std::array<int, HistoryLength> PollutionHis{};
 std::array<int, HistoryLength> CrimeHis{};
 std::array<int, HistoryLength> MiscHis{};
+
+std::array<int, HistoryLength> ResHis120Years{};
+std::array<int, HistoryLength> ComHis120Years{};
+std::array<int, HistoryLength> IndHis120Years{};
+
+std::array<int, HistoryLength> MoneyHis120Years{};
+std::array<int, HistoryLength> PollutionHis120Years{};
+std::array<int, HistoryLength> CrimeHis120Years{};
+std::array<int, HistoryLength> MiscHis120Years{};
+
 std::array<int, PWRMAPSIZE> PowerMap{};
 
 
@@ -110,15 +120,7 @@ namespace
 
     void resetHistoryArrays()
     {
-        for (int i = 0; i < HistoryLength; ++i)
-        {
-            ResHis[i] = 0;
-            ComHis[i] = 0;
-            IndHis[i] = 0;
-            MoneyHis[i] = 0;
-            CrimeHis[i] = 0;
-            PollutionHis[i] = 0;
-        }
+       
     }
 };
 
@@ -131,6 +133,6 @@ void initMapArrays()
 
     resetHistoryArrays();
 
-    for (auto& idx : MiscHis) { idx = 0; }
-    for (auto& idx : PowerMap) { idx = 0; }
+    MiscHis.fill(0);
+    PowerMap.fill(0);
 }
