@@ -31,8 +31,6 @@
 #include "StringRender.h"
 
 #include "w_eval.h"
-#include "w_graph.h"
-#include "w_map.h"
 #include "w_sound.h"
 #include "w_stubs.h"
 #include "w_tool.h"
@@ -167,7 +165,7 @@ void sim_exit()
 void sim_update()
 {
     updateDate();
-    graphDoer();
+    //graphDoer();
     scoreDoer();
 }
 
@@ -270,8 +268,6 @@ void sim_init()
 
     InitializeSound();
     initMapArrays();
-    initGraphs();
-    //InitFundingLevel();
     StopEarthquake();
     ResetMapState();
     ResetEditorState();

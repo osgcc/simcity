@@ -17,7 +17,6 @@
 #include "s_msg.h"
 
 #include "w_eval.h"
-#include "w_graph.h"
 #include "w_sound.h"
 #include "w_stubs.h"
 #include "w_tk.h"
@@ -135,12 +134,6 @@ void UpdateOptionsMenu(int options)
 	  (options&64)?1:0, (options&128)?1:0);
   Eval(buf);
   */
-}
-
-
-void UpdateGraphs()
-{
-  ChangeCensus();
 }
 
 

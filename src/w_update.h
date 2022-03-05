@@ -31,7 +31,6 @@ enum class Month
 };
 
 
-void UpdateGraphs();
 void UpdateEvaluation();
 void UpdateFunds(Budget&);
 void updateDate();

@@ -66,9 +66,6 @@
     <ClCompile Include="src\w_eval.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_graph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\w_keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -152,9 +149,6 @@
     <ClInclude Include="src\s_alloc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\w_graph.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\s_init.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -195,9 +189,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\s_traf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\w_tool.h">

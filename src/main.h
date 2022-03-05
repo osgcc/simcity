@@ -305,7 +305,6 @@ extern int RValve, CValve, IValve;
 extern int PwrdZCnt;
 extern int unPwrdZCnt;
 
-extern int Graph10Max, Graph120Max;
 extern int Res2HisMax, Com2HisMax, Ind2HisMax;
 extern int CityScore;
 extern int deltaCityScore;
@@ -333,7 +332,6 @@ extern int PunishCnt;
 
 extern bool NewMap;
 extern int NewMapFlags[NMAPS];
-extern int NewGraph;
 extern int MustUpdateOptions;
 
 extern SDL_Renderer* MainWindowRenderer;

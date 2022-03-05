@@ -14,7 +14,6 @@
 #include "s_msg.h"
 #include "s_sim.h"
 
-#include "w_graph.h"
 #include "w_keys.h"
 #include "Sprite.h"
 #include "w_stubs.h"
@@ -25,8 +24,6 @@
 
 void InitWillStuff()
 {
-    //RandomlySeedRand();
-    InitGraphMax();
     RoadEffect = 32;
     PoliceEffect = 1000;
     FireEffect = 1000;

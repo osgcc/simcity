@@ -45,7 +45,6 @@
     <ClCompile Include="src\ToolPalette.cpp" />
     <ClCompile Include="src\w_con.cpp" />
     <ClCompile Include="src\w_eval.cpp" />
-    <ClCompile Include="src\w_graph.cpp" />
     <ClCompile Include="src\w_keys.cpp" />
     <ClCompile Include="src\w_map.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
@@ -61,7 +60,6 @@
     <ClInclude Include="src\Budget.h" />
     <ClInclude Include="src\BudgetWindow.h" />
     <ClInclude Include="src\Font.h" />
-    <ClInclude Include="src\Graph.h" />
     <ClInclude Include="src\g_ani.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Point.h" />
@@ -85,7 +83,6 @@
     <ClInclude Include="src\Vector.h" />
     <ClInclude Include="src\VectorSizeRange.h" />
     <ClInclude Include="src\w_con.h" />
-    <ClInclude Include="src\w_graph.h" />
     <ClInclude Include="src\animtab.h" />
     <ClInclude Include="src\g_map.h" />
     <ClInclude Include="src\main.h" />

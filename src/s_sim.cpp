@@ -26,7 +26,6 @@
 #include "s_traf.h"
 #include "s_zone.h"
 
-#include "w_graph.h"
 #include "w_stubs.h"
 #include "w_util.h"
 
@@ -921,16 +920,6 @@ void TakeCensus(Budget& budget)
         MoneyHis[x + 1] = MoneyHis[x];
     }
 
-    Graph10Max = ResHisMax;
-    if (ComHisMax > Graph10Max)
-    {
-        Graph10Max = ComHisMax;
-    }
-    if (IndHisMax > Graph10Max)
-    {
-        Graph10Max = IndHisMax;
-    }
-
     ResHis[0] = ResPop / 8;
     ComHis[0] = ComPop;
     IndHis[0] = IndPop;
@@ -946,8 +935,6 @@ void TakeCensus(Budget& budget)
     MoneyHis[0] = std::clamp((budget.CashFlow() / 20) + 128, 0, 255); // scale to 0..255
     CrimeHis[0] = std::clamp(CrimeHis[0], 0, 255);
     PollutionHis[0] = std::clamp(PollutionHis[0], 0, 255);
-
-    ChangeCensus(); /* XXX: if 10 year graph view */
 
     if (HospPop < (ResPop / 256))
     {
@@ -1003,24 +990,12 @@ void Take2Census()
         MoneyHis[x + 1] = MoneyHis[x];
     }
 
-    Graph120Max = Res2HisMax;
-
-    if (Com2HisMax > Graph120Max)
-    {
-        Graph120Max = Com2HisMax;
-    }
-    if (Ind2HisMax > Graph120Max)
-    {
-        Graph120Max = Ind2HisMax;
-    }
-
     ResHis[120] = ResPop / 8;
     ComHis[120] = ComPop;
     IndHis[120] = IndPop;
     CrimeHis[120] = CrimeHis[0];
     PollutionHis[120] = PollutionHis[0];
     MoneyHis[120] = MoneyHis[0];
-    ChangeCensus(); /* XXX: if 120 year graph view */
 }
 
 
@@ -1452,8 +1427,6 @@ void DoSimInit(Budget& budget)
     PopDenScan();
     FireAnalysis();
     NewMap = 1;
-    doAllGraphs();
-    NewGraph = 1;
     TotalPop = 1;
     DoInitialEval = 1;
 }
