@@ -972,6 +972,10 @@ void Take2Census()
     ResHis120Years[0] = ResPop / 8; // magic number
     ComHis120Years[0] = ComPop;
     IndHis120Years[0] = IndPop;
+
+    CrimeHis120Years[0] = CrimeHis[0];
+    PollutionHis120Years[0] = PollutionHis[0];
+    MoneyHis120Years[0] = MoneyHis[0];
 }
 
 
