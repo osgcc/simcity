@@ -1081,15 +1081,13 @@ void SetCommonInits()
 void InitSimMemory()
 {
     SetCommonInits();
-    for (int x = 0; x < HistoryLength; x++)
-    {
-        ResHis[x] = 0;
-        ComHis[x] = 0;
-        IndHis[x] = 0;
-        MoneyHis[x] = 128;
-        CrimeHis[x] = 0;
-        PollutionHis[x] = 0;
-    }
+
+    ResHis.fill(0);
+    ComHis.fill(0);
+    IndHis.fill(0);
+    MoneyHis.fill(128); // magic number
+    CrimeHis.fill(0);
+    PollutionHis.fill(0);
 
     CrimeRamp = 0;
     PolluteRamp = 0;
