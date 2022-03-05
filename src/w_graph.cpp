@@ -56,24 +56,6 @@ unsigned char HistColor[] =
 };
 
 
-void EventuallyRedrawGraph(Graph* graph)
-{
-    /*
-    if (!(graph->flags & VIEW_REDRAW_PENDING))
-    {
-        assert(graph->draw_graph_token == 0);
-
-        if (graph->draw_graph_token == 0)
-        {
-            graph->draw_graph_token = Tk_CreateTimerHandler(GraphUpdateTime, DisplaySimGraph, (ClientData)graph);
-            graph->flags |= VIEW_REDRAW_PENDING;
-            fprintf(stderr, "EventuallyRedrawGraph token %d\n", graph->draw_graph_token);
-        }
-    }
-    */
-}
-
-
 void drawMonth(const std::array<int, HistoryLength>& history, unsigned char* s, float scale)
 {
     /*
@@ -217,43 +199,6 @@ void InitGraphMax()
 }
 
 
-void DoResizeGraph(Graph* graph, int w, int h)
-{
-    /*
-    int resize = 0;
-
-    graph->w_width = w; graph->w_height = h;
-
-    if (graph->pixmap != None)
-    {
-        XFreePixmap(graph->x->dpy, graph->pixmap);
-        graph->pixmap = None;
-    }
-
-    graph->pixmap = XCreatePixmap(graph->x->dpy, graph->x->root, w, h, graph->x->depth);
-
-    if (graph->pixmap == None)
-    {
-        fprintf(stderr, "Sorry, Micropolis can't create a pixmap on X display \"%s\".\n", graph->x->display);
-        sim_exit(1); // Just sets tkMustExit and ExitReturn
-        return;
-    }
-    */
-}
-
-
-void DoNewGraph(Graph* graph)
-{
-    /*
-    sim->graphs++;
-    graph->next = sim->graph;
-    sim->graph = graph;
-
-    NewGraph = 1;
-    */
-}
-
-
 void InitNewGraph(Graph* graph)
 {
     /*
@@ -290,7 +235,7 @@ void InitNewGraph(Graph* graph)
     graph->fontPtr = NULL;
     */
 
-    DoResizeGraph(graph, 16, 16);
+    //DoResizeGraph(graph, 16, 16);
 }
 
 
@@ -300,15 +245,14 @@ constexpr auto BORDER = 5;
 void DoUpdateGraph(Graph* graph)
 {
     unsigned char** hist;
-    int mask, j, x, y;
     SDL_Point points[121]{};
     int year = (CityTime / 48) + StartingYear;
     int month = (CityTime / 4) % 12;
-    int do_top_labels = 0;
-    int do_right_labels = 0;
-    int top_label_height = 30;
-    int right_label_width = 65;
-    float sx, sy;
+    bool do_top_labels = false;
+    bool do_right_labels = false;
+    
+    static constexpr auto top_label_height = 30;
+    static constexpr auto right_label_width = 65;
 
     if (graph->range == 10)
     {
@@ -336,19 +280,20 @@ void DoUpdateGraph(Graph* graph)
     if (w > (4 * right_label_width))
     {
         w -= right_label_width;
-        do_right_labels = 1;
+        do_right_labels = true;
     }
 
     if (do_right_labels && (h > (3 * top_label_height)))
     {
         ty += top_label_height;
         h -= top_label_height;
-        do_top_labels = 1;
+        do_top_labels = true;
     }
 
-    sx = ((float)w) / 120.0; sy = ((float)h) / 256.0;
+    float sx = ((float)w) / 120.0f;
+    float sy = ((float)h) / 256.0f;
 
-    mask = graph->mask;
+    int mask = graph->mask;
     for (int i = 0; i < HISTORIES; i++, mask >>= 1, hist++)
     {
         if (mask & 1)
@@ -356,15 +301,18 @@ void DoUpdateGraph(Graph* graph)
             int fg = COLOR_WHITE;
             int bg = COLOR_BLACK;
 
-            for (j = 0; j < 120; j++)
+            int x{};
+            int y{};
+
+            for (int j = 0; j < 120; j++)
             {
                 x = tx + (j * sx);
                 y = ty + ((int)(h - (((float)(*hist)[j]) * sy)));
                 points[j].x = x; points[j].y = y;
             }
 
-            x = tx + (j * sx);
-            points[j].x = x; points[j].y = y;
+            x = tx + (119 * sx);
+            points[119] = { x, y };
 
             //XSetForeground(dpy, gc, pix[HistColor[i]]);
             //XDrawLines(dpy, pm, gc, points, 121, CoordModeOrigin);
@@ -384,17 +332,15 @@ void DoUpdateGraph(Graph* graph)
     }
 
     //XSetLineAttributes(dpy, gc, 1, LineSolid, CapButt, JoinMiter);
-
     //XSetForeground(dpy, gc, pix[COLOR_BLACK]);
     //XDrawLine(dpy, pm, gc, tx, ty - 1, tx + w, ty - 1);
     //XDrawLine(dpy, pm, gc, tx, ty + h, tx + w, ty + h);
 
     if (graph->range == 10)
     {
-        for (x = 120 - month; x >= 0; x -= 12)
+        for (int x = 120 - month; x >= 0; x -= 12)
         {
-            int xx, yy;
-            xx = tx + (x * sx);
+            int xx = tx + (x * sx);
 
             //XDrawLine(dpy, pm, gc, xx, ty - 1, xx, ty + h);
 
@@ -404,7 +350,7 @@ void DoUpdateGraph(Graph* graph)
                 //sprintf(buf, "%d", year--);
                 
                 xx = tx + (x * sx) + 2;
-                yy = ty - ((year & 1) ? 4 : 20);
+                int yy = ty - ((year & 1) ? 4 : 20);
                 
                 //XDrawString(graph->x->dpy, pm, graph->x->gc, xx, yy, buf, strlen(buf));
             }
@@ -418,10 +364,9 @@ void DoUpdateGraph(Graph* graph)
         past = 10 * (year % 10);
         year /= 10;
 
-        for (x = 1200 - past; x >= 0; x -= 120)
+        for (int x = 1200 - past; x >= 0; x -= 120)
         {
-            int xx, yy;
-            xx = tx + (x * sx);
+            int xx = tx + (x * sx);
             //XDrawLine(dpy, pm, gc, xx, ty - 1, xx, ty + h);
             if (do_top_labels)
             {
@@ -429,7 +374,7 @@ void DoUpdateGraph(Graph* graph)
                 //sprintf(buf, "%d0", year--);
 
                 xx = tx + (x * sx) + 2;
-                yy = ty - ((year & 1) ? 4 : 20);
+                int yy = ty - ((year & 1) ? 4 : 20);
                 //XDrawString(graph->x->dpy, pm, graph->x->gc, xx, yy, buf, strlen(buf));
             }
         }

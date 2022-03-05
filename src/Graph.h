@@ -7,34 +7,21 @@
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
-// file, included in this distribution, for details.#pragma once
+// file, included in this distribution, for details.
+#pragma once
 
 struct Graph
 {
-	struct Graph* next;
+	int range{};
+	int mask{};
 
-	int range;
-	int mask;
+	int flags{};
 
-	//Tk_Window tkwin;
-	//Tcl_Interp* interp;
+	int visible{};
 
-	int flags;
-	//XDisplay* x;
+	int w_x{};
+	int w_y{};
 
-	int visible;
-	int w_x, w_y;
-	int w_width, w_height;
-
-	//Pixmap pixmap;
-
-	int* pixels;
-
-	//XFontStruct* fontPtr;
-	//Tk_3DBorder border;
-
-	int borderWidth;
-	int relief;
-
-	//Tk_TimerToken draw_graph_token;
+	int w_width{};
+	int w_height{};
 };
