@@ -21,7 +21,8 @@ enum class SimulationSpeed
 	Paused,
 	Slow,
 	Normal,
-	Fast
+	Fast,
+	AfricanSwallow
 };
 
 const std::string& SpeedString(SimulationSpeed speed);

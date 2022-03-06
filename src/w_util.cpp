@@ -28,9 +28,9 @@ namespace
     SimulationSpeed simulationSpeed;
     SimulationSpeed previousSimulationSpeed;
 
-    std::array<std::string, 4> speedStringTable
+    std::array<std::string, 5> speedStringTable
     {
-        "Paused", "Slow", "Normal", "Fast"
+        "Paused", "Slow", "Normal", "Fast" , "African Swallow"
     };
 };
 
