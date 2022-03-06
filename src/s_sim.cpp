@@ -949,13 +949,6 @@ void TakeCensus(Budget& budget)
     {
         NeedChurch = 0;
     }
-
-    std::cout << "ResHis[0]: " << ResHis[0] <<
-        " ComHis[0]: " << ComHis[0] <<
-        " IndHis[0]: " << IndHis[0] <<
-        " CrimeHis[0]: " << CrimeHis[0] <<
-        " PollutionHis[0]: " << PollutionHis[0] <<
-        " MoneyHis[0]: " << MoneyHis[0] << std::endl;
 }
 
 
