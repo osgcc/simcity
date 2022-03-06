@@ -29,7 +29,6 @@ bool Eval(const std::string& buf)
 
 void StopEarthquake()
 {
-    std::cout << "StopEarthquake" << std::endl;
     ShakeNow = 0;
     if (earthquake_timer_set)
     {

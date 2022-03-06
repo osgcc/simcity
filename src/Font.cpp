@@ -14,7 +14,6 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include <iostream>
 #include <cmath>
 #include <algorithm>
 #include <cstddef>
@@ -267,7 +266,6 @@ namespace {
 		return roundedUpSize.to<int>();
 	}
 
-#include <iostream>
 
 	void fillInCharacterDimensions(TTF_Font* font, std::vector<Font::GlyphMetrics>& glyphMetricsList)
 	{
@@ -281,8 +279,6 @@ namespace {
 
 	void fillInTextureCoordinates(std::vector<Font::GlyphMetrics>& glyphMetricsList, Vector<int> glyphSize)
 	{
-
-		std::cout << std::endl << std::endl << std::endl << std::endl;
 		for (const auto glyphPosition : PointInRectangleRange(Rectangle{0, 0, GLYPH_MATRIX_SIZE, GLYPH_MATRIX_SIZE}))
 		{
 			const std::size_t glyph = static_cast<std::size_t>(glyphPosition.y) * GLYPH_MATRIX_SIZE + glyphPosition.x;

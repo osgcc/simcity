@@ -157,7 +157,6 @@ void SetMessageField(const std::string& msg)
     if (LastMessage() != msg)
     {
         LastMessage(msg);
-        Eval(std::string("UISetMessage {" + msg + "}").c_str());
     }
 }
 
