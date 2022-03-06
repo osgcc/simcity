@@ -795,7 +795,7 @@ void DrawPendingTool(const ToolPalette& palette)
         return;
     }
 
-    const SDL_Rect toolRect =
+    const SDL_Rect toolRect
     {
         TileHighlight.x - (Tools.at(PendingTool).offset * 16),
         TileHighlight.y - (Tools.at(PendingTool).offset * 16),
