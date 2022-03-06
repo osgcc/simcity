@@ -153,11 +153,7 @@ const Point<int>& viewOffset()
     return MapViewOffset;
 }
 
-constexpr SDL_Color ColorResidential{ 0, 165, 0, 255 };
-constexpr SDL_Color ColorCommercial{ 79, 79, 255, 255 };
-constexpr SDL_Color ColorIndustrial{ 255, 255, 0, 255 };
 constexpr auto RciValveHeight = 20;
-
 
 SDL_Window* MainWindow = nullptr;
 SDL_Renderer* MainWindowRenderer = nullptr;
@@ -720,13 +716,13 @@ void drawValve()
     CommercialValveRect.h = -static_cast<int>(RciValveHeight * commercialPercent);
     IndustrialValveRect.h = -static_cast<int>(RciValveHeight * industrialPercent);
 
-    SDL_SetRenderDrawColor(MainWindowRenderer, ColorResidential.r, ColorResidential.g, ColorResidential.b, ColorResidential.a);
+    SDL_SetRenderDrawColor(MainWindowRenderer, Colors::Green.r, Colors::Green.g, Colors::Green.b, 255);
     SDL_RenderFillRect(MainWindowRenderer, &ResidentialValveRect);
 
-    SDL_SetRenderDrawColor(MainWindowRenderer, ColorCommercial.r, ColorCommercial.g, ColorCommercial.b, ColorCommercial.a);
+    SDL_SetRenderDrawColor(MainWindowRenderer, Colors::MediumBlue.r, Colors::MediumBlue.g, Colors::MediumBlue.b, 255);
     SDL_RenderFillRect(MainWindowRenderer, &CommercialValveRect);
 
-    SDL_SetRenderDrawColor(MainWindowRenderer, ColorIndustrial.r, ColorIndustrial.g, ColorIndustrial.b, ColorIndustrial.a);
+    SDL_SetRenderDrawColor(MainWindowRenderer, Colors::Gold.r, Colors::Gold.g, Colors::Gold.b, 255);
     SDL_RenderFillRect(MainWindowRenderer, &IndustrialValveRect);
 
     // not a huge fan of this
