@@ -90,12 +90,16 @@ namespace
     bool MouseClicked{};
     bool DrawDebug{ false };
     bool BudgetWindowShown{ false };
-    bool Exit = false;
+    bool Exit{ false };
+    bool RedrawMinimap{ false };
+    bool SimulationStep{ false };
+
+    constexpr unsigned int SimStepDefaultTime{ 100 };
 
     SDL_Rect TileHighlight{ 0, 0, 16, 16 };
     SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
 
-    std::array<unsigned int, 4> SpeedModifierTable{ 0, 0, 20, 37 };
+    std::array<unsigned int, 5> SpeedModifierTable{ 0, 0, 50, 75, 95 };
 
     std::string currentBudget{};
 
@@ -160,7 +164,6 @@ void sim_exit()
 {
     Exit = true;
 }
-
 
 
 enum class HistoryGraph
@@ -281,9 +284,8 @@ void sim_loop(bool doSim)
     if (doSim)
     {
         SimFrame(budget);
+        SimulationStep = false;
     }
-
-    const int tick = TickCount();
 
     if (animationTick())
     {
@@ -302,10 +304,10 @@ void sim_loop(bool doSim)
     }
 
     
-    if (tick % 1000 == 0)
+    if (RedrawMinimap)
     {
         DrawMiniMap();
-        //drawRes();
+        RedrawMinimap = false;
     }  
 
     sim_update();
@@ -524,6 +526,11 @@ void handleKeyEvent(SDL_Event& event)
     case SDLK_3:
         if (Paused()) { Resume(); }
         SimSpeed(SimulationSpeed::Fast);
+        break;
+
+    case SDLK_4:
+        if (Paused()) { Resume(); }
+        SimSpeed(SimulationSpeed::AfricanSwallow);
         break;
 
     case SDLK_F5:
@@ -842,24 +849,24 @@ unsigned int speedModifier()
 }
 
 
-bool simulationTick()
-{
-    timing::accumulatorAdjust = 40 - speedModifier();
-    timing::accumulator += timing::tickDelta;
-    if (timing::accumulator > timing::accumulatorAdjust)
-    {
-        timing::accumulator -= timing::accumulatorAdjust;
-        return true;
-    }
-
-    return false;
-}
-
-
-unsigned int zonePowerBlinkFlag(unsigned int interval, void* param)
+unsigned int zonePowerBlinkTick(unsigned int interval, void* param)
 {
     toggleBlinkFlag();
     return interval;
+}
+
+
+unsigned int redrawMiniMapTick(unsigned int interval, void* param)
+{
+    RedrawMinimap = true;
+    return interval;
+}
+
+
+unsigned int simulationTick(unsigned int interval, void* param)
+{
+    SimulationStep = true;
+    return SimStepDefaultTime - speedModifier();
 }
 
 
@@ -875,7 +882,9 @@ void startGame()
     DrawMiniMap();
     DrawBigMap();
 
-    SDL_TimerID zonePowerBlink = SDL_AddTimer(500, zonePowerBlinkFlag, nullptr);
+    SDL_TimerID zonePowerBlink = SDL_AddTimer(500, zonePowerBlinkTick, nullptr);
+    SDL_TimerID redrawMinimapTimer = SDL_AddTimer(1000, redrawMiniMapTick, nullptr);
+    SDL_TimerID simulationTimer = SDL_AddTimer(SimStepDefaultTime, simulationTick, nullptr);
 
     stringRenderer = new StringRender(MainWindowRenderer);
 
@@ -896,7 +905,7 @@ void startGame()
         timing::updateTiming();
         PendingTool = toolPalette.tool();
 
-        sim_loop(simulationTick());
+        sim_loop(SimulationStep);
         
         pumpEvents();
 
