@@ -162,10 +162,78 @@ void sim_exit()
 }
 
 
+
+enum class HistoryGraph
+{
+    Residential,
+    Commercial,
+    Industrial,
+    CashFlow,
+    Crime,
+    Pollution
+};
+
+
+struct Graph
+{
+    using PointsList = std::array<SDL_Point, 120>;
+    
+    const GraphHistory& history;
+    const std::string name;
+    const SDL_Color color;
+    PointsList points;
+};
+
+
+std::map<HistoryGraph, Graph> HistoryGraphTable
+{
+    { HistoryGraph::Residential, { ResHis, "Residential", Colors::LightGreen, { 0 } } },
+    { HistoryGraph::Commercial, { ComHis, "Commercial", Colors::DarkBlue, { 0 } } },
+    { HistoryGraph::Industrial, { IndHis, "Industrial", Colors::Gold, { 0 } } },
+    { HistoryGraph::CashFlow, { MoneyHis, "Cash Flow", Colors::Turquoise, { 0 } } },
+    { HistoryGraph::Crime, { CrimeHis, "Crime", Colors::Red, { 0 } } },
+    { HistoryGraph::Pollution, { PollutionHis, "Pollution", Colors::Olive, { 0 } } },
+};
+
+
+void fillGraphPoints(Graph::PointsList& points, const GraphHistory& history, const int graphWidth, const int graphHeight)
+{
+    float sx = static_cast<float>(graphWidth / 120.0f);
+    float sy = static_cast<float>(graphHeight / 256.0f);
+
+    for (int i = 0; i < 120; ++i)
+    {
+        const int x = static_cast<int>(i * sx);
+        const int y = graphHeight - static_cast<int>(history[i] * sy);
+        
+        points[i] = { x + 130, y + UiHeaderRect.y + UiHeaderRect.h + 5 };
+    }
+}
+
+
+void drawGraphs()
+{
+    for (auto& [type, graph] : HistoryGraphTable)
+    {
+        SDL_SetRenderDrawColor(MainWindowRenderer, graph.color.r, graph.color.g, graph.color.b, 255);
+        SDL_RenderDrawLines(MainWindowRenderer, graph.points.data(), static_cast<int>(graph.points.size()));
+    }
+
+    SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 100);
+    
+    const SDL_Rect rect{ 130, UiHeaderRect.y + UiHeaderRect.h + 5, 260, 150 };
+    SDL_RenderFillRect(MainWindowRenderer, &rect);
+}
+
+
 void sim_update()
 {
+    for (auto& [ type, graph ] : HistoryGraphTable)
+    {
+        fillGraphPoints(graph.points, graph.history, 260, 150);
+    }
+
     updateDate();
-    //graphDoer();
     scoreDoer();
 }
 
@@ -867,6 +935,8 @@ void startGame()
 
             if (DrawDebug) { drawDebug(); }
         }
+
+        drawGraphs();
 
         SDL_RenderPresent(MainWindowRenderer);
     }
