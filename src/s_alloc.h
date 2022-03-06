@@ -37,30 +37,29 @@ extern std::array<std::array<int, EightWorldHeight>, EightWorldWidth> FireRate;
 extern int ComRate[SmX][SmY];
 extern int STem[SmX][SmY];
 
+using GraphHistory = std::array<int, HistoryLength>;
 
-extern std::array<int, HistoryLength> ResHis;
-extern std::array<int, HistoryLength> ComHis;
-extern std::array<int, HistoryLength> IndHis;
-extern std::array<int, HistoryLength> MoneyHis;
-extern std::array<int, HistoryLength> PollutionHis;
-extern std::array<int, HistoryLength> CrimeHis;
-extern std::array<int, HistoryLength> MiscHis;
+extern GraphHistory ResHis;
+extern GraphHistory ComHis;
+extern GraphHistory IndHis;
+extern GraphHistory MoneyHis;
+extern GraphHistory PollutionHis;
+extern GraphHistory CrimeHis;
+extern GraphHistory MiscHis;
 
 extern std::array<int, PWRMAPSIZE> PowerMap;
 
-extern std::array<int, HistoryLength> ResHis120Years;
-extern std::array<int, HistoryLength> ComHis120Years;
-extern std::array<int, HistoryLength> IndHis120Years;
-extern std::array<int, HistoryLength> MoneyHis120Years;
-extern std::array<int, HistoryLength> PollutionHis120Years;
-extern std::array<int, HistoryLength> CrimeHis120Years;
-extern std::array<int, HistoryLength> MiscHis120Years;
-
+extern GraphHistory ResHis120Years;
+extern GraphHistory ComHis120Years;
+extern GraphHistory IndHis120Years;
+extern GraphHistory MoneyHis120Years;
+extern GraphHistory PollutionHis120Years;
+extern GraphHistory CrimeHis120Years;
+extern GraphHistory MiscHis120Years;
 
 extern int ResHisMax;
 extern int ComHisMax;
 extern int IndHisMax;
-
 
 void initMapArrays();
 

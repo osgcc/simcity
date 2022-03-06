@@ -68,23 +68,24 @@ std::array<std::array<int, EightWorldHeight>, EightWorldWidth> FireRate{};
 int ComRate[SmX][SmY];
 int STem[SmX][SmY];
 
-std::array<int, HistoryLength> ResHis{};
-std::array<int, HistoryLength> ComHis{};
-std::array<int, HistoryLength> IndHis{};
 
-std::array<int, HistoryLength> MoneyHis{};
-std::array<int, HistoryLength> PollutionHis{};
-std::array<int, HistoryLength> CrimeHis{};
-std::array<int, HistoryLength> MiscHis{};
+GraphHistory ResHis{};
+GraphHistory ComHis{};
+GraphHistory IndHis{};
 
-std::array<int, HistoryLength> ResHis120Years{};
-std::array<int, HistoryLength> ComHis120Years{};
-std::array<int, HistoryLength> IndHis120Years{};
+GraphHistory MoneyHis{};
+GraphHistory PollutionHis{};
+GraphHistory CrimeHis{};
+GraphHistory MiscHis{};
 
-std::array<int, HistoryLength> MoneyHis120Years{};
-std::array<int, HistoryLength> PollutionHis120Years{};
-std::array<int, HistoryLength> CrimeHis120Years{};
-std::array<int, HistoryLength> MiscHis120Years{};
+GraphHistory ResHis120Years{};
+GraphHistory ComHis120Years{};
+GraphHistory IndHis120Years{};
+
+GraphHistory MoneyHis120Years{};
+GraphHistory PollutionHis120Years{};
+GraphHistory CrimeHis120Years{};
+GraphHistory MiscHis120Years{};
 
 std::array<int, PWRMAPSIZE> PowerMap{};
 
