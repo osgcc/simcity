@@ -194,7 +194,7 @@ enum class HistoryGraph
 
 struct Graph
 {
-    using PointsList = std::array<SDL_Point, 120>;
+    using PointsList = std::array<SDL_Point, HistoryLength>;
     
     const GraphHistory& history;
     const std::string name;
@@ -219,7 +219,7 @@ void fillGraphPoints(Graph::PointsList& points, const GraphHistory& history, con
     float sx = static_cast<float>(graphWidth / 120.0f);
     float sy = static_cast<float>(graphHeight / 256.0f);
 
-    for (int i = 0; i < 120; ++i)
+    for (int i = 0; i < HistoryLength; ++i)
     {
         const int x = static_cast<int>(i * sx);
         const int y = graphHeight - static_cast<int>(history[i] * sy);

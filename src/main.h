@@ -49,7 +49,7 @@ constexpr auto SmY = (SimHeight + 7) / 8;
 
 constexpr auto PROBNUM = 10;
 
-constexpr auto HistoryLength = 240;
+constexpr auto HistoryLength = 120;
 constexpr auto MISCHISTLEN = 240;
 
 constexpr auto POWERMAPROW = ((SimWidth + 15) / 16);
