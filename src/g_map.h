@@ -25,6 +25,7 @@ namespace Colors
 	constexpr SDL_Color Olive{ 107, 142, 35 };
 	constexpr SDL_Color Orange{ 255, 165, 0, 255 };
 	constexpr SDL_Color Red{ 255, 0, 0, 255 };
+	constexpr SDL_Color Turquoise{ 64, 224, 208, 255 };
 	constexpr SDL_Color Yellow{ 255, 255, 0, 255 };
 };
 
