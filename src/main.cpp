@@ -306,7 +306,6 @@ void sim_loop(bool doSim)
         DrawBigMapSegment(begin, end);
     }
 
-    
     if (RedrawMinimap)
     {
         DrawMiniMap();
