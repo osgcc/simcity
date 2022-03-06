@@ -93,8 +93,10 @@ namespace
     bool Exit{ false };
     bool RedrawMinimap{ false };
     bool SimulationStep{ false };
+    bool AnimationStep{ false };
 
     constexpr unsigned int SimStepDefaultTime{ 100 };
+    constexpr unsigned int AnimationStepDefaultTime{ 150 };
 
     SDL_Rect TileHighlight{ 0, 0, 16, 16 };
     SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
@@ -110,22 +112,39 @@ namespace
     BudgetWindow* budgetWindow{ nullptr };
     StringRender* stringRenderer{ nullptr };
 
-    namespace timing
+
+    unsigned int speedModifier()
     {
-        unsigned int currentTick{};
-        unsigned int lastTick{};
-        unsigned int tickDelta{};
+        return SpeedModifierTable[static_cast<unsigned int>(SimSpeed())];
+    }
 
-        unsigned int accumulator{};
-        unsigned int accumulatorAdjust{};
 
-        void updateTiming()
-        {
-            lastTick = currentTick;
-            currentTick = SDL_GetTicks();
-            tickDelta = currentTick - lastTick;
-        }
-    };
+    unsigned int zonePowerBlinkTick(unsigned int interval, void*)
+    {
+        toggleBlinkFlag();
+        return interval;
+    }
+
+
+    unsigned int redrawMiniMapTick(unsigned int interval, void*)
+    {
+        RedrawMinimap = true;
+        return interval;
+    }
+
+
+    unsigned int simulationTick(unsigned int interval, void*)
+    {
+        SimulationStep = true;
+        return SimStepDefaultTime - speedModifier();
+    }
+
+
+    unsigned int animationTick(unsigned int interval, void*)
+    {
+        AnimationStep = true;
+        return interval;
+    }
 };
 
 
@@ -260,22 +279,6 @@ void DrawMiniMap()
 }
 
 
-unsigned int animationAccumulator{};
-unsigned int animationSpeed{ 125 };
-
-bool animationTick()
-{
-    animationAccumulator += timing::tickDelta;
-    if (animationAccumulator > animationSpeed)
-    {
-        animationAccumulator -= animationSpeed;
-        return true;
-    }
-
-    return false;
-}
-
-
 void sim_loop(bool doSim)
 {
     // \fixme Find a better way to do this
@@ -287,9 +290,15 @@ void sim_loop(bool doSim)
         SimulationStep = false;
     }
 
-    if (animationTick())
+    if (AnimationStep)
     {
-        animateTiles();
+        AnimationStep = false;
+
+        if (!Paused())
+        {
+            animateTiles();
+            MoveObjects();
+        }
 
         const Point<int> begin{ MapViewOffset.x / 16, MapViewOffset.y / 16 };
         const Point<int> end
@@ -297,8 +306,6 @@ void sim_loop(bool doSim)
             std::clamp((MapViewOffset.x + WindowSize.x) / 16 + 1, 0, SimWidth),
             std::clamp((MapViewOffset.y + WindowSize.y) / 16 + 1, 0, SimHeight)
         };
-
-        MoveObjects();
 
         DrawBigMapSegment(begin, end);
     }
@@ -843,33 +850,6 @@ void drawDebug()
 }
 
 
-unsigned int speedModifier()
-{
-    return SpeedModifierTable[static_cast<unsigned int>(SimSpeed())];
-}
-
-
-unsigned int zonePowerBlinkTick(unsigned int interval, void* param)
-{
-    toggleBlinkFlag();
-    return interval;
-}
-
-
-unsigned int redrawMiniMapTick(unsigned int interval, void* param)
-{
-    RedrawMinimap = true;
-    return interval;
-}
-
-
-unsigned int simulationTick(unsigned int interval, void* param)
-{
-    SimulationStep = true;
-    return SimStepDefaultTime - speedModifier();
-}
-
-
 void startGame()
 {
     sim_init();
@@ -885,6 +865,7 @@ void startGame()
     SDL_TimerID zonePowerBlink = SDL_AddTimer(500, zonePowerBlinkTick, nullptr);
     SDL_TimerID redrawMinimapTimer = SDL_AddTimer(1000, redrawMiniMapTick, nullptr);
     SDL_TimerID simulationTimer = SDL_AddTimer(SimStepDefaultTime, simulationTick, nullptr);
+    SDL_TimerID animationTimer = SDL_AddTimer(AnimationStepDefaultTime, animationTick, nullptr);
 
     stringRenderer = new StringRender(MainWindowRenderer);
 
@@ -902,7 +883,6 @@ void startGame()
 
     while (!Exit)
     {
-        timing::updateTiming();
         PendingTool = toolPalette.tool();
 
         sim_loop(SimulationStep);
@@ -912,7 +892,6 @@ void startGame()
         currentBudget = NumberToDollarDecimal(budget.CurrentFunds());
 
         SDL_RenderClear(MainWindowRenderer);
-
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
         DrawObjects();
 
@@ -942,15 +921,18 @@ void startGame()
             }
             toolPalette.draw();
 
+            drawGraphs();
+
             if (DrawDebug) { drawDebug(); }
         }
-
-        drawGraphs();
 
         SDL_RenderPresent(MainWindowRenderer);
     }
 
     SDL_RemoveTimer(zonePowerBlink);
+    SDL_RemoveTimer(redrawMinimapTimer);
+    SDL_RemoveTimer(simulationTimer);
+    SDL_RemoveTimer(animationTimer);
 }
 
 
