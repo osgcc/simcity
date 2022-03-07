@@ -82,30 +82,13 @@ constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 
 #define NMAPS 15
 
+
 /* These adjust frequency in Simulate() */
 #define CENSUSRATE 4
 #define TAXFREQ 48
 
-/* These are names of the 16 colors */
-#define COLOR_WHITE		0
-#define COLOR_YELLOW		1
-#define COLOR_ORANGE		2
-#define COLOR_RED		3
-#define COLOR_DARKRED		4
-#define COLOR_DARKBLUE		5
-#define COLOR_LIGHTBLUE		6
-#define COLOR_BROWN		7
-#define COLOR_LIGHTGREEN	8
-#define COLOR_DARKGREEN		9
-#define COLOR_OLIVE		10
-#define COLOR_LIGHTBROWN	11
-#define COLOR_LIGHTGRAY		12
-#define COLOR_MEDIUMGRAY	13
-#define COLOR_DARKGRAY		14
-#define COLOR_BLACK		15
 
 /* Status Bits */
-
 #define PWRBIT	0x8000 /* 20 bit 15 */
 #define CONDBIT	0x4000 /* 10 bit 14 */
 #define BURNBIT	0x2000 /* 8 bit 13 */
@@ -119,12 +102,8 @@ constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 #define BLBNCNBIT	(BULLBIT+BURNBIT+CONDBIT)
 #define BNCNBIT		(BURNBIT+CONDBIT)
 
-/* Max # of Objects */
-
-#define OBJN		9
 
 /* Character Mapping */
-
 #define DIRT		0
 #define RIVER		2
 #define REDGE		3
@@ -265,11 +244,6 @@ constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 
 #define TILE_COUNT	960
 
-#define STATE_CMD 0
-#define STATE_TILES 1
-#define STATE_OVERLAYS 2
-#define STATE_GRAPHS 3
-
 extern int CChr; // unmasked tile value
 extern int CChr9; // masked tile value
 
@@ -291,7 +265,6 @@ extern int ShakeNow;
 extern int RoadEffect, PoliceEffect, FireEffect;
 
 extern int DoAnimation;
-extern unsigned char ColorIntensities[];
 
 extern int NoDisasters;
 extern int autoBulldoze;
@@ -305,7 +278,6 @@ extern int RValve, CValve, IValve;
 extern int PwrdZCnt;
 extern int unPwrdZCnt;
 
-extern int Res2HisMax, Com2HisMax, Ind2HisMax;
 extern int CityScore;
 extern int deltaCityScore;
 extern int ScoreType;
@@ -314,9 +286,6 @@ extern int CityClass;
 extern int PolMaxX, PolMaxY;
 extern int PowerStackNum;
 extern int TrafficAverage;
-extern int PosStackN;
-extern int SMapXStack[], SMapYStack[];
-extern int Zsource;
 extern int CrashX, CrashY;
 extern int CCx, CCy;
 extern int CityPop, deltaCityPop;

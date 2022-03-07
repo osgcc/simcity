@@ -39,9 +39,9 @@ int CrimeAverage, PolluteAverage, LVAverage;
 int CityTime;
 int StartingYear;
 
-int ResHisMax, Res2HisMax;
-int ComHisMax, Com2HisMax;
-int IndHisMax, Ind2HisMax;
+int ResHisMax;
+int ComHisMax;
+int IndHisMax;
 
 int RoadEffect, PoliceEffect, FireEffect;
 
@@ -50,7 +50,6 @@ std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> TrfDensity{};
 std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PollutionMem{};
 std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> LandValueMem{};
 std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> CrimeMem{};
-
 
 std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem{};
 std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
