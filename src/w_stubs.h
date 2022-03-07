@@ -15,7 +15,6 @@ class Budget;
 
 int TickCount();
 
-void InitGame();
 void GameStarted(Budget&);
 void DoPlayNewCity(Budget&);
 

@@ -146,12 +146,6 @@ void DropFireBombs()
 }
 
 
-void InitGame()
-{
-    SimSpeed(SimulationSpeed::Paused);
-}
-
-
 void GameStarted(Budget& budget)
 {
     switch (Startup)

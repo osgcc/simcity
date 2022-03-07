@@ -848,7 +848,6 @@ void drawDebug()
 void startGame()
 {
     sim_init();
-    InitGame();
 
     Startup = -1;
 
