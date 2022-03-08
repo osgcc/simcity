@@ -92,34 +92,6 @@ void DoPlayNewCity(Budget& budget)
 }
 
 
-void DoReallyStartGame()
-{
-    Eval("UIReallyStartGame");
-
-    /*
-    proc UIPickScenarioMode{}
-    {
-        global State
-            global CityLibDir
-            set State scenario
-            sim Pause
-            WithdrawAll
-            InitHistory
-            UIGenerateCityNow
-            InitScenarios
-            InitVotesForUseThisMap
-            ShowScenarios
-    }
-    */
-}
-
-
-void DoStartLoad()
-{
-    Eval("UIStartLoad");
-}
-
-
 void DoStartScenario(int scenario)
 {
     Eval("UIStartScenario " + std::to_string(scenario));
@@ -139,7 +111,6 @@ void GameStarted(Budget& budget)
     case -2: /* Load a city */
         if (LoadCity(StartupName))
         {
-            DoStartLoad();
             StartupName = "";
             break;
         }
