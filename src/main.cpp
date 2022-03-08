@@ -847,7 +847,7 @@ void drawDebug()
 }
 
 
-void GameStarted(Budget& budget)
+void PrimeGame(Budget& budget)
 {
     switch (Startup)
     {
@@ -888,7 +888,7 @@ void gameInit()
 
     Startup = -1;
 
-    GameStarted(budget);
+    PrimeGame(budget);
 
     DrawMiniMap();
     DrawBigMap();
