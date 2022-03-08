@@ -43,6 +43,12 @@ namespace
     constexpr auto DefaultMessageDisplayTime{ 3000 };
 
     int messageDisplayTime{ DefaultMessageDisplayTime };
+
+    int TickCount()
+    {
+        return static_cast<int>(SDL_GetTicks());
+    }
+
 };
 
 

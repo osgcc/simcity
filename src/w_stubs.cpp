@@ -41,8 +41,6 @@ int NoDisasters;
 namespace
 {
     int gameLevel{};
-
-    std::string cityName{};
 }
 
 
@@ -55,10 +53,4 @@ void GameLevel(const int level)
 int GameLevel()
 {
     return gameLevel;
-}
-
-
-int TickCount()
-{
-    return static_cast<int>(SDL_GetTicks());
 }

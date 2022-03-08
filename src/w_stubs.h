@@ -13,7 +13,5 @@
 extern int autoGo;
 class Budget;
 
-int TickCount();
-
 void GameLevel(const int level);
 int GameLevel();
