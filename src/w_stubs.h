@@ -9,9 +9,3 @@
 // it under the terms of the GNU GPLv3, with additional terms. See the README
 // file, included in this distribution, for details.
 #pragma once
-
-extern int autoGo;
-class Budget;
-
-void GameLevel(const int level);
-int GameLevel();

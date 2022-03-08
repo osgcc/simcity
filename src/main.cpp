@@ -99,6 +99,8 @@ namespace
     constexpr unsigned int SimStepDefaultTime{ 100 };
     constexpr unsigned int AnimationStepDefaultTime{ 150 };
 
+    int gameLevel{};
+
     SDL_Rect TileHighlight{ 0, 0, 16, 16 };
     SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
 
@@ -114,7 +116,6 @@ namespace
 
     BudgetWindow* budgetWindow{ nullptr };
     StringRender* stringRenderer{ nullptr };
-
 
     unsigned int speedModifier()
     {
@@ -163,6 +164,18 @@ const std::string& CityName()
 }
 
 
+void GameLevel(const int level)
+{
+    gameLevel = std::clamp(level, 0, 2);
+}
+
+
+int GameLevel()
+{
+    return gameLevel;
+}
+
+
 const Point<int>& viewOffset()
 {
     return MapViewOffset;
@@ -182,6 +195,15 @@ Texture RCI_Indicator{};
 
 Font* MainFont{ nullptr };
 Font* MainBigFont{ nullptr };
+
+
+int PunishCnt;
+int autoBulldoze, autoBudget;
+int autoGo;
+
+int InitSimLoad;
+int ScenarioID;
+int NoDisasters;
 
 
 SDL_Rect& miniMapTileRect()

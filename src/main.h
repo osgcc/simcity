@@ -168,3 +168,6 @@ void sim_exit();
 const Point<int>& viewOffset();
 
 SDL_Rect& miniMapTileRect();
+
+void GameLevel(const int level);
+int GameLevel();
