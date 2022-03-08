@@ -21,6 +21,7 @@
 
 #include "s_alloc.h"
 #include "s_disast.h"
+#include "s_fileio.h"
 #include "s_gen.h"
 #include "s_init.h"
 #include "s_msg.h"
@@ -104,6 +105,7 @@ namespace
     std::array<unsigned int, 5> SpeedModifierTable{ 0, 0, 50, 75, 95 };
 
     std::string currentBudget{};
+    std::string StartupName;
 
     std::vector<const SDL_Rect*> UiRects{};
 
@@ -842,6 +844,41 @@ void drawDebug()
     sstream.str("");
     sstream << "PolicePop: " << PolicePop << " FireStPop: " << FireStPop;
     stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 13 });
+}
+
+
+void GameStarted(Budget& budget)
+{
+    switch (Startup)
+    {
+    case -2: /* Load a city */
+        if (LoadCity(StartupName))
+        {
+            StartupName = "";
+            break;
+        }
+
+    case -1:
+        if (!StartupName.empty())
+        {
+            CityName(StartupName);
+            StartupName = "";
+        }
+        else
+        {
+            CityName("NowHere");
+        }
+        DoPlayNewCity(budget);
+        break;
+
+    case 0:
+        throw std::runtime_error("Unexpected startup switch: " + std::to_string(Startup));
+        break;
+
+    default: /* scenario number */
+        DoStartScenario(Startup);
+        break;
+    }
 }
 
 

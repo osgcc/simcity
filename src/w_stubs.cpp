@@ -38,8 +38,6 @@ int InitSimLoad;
 int ScenarioID;
 int NoDisasters;
 
-std::string StartupName;
-
 namespace
 {
     int gameLevel{};
@@ -95,39 +93,4 @@ void DoPlayNewCity(Budget& budget)
 void DoStartScenario(int scenario)
 {
     Eval("UIStartScenario " + std::to_string(scenario));
-}
-
-
-void GameStarted(Budget& budget)
-{
-    switch (Startup)
-    {
-    case -2: /* Load a city */
-        if (LoadCity(StartupName))
-        {
-            StartupName = "";
-            break;
-        }
-
-    case -1:
-        if (!StartupName.empty())
-        {
-            CityName(StartupName);
-            StartupName = "";
-        }
-        else
-        {
-            CityName("NowHere");
-        }
-        DoPlayNewCity(budget);
-        break;
-
-    case 0:
-        throw std::runtime_error("Unexpected startup switch: " + std::to_string(Startup));
-        break;
-
-    default: /* scenario number */
-        DoStartScenario(Startup);
-        break;
-    }
 }
