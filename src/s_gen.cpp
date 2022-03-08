@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "CityProperties.h"
 #include "Map.h"
 
 #include "s_alloc.h"
@@ -569,7 +570,7 @@ void GenerateMap(int r)
 #include <iostream>
 #include "s_alloc.h"
 
-void GenerateSomeCity(int seed, Budget& budget)
+void GenerateSomeCity(int seed, CityProperties& properties, Budget& budget)
 {
     ScenarioID = 0;
     CityTime = 0;
@@ -580,14 +581,14 @@ void GenerateSomeCity(int seed, Budget& budget)
     ResetMapState();
     ResetEditorState();
     UpdateFunds(budget);
-    DoSimInit(budget);
+    DoSimInit(properties, budget);
     Eval("UIDidGenerateNewCity");
 
     GenerateMap(seed);
 }
 
 
-void GenerateNewCity(Budget& budget)
+void GenerateNewCity(CityProperties& properties, Budget& budget)
 {
-    GenerateSomeCity(RandomRange(0, std::numeric_limits<int>::max()), budget);
+    GenerateSomeCity(RandomRange(0, std::numeric_limits<int>::max()), properties, budget);
 }

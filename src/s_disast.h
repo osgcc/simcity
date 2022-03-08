@@ -10,7 +10,9 @@
 // file, included in this distribution, for details.
 #pragma once
 
-void DoDisasters();
+class CityProperties;
+
+void DoDisasters(CityProperties&);
 void DoFlood();
 
 void MakeEarthquake();

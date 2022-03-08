@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "CityProperties.h"
+
 #include "w_tk.h"
 #include "w_util.h"
 
@@ -112,7 +114,7 @@ void SetEvaluation(const Strings& strings)
 }
 
 
-void doScoreCard()
+void doScoreCard(const CityProperties& properties)
 {
 	const Strings strings
 	{
@@ -130,7 +132,7 @@ void doScoreCard()
 		std::to_string(deltaCityPop),
 		NumberToDollarDecimal(CityAssessedValue),
 		cityClassStr[CityClass],
-		cityLevelStr[GameLevel()],
+		cityLevelStr[properties.GameLevel()],
 		std::to_string(CityYes) + "%",
 		std::to_string(CityNo) + "%",
 		std::to_string(CurrentYear())
@@ -146,11 +148,11 @@ void ChangeEval()
 }
 
 
-void scoreDoer()
+void scoreDoer(const CityProperties& properties)
 {
 	if (EvalChanged)
 	{
-		doScoreCard();
+		doScoreCard(properties);
 		EvalChanged = false;
 	}
 }

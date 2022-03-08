@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "CityProperties.h"
+
 #include "Map.h"
 
 #include "s_alloc.h"
@@ -612,7 +614,7 @@ void DoResidential(int ZonePwrFlg)
 }
 
 
-void DoZone()
+void DoZone(const CityProperties& properties)
 {
   int ZonePwrFlg;
 
@@ -621,7 +623,7 @@ void DoZone()
   else unPwrdZCnt++;
 
   if (CChr9 > PORTBASE) {	/* do Special Zones  */
-    DoSPZone(ZonePwrFlg);
+    DoSPZone(ZonePwrFlg, properties);
     return;
   }
   if (CChr9 < HOSPITAL) {	

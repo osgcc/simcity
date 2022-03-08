@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #pragma once
 
+class CityProperties;
 
 void ChangeEval();
-void scoreDoer();
+void scoreDoer(const CityProperties& properties);

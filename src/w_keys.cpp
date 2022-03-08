@@ -24,6 +24,8 @@
 
 static char LastKeys[5];
 
+int PunishCnt{};
+
 
 /* TODO:
   <n> new city

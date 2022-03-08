@@ -11,6 +11,7 @@
 #include "s_sim.h"
 
 #include "Budget.h"
+#include "CityProperties.h"
 
 #include "main.h"
 #include "Map.h"
@@ -458,7 +459,7 @@ void CoalSmoke(int mx, int my)
 }
 
 
-void DoSPZone(int PwrOn)
+void DoSPZone(int PwrOn, const CityProperties& properties)
 {
     static int MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
     int z;
@@ -476,7 +477,7 @@ void DoSPZone(int PwrOn)
         return;
 
     case NUCLEAR:
-        if (!NoDisasters && !RandomRange(0, MltdwnTab[GameLevel()]))
+        if (!NoDisasters && !RandomRange(0, MltdwnTab[properties.GameLevel()]))
         {
             DoMeltdown(SMapX, SMapY);
             return;
@@ -605,7 +606,7 @@ void DoSPZone(int PwrOn)
 
 
 /* comefrom: Simulate DoSimInit */
-void MapScan(int x1, int x2)
+void MapScan(int x1, int x2, const CityProperties& properties)
 {
     for (int x = x1; x < x2; x++)
     {
@@ -656,7 +657,7 @@ void MapScan(int x1, int x2)
 
                     if (CChr & ZONEBIT) // process Zones
                     {
-                        DoZone();
+                        DoZone(properties);
                         continue;
                     }
 
@@ -676,7 +677,7 @@ void MapScan(int x1, int x2)
 }
 
 
-void SetValves(const Budget& budget)
+void SetValves(const CityProperties& properties, const Budget& budget)
 {
     static int TaxTable[21] = {
       200, 150, 120, 100, 80, 50, 30, 0, -10, -40, -100,
@@ -698,7 +699,7 @@ void SetValves(const Budget& budget)
     MiscHis[12] = LVAverage;
     MiscHis[13] = CrimeAverage;
     MiscHis[14] = PolluteAverage;
-    MiscHis[15] = GameLevel();
+    MiscHis[15] = properties.GameLevel();
     MiscHis[16] = CityClass;
     MiscHis[17] = CityScore;
 
@@ -742,7 +743,7 @@ void SetValves(const Budget& budget)
     PjComPop = IntMarket * LaborBase;
 
     temp = 1;
-    switch (GameLevel())
+    switch (properties.GameLevel())
     {
     case 0:
         temp = 1.2f;
@@ -792,7 +793,7 @@ void SetValves(const Budget& budget)
     if (Cratio > 2) { Cratio = 2; }
     if (Iratio > 2) { Iratio = 2; }
 
-    int index = std::clamp(budget.TaxRate() + GameLevel(), 0, 20);
+    int index = std::clamp(budget.TaxRate() + properties.GameLevel(), 0, 20);
 
     Rratio = ((Rratio - 1) * 600) + TaxTable[index]; /* global tax/Glevel effects */
     Cratio = ((Cratio - 1) * 600) + TaxTable[index];
@@ -971,7 +972,7 @@ void Take2Census()
 }
 
 
-void CollectTax(Budget& budget)
+void CollectTax(const CityProperties& properties, Budget& budget)
 {
     static float RLevels[3] = { 0.7f, 0.9f, 1.2f };
     static float FLevels[3] = { 1.4f, 1.2f, 0.8f };
@@ -982,9 +983,9 @@ void CollectTax(Budget& budget)
     
     budget.PoliceFundsNeeded(PolicePop * 100);
     budget.FireFundsNeeded(FireStPop * 100);
-    budget.RoadFundsNeeded(static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[GameLevel()]));
+    budget.RoadFundsNeeded(static_cast<int>((RoadTotal + (RailTotal * 2)) * RLevels[properties.GameLevel()]));
 
-    budget.TaxIncome(static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * budget.TaxRate() * FLevels[GameLevel()])); //yuck
+    budget.TaxIncome(static_cast<int>(((static_cast<float>(TotalPop) * LVAverage) / 120.0f) * budget.TaxRate() * FLevels[properties.GameLevel()])); //yuck
 
     if (TotalPop) // if there are people to tax
     {
@@ -1131,7 +1132,7 @@ void DecTrafficMem()
 
 
 /* comefrom: DoSimInit */
-void SimLoadInit()
+void SimLoadInit(CityProperties& properties)
 {
     static int DisTab[9] = { 0, 2, 10, 5, 20, 3, 5, 5, 2 * 48 };
     static int ScoreWaitTab[9] = { 0, 30 * 48, 5 * 48, 5 * 48, 10 * 48,
@@ -1149,7 +1150,7 @@ void SimLoadInit()
     LVAverage = MiscHis[12];
     CrimeAverage = MiscHis[13];
     PolluteAverage = MiscHis[14];
-    GameLevel(MiscHis[15]);
+    properties.GameLevel(MiscHis[15]);
 
     if (CityTime < 0)
     {
@@ -1223,7 +1224,7 @@ namespace
 };
 
 
-void Simulate(int mod16, Budget& budget)
+void Simulate(int mod16, CityProperties& properties, Budget& budget)
 {
     int speed = static_cast<int>(SimulationSpeed()); // ew, find a better way to do this
 
@@ -1243,42 +1244,42 @@ void Simulate(int mod16, Budget& budget)
         
         if (!(Scycle % 2))
         {
-            SetValves(budget);
+            SetValves(properties, budget);
         }
         
         ClearCensus();
         break;
 
     case 1:
-        MapScan(0, 1 * SimWidth / 8);
+        MapScan(0, 1 * SimWidth / 8, properties);
         break;
 
     case 2:
-        MapScan(1 * SimWidth / 8, 2 * SimWidth / 8);
+        MapScan(1 * SimWidth / 8, 2 * SimWidth / 8, properties);
         break;
 
     case 3:
-        MapScan(2 * SimWidth / 8, 3 * SimWidth / 8);
+        MapScan(2 * SimWidth / 8, 3 * SimWidth / 8, properties);
         break;
 
     case 4:
-        MapScan(3 * SimWidth / 8, 4 * SimWidth / 8);
+        MapScan(3 * SimWidth / 8, 4 * SimWidth / 8, properties);
         break;
 
     case 5:
-        MapScan(4 * SimWidth / 8, 5 * SimWidth / 8);
+        MapScan(4 * SimWidth / 8, 5 * SimWidth / 8, properties);
         break;
 
     case 6:
-        MapScan(5 * SimWidth / 8, 6 * SimWidth / 8);
+        MapScan(5 * SimWidth / 8, 6 * SimWidth / 8, properties);
         break;
 
     case 7:
-        MapScan(6 * SimWidth / 8, 7 * SimWidth / 8);
+        MapScan(6 * SimWidth / 8, 7 * SimWidth / 8, properties);
         break;
 
     case 8:
-        MapScan(7 * SimWidth / 8, SimWidth);
+        MapScan(7 * SimWidth / 8, SimWidth, properties);
         break;
 
     case 9:
@@ -1293,7 +1294,7 @@ void Simulate(int mod16, Budget& budget)
 
         if (!(CityTime % TAXFREQ))
         {
-            CollectTax(budget);
+            CollectTax(properties, budget);
             CityEvaluation(budget);
         }
         break;
@@ -1349,13 +1350,13 @@ void Simulate(int mod16, Budget& budget)
         {
             FireAnalysis();
         }
-        DoDisasters();
+        DoDisasters(properties);
         break;
     }
 }
 
 
-void SimFrame(Budget& budget)
+void SimFrame(CityProperties& properties, Budget& budget)
 {
     if (SimSpeed() == SimulationSpeed::Paused)
     {
@@ -1366,12 +1367,12 @@ void SimFrame(Budget& budget)
     {
         Fcycle = 0;
     }
-    
-    Simulate(Fcycle % 16, budget);
+
+    Simulate(Fcycle % 16, properties, budget);
 }
 
 
-void DoSimInit(Budget& budget)
+void DoSimInit(CityProperties& properties, Budget& budget)
 {
     Fcycle = 0;
     Scycle = 0;
@@ -1383,12 +1384,12 @@ void DoSimInit(Budget& budget)
 
     if (InitSimLoad == 1)  			/* if city just loaded  */
     {
-        SimLoadInit();
+        SimLoadInit(properties);
     }
 
-    SetValves(budget);
+    SetValves(properties, budget);
     ClearCensus();
-    MapScan(0, SimWidth); /* XXX are you sure ??? */
+    MapScan(0, SimWidth, properties); /* XXX are you sure ??? */
     DoPowerScan();
     NewPower = 1;		/* post rel */
     PTLScan();

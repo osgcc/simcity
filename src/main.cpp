@@ -99,8 +99,6 @@ namespace
     constexpr unsigned int SimStepDefaultTime{ 100 };
     constexpr unsigned int AnimationStepDefaultTime{ 150 };
 
-    int gameLevel{};
-
     SDL_Rect TileHighlight{ 0, 0, 16, 16 };
     SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
 
@@ -153,18 +151,6 @@ namespace
 };
 
 
-void GameLevel(const int level)
-{
-    gameLevel = std::clamp(level, 0, 2);
-}
-
-
-int GameLevel()
-{
-    return gameLevel;
-}
-
-
 const Point<int>& viewOffset()
 {
     return MapViewOffset;
@@ -186,7 +172,6 @@ Font* MainFont{ nullptr };
 Font* MainBigFont{ nullptr };
 
 
-int PunishCnt;
 int autoBulldoze, autoBudget;
 int autoGo;
 
@@ -278,7 +263,7 @@ void sim_update()
     }
 
     updateDate();
-    scoreDoer();
+    scoreDoer(cityProperties);
 }
 
 
@@ -308,7 +293,7 @@ void sim_loop(bool doSim)
 
     if (doSim)
     {
-        SimFrame(budget);
+        SimFrame(cityProperties, budget);
         SimulationStep = false;
     }
 
@@ -352,7 +337,6 @@ void sim_init()
     AutoGotoMessageLocation(true);
     CityTime = 50;
     NoDisasters = 0;
-    PunishCnt = 0;
     autoBulldoze = 1;
     autoBudget = 1;
     MessageId(NotificationId::None);
@@ -372,7 +356,7 @@ void sim_init()
     ClearMap();
     InitWillStuff();
     budget.CurrentFunds(5000);
-    SetGameLevelFunds(StartupGameLevel, budget);
+    SetGameLevelFunds(StartupGameLevel, cityProperties, budget);
     SimSpeed(SimulationSpeed::Paused);
 }
 
@@ -875,10 +859,9 @@ void DoPlayNewCity(CityProperties& properties, Budget& budget)
 {
     Eval("UIPlayNewCity");
 
-    GameLevel(0);
+    properties.GameLevel(0);
     properties.CityName("NowHere");
-    if (GameLevel() == -1) { GameLevel(0); }
-    GenerateNewCity(budget);
+    GenerateNewCity(properties, budget);
 
     Resume();
     SimSpeed(SimulationSpeed::Normal);

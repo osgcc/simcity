@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "CityProperties.h"
 #include "Map.h"
 
 #include "s_alloc.h"
@@ -311,7 +312,7 @@ void ScenarioDisaster()
 }
 
 
-void DoDisasters()
+void DoDisasters(CityProperties& properties)
 {
     // Chance of disasters at lev 0 1 2
     static int DisChance[3] = { 10 * 48, 5 * 48, 60 };
@@ -331,7 +332,7 @@ void DoDisasters()
         return;
     }
     
-    int disasterChance = RandomRange(0, DisChance[GameLevel()]);
+    int disasterChance = RandomRange(0, DisChance[properties.GameLevel()]);
     if (disasterChance == 0)
     {
         int disasterType = RandomRange(0, 8);

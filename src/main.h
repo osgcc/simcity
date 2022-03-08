@@ -153,9 +153,6 @@ extern int CityAssessedValue;
 
 extern int InitSimLoad;
 extern int DoInitialEval;
-extern int Startup;
-
-extern int PunishCnt;
 
 extern bool NewMap;
 extern int NewMapFlags[NMAPS];
@@ -168,6 +165,3 @@ void sim_exit();
 const Point<int>& viewOffset();
 
 SDL_Rect& miniMapTileRect();
-
-void GameLevel(const int level);
-int GameLevel();

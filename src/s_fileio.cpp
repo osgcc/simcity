@@ -11,6 +11,7 @@
 #include "main.h"
 
 #include "Budget.h"
+#include "CityProperties.h"
 
 #include "s_alloc.h"
 #include "s_init.h"
@@ -358,12 +359,12 @@ enum class ScenarioName
 };
 
 
-void LoadScenario(int s, Budget& budget)
+void LoadScenario(int s, CityProperties& properties, Budget& budget)
 {
     std::string name;
     std::string fname;
 
-    GameLevel(0);
+    properties.GameLevel(0);
 
     if ((s < 1) || (s > 8)) { s = 1; }
 
@@ -443,6 +444,6 @@ void LoadScenario(int s, Budget& budget)
     UpdateFunds(budget);
     InitSimLoad = 1;
     DoInitialEval = 0;
-    DoSimInit(budget);
+    DoSimInit(properties, budget);
     DidLoadScenario();
 }

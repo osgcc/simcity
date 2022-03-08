@@ -15,6 +15,7 @@
 #include <string>
 
 class Budget;
+class CityProperties;
 
 enum class SimulationSpeed
 {
@@ -41,6 +42,6 @@ bool Paused();
 
 int CurrentYear();
 void SetYear(int year);
-void SetGameLevelFunds(int level, Budget&);
+void SetGameLevelFunds(int level, CityProperties& properties, Budget&);
 bool CoordinatesValid(int x, int y, int width, int height);
 Point<int> PositionToCell(const Point<int>& position, const Point<int>& offset);

@@ -12,4 +12,8 @@
 
 #include <string>
 
+class Budget;
+class CityProperties;
+
 int LoadCity(const std::string& filename);
+void LoadScenario(int s, CityProperties&, Budget&);

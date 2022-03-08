@@ -11,6 +11,7 @@
 #pragma once
 
 class Budget;
+class CityProperties;
 
 void ClearMap();
-void GenerateNewCity(Budget&);
+void GenerateNewCity(CityProperties&, Budget&);

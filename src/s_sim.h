@@ -11,11 +11,12 @@
 #pragma once
 
 class Budget;
+class CityProperties;
 
-void SimFrame(Budget&);
+void SimFrame(CityProperties&, Budget&);
 void FireZone(int Xloc, int Yloc, int ch);
-void DoSimInit(Budget&);
-void DoSPZone(int PwrOn);
+void DoSimInit(CityProperties&, Budget&);
+void DoSPZone(int PwrOn, const CityProperties& properties);
 void RepairZone(int ZCent, int zsize);
 
 int RandomRange(int min, int max);

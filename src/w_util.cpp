@@ -11,6 +11,7 @@
 #include "w_util.h"
 
 #include "Budget.h"
+#include "CityProperties.h"
 
 #include "main.h"
 
@@ -114,24 +115,24 @@ bool Paused()
 }
 
 
-void SetGameLevelFunds(int level, Budget& budget)
+void SetGameLevelFunds(int level, CityProperties& properties, Budget& budget)
 {
     switch (level)
     {
     default:
     case 0:
         budget.CurrentFunds(20000);
-        GameLevel(0);
+        properties.GameLevel(0);
         break;
 
     case 1:
         budget.CurrentFunds(10000);
-        GameLevel(1);
+        properties.GameLevel(1);
         break;
 
     case 2:
         budget.CurrentFunds(5000);
-        GameLevel(2);
+        properties.GameLevel(2);
         break;
     }
 }

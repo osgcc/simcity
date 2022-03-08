@@ -10,9 +10,11 @@
 // file, included in this distribution, for details.
 #pragma once
 
+class CityProperties;
+
 int DoFreePop();
 int RZPop(int Ch9);
 int CZPop(int Ch9);
 int IZPop(int Ch9);
 bool SetZPower();
-void DoZone();
+void DoZone(const CityProperties&);
