@@ -58,6 +58,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\Budget.h" />
     <ClInclude Include="src\BudgetWindow.h" />
+    <ClInclude Include="src\CityProperties.h" />
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\g_ani.h" />
     <ClInclude Include="src\Map.h" />

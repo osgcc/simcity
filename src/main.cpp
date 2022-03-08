@@ -13,6 +13,7 @@
 #include "Budget.h"
 #include "BudgetWindow.h"
 
+#include "CityProperties.h"
 #include "Font.h"
 #include "Map.h"
 
@@ -105,7 +106,6 @@ namespace
 
     std::array<unsigned int, 5> SpeedModifierTable{ 0, 0, 50, 75, 95 };
 
-    std::string cityName{};
     std::string currentBudget{};
     std::string StartupName;
 
@@ -115,6 +115,8 @@ namespace
 
     BudgetWindow* budgetWindow{ nullptr };
     StringRender* stringRenderer{ nullptr };
+
+    CityProperties cityProperties;
 
     unsigned int speedModifier()
     {
@@ -149,18 +151,6 @@ namespace
         return interval;
     }
 };
-
-
-void CityName(const std::string& name)
-{
-    cityName = name;
-}
-
-
-const std::string& CityName()
-{
-    return cityName;
-}
 
 
 void GameLevel(const int level)
@@ -881,12 +871,12 @@ void drawDebug()
 }
 
 
-void DoPlayNewCity(Budget& budget)
+void DoPlayNewCity(CityProperties& properties, Budget& budget)
 {
     Eval("UIPlayNewCity");
 
     GameLevel(0);
-    CityName("NowHere");
+    properties.CityName("NowHere");
     if (GameLevel() == -1) { GameLevel(0); }
     GenerateNewCity(budget);
 
@@ -901,7 +891,7 @@ void DoStartScenario(int scenario)
 }
 
 
-void PrimeGame(Budget& budget)
+void PrimeGame(CityProperties& properties, Budget& budget)
 {
     switch (Startup)
     {
@@ -915,14 +905,14 @@ void PrimeGame(Budget& budget)
     case -1:
         if (!StartupName.empty())
         {
-            CityName(StartupName);
+            properties.CityName(StartupName);
             StartupName = "";
         }
         else
         {
-            CityName("NowHere");
+            properties.CityName("NowHere");
         }
-        DoPlayNewCity(budget);
+        DoPlayNewCity(properties, budget);
         break;
 
     case 0:
@@ -942,7 +932,7 @@ void gameInit()
 
     Startup = -1;
 
-    PrimeGame(budget);
+    PrimeGame(cityProperties, budget);
 
     DrawMiniMap();
     DrawBigMap();
