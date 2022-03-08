@@ -845,7 +845,7 @@ void drawDebug()
 }
 
 
-void startGame()
+void gameInit()
 {
     sim_init();
 
@@ -969,7 +969,7 @@ int main(int argc, char* argv[])
         initViewParamters();
         updateMapDrawParameters();
 
-        startGame();
+        gameInit();
 
         cleanUp();
 
