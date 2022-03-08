@@ -87,20 +87,6 @@ void DoPlayNewCity(Budget& budget)
     if (GameLevel() == -1) { GameLevel(0); }
     GenerateNewCity(budget);
 
-    /*
-    proc UIPlayGame {}
-    {
-        global State
-        global Priority
-        set State play
-        sim Resume
-        sim Speed 3
-        sim AutoGoto 1
-        SetPriority $Priority
-
-    }
-    */
-
     Resume();
     SimSpeed(SimulationSpeed::Normal);
 }
@@ -172,7 +158,7 @@ void GameStarted(Budget& budget)
         break;
 
     case 0:
-        DoReallyStartGame();
+        throw std::runtime_error("Unexpected startup switch: " + std::to_string(Startup));
         break;
 
     default: /* scenario number */
