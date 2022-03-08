@@ -98,12 +98,6 @@ void DoStartScenario(int scenario)
 }
 
 
-void DropFireBombs()
-{
-    Eval("DropFireBombs");
-}
-
-
 void GameStarted(Budget& budget)
 {
     switch (Startup)

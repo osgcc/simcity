@@ -67,8 +67,6 @@ int ShakeNow;
 int FloodCount;
 int FloodX, FloodY;
 
-// fordward declare from w_stubs
-void DropFireBombs();
 
 // forward declare from s_sim
 void DoMeltdown(int, int);
@@ -233,6 +231,27 @@ void DoFlood()
             Map[SMapX][SMapY] = 0;
         }
     }
+}
+
+
+void DropFireBombs()
+{
+    /*
+    proc FireBomb{}
+    {
+        sim FireBomb
+    }
+    */
+
+    /*
+    proc DropFireBombs{}
+    {
+        FireBomb
+            after 300 FireBomb
+            after 600 FireBomb
+            after 900 FireBomb
+    }
+    */
 }
 
 
