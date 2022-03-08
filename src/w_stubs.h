@@ -15,9 +15,6 @@ class Budget;
 
 int TickCount();
 
-void DoPlayNewCity(Budget&);
-void DoStartScenario(int scenario);
-
 void CityName(const std::string&);
 const std::string& CityName();
 

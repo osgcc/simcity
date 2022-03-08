@@ -847,6 +847,26 @@ void drawDebug()
 }
 
 
+void DoPlayNewCity(Budget& budget)
+{
+    Eval("UIPlayNewCity");
+
+    GameLevel(0);
+    CityName("NowHere");
+    if (GameLevel() == -1) { GameLevel(0); }
+    GenerateNewCity(budget);
+
+    Resume();
+    SimSpeed(SimulationSpeed::Normal);
+}
+
+
+void DoStartScenario(int scenario)
+{
+    Eval("UIStartScenario " + std::to_string(scenario));
+}
+
+
 void PrimeGame(Budget& budget)
 {
     switch (Startup)
