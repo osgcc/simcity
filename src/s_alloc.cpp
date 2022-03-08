@@ -11,7 +11,6 @@
 #include "s_alloc.h"
 
 #include "main.h"
-#include "w_stubs.h"
 
 #include <array>
 #include <vector>

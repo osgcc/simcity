@@ -49,7 +49,6 @@
     <ClCompile Include="src\w_map.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
     <ClCompile Include="src\w_sound.cpp" />
-    <ClCompile Include="src\w_stubs.cpp" />
     <ClCompile Include="src\w_tk.cpp" />
     <ClCompile Include="src\w_tool.cpp" />
     <ClCompile Include="src\w_update.cpp" />
@@ -92,7 +91,6 @@
     <ClInclude Include="src\w_map.h" />
     <ClInclude Include="src\w_resrc.h" />
     <ClInclude Include="src\w_sound.h" />
-    <ClInclude Include="src\w_stubs.h" />
     <ClInclude Include="src\w_tk.h" />
     <ClInclude Include="src\w_tool.h" />
     <ClInclude Include="src\w_update.h" />

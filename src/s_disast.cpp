@@ -17,7 +17,6 @@
 
 #include "s_msg.h"
 
-#include "w_stubs.h"
 #include "w_util.h"
 
 #include <algorithm>

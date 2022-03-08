@@ -16,7 +16,6 @@
 
 #include "w_resrc.h"
 #include "w_sound.h"
-#include "w_stubs.h"
 #include "w_tk.h"
 
 

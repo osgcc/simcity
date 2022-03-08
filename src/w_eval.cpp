@@ -10,7 +10,6 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
-#include "w_stubs.h"
 #include "w_tk.h"
 #include "w_util.h"
 

@@ -16,7 +16,6 @@
 
 #include "w_keys.h"
 #include "Sprite.h"
-#include "w_stubs.h"
 #include "w_tool.h"
 #include "w_update.h"
 #include "w_util.h"

@@ -21,7 +21,6 @@
 #include "w_con.h"
 #include "w_resrc.h"
 #include "w_sound.h"
-#include "w_stubs.h"
 #include "w_tk.h"
 #include "w_update.h"
 #include "w_util.h"

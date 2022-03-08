@@ -26,7 +26,6 @@
 #include "s_traf.h"
 #include "s_zone.h"
 
-#include "w_stubs.h"
 #include "w_util.h"
 
 #include "Sprite.h"
