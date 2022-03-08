@@ -104,6 +104,7 @@ namespace
 
     std::array<unsigned int, 5> SpeedModifierTable{ 0, 0, 50, 75, 95 };
 
+    std::string cityName{};
     std::string currentBudget{};
     std::string StartupName;
 
@@ -148,6 +149,18 @@ namespace
         return interval;
     }
 };
+
+
+void CityName(const std::string& name)
+{
+    cityName = name;
+}
+
+
+const std::string& CityName()
+{
+    return cityName;
+}
 
 
 const Point<int>& viewOffset()

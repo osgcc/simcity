@@ -58,18 +58,6 @@ int GameLevel()
 }
 
 
-void CityName(const std::string& name)
-{
-    cityName = name;
-}
-
-
-const std::string& CityName()
-{
-    return cityName;
-}
-
-
 int TickCount()
 {
     return static_cast<int>(SDL_GetTicks());

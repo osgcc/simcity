@@ -15,8 +15,5 @@ class Budget;
 
 int TickCount();
 
-void CityName(const std::string&);
-const std::string& CityName();
-
 void GameLevel(const int level);
 int GameLevel();
