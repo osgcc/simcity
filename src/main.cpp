@@ -11,7 +11,9 @@
 #include "main.h"
 
 #include "Budget.h"
+
 #include "BudgetWindow.h"
+#include "GraphWindow.h"
 
 #include "CityProperties.h"
 #include "Font.h"
@@ -112,6 +114,7 @@ namespace
     Budget budget{};
 
     BudgetWindow* budgetWindow{ nullptr };
+    GraphWindow* graphWindow{ nullptr };
     StringRender* stringRenderer{ nullptr };
 
     CityProperties cityProperties;
@@ -242,16 +245,15 @@ void fillGraphPoints(Graph::PointsList& points, const GraphHistory& history, con
 
 void drawGraphs()
 {
+    SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 255);
+    const SDL_Rect rect{ 130, UiHeaderRect.y + UiHeaderRect.h + 5, 240, 200 };
+    SDL_RenderFillRect(MainWindowRenderer, &rect);
+
     for (auto& [type, graph] : HistoryGraphTable)
     {
         SDL_SetRenderDrawColor(MainWindowRenderer, graph.color.r, graph.color.g, graph.color.b, 255);
         SDL_RenderDrawLines(MainWindowRenderer, graph.points.data(), static_cast<int>(graph.points.size()));
     }
-
-    SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 100);
-    
-    const SDL_Rect rect{ 130, UiHeaderRect.y + UiHeaderRect.h + 5, 260, 150 };
-    SDL_RenderFillRect(MainWindowRenderer, &rect);
 }
 
 
@@ -259,7 +261,7 @@ void sim_update()
 {
     for (auto& [ type, graph ] : HistoryGraphTable)
     {
-        fillGraphPoints(graph.points, graph.history, 260, 150);
+        fillGraphPoints(graph.points, graph.history, 240, 200);
     }
 
     updateDate();
@@ -603,6 +605,11 @@ void handleMouseEvent(SDL_Event& event)
                 budgetWindow->injectMouseClickPosition(mp);
             }
 
+            if (SDL_PointInRect(&mp, &graphWindow->rect()))
+            {
+                graphWindow->injectMouseDown(mp);
+            }
+
             if (!BudgetWindowShown)
             {
                 ToolDown(TilePointedAt.x, TilePointedAt.y, budget);
@@ -933,6 +940,9 @@ void gameInit()
     budgetWindow = new BudgetWindow(MainWindowRenderer, *stringRenderer, budget);
     centerBudgetWindow();
 
+    graphWindow = new GraphWindow(MainWindowRenderer);
+    graphWindow->position({ 200, 200 });
+
     UiRects.push_back(&toolPalette.rect());
     UiRects.push_back(&UiHeaderRect);
 
@@ -984,6 +994,8 @@ void gameInit()
             if (DrawDebug) { drawDebug(); }
         }
 
+        graphWindow->draw();
+
         SDL_RenderPresent(MainWindowRenderer);
     }
 
@@ -999,6 +1011,7 @@ void cleanUp()
     delete MainFont;
     delete MainBigFont;
     delete budgetWindow;
+    delete graphWindow;
     delete stringRenderer;
 
     SDL_DestroyTexture(BigTileset.texture);
