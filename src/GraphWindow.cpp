@@ -5,7 +5,6 @@
 
 namespace
 {
-
 	const SDL_Rect ButtonUp{ 285, 0, 36, 36 };
 	const SDL_Rect ButtonDown{ 326, 0, 36, 36 };
 	const SDL_Rect Bg{ 0, 0, 264, 287 };
