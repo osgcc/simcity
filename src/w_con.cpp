@@ -547,7 +547,7 @@ ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command, Budget& budget
     /* AutoDoze */
     if ((Command >= 2) && (Command <= 4))
     {
-        if ((autoBulldoze != 0) &&
+        if ((autoBulldoze) &&
             (budget.CurrentFunds() > 0) &&
             ((Tile = (*TileAdrPtr)) & BULLBIT))
         {
