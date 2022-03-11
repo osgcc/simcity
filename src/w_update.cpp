@@ -15,6 +15,7 @@
 #include "main.h"
 
 #include "s_msg.h"
+#include "s_scan.h"
 
 #include "w_eval.h"
 #include "w_sound.h"

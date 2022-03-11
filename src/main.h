@@ -153,7 +153,6 @@ extern int CityAssessedValue;
 extern int InitSimLoad;
 extern int DoInitialEval;
 
-extern bool NewMap;
 extern int NewMapFlags[NMAPS];
 extern int MustUpdateOptions;
 
