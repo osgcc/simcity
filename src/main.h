@@ -160,6 +160,9 @@ extern int MustUpdateOptions;
 extern SDL_Renderer* MainWindowRenderer;
 extern Texture SmallTileset;
 
+void showBudgetWindow();
+bool autoBudget();
+
 void sim_exit();
 const Point<int>& viewOffset();
 

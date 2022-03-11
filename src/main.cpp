@@ -97,6 +97,7 @@ namespace
     bool RedrawMinimap{ false };
     bool SimulationStep{ false };
     bool AnimationStep{ false };
+    bool AutoBudget{ false };
 
     constexpr unsigned int SimStepDefaultTime{ 100 };
     constexpr unsigned int AnimationStepDefaultTime{ 150 };
@@ -176,12 +177,23 @@ Font* MainBigFont{ nullptr };
 
 
 bool AutoBulldoze{ false };
-bool AutoBudget{ false };
 bool AutoGo{ false };
 
 int InitSimLoad;
 int ScenarioID;
 int NoDisasters;
+
+
+void showBudgetWindow()
+{
+    BudgetWindowShown = true;
+}
+
+
+bool autoBudget()
+{
+    return AutoBudget;
+}
 
 
 SDL_Rect& miniMapTileRect()
