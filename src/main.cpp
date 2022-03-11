@@ -1010,6 +1010,8 @@ void gameInit()
         graphWindow->draw();
 
         SDL_RenderPresent(MainWindowRenderer);
+
+        NewMap = false;
     }
 
     SDL_RemoveTimer(zonePowerBlink);

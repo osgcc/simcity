@@ -1396,7 +1396,7 @@ void DoSimInit(CityProperties& properties, Budget& budget)
     CrimeScan();
     PopDenScan();
     FireAnalysis();
-    NewMap = 1;
+    NewMap = true;
     TotalPop = 1;
     DoInitialEval = 1;
 }

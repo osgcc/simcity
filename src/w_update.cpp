@@ -119,7 +119,7 @@ void updateDate()
         lastCityYear = year;
         lastCityMonth = month;
 
-        if (month == 0 && !autoBudget())
+        if (month == 0 && !autoBudget() && !NewMap)
         {
             showBudgetWindow();
         }
