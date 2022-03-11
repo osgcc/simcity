@@ -175,9 +175,9 @@ Font* MainFont{ nullptr };
 Font* MainBigFont{ nullptr };
 
 
-bool autoBulldoze{ false };
-bool autoBudget{ false };
-bool autoGo{ false };
+bool AutoBulldoze{ false };
+bool AutoBudget{ false };
+bool AutoGo{ false };
 
 int InitSimLoad;
 int ScenarioID;
@@ -340,8 +340,8 @@ void sim_init()
     AutoGotoMessageLocation(true);
     CityTime = 50;
     NoDisasters = 0;
-    autoBulldoze = true;
-    autoBudget = false;
+    AutoBulldoze = true;
+    AutoBudget = false;
     MessageId(NotificationId::None);
     ClearMes();
     SimSpeed(SimulationSpeed::Normal);

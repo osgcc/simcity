@@ -115,9 +115,9 @@ int loadFile(char *filename)
   l = *(int *)(MiscHis + 8);
   CityTime = l;
 
-  autoBulldoze = MiscHis[52];	/* flag for autoBulldoze
-  autoBudget = MiscHis[53];	/* flag for autoBudget
-  autoGo = MiscHis[54];		/* flag for autoGo
+  AutoBulldoze = MiscHis[52];	/* flag for AutoBulldoze
+  AutoBudget = MiscHis[53];	/* flag for AutoBudget
+  AutoGo = MiscHis[54];		/* flag for AutoGo
   UserSoundOn = MiscHis[55];	/* flag for the sound on/off
   CityTax = MiscHis[56];
   SimSpeed = MiscHis[57];
@@ -186,9 +186,9 @@ int saveFile(const std::string& filename)
   l = CityTime;
   (*(int *)(MiscHis + 8)) = l;
 
-  MiscHis[52] = autoBulldoze;	/* flag for autoBulldoze
-  MiscHis[53] = autoBudget;	/* flag for autoBudget
-  MiscHis[54] = autoGo;		/* flag for autoGo
+  MiscHis[52] = AutoBulldoze;	/* flag for AutoBulldoze
+  MiscHis[53] = AutoBudget;	/* flag for AutoBudget
+  MiscHis[54] = AutoGo;		/* flag for AutoGo
   MiscHis[55] = UserSoundOn;	/* flag for the sound on/off
   MiscHis[57] = SimSpeed;
   MiscHis[56] = CityTax;	/* post release

@@ -360,7 +360,7 @@ ToolResult checkArea(const int mapH, const int mapV, const int base, const int s
         {
             const unsigned int tileValue{ maskedTileValue(mapX, mapY) };
 
-            if (autoBulldoze)
+            if (AutoBulldoze)
             {
                 // if autoDoze is enabled, add up the cost of bulldozed tiles
                 if (tileValue != 0)

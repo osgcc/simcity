@@ -125,7 +125,7 @@ extern int RoadEffect, PoliceEffect, FireEffect;
 extern int DoAnimation;
 
 extern int NoDisasters;
-extern bool autoBulldoze;
+extern bool AutoBulldoze;
 
 extern int DisasterEvent;
 extern int DisasterWait;
