@@ -69,12 +69,12 @@ namespace
 
 	std::array<ButtonMeta, 6> Buttons
 	{
-		ButtonMeta{ ButtonId::Residential, ButtonLayout.at(ButtonId::Residential), { 0 }, { false } },
-		ButtonMeta{ ButtonId::Commercial, ButtonLayout.at(ButtonId::Commercial), { 0 }, { false } },
-		ButtonMeta{ ButtonId::Industrial, ButtonLayout.at(ButtonId::Industrial), { 0 }, { false } },
-		ButtonMeta{ ButtonId::Pollution, ButtonLayout.at(ButtonId::Pollution), { 0 }, { false } },
-		ButtonMeta{ ButtonId::Crime, ButtonLayout.at(ButtonId::Crime), { 0 }, { false } },
-		ButtonMeta{ ButtonId::Money, ButtonLayout.at(ButtonId::Money), { 0 }, { false } }
+		ButtonMeta{ ButtonId::Residential, ButtonLayout.at(ButtonId::Residential), { 0 }, { true } },
+		ButtonMeta{ ButtonId::Commercial, ButtonLayout.at(ButtonId::Commercial), { 0 }, { true } },
+		ButtonMeta{ ButtonId::Industrial, ButtonLayout.at(ButtonId::Industrial), { 0 }, { true } },
+		ButtonMeta{ ButtonId::Pollution, ButtonLayout.at(ButtonId::Pollution), { 0 }, { true } },
+		ButtonMeta{ ButtonId::Crime, ButtonLayout.at(ButtonId::Crime), { 0 }, { true } },
+		ButtonMeta{ ButtonId::Money, ButtonLayout.at(ButtonId::Money), { 0 }, { true } }
 	};
 
 
