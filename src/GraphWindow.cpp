@@ -10,8 +10,6 @@
 // file, included in this distribution, for details.
 #include "GraphWindow.h"
 
-#include "Graph.h"
-
 #include "g_map.h"
 
 #include <array>
@@ -23,7 +21,9 @@ namespace
 	const SDL_Rect ButtonDown{ 326, 0, 36, 36 };
 	const SDL_Rect Bg{ 0, 0, 264, 287 };
 
-	SDL_Rect GraphArea{ 10, 71, 242, 202 };
+	const SDL_Rect GraphLayout{ 10, 71, 242, 202 };
+	SDL_Rect GraphPosition = GraphLayout;
+
 
 	enum class HistoryGraph
 	{
@@ -57,6 +57,7 @@ namespace
 		Money
 	};
 
+
 	struct ButtonMeta
 	{
 		ButtonId id{ ButtonId::Residential };
@@ -64,6 +65,7 @@ namespace
 		SDL_Rect iconPosition{ 0 };
 		bool toggled{ false };
 	};
+
 
 	const std::map<ButtonId, SDL_Rect> ButtonLayout
 	{
@@ -75,6 +77,7 @@ namespace
 		{ ButtonId::Money, { 213, 31, 36, 36 } },
 	};
 
+
 	std::array<ButtonMeta, 6> Buttons
 	{
 		ButtonMeta{ ButtonId::Residential, ButtonLayout.at(ButtonId::Residential), { 0 }, { false } },
@@ -84,6 +87,7 @@ namespace
 		ButtonMeta{ ButtonId::Crime, ButtonLayout.at(ButtonId::Crime), { 0 }, { false } },
 		ButtonMeta{ ButtonId::Money, ButtonLayout.at(ButtonId::Money), { 0 }, { false } }
 	};
+
 
 	const std::map<ButtonId, SDL_Rect> IconRects
 	{
@@ -100,13 +104,15 @@ namespace
 GraphWindow::GraphWindow(SDL_Renderer* renderer) :
 	mRenderer(*renderer),
 	mTexture(loadTexture(renderer, "images/graph.png"))
-{}
+{
+	initTexture(mGraphTexture, GraphLayout.w, GraphLayout.h);
+}
 
 
 void GraphWindow::position(const SDL_Point& position)
 {
 	mArea = { mArea.x + position.x, mArea.y + position.y, mArea.w, mArea.h };
-	GraphArea = { mArea.x + 10, mArea.y + 71, GraphArea.w, GraphArea.h };
+	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
 
 	for (auto& button : Buttons)
 	{
@@ -140,5 +146,47 @@ void GraphWindow::draw()
 
 		SDL_RenderCopy(&mRenderer, mTexture.texture, &buttonTexture, &button.area);
 		SDL_RenderCopy(&mRenderer, mTexture.texture, &IconRects.at(button.id), &iconPosition);
+		
+		SDL_RenderCopy(&mRenderer, mGraphTexture.texture, &mGraphTexture.area, &GraphPosition);
+	}
+}
+
+
+void GraphWindow::update()
+{
+	for (auto& [type, graph] : HistoryGraphTable)
+	{
+		fillGraphPoints(graph.points, graph.history);
+	}
+
+	SDL_SetRenderTarget(MainWindowRenderer, mGraphTexture.texture);
+	
+	turnOffBlending(mGraphTexture);
+
+	SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 0);
+	SDL_RenderClear(MainWindowRenderer);
+
+	for (auto& [type, graph] : HistoryGraphTable)
+	{
+		SDL_SetRenderDrawColor(MainWindowRenderer, graph.color.r, graph.color.g, graph.color.b, 255);
+		SDL_RenderDrawLines(MainWindowRenderer, graph.points.data(), static_cast<int>(graph.points.size()));
+	}
+
+	turnOnBlending(mGraphTexture);
+	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
+}
+
+
+void GraphWindow::fillGraphPoints(Graph::PointsList& points, const GraphHistory& history)
+{
+	float sx = static_cast<float>(GraphLayout.w / 120.0f);
+	float sy = static_cast<float>(GraphLayout.h / 256.0f);
+
+	for (int i = 0; i < HistoryLength; ++i)
+	{
+		const int x = static_cast<int>(i * sx);
+		const int y = GraphLayout.h - static_cast<int>(history[i] * sy);
+
+		points[i] = { x, y };
 	}
 }

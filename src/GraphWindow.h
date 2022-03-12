@@ -10,9 +10,11 @@
 // file, included in this distribution, for details.
 #pragma once
 
-#include "SDL2/SDL.h"
+#include <SDL2/SDL.h>
 
+#include "Graph.h"
 #include "Texture.h"
+
 
 class GraphWindow
 {
@@ -28,8 +30,13 @@ public:
 
 	void draw();
 
+	void update();
+
 private:
+	void fillGraphPoints(Graph::PointsList&, const GraphHistory&);
+
 	SDL_Renderer& mRenderer;
 	const Texture mTexture;
+	Texture mGraphTexture;
 	SDL_Rect mArea{ 0, 0, 264, 287 };
 };

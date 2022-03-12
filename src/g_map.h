@@ -35,6 +35,9 @@ namespace Colors
 void initTexture(Texture& texture, const int width, const int height);
 void initOverlayTexture();
 
+void turnOffBlending(const Texture& texture);
+void turnOnBlending(const Texture& texture);
+
 void drawPopDensity();
 void drawCrimeMap();
 void drawTrafficMap();
