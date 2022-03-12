@@ -17,6 +17,7 @@
 
 #include "CityProperties.h"
 #include "Font.h"
+#include "Graph.h"
 #include "Map.h"
 
 #include "g_ani.h"
@@ -217,17 +218,6 @@ enum class HistoryGraph
     CashFlow,
     Crime,
     Pollution
-};
-
-
-struct Graph
-{
-    using PointsList = std::array<SDL_Point, HistoryLength>;
-    
-    const GraphHistory& history;
-    const std::string name;
-    const SDL_Color color;
-    PointsList points;
 };
 
 
