@@ -182,7 +182,7 @@ bool AutoGo{ false };
 
 int InitSimLoad;
 int ScenarioID;
-int NoDisasters;
+bool NoDisasters;
 
 
 void showBudgetWindow()
@@ -351,7 +351,7 @@ void sim_init()
     StartingYear = 1900;
     AutoGotoMessageLocation(true);
     CityTime = 50;
-    NoDisasters = 0;
+    NoDisasters = false;
     AutoBulldoze = true;
     AutoBudget = false;
     MessageId(NotificationId::None);
