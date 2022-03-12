@@ -900,7 +900,7 @@ void gameInit()
     centerBudgetWindow();
 
     graphWindow = new GraphWindow(MainWindowRenderer);
-    graphWindow->position({ 200, 200 });
+    //graphWindow->position({ 200, 200 });
 
     UiRects.push_back(&toolPalette.rect());
     UiRects.push_back(&UiHeaderRect);
