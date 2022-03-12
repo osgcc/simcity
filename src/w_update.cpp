@@ -34,6 +34,8 @@ namespace
     int lastCityYear{};
     int lastCityMonth{};
 
+    bool NewMonth{ false };
+
     const std::string MonthTable[12] =
     {
       "Jan",
@@ -49,6 +51,12 @@ namespace
       "Nov",
       "Dec"
     };
+}
+
+
+bool newMonth()
+{
+    return NewMonth;
 }
 
 
@@ -112,10 +120,13 @@ void updateDate()
 
     doMessage();
 
+    NewMonth = false;
     if ((LastCityYear() != year) || (LastCityMonth() != month))
     {
         lastCityYear = year;
         lastCityMonth = month;
+
+        NewMonth = true;
 
         if (month == 0 && !autoBudget() && !NewMap)
         {

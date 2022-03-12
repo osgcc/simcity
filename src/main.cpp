@@ -212,8 +212,10 @@ void sim_exit()
 
 void sim_update()
 {
-    graphWindow->update();
     updateDate();
+
+    if (newMonth()) { graphWindow->update(); }
+
     scoreDoer(cityProperties);
 }
 
