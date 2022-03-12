@@ -425,6 +425,12 @@ void centerBudgetWindow()
 }
 
 
+void centerGraphWindow()
+{
+    graphWindow->position({ WindowSize.x / 2 - graphWindow->rect().w / 2, WindowSize.y / 2 - graphWindow->rect().h / 2 });
+}
+
+
 void windowResized(const Vector<int>& size)
 {
     getWindowSize();
@@ -434,6 +440,7 @@ void windowResized(const Vector<int>& size)
 
     updateMapDrawParameters();
     centerBudgetWindow();
+    centerGraphWindow();
 
     UiHeaderRect.w = WindowSize.x - 20;
 }
@@ -900,7 +907,7 @@ void gameInit()
     centerBudgetWindow();
 
     graphWindow = new GraphWindow(MainWindowRenderer);
-    graphWindow->position({ 200, 200 });
+    centerGraphWindow();
 
     UiRects.push_back(&toolPalette.rect());
     UiRects.push_back(&UiHeaderRect);
