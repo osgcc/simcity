@@ -25,6 +25,8 @@ public:
 
 	void position(const SDL_Point& position);
 	void injectMouseDown(const SDL_Point& position);
+	void injectMouseUp();
+	void injectMouseMotion(const SDL_Point& delta);
 
 	const SDL_Rect& rect() const { return mArea; }
 
@@ -39,4 +41,6 @@ private:
 	const Texture mTexture;
 	Texture mGraphTexture;
 	SDL_Rect mArea{ 0, 0, 264, 287 };
+
+	bool mDragging{ false };
 };

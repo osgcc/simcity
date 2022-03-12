@@ -24,6 +24,9 @@ namespace
 	const SDL_Rect GraphLayout{ 10, 71, 242, 202 };
 	SDL_Rect GraphPosition = GraphLayout;
 
+	const SDL_Rect TitleBarLayout{ 6, 5, 250, 21 };
+	SDL_Rect TitleBarPosition = TitleBarLayout;
+
 
 	enum class ButtonId
 	{
@@ -98,6 +101,8 @@ namespace
 				return button.toggled;
 			}
 		}
+
+		return false;
 	}
 };
 
@@ -114,6 +119,7 @@ void GraphWindow::position(const SDL_Point& position)
 {
 	mArea = { mArea.x + position.x, mArea.y + position.y, mArea.w, mArea.h };
 	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
+	TitleBarPosition = { TitleBarLayout.x + mArea.x, TitleBarLayout.y + mArea.y, TitleBarLayout.w, TitleBarLayout.h };
 
 	for (auto& button : Buttons)
 	{
@@ -125,6 +131,12 @@ void GraphWindow::position(const SDL_Point& position)
 
 void GraphWindow::injectMouseDown(const SDL_Point& position)
 {
+	if (SDL_PointInRect(&position, &TitleBarPosition))
+	{
+		mDragging = true;
+		return;
+	}
+
 	for (auto& button : Buttons)
 	{
 		if (SDL_PointInRect(&position, &button.area))
@@ -134,6 +146,18 @@ void GraphWindow::injectMouseDown(const SDL_Point& position)
 			return; // assumption: mouse position can only ever be within one button
 		}
 	}
+}
+
+void GraphWindow::injectMouseUp()
+{
+	mDragging = false;
+}
+
+
+void GraphWindow::injectMouseMotion(const SDL_Point& delta)
+{
+	if (!mDragging) { return; }
+	position(delta);
 }
 
 

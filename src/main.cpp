@@ -100,6 +100,7 @@ namespace
     bool SimulationStep{ false };
     bool AnimationStep{ false };
     bool AutoBudget{ false };
+    bool ShowGraphWindow{ false };
 
     constexpr unsigned int SimStepDefaultTime{ 100 };
     constexpr unsigned int AnimationStepDefaultTime{ 150 };
@@ -214,7 +215,7 @@ void sim_update()
 {
     updateDate();
 
-    if (newMonth()) { graphWindow->update(); }
+    if (newMonth() && ShowGraphWindow) { graphWindow->update(); }
 
     scoreDoer(cityProperties);
 }
@@ -504,6 +505,11 @@ void handleKeyEvent(SDL_Event& event)
         //MakeFire();
         break;
 
+    case SDLK_F9:
+        ShowGraphWindow = !ShowGraphWindow;
+        if (ShowGraphWindow) { graphWindow->update(); }
+        break;
+
     case SDLK_F10:
         BudgetWindowShown = !BudgetWindowShown;
         if (BudgetWindowShown) { budgetWindow->update(); }
@@ -522,12 +528,17 @@ void handleKeyEvent(SDL_Event& event)
 
 void handleMouseEvent(SDL_Event& event)
 {
+    SDL_Point mouseMotionDelta{};
+
     switch (event.type)
     {
     case SDL_MOUSEMOTION:
         MousePosition = { event.motion.x, event.motion.y };
+        mouseMotionDelta = { event.motion.xrel, event.motion.yrel };
 
         calculateMouseToWorld();
+
+        if (ShowGraphWindow) { graphWindow->injectMouseMotion(mouseMotionDelta); }
 
         if ((SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON_RMASK) != 0)
         {
@@ -574,10 +585,8 @@ void handleMouseEvent(SDL_Event& event)
             MouseClicked = true;
             MouseClickPosition = { event.button.x, event.button.y };
 
-            if (BudgetWindowShown)
-            {
-                budgetWindow->injectMouseUp();
-            }
+            if (BudgetWindowShown) { budgetWindow->injectMouseUp(); }
+            if (ShowGraphWindow) { graphWindow->injectMouseUp(); }
         }
         break;
 
@@ -939,10 +948,9 @@ void gameInit()
             }
             toolPalette.draw();
 
+            if (ShowGraphWindow) { graphWindow->draw(); }
             if (DrawDebug) { drawDebug(); }
         }
-
-        graphWindow->draw();
 
         SDL_RenderPresent(MainWindowRenderer);
 
