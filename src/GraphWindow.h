@@ -23,7 +23,9 @@ public:
 	GraphWindow(SDL_Renderer*);
 	~GraphWindow() = default;
 
-	void move(const SDL_Point& position);
+	void move(const SDL_Point&);
+	void position(const SDL_Point&);
+
 	void injectMouseDown(const SDL_Point& position);
 	void injectMouseUp();
 	void injectMouseMotion(const SDL_Point& delta);

@@ -115,9 +115,23 @@ GraphWindow::GraphWindow(SDL_Renderer* renderer) :
 }
 
 
-void GraphWindow::move(const SDL_Point& position)
+void GraphWindow::move(const SDL_Point& movement)
 {
-	mArea = { mArea.x + position.x, mArea.y + position.y, mArea.w, mArea.h };
+	mArea = { mArea.x + movement.x, mArea.y + movement.y, mArea.w, mArea.h };
+	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
+	TitleBarPosition = { TitleBarLayout.x + mArea.x, TitleBarLayout.y + mArea.y, TitleBarLayout.w, TitleBarLayout.h };
+
+	for (auto& button : Buttons)
+	{
+		button.area = { ButtonLayout.at(button.id).x + mArea.x, ButtonLayout.at(button.id).y + mArea.y, 36, 36 };
+		button.iconPosition = { button.area.x + 6, button.area.y + 6, 22, 22 };
+	}
+}
+
+
+void GraphWindow::position(const SDL_Point& position)
+{
+	mArea = { position.x, position.y, mArea.w, mArea.h };
 	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
 	TitleBarPosition = { TitleBarLayout.x + mArea.x, TitleBarLayout.y + mArea.y, TitleBarLayout.w, TitleBarLayout.h };
 
