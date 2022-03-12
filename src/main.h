@@ -154,7 +154,6 @@ extern int InitSimLoad;
 extern int DoInitialEval;
 
 extern int NewMapFlags[NMAPS];
-extern int MustUpdateOptions;
 
 extern SDL_Renderer* MainWindowRenderer;
 extern Texture SmallTileset;

@@ -28,9 +28,6 @@
 #include <string>
 
 
-int MustUpdateOptions;
-
-
 namespace
 {
     int lastCityTime{};

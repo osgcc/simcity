@@ -9,6 +9,8 @@ namespace
 	const SDL_Rect ButtonDown{ 326, 0, 36, 36 };
 	const SDL_Rect Bg{ 0, 0, 264, 287 };
 
+	SDL_Rect GraphArea{ 10, 71, 242, 202 };
+
 	enum class ButtonId
 	{
 		Residential,
@@ -68,6 +70,7 @@ GraphWindow::GraphWindow(SDL_Renderer* renderer) :
 void GraphWindow::position(const SDL_Point& position)
 {
 	mArea = { mArea.x + position.x, mArea.y + position.y, mArea.w, mArea.h };
+	GraphArea = { mArea.x + 10, mArea.y + 71, GraphArea.w, GraphArea.h };
 
 	for (auto& button : Buttons)
 	{

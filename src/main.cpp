@@ -347,7 +347,6 @@ void sim_init()
 {
     userSoundOn(true);
 
-    MustUpdateOptions = 1;
     ScenarioID = 0;
     StartingYear = 1900;
     AutoGotoMessageLocation(true);

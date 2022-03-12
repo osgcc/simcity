@@ -123,7 +123,7 @@ int loadFile(char *filename)
   SimSpeed = MiscHis[57];
   //  sim_skips = sim_skip = 0;
   ChangeCensus();
-  MustUpdateOptions = 1;
+  //MustUpdateOptions = 1;
 
   /* yayaya
 
