@@ -210,27 +210,6 @@ void sim_exit()
 }
 
 
-enum class HistoryGraph
-{
-    Residential,
-    Commercial,
-    Industrial,
-    CashFlow,
-    Crime,
-    Pollution
-};
-
-
-std::map<HistoryGraph, Graph> HistoryGraphTable
-{
-    { HistoryGraph::Residential, { ResHis, "Residential", Colors::LightGreen, { 0 } } },
-    { HistoryGraph::Commercial, { ComHis, "Commercial", Colors::DarkBlue, { 0 } } },
-    { HistoryGraph::Industrial, { IndHis, "Industrial", Colors::Gold, { 0 } } },
-    { HistoryGraph::CashFlow, { MoneyHis, "Cash Flow", Colors::Turquoise, { 0 } } },
-    { HistoryGraph::Crime, { CrimeHis, "Crime", Colors::Red, { 0 } } },
-    { HistoryGraph::Pollution, { PollutionHis, "Pollution", Colors::Olive, { 0 } } },
-};
-
 
 void fillGraphPoints(Graph::PointsList& points, const GraphHistory& history, const int graphWidth, const int graphHeight)
 {
@@ -253,20 +232,24 @@ void drawGraphs()
     const SDL_Rect rect{ 130, UiHeaderRect.y + UiHeaderRect.h + 5, 240, 200 };
     SDL_RenderFillRect(MainWindowRenderer, &rect);
 
+    /*
     for (auto& [type, graph] : HistoryGraphTable)
     {
         SDL_SetRenderDrawColor(MainWindowRenderer, graph.color.r, graph.color.g, graph.color.b, 255);
         SDL_RenderDrawLines(MainWindowRenderer, graph.points.data(), static_cast<int>(graph.points.size()));
     }
+    */
 }
 
 
 void sim_update()
 {
+    /*
     for (auto& [ type, graph ] : HistoryGraphTable)
     {
         fillGraphPoints(graph.points, graph.history, 240, 200);
     }
+    */
 
     updateDate();
     scoreDoer(cityProperties);

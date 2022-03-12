@@ -10,6 +10,10 @@
 // file, included in this distribution, for details.
 #include "GraphWindow.h"
 
+#include "Graph.h"
+
+#include "g_map.h"
+
 #include <array>
 #include <map>
 
@@ -20,6 +24,28 @@ namespace
 	const SDL_Rect Bg{ 0, 0, 264, 287 };
 
 	SDL_Rect GraphArea{ 10, 71, 242, 202 };
+
+	enum class HistoryGraph
+	{
+		Residential,
+		Commercial,
+		Industrial,
+		CashFlow,
+		Crime,
+		Pollution
+	};
+
+
+	std::map<HistoryGraph, Graph> HistoryGraphTable
+	{
+		{ HistoryGraph::Residential, { ResHis, "Residential", Colors::LightGreen, { 0 } } },
+		{ HistoryGraph::Commercial, { ComHis, "Commercial", Colors::DarkBlue, { 0 } } },
+		{ HistoryGraph::Industrial, { IndHis, "Industrial", Colors::Gold, { 0 } } },
+		{ HistoryGraph::CashFlow, { MoneyHis, "Cash Flow", Colors::Turquoise, { 0 } } },
+		{ HistoryGraph::Crime, { CrimeHis, "Crime", Colors::Red, { 0 } } },
+		{ HistoryGraph::Pollution, { PollutionHis, "Pollution", Colors::Olive, { 0 } } },
+	};
+
 
 	enum class ButtonId
 	{
