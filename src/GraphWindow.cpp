@@ -25,28 +25,6 @@ namespace
 	SDL_Rect GraphPosition = GraphLayout;
 
 
-	enum class HistoryGraph
-	{
-		Residential,
-		Commercial,
-		Industrial,
-		CashFlow,
-		Crime,
-		Pollution
-	};
-
-
-	std::map<HistoryGraph, Graph> HistoryGraphTable
-	{
-		{ HistoryGraph::Residential, { ResHis, "Residential", Colors::LightGreen, { 0 } } },
-		{ HistoryGraph::Commercial, { ComHis, "Commercial", Colors::DarkBlue, { 0 } } },
-		{ HistoryGraph::Industrial, { IndHis, "Industrial", Colors::Gold, { 0 } } },
-		{ HistoryGraph::CashFlow, { MoneyHis, "Cash Flow", Colors::Turquoise, { 0 } } },
-		{ HistoryGraph::Crime, { CrimeHis, "Crime", Colors::Red, { 0 } } },
-		{ HistoryGraph::Pollution, { PollutionHis, "Pollution", Colors::Olive, { 0 } } },
-	};
-
-
 	enum class ButtonId
 	{
 		Residential,
@@ -55,6 +33,17 @@ namespace
 		Pollution,
 		Crime,
 		Money
+	};
+
+
+	std::map<ButtonId, Graph> HistoryGraphTable
+	{
+		{ ButtonId::Residential, { ResHis, "Residential", Colors::LightGreen, { 0 } } },
+		{ ButtonId::Commercial, { ComHis, "Commercial", Colors::DarkBlue, { 0 } } },
+		{ ButtonId::Industrial, { IndHis, "Industrial", Colors::Gold, { 0 } } },
+		{ ButtonId::Money, { MoneyHis, "Cash Flow", Colors::Turquoise, { 0 } } },
+		{ ButtonId::Crime, { CrimeHis, "Crime", Colors::Red, { 0 } } },
+		{ ButtonId::Pollution, { PollutionHis, "Pollution", Colors::Olive, { 0 } } }
 	};
 
 
@@ -98,6 +87,18 @@ namespace
 		{ ButtonId::Crime, { 285, 151, 22, 22 } },
 		{ ButtonId::Money, { 285, 174, 22, 22 } }
 	};
+
+
+	bool ButtonToggled(const ButtonId id)
+	{
+		for (auto& button : Buttons)
+		{
+			if (button.id == id)
+			{
+				return button.toggled;
+			}
+		}
+	}
 };
 
 
@@ -129,6 +130,8 @@ void GraphWindow::injectMouseDown(const SDL_Point& position)
 		if (SDL_PointInRect(&position, &button.area))
 		{
 			button.toggled = !button.toggled;
+			update();
+			return; // assumption: mouse position can only ever be within one button
 		}
 	}
 }
@@ -168,6 +171,7 @@ void GraphWindow::update()
 
 	for (auto& [type, graph] : HistoryGraphTable)
 	{
+		if (!ButtonToggled(type)) { continue; }
 		SDL_SetRenderDrawColor(MainWindowRenderer, graph.color.r, graph.color.g, graph.color.b, 255);
 		SDL_RenderDrawLines(MainWindowRenderer, graph.points.data(), static_cast<int>(graph.points.size()));
 	}
