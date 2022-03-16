@@ -106,19 +106,19 @@ void FileIo::pickOpenFile()
         return;
     }
 
-    IShellItem* psiResult{ nullptr };
-    if (SUCCEEDED(fileOpenDialog->GetResult(&psiResult)))
+    IShellItem* item{ nullptr };
+    if (SUCCEEDED(fileOpenDialog->GetResult(&item)))
     {
         PWSTR filePath{ nullptr };
 
-        if (!SUCCEEDED(psiResult->GetDisplayName(SIGDN_FILESYSPATH, &filePath)))
+        if (!SUCCEEDED(item->GetDisplayName(SIGDN_FILESYSPATH, &filePath)))
         {
             throw std::runtime_error("Unable to get file name");
         }
         mFileNameW = filePath;
         CoTaskMemFree(filePath);
 
-        psiResult->Release();
+        item->Release();
     }
 
     fileOpenDialog->Release();
