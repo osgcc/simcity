@@ -72,12 +72,12 @@ FileIo::FileIo(SDL_Window& window):
 }
 
 
-void FileIo::saveFile()
+void FileIo::pickSaveFile()
 {
 }
 
 
-void FileIo::openFile()
+void FileIo::pickOpenFile()
 {
     // CoCreate the File Open Dialog object.
     IFileDialog* fileOpenDialog{ nullptr };

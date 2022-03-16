@@ -27,8 +27,8 @@ public:
 
 	const std::string& savePath() const { return mSavePath; }
 
-	void saveFile();
-	void openFile();
+	void pickSaveFile();
+	void pickOpenFile();
 
 private:
 	SDL_Window& mWindow;
