@@ -77,11 +77,17 @@ void FileIo::pickSaveFile()
 }
 
 
+/**
+ * There are a few assumptions here regarding the Win32 API's handling of the file
+ * open interface -- creating items, setting parameters and options, etc. are all
+ * assumed to not fail. If they fail this will undoubtedly result in other issues.
+ * 
+ * The checks are not present for the sake of brevity. If it's determined that the
+ * hresult checks are necessary they can be added as needed.
+ */
 void FileIo::pickOpenFile()
 {
-    // CoCreate the File Open Dialog object.
     IFileDialog* fileOpenDialog{ nullptr };
-
     if (!SUCCEEDED(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&fileOpenDialog))))
     {
         throw std::runtime_error("Unable to create file IO dialog");
