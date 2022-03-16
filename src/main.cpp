@@ -582,7 +582,6 @@ void handleMouseEvent(SDL_Event& event)
             {
                 ToolDown(TilePointedAt.x, TilePointedAt.y, budget);
             }
-
         }
         break;
 
