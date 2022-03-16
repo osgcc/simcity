@@ -16,6 +16,7 @@
 #include "GraphWindow.h"
 
 #include "CityProperties.h"
+#include "FileIo.h"
 #include "Font.h"
 #include "Graph.h"
 #include "Map.h"
@@ -122,6 +123,8 @@ namespace
     StringRender* stringRenderer{ nullptr };
 
     CityProperties cityProperties;
+
+    FileIo* fileIo{ nullptr };
 
     unsigned int speedModifier()
     {
@@ -977,6 +980,7 @@ void cleanUp()
     delete budgetWindow;
     delete graphWindow;
     delete stringRenderer;
+    delete fileIo;
 
     SDL_DestroyTexture(BigTileset.texture);
     SDL_DestroyTexture(RCI_Indicator.texture);
@@ -1006,6 +1010,10 @@ int main(int argc, char* argv[])
 
         MainFont = new Font("res/raleway-medium.ttf", 12);
         MainBigFont = new Font("res/raleway-medium.ttf", 14);
+
+        fileIo = new FileIo(*MainWindow);
+
+        fileIo->openFile();
 
         initViewParamters();
         updateMapDrawParameters();
