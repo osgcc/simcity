@@ -26,14 +26,15 @@ public:
 	~FileIo() = default;
 
 	const std::string& savePath() const { return mSavePath; }
+	const std::string& fileName() const { return mFileName; }
 
-	void pickSaveFile();
-	void pickOpenFile();
+	bool pickSaveFile();
+	bool pickOpenFile();
 
 private:
 	enum class FileOperation { Open, Save };
 
-	void showFileDialog(FileOperation);
+	bool showFileDialog(FileOperation);
 	void extractFileName();
 
 	SDL_Window& mWindow;

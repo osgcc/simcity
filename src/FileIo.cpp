@@ -72,25 +72,35 @@ FileIo::FileIo(SDL_Window& window):
 }
 
 
-void FileIo::pickSaveFile()
+/**
+ * \return Returns true if a file name was selected, false otherwise.
+ */
+bool FileIo::pickSaveFile()
 {
-    showFileDialog(FileOperation::Save);
-    extractFileName();
+    const auto filePicked = showFileDialog(FileOperation::Save);
+    
+    if (filePicked)
+    {
+        extractFileName();
+    }
+
+    return filePicked;
 }
 
 
 /**
- * There are a few assumptions here regarding the Win32 API's handling of the file
- * open interface -- creating items, setting parameters and options, etc. are all
- * assumed to not fail. If they fail this will undoubtedly result in other issues.
- * 
- * The checks are not present for the sake of brevity. If it's determined that the
- * hresult checks are necessary they can be added as needed.
+ * \return Returns true if a file name was selected, false otherwise.
  */
-void FileIo::pickOpenFile()
+bool FileIo::pickOpenFile()
 {
-    showFileDialog(FileOperation::Open);
-    extractFileName();
+    const auto filePicked = showFileDialog(FileOperation::Open);
+
+    if (filePicked)
+    {
+        extractFileName();
+    }
+
+    return filePicked;
 }
 
 
@@ -102,7 +112,17 @@ void FileIo::extractFileName()
 }
 
 
-void FileIo::showFileDialog(FileOperation operation)
+/**
+ * There are a few assumptions here regarding the Win32 API's handling of the file
+ * pick interface -- creating items, setting parameters and options, etc. are all
+ * assumed to not fail. If they fail this will undoubtedly result in other issues.
+ *
+ * The checks are not present for the sake of brevity. If it's determined that the
+ * hresult checks are necessary they can be added as needed.
+ * 
+ * \return Returns true if a file name has been picked. False otherwise.
+ */
+bool FileIo::showFileDialog(FileOperation operation)
 {
     CLSID fileOperation
     {
@@ -136,7 +156,7 @@ void FileIo::showFileDialog(FileOperation operation)
     if (!SUCCEEDED(fileDialog->Show(mWmInfo.info.win.window)))
     {
         fileDialog->Release();
-        return;
+        return false;
     }
 
     IShellItem* item{ nullptr };
@@ -155,4 +175,6 @@ void FileIo::showFileDialog(FileOperation operation)
     }
 
     fileDialog->Release();
+
+    return true;
 }
