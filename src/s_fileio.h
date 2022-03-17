@@ -17,3 +17,5 @@ class CityProperties;
 
 int LoadCity(const std::string& filename);
 void LoadScenario(int s, CityProperties&, Budget&);
+void SaveCityAs(const std::string& filename);
+void SaveCity();
