@@ -1014,6 +1014,7 @@ int main(int argc, char* argv[])
         fileIo = new FileIo(*MainWindow);
 
         fileIo->pickOpenFile();
+        fileIo->pickSaveFile();
 
         initViewParamters();
         updateMapDrawParameters();

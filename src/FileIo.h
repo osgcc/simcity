@@ -31,6 +31,11 @@ public:
 	void pickOpenFile();
 
 private:
+	enum class FileOperation { Open, Save };
+
+	void showFileDialog(FileOperation);
+	void extractFileName();
+
 	SDL_Window& mWindow;
 	SDL_SysWMinfo mWmInfo{};
 

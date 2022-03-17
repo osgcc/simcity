@@ -74,6 +74,8 @@ FileIo::FileIo(SDL_Window& window):
 
 void FileIo::pickSaveFile()
 {
+    showFileDialog(FileOperation::Save);
+    extractFileName();
 }
 
 
@@ -87,8 +89,28 @@ void FileIo::pickSaveFile()
  */
 void FileIo::pickOpenFile()
 {
+    showFileDialog(FileOperation::Open);
+    extractFileName();
+}
+
+
+void FileIo::extractFileName()
+{
+    std::size_t location = mFileNameW.find_last_of(L"/\\");
+    mFileNameW = mFileNameW.substr(location + 1);
+    mFileName = StringFromWString(mFileNameW);
+}
+
+
+void FileIo::showFileDialog(FileOperation operation)
+{
+    CLSID fileOperation
+    {
+        operation == FileOperation::Open ? CLSID_FileOpenDialog : CLSID_FileSaveDialog
+    };
+    
     IFileDialog* fileDialog{ nullptr };
-    if (!SUCCEEDED(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&fileDialog))))
+    if (!SUCCEEDED(CoCreateInstance(fileOperation, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&fileDialog))))
     {
         throw std::runtime_error("Unable to create file IO dialog");
     }
@@ -105,6 +127,11 @@ void FileIo::pickOpenFile()
     fileDialog->SetFileTypes(ARRAYSIZE(FileTypeFilter), FileTypeFilter);
     fileDialog->SetFileTypeIndex(1);
     fileDialog->SetDefaultExtension(L"cty");
+
+    if (operation == FileOperation::Save && !mFileNameW.empty())
+    {
+        fileDialog->SetFileName(mFileNameW.c_str());
+    }
 
     if (!SUCCEEDED(fileDialog->Show(mWmInfo.info.win.window)))
     {
@@ -128,8 +155,4 @@ void FileIo::pickOpenFile()
     }
 
     fileDialog->Release();
-
-    std::size_t location = mFileNameW.find_last_of(L"/\\");
-    mFileNameW = mFileNameW.substr(location + 1);
-    mFileName = StringFromWString(mFileNameW);
 }
