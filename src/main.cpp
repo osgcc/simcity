@@ -1013,7 +1013,7 @@ int main(int argc, char* argv[])
 
         fileIo = new FileIo(*MainWindow);
 
-        fileIo->openFile();
+        fileIo->pickOpenFile();
 
         initViewParamters();
         updateMapDrawParameters();

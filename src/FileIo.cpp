@@ -87,33 +87,33 @@ void FileIo::pickSaveFile()
  */
 void FileIo::pickOpenFile()
 {
-    IFileDialog* fileOpenDialog{ nullptr };
-    if (!SUCCEEDED(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&fileOpenDialog))))
+    IFileDialog* fileDialog{ nullptr };
+    if (!SUCCEEDED(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&fileDialog))))
     {
         throw std::runtime_error("Unable to create file IO dialog");
     }
 
     IShellItem* defaultFolder{ nullptr };
     SHCreateItemFromParsingName(mSavePathW.c_str(), nullptr, IID_PPV_ARGS(&defaultFolder));
-    fileOpenDialog->SetDefaultFolder(defaultFolder);
+    fileDialog->SetDefaultFolder(defaultFolder);
     defaultFolder->Release();
 
     DWORD dwFlags{};
-    fileOpenDialog->GetOptions(&dwFlags);
+    fileDialog->GetOptions(&dwFlags);
 
-    fileOpenDialog->SetOptions(dwFlags | FOS_FORCEFILESYSTEM);
-    fileOpenDialog->SetFileTypes(ARRAYSIZE(FileTypeFilter), FileTypeFilter);
-    fileOpenDialog->SetFileTypeIndex(1);
-    fileOpenDialog->SetDefaultExtension(L"cty");
+    fileDialog->SetOptions(dwFlags | FOS_FORCEFILESYSTEM);
+    fileDialog->SetFileTypes(ARRAYSIZE(FileTypeFilter), FileTypeFilter);
+    fileDialog->SetFileTypeIndex(1);
+    fileDialog->SetDefaultExtension(L"cty");
 
-    if (!SUCCEEDED(fileOpenDialog->Show(mWmInfo.info.win.window)))
+    if (!SUCCEEDED(fileDialog->Show(mWmInfo.info.win.window)))
     {
-        fileOpenDialog->Release();
+        fileDialog->Release();
         return;
     }
 
     IShellItem* item{ nullptr };
-    if (SUCCEEDED(fileOpenDialog->GetResult(&item)))
+    if (SUCCEEDED(fileDialog->GetResult(&item)))
     {
         PWSTR filePath{ nullptr };
 
@@ -127,7 +127,7 @@ void FileIo::pickOpenFile()
         item->Release();
     }
 
-    fileOpenDialog->Release();
+    fileDialog->Release();
 
     std::size_t location = mFileNameW.find_last_of(L"/\\");
     mFileNameW = mFileNameW.substr(location + 1);
