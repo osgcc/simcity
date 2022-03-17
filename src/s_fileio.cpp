@@ -97,7 +97,7 @@ static int _load_file(const std::string filename, const std::string& dir)
 }
 
 
-int loadFile(char *filename)
+int loadFile(const std::string& filename)
 {
     /*
   int l;
@@ -232,46 +232,18 @@ void DidLoadScenario()
 
 int LoadCity(const std::string& filename)
 {
-  /*
-    char *cp;
-  char msg[256];
-
-  if (loadFile(filename))
-  {
-      CityFileName = filename;
-
-      filename = (char *)malloc(strlen(cp) + 1);
-    strcpy(filename, cp);
-    setAnyCityName(filename);
-
-    InvalidateMaps();
-    InvalidateEditors();
-    DidLoadCity();
-    return (1);
-  } else {
-    sprintf(msg, "Unable to load a city from the file named \"%s\". %s",
-	    filename ? filename : "(null)",
-	    errno ? strerror(errno) : "");
-    DidntLoadCity(msg);
-    return (0);
-
-  }
-  */
+    if (loadFile(filename))
+    {
+        CityFileName = filename;
+        return 1;
+    }
+    else
+    {
+        std::cout << "Unable to load a city from the file named '" << filename << "'" << std::endl;
+        return 0;
+    }
 
     return 0;
-}
-
-
-void DidLoadCity()
-{
-  Eval("UIDidLoadCity");
-}
-
-
-void DidntLoadCity(const std::string& msg)
-{
-    std::string buf = "UIDidntLoadCity {" + msg + "}";
-    Eval(buf.c_str());
 }
 
 
