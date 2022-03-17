@@ -268,33 +268,12 @@ void DidntSaveCity(const std::string& msg)
 
 void SaveCityAs(const std::string& filename)
 {
-    /*
-  char msg[256];
-  char *cp;
+    CityFileName = filename;
 
-  if (CityFileName != NULL)
-    free(CityFileName);
-  CityFileName = (char *)malloc(strlen(filename) + 1);
-  strcpy(CityFileName, filename);
-
-  if (saveFile(CityFileName)) {
-    if (cp = (char *)rindex(filename, '.'))
-      *cp = 0;
-    if (cp = (char *)rindex(filename, '/'))
-      cp++;
-    else
-      cp = filename;
-    filename = (char *)malloc(strlen(cp) + 1);
-    strcpy(filename, cp);
-    setCityName(cp);
-    DidSaveCity();
-  } else {
-    sprintf(msg, "Unable to save the city to the file named \"%s\". %s",
-        CityFileName ? CityFileName : "(null)",
-        errno ? strerror(errno) : "");
-    DidntSaveCity(msg);
-  }
-  */
+    if (!saveFile(CityFileName))
+    {
+        std::cout << "Unable to save the city to the file named '" << CityFileName << "'" << std::endl;
+    }
 }
 
 
