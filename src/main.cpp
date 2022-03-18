@@ -508,6 +508,25 @@ void handleKeyEvent(SDL_Event& event)
         SimSpeed(SimulationSpeed::AfricanSwallow);
         break;
 
+    case SDLK_F2:
+        if (!fileIo->filePicked() || SDL_GetModState() & (KMOD_LSHIFT | KMOD_RSHIFT))
+        {
+            if (!fileIo->pickSaveFile())
+            {
+                break;
+            }
+        }
+
+        SaveCity();
+        break;
+
+    case SDLK_F3:
+        if (fileIo->pickOpenFile())
+        {
+            LoadCity(fileIo->fileName());
+        }
+        break;
+
     case SDLK_F5:
         //MakeTornado();
         //MakeFlood();
