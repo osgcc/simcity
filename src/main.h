@@ -160,6 +160,7 @@ extern Texture SmallTileset;
 
 void showBudgetWindow();
 bool autoBudget();
+bool autoGoto();
 
 void sim_exit();
 const Point<int>& viewOffset();

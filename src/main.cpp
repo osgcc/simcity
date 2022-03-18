@@ -202,6 +202,12 @@ bool autoBudget()
 }
 
 
+bool autoGoto()
+{
+    return AutoGo;
+}
+
+
 SDL_Rect& miniMapTileRect()
 {
     return MiniMapTileRect;
