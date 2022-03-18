@@ -72,6 +72,12 @@ FileIo::FileIo(SDL_Window& window):
 }
 
 
+bool FileIo::filePicked() const
+{
+    return !mFileName.empty();
+}
+
+
 /**
  * \return Returns true if a file name was selected, false otherwise.
  */

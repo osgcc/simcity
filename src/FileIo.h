@@ -31,6 +31,8 @@ public:
 	bool pickSaveFile();
 	bool pickOpenFile();
 
+	bool filePicked() const;
+
 private:
 	enum class FileOperation { Open, Save };
 
