@@ -311,7 +311,6 @@ void sim_init()
     Exit = false;
 
     InitializeSound();
-    initMapArrays();
     StopEarthquake();
     ResetMapState();
     ResetEditorState();
@@ -320,6 +319,69 @@ void sim_init()
     budget.CurrentFunds(5000);
     SetGameLevelFunds(StartupGameLevel, cityProperties, budget);
     SimSpeed(SimulationSpeed::Paused);
+}
+
+
+void DoPlayNewCity(CityProperties& properties, Budget& budget)
+{
+    Eval("UIPlayNewCity");
+
+    properties.GameLevel(0);
+    properties.CityName("NowHere");
+    GenerateNewCity(properties, budget);
+
+    Resume();
+    SimSpeed(SimulationSpeed::Normal);
+}
+
+
+void DoStartScenario(int scenario)
+{
+    Eval("UIStartScenario " + std::to_string(scenario));
+}
+
+
+void PrimeGame(CityProperties& properties, Budget& budget)
+{
+    switch (Startup)
+    {
+    case -2: /* Load a city */
+        if (LoadCity(StartupName))
+        {
+            StartupName = "";
+            break;
+        }
+
+    case -1:
+        if (!StartupName.empty())
+        {
+            properties.CityName(StartupName);
+            StartupName = "";
+        }
+        else
+        {
+            properties.CityName("NowHere");
+        }
+        DoPlayNewCity(properties, budget);
+        break;
+
+    case 0:
+        throw std::runtime_error("Unexpected startup switch: " + std::to_string(Startup));
+        break;
+
+    default: /* scenario number */
+        DoStartScenario(Startup);
+        break;
+    }
+}
+
+
+void ResetGame()
+{
+    sim_init();
+    PrimeGame(cityProperties, budget);
+    DrawMiniMap();
+    DrawBigMap();
 }
 
 
@@ -539,6 +601,10 @@ void handleKeyEvent(SDL_Event& event)
         //MakeFlood();
         //MakeMeltdown();
         //MakeFire();
+        break;
+
+    case SDLK_F7:
+        ResetGame();
         break;
 
     case SDLK_F9:
@@ -853,60 +919,6 @@ void drawDebug()
     sstream.str("");
     sstream << "PolicePop: " << PolicePop << " FireStPop: " << FireStPop;
     stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 13 });
-}
-
-
-void DoPlayNewCity(CityProperties& properties, Budget& budget)
-{
-    Eval("UIPlayNewCity");
-
-    properties.GameLevel(0);
-    properties.CityName("NowHere");
-    GenerateNewCity(properties, budget);
-
-    Resume();
-    SimSpeed(SimulationSpeed::Normal);
-}
-
-
-void DoStartScenario(int scenario)
-{
-    Eval("UIStartScenario " + std::to_string(scenario));
-}
-
-
-void PrimeGame(CityProperties& properties, Budget& budget)
-{
-    switch (Startup)
-    {
-    case -2: /* Load a city */
-        if (LoadCity(StartupName))
-        {
-            StartupName = "";
-            break;
-        }
-
-    case -1:
-        if (!StartupName.empty())
-        {
-            properties.CityName(StartupName);
-            StartupName = "";
-        }
-        else
-        {
-            properties.CityName("NowHere");
-        }
-        DoPlayNewCity(properties, budget);
-        break;
-
-    case 0:
-        throw std::runtime_error("Unexpected startup switch: " + std::to_string(Startup));
-        break;
-
-    default: /* scenario number */
-        DoStartScenario(Startup);
-        break;
-    }
 }
 
 
