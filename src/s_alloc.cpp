@@ -119,7 +119,26 @@ namespace
 
     void resetHistoryArrays()
     {
-       
+         ResHis.fill(0);
+         ComHis.fill(0);
+         IndHis.fill(0);
+
+         MoneyHis.fill(0);
+         PollutionHis.fill(0);
+         CrimeHis.fill(0);
+         MiscHis.fill(0);
+
+         ResHis120Years.fill(0);
+         ComHis120Years.fill(0);
+         IndHis120Years.fill(0);
+
+         MoneyHis120Years.fill(0);
+         PollutionHis120Years.fill(0);
+         CrimeHis120Years.fill(0);
+         MiscHis120Years.fill(0);
+
+         MiscHis.fill(0);
+         PowerMap.fill(0);
     }
 };
 
@@ -131,7 +150,4 @@ void initMapArrays()
     resetHistoryArrays();
 
     resetHistoryArrays();
-
-    MiscHis.fill(0);
-    PowerMap.fill(0);
 }
