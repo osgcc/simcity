@@ -12,6 +12,7 @@
 
 #include "Budget.h"
 #include "CityProperties.h"
+#include "Map.h"
 
 #include "s_alloc.h"
 #include "s_init.h"
@@ -21,6 +22,7 @@
 #include "w_update.h"
 #include "w_util.h"
 
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -34,12 +36,6 @@ std::string CityFileName;
 static bool _load_int(int& buf, size_t len, FILE* f)
 {
     return fread(&buf, sizeof(int), len, f) == len;
-}
-
-
-static bool _save_int(int& buf, size_t len, FILE* f)
-{
-    return fwrite(&buf, sizeof(int), len, f) == len;
 }
 
 
@@ -165,62 +161,40 @@ int loadFile(const std::string& filename)
 }
 
 
-int saveFile(const std::string& filename)
+int saveFile(const std::string& filename, const CityProperties&, const Budget& budget)
 {
-    /*
-  int l;
-  FILE *f;
+    std::ofstream outfile(filename, std::ofstream::binary);
+    if (outfile.fail())
+    {
+        outfile.close();
+        return false;
+    }
 
-  if ((f = fopen(filename.c_str(), "w")) == NULL) {
-    /* TODO: report error 
-    return(0);
-  }
+    MiscHis[50] = budget.CurrentFunds();
+    MiscHis[8] = CityTime;
 
-  /* total funds is a int.....    MiscHis is array of ints
-  /* total funds is bien put in the 50th & 51th word of MiscHis
-  /* find the address, cast the ptr to a lontPtr, take contents
+    MiscHis[52] = AutoBulldoze; // flag for AutoBulldoze
+    MiscHis[53] = autoBudget();   // flag for AutoBudget
+    MiscHis[54] = autoGoto();       // flag for AutoGo
+    //MiscHis[55] = UserSoundOn;  // flag for the sound on/off
+    MiscHis[57] = static_cast<int>(SimSpeed());
+    MiscHis[56] = budget.TaxRate(); // post release  <- ??
 
-  l = TotalFunds;
-  (*(int *)(MiscHis + 50)) = l;
+    MiscHis[58] = static_cast<int>(budget.PolicePercent() * 100.0f);
+    MiscHis[60] = static_cast<int>(budget.FirePercent() * 100.0f);
+    MiscHis[62] = static_cast<int>(budget.RoadPercent() * 100.0f);
 
-  l = CityTime;
-  (*(int *)(MiscHis + 8)) = l;
+    outfile.write(reinterpret_cast<char*>(ResHis.data()), sizeof(GraphHistory));
+    outfile.write(reinterpret_cast<char*>(ComHis.data()), sizeof(GraphHistory));
+    outfile.write(reinterpret_cast<char*>(IndHis.data()), sizeof(GraphHistory));
+    outfile.write(reinterpret_cast<char*>(CrimeHis.data()), sizeof(GraphHistory));
+    outfile.write(reinterpret_cast<char*>(PollutionHis.data()), sizeof(GraphHistory));
+    outfile.write(reinterpret_cast<char*>(MoneyHis.data()), sizeof(GraphHistory));
+    outfile.write(reinterpret_cast<char*>(MiscHis.data()), sizeof(GraphHistory));
+    outfile.write(reinterpret_cast<char*>(Map.data()), sizeof(Map));
 
-  MiscHis[52] = AutoBulldoze;	/* flag for AutoBulldoze
-  MiscHis[53] = AutoBudget;	/* flag for AutoBudget
-  MiscHis[54] = AutoGo;		/* flag for AutoGo
-  MiscHis[55] = UserSoundOn;	/* flag for the sound on/off
-  MiscHis[57] = SimSpeed;
-  MiscHis[56] = CityTax;	/* post release
-
-  /* yayaya
-
-  l = (int)(policePercent * 65536);
-  (*(int *)(MiscHis + 58)) = l;
-
-  l = (int)(firePercent * 65536);
-  (*(int *)(MiscHis + 60)) = l;
-
-  l = (int)(roadPercent * 65536);
-  (*(int *)(MiscHis + 62)) = l;
-
-  if ((_save_short(ResHis, HistoryLength / 2, f) == 0) ||
-      (_save_short(ComHis, HistoryLength / 2, f) == 0) ||
-      (_save_short(IndHis, HistoryLength / 2, f) == 0) ||
-      (_save_short(CrimeHis, HistoryLength / 2, f) == 0) ||
-      (_save_short(PollutionHis, HistoryLength / 2, f) == 0) ||
-      (_save_short(MoneyHis, HistoryLength / 2, f) == 0) ||
-      (_save_short(MiscHis, MISCHISTLEN / 2, f) == 0) ||
-      (_save_short((&Map[0][0]), SimWidth * SimHeight, f) < 0)) {
-
-    /* TODO:  report error
-    fclose(f);
-    return(0);
-  }
-
-  fclose(f)
-  */
-  return 1;
+    outfile.close();
+    return true;
 }
 
 
@@ -266,18 +240,19 @@ void DidntSaveCity(const std::string& msg)
 }
 
 
-void SaveCityAs(const std::string& filename)
+void SaveCityAs(const std::string& filename, const CityProperties& properties, const Budget& budget)
 {
     CityFileName = filename;
 
-    if (!saveFile(CityFileName))
+    if (!saveFile(CityFileName, properties, budget))
     {
         std::cout << "Unable to save the city to the file named '" << CityFileName << "'" << std::endl;
     }
+ 
 }
 
 
-void SaveCity()
+void SaveCity(const CityProperties& properties, const Budget& budget)
 {
     if (CityFileName.empty())
     {
@@ -285,7 +260,7 @@ void SaveCity()
     }
     else
     {
-        if (saveFile(CityFileName))
+        if (saveFile(CityFileName, properties, budget))
         {
             DidSaveCity();
         }
