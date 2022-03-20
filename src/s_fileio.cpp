@@ -95,18 +95,19 @@ static int _load_file(const std::string filename, const std::string& dir)
 }
 
 
-int loadFile(const std::string& filename, CityProperties& properties, Budget& budget)
+bool loadFile(const std::string& filename, CityProperties& properties, Budget& budget)
 {
     if (_load_file(filename, "") == 0)
     {
         return false;
     }
 
+    CityTime = std::clamp(MiscHis[8], 0, std::numeric_limits<int>::max());
     budget.CurrentFunds(MiscHis[50]);
-
     AutoBulldoze = MiscHis[52];
     autoBudget(MiscHis[53]);
     autoGoto(MiscHis[54]);
+
     //UserSoundOn = MiscHis[55];
     budget.TaxRate(std::clamp(MiscHis[56], 0, 20));
     SimSpeed(static_cast<SimulationSpeed>(MiscHis[57]));
@@ -115,17 +116,15 @@ int loadFile(const std::string& filename, CityProperties& properties, Budget& bu
     budget.FirePercent(static_cast<float>(MiscHis[60] / 100.0f));
     budget.RoadPercent(static_cast<float>(MiscHis[62] / 100.0f));
 
-    CityTime = std::clamp(MiscHis[8], 0, std::numeric_limits<int>::max());
-
-    //set the scenario id to 0
     InitWillStuff();
     ScenarioID = 0;
     DoSimInit(properties, budget);
-    return 1;
+
+    return true;
 }
 
 
-int saveFile(const std::string& filename, const CityProperties&, const Budget& budget)
+bool saveFile(const std::string& filename, const CityProperties&, const Budget& budget)
 {
     std::ofstream outfile(filename, std::ofstream::binary);
     if (outfile.fail())
@@ -168,20 +167,20 @@ void DidLoadScenario()
 }
 
 
-int LoadCity(const std::string& filename, CityProperties& properties, Budget& budget)
+bool LoadCity(const std::string& filename, CityProperties& properties, Budget& budget)
 {
     if (loadFile(filename, properties, budget))
     {
         CityFileName = filename;
-        return 1;
+        return true;
     }
     else
     {
         std::cout << "Unable to load a city from the file named '" << filename << "'" << std::endl;
-        return 0;
+        return false;
     }
 
-    return 0;
+    return false;
 }
 
 

@@ -604,7 +604,7 @@ void handleKeyEvent(SDL_Event& event)
     case SDLK_F3:
         if (fileIo->pickOpenFile())
         {
-            LoadCity(fileIo->fileName(), cityProperties, budget);
+            LoadCity(fileIo->fullPath(), cityProperties, budget);
         }
         break;
 
