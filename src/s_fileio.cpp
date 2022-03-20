@@ -29,9 +29,6 @@
 #include <string>
 
 
-std::string CityFileName;
-
-
 namespace
 {
     bool _load_file(const std::string filename, const std::string& dir)
@@ -55,7 +52,7 @@ namespace
 
 bool loadFile(const std::string& filename, CityProperties& properties, Budget& budget)
 {
-    if (_load_file(filename, "") == 0)
+    if (!_load_file(filename, ""))
     {
         return false;
     }
@@ -127,18 +124,13 @@ void DidLoadScenario()
 
 bool LoadCity(const std::string& filename, CityProperties& properties, Budget& budget)
 {
-    if (loadFile(filename, properties, budget))
-    {
-        CityFileName = filename;
-        return true;
-    }
-    else
+    if(!loadFile(filename, properties, budget))
     {
         std::cout << "Unable to load a city from the file named '" << filename << "'" << std::endl;
         return false;
     }
 
-    return false;
+    return true;
 }
 
 
@@ -161,34 +153,15 @@ void DidntSaveCity(const std::string& msg)
 }
 
 
-void SaveCityAs(const std::string& filename, const CityProperties& properties, const Budget& budget)
+void SaveCity(const std::string& filename, const CityProperties& properties, const Budget& budget)
 {
-    CityFileName = filename;
-
-    if (!saveFile(CityFileName, properties, budget))
+    if (saveFile(filename, properties, budget))
     {
-        std::cout << "Unable to save the city to the file named '" << CityFileName << "'" << std::endl;
-    }
- 
-}
-
-
-void SaveCity(const CityProperties& properties, const Budget& budget)
-{
-    if (CityFileName.empty())
-    {
-        DoSaveCityAs();
+        DidSaveCity();
     }
     else
     {
-        if (saveFile(CityFileName, properties, budget))
-        {
-            DidSaveCity();
-        }
-        else
-        {
-            DidntSaveCity("Unable to save the city to the file named '" + CityFileName + "'.");
-        }
+        DidntSaveCity("Unable to save the city to the file named '" + filename + "'.");
     }
 }
 

@@ -595,10 +595,9 @@ void handleKeyEvent(SDL_Event& event)
             {
                 break;
             }
-            CityFileName = fileIo->fullPath();
         }
 
-        SaveCity(cityProperties, budget);
+        SaveCity(fileIo->fullPath(), cityProperties, budget);
         break;
 
     case SDLK_F3:
