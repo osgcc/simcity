@@ -173,12 +173,12 @@ int saveFile(const std::string& filename, const CityProperties&, const Budget& b
     MiscHis[50] = budget.CurrentFunds();
     MiscHis[8] = CityTime;
 
-    MiscHis[52] = AutoBulldoze; // flag for AutoBulldoze
-    MiscHis[53] = autoBudget();   // flag for AutoBudget
-    MiscHis[54] = autoGoto();       // flag for AutoGo
-    //MiscHis[55] = UserSoundOn;  // flag for the sound on/off
+    MiscHis[52] = AutoBulldoze;
+    MiscHis[53] = autoBudget(); 
+    MiscHis[54] = autoGoto();
+    //MiscHis[55] = UserSoundOn;
     MiscHis[57] = static_cast<int>(SimSpeed());
-    MiscHis[56] = budget.TaxRate(); // post release  <- ??
+    MiscHis[56] = budget.TaxRate();
 
     MiscHis[58] = static_cast<int>(budget.PolicePercent() * 100.0f);
     MiscHis[60] = static_cast<int>(budget.FirePercent() * 100.0f);
