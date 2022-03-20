@@ -29,69 +29,27 @@
 #include <string>
 
 
-std::string HomeDirectory;
-const std::string ResroucesDirectory;
-
 std::string CityFileName;
 
 
-static bool _load_int(int& buf, size_t len, FILE* f)
+namespace
 {
-    return fread(&buf, sizeof(int), len, f) == len;
-}
+    bool _load_file(const std::string filename, const std::string& dir)
+    {
+        /*
+        if ((_load_short(ResHis, HistoryLength / 2, f) == 0) ||
+            (_load_short(ComHis, HistoryLength / 2, f) == 0) ||
+            (_load_short(IndHis, HistoryLength / 2, f) == 0) ||
+            (_load_short(CrimeHis, HistoryLength / 2, f) == 0) ||
+            (_load_short(PollutionHis, HistoryLength / 2, f) == 0) ||
+            (_load_short(MoneyHis, HistoryLength / 2, f) == 0) ||
+            (_load_short(MiscHis, MISCHISTLEN / 2, f) == 0) ||
+            (_load_short((&Map[0][0]), SimWidth * SimHeight, f) < 0)) {
+        }
+        */
 
-
-static int _load_file(const std::string filename, const std::string& dir)
-{
-    /*
-  FILE *f;
-  char path[512];
-  int size;
-
-  if (dir != NULL) {
-    sprintf(path, "%s/%s", dir, filename);
-    filename = path;
-  }
-  if ((f = fopen(filename.c_str(), "r")) == NULL) {
-    return (0);
-  }
-
-  fseek(f, 0L, SEEK_END);
-  size = ftell(f);
-  fseek(f, 0L, SEEK_SET);
-
-  switch (size) {
-  case 27120: /* Normal city
-    break;
-
-  case 99120: /* 2x2 city
-    break;
-
-  case 219120: /* 3x3 city
-    break;
-
-  default:
-    return (0);
-  }
-
-  if ((_load_short(ResHis, HistoryLength / 2, f) == 0) ||
-      (_load_short(ComHis, HistoryLength / 2, f) == 0) ||
-      (_load_short(IndHis, HistoryLength / 2, f) == 0) ||
-      (_load_short(CrimeHis, HistoryLength / 2, f) == 0) ||
-      (_load_short(PollutionHis, HistoryLength / 2, f) == 0) ||
-      (_load_short(MoneyHis, HistoryLength / 2, f) == 0) ||
-      (_load_short(MiscHis, MISCHISTLEN / 2, f) == 0) ||
-      (_load_short((&Map[0][0]), SimWidth * SimHeight, f) < 0)) {
-
-    /* TODO:  report error
-    fclose(f);
-    return(0);
-  }
-
-  fclose(f);
-      */
-
-    return 1;
+        return true;
+    }
 }
 
 
@@ -327,7 +285,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
     setAnyCityName(name.c_str());
     SimSpeed(SimulationSpeed::Normal);
 
-    _load_file(fname, ResroucesDirectory);
+    _load_file(fname, "");
 
     InitWillStuff();
     UpdateFunds(budget);
