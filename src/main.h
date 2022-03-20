@@ -159,8 +159,12 @@ extern SDL_Renderer* MainWindowRenderer;
 extern Texture SmallTileset;
 
 void showBudgetWindow();
+
 bool autoBudget();
+void autoBudget(const bool b);
+
 bool autoGoto();
+void autoGoto(const bool b);
 
 void sim_exit();
 const Point<int>& viewOffset();

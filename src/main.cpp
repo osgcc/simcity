@@ -202,9 +202,21 @@ bool autoBudget()
 }
 
 
+void autoBudget(const bool b)
+{
+    AutoBudget = b;
+}
+
+
 bool autoGoto()
 {
     return AutoGo;
+}
+
+
+void autoGoto(const bool b)
+{
+    AutoGo = b;
 }
 
 
@@ -346,7 +358,7 @@ void PrimeGame(CityProperties& properties, Budget& budget)
     switch (Startup)
     {
     case -2: /* Load a city */
-        if (LoadCity(StartupName))
+        if (LoadCity(StartupName, properties, budget))
         {
             StartupName = "";
             break;
@@ -592,7 +604,7 @@ void handleKeyEvent(SDL_Event& event)
     case SDLK_F3:
         if (fileIo->pickOpenFile())
         {
-            LoadCity(fileIo->fileName());
+            LoadCity(fileIo->fileName(), cityProperties, budget);
         }
         break;
 

@@ -22,8 +22,10 @@
 #include "w_update.h"
 #include "w_util.h"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <string>
 
 
@@ -93,71 +95,33 @@ static int _load_file(const std::string filename, const std::string& dir)
 }
 
 
-int loadFile(const std::string& filename)
+int loadFile(const std::string& filename, CityProperties& properties, Budget& budget)
 {
-    /*
-  int l;
+    if (_load_file(filename, "") == 0)
+    {
+        return false;
+    }
 
-  if (_load_file(filename, NULL) == 0)
-    return(0);
+    budget.CurrentFunds(MiscHis[50]);
 
-  /* total funds is a int.....    MiscHis is array of shorts
-  /* total funds is being put in the 50th & 51th word of MiscHis
-  /* find the address, cast the ptr to a lontPtr, take contents
+    AutoBulldoze = MiscHis[52];
+    autoBudget(MiscHis[53]);
+    autoGoto(MiscHis[54]);
+    //UserSoundOn = MiscHis[55];
+    budget.TaxRate(std::clamp(MiscHis[56], 0, 20));
+    SimSpeed(static_cast<SimulationSpeed>(MiscHis[57]));
 
-  l = *(int *)(MiscHis + 50);
-  SetFunds(l);
+    budget.PolicePercent(static_cast<float>(MiscHis[58] / 100.0f));
+    budget.FirePercent(static_cast<float>(MiscHis[60] / 100.0f));
+    budget.RoadPercent(static_cast<float>(MiscHis[62] / 100.0f));
 
-  l = *(int *)(MiscHis + 8);
-  CityTime = l;
+    CityTime = std::clamp(MiscHis[8], 0, std::numeric_limits<int>::max());
 
-  AutoBulldoze = MiscHis[52];	/* flag for AutoBulldoze
-  AutoBudget = MiscHis[53];	/* flag for AutoBudget
-  AutoGo = MiscHis[54];		/* flag for AutoGo
-  UserSoundOn = MiscHis[55];	/* flag for the sound on/off
-  CityTax = MiscHis[56];
-  SimSpeed = MiscHis[57];
-  //  sim_skips = sim_skip = 0;
-  ChangeCensus();
-  //MustUpdateOptions = 1;
-
-  /* yayaya
-
-  l = *(int *)(MiscHis + 58);
-  policePercent = l / 65536.0f;
-
-  l = *(int *)(MiscHis + 60);
-  firePercent = l / 65536.0f;
-
-  l = *(int *)(MiscHis + 62);
-  roadPercent = l / 65536.0f;
-
-  policePercent = (*(int*)(MiscHis + 58)) / 65536.0f;	/* and 59
-  firePercent = (*(int*)(MiscHis + 60)) / 65536.0f;	/* and 61
-  roadPercent =(*(int*)(MiscHis + 62)) / 65536.0f;	/* and 63
-
-  if (CityTime < 0)
-    CityTime = 0;
-  if ((CityTax > 20) || (CityTax < 0))
-    CityTax = 7;
-  if ((SimSpeed < 0) || (SimSpeed > 3))
-    SimSpeed = 3;
-
-  setSpeed(SimSpeed);
-
-  InitFundingLevel();
-
-  /* set the scenario id to 0
-  InitWillStuff();
-  ScenarioID = 0;
-  InitSimLoad = 1;
-  DoInitialEval = 0;
-  DoSimInit();
-  InvalidateEditors();
-  InvalidateMaps();
-  */
-
-  return 1;
+    //set the scenario id to 0
+    InitWillStuff();
+    ScenarioID = 0;
+    DoSimInit(properties, budget);
+    return 1;
 }
 
 
@@ -204,9 +168,9 @@ void DidLoadScenario()
 }
 
 
-int LoadCity(const std::string& filename)
+int LoadCity(const std::string& filename, CityProperties& properties, Budget& budget)
 {
-    if (loadFile(filename))
+    if (loadFile(filename, properties, budget))
     {
         CityFileName = filename;
         return 1;
