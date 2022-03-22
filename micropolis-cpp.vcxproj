@@ -48,7 +48,6 @@
     <ClCompile Include="src\w_con.cpp" />
     <ClCompile Include="src\w_eval.cpp" />
     <ClCompile Include="src\w_keys.cpp" />
-    <ClCompile Include="src\w_map.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
     <ClCompile Include="src\w_sound.cpp" />
     <ClCompile Include="src\w_tk.cpp" />
@@ -94,7 +93,6 @@
     <ClInclude Include="src\s_alloc.h" />
     <ClInclude Include="src\w_eval.h" />
     <ClInclude Include="src\w_keys.h" />
-    <ClInclude Include="src\w_map.h" />
     <ClInclude Include="src\w_resrc.h" />
     <ClInclude Include="src\w_sound.h" />
     <ClInclude Include="src\w_tk.h" />

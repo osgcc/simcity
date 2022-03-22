@@ -69,9 +69,6 @@
     <ClCompile Include="src\w_keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\w_resrc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -138,9 +135,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\w_update.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\w_map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\g_map.h">
