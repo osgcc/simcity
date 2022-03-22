@@ -66,7 +66,6 @@
 
 const std::string MicropolisVersion = "4.0";
 
-int StartupGameLevel = 0;
 int DoAnimation = 1;
 
 namespace
@@ -343,7 +342,7 @@ void sim_init()
     ClearMap();
     InitWillStuff();
     budget.CurrentFunds(5000);
-    SetGameLevelFunds(StartupGameLevel, cityProperties, budget);
+    SetGameLevelFunds(0, cityProperties, budget);
     SimSpeed(SimulationSpeed::Paused);
 }
 
