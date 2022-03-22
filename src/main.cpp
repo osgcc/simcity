@@ -603,6 +603,7 @@ void handleKeyEvent(SDL_Event& event)
     case SDLK_F3:
         if (fileIo->pickOpenFile())
         {
+            ResetGame();
             LoadCity(fileIo->fullPath(), cityProperties, budget);
         }
         break;

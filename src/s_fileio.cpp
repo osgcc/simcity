@@ -31,19 +31,58 @@
 
 namespace
 {
+    void copyBufIntoArray(const int (&buf)[HistoryLength], GraphHistory& graph)
+    {
+        for (size_t i = 0; i < ResHis.size(); ++i)
+        {
+            graph[i] = buf[i];
+        }
+    }
+
     bool _load_file(const std::string filename, const std::string& dir)
     {
-        /*
-        if ((_load_short(ResHis, HistoryLength / 2, f) == 0) ||
-            (_load_short(ComHis, HistoryLength / 2, f) == 0) ||
-            (_load_short(IndHis, HistoryLength / 2, f) == 0) ||
-            (_load_short(CrimeHis, HistoryLength / 2, f) == 0) ||
-            (_load_short(PollutionHis, HistoryLength / 2, f) == 0) ||
-            (_load_short(MoneyHis, HistoryLength / 2, f) == 0) ||
-            (_load_short(MiscHis, MISCHISTLEN / 2, f) == 0) ||
-            (_load_short((&Map[0][0]), SimWidth * SimHeight, f) < 0)) {
+        std::ifstream infile(filename, std::ofstream::binary);
+        if (infile.fail())
+        {
+            infile.close();
+            return false;
         }
-        */
+
+        int buff[HistoryLength]{};
+
+        infile.read(reinterpret_cast<char*>(&buff[0]), sizeof(GraphHistory));
+        copyBufIntoArray(buff, ResHis);
+
+        infile.read(reinterpret_cast<char*>(&buff[0]), sizeof(GraphHistory));
+        copyBufIntoArray(buff, ComHis);
+
+        infile.read(reinterpret_cast<char*>(&buff[0]), sizeof(GraphHistory));
+        copyBufIntoArray(buff, IndHis);
+
+        infile.read(reinterpret_cast<char*>(&buff[0]), sizeof(GraphHistory));
+        copyBufIntoArray(buff, CrimeHis);
+
+        infile.read(reinterpret_cast<char*>(&buff[0]), sizeof(GraphHistory));
+        copyBufIntoArray(buff, PollutionHis);
+
+        infile.read(reinterpret_cast<char*>(&buff[0]), sizeof(GraphHistory));
+        copyBufIntoArray(buff, MoneyHis);
+
+        infile.read(reinterpret_cast<char*>(&buff[0]), sizeof(GraphHistory));
+        copyBufIntoArray(buff, MiscHis);
+
+        int mapRow[SimHeight]{};
+        for (size_t row = 0; row < SimWidth; ++row)
+        {
+            infile.read(reinterpret_cast<char*>(&mapRow[0]), sizeof(mapRow));
+
+            for (size_t i = 0; i < SimHeight; ++i)
+            {
+                Map[row][i] = mapRow[i];
+            }
+        }
+           
+        infile.close();
 
         return true;
     }
@@ -88,8 +127,8 @@ bool saveFile(const std::string& filename, const CityProperties&, const Budget& 
         return false;
     }
 
-    MiscHis[50] = budget.CurrentFunds();
     MiscHis[8] = CityTime;
+    MiscHis[50] = budget.CurrentFunds();
 
     MiscHis[52] = AutoBulldoze;
     MiscHis[53] = autoBudget(); 
