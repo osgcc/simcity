@@ -1075,7 +1075,7 @@ int main(int argc, char* argv[])
     catch(std::exception e)
     {
         std::string message(std::string(e.what()) + "\n\nMicropolis-SDL2PP will now close.");
-        MessageBoxA(nullptr, message.c_str(), "Unrecoverable Error", MB_ICONERROR | MB_OK);
+        MessageBoxA(nullptr, message.c_str(), "Micropolis-SDL2PP", MB_ICONERROR | MB_OK);
     }
 
     return 0;
