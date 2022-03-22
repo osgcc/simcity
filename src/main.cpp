@@ -121,6 +121,7 @@ namespace
     BudgetWindow* budgetWindow{ nullptr };
     GraphWindow* graphWindow{ nullptr };
     StringRender* stringRenderer{ nullptr };
+    ToolPalette* toolPalette{ nullptr };
 
     CityProperties cityProperties;
 
@@ -934,45 +935,14 @@ void drawDebug()
 }
 
 
-void gameInit()
+void GameLoop()
 {
-    sim_init();
-
-    Startup = -1;
-
-    PrimeGame(cityProperties, budget);
-
-    DrawMiniMap();
-    DrawBigMap();
-
-    SDL_TimerID zonePowerBlink = SDL_AddTimer(500, zonePowerBlinkTick, nullptr);
-    SDL_TimerID redrawMinimapTimer = SDL_AddTimer(1000, redrawMiniMapTick, nullptr);
-    SDL_TimerID simulationTimer = SDL_AddTimer(SimStepDefaultTime, simulationTick, nullptr);
-    SDL_TimerID animationTimer = SDL_AddTimer(AnimationStepDefaultTime, animationTick, nullptr);
-
-    stringRenderer = new StringRender(MainWindowRenderer);
-
-    ToolPalette toolPalette(MainWindowRenderer);
-    toolPalette.position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
-
-    budgetWindow = new BudgetWindow(MainWindowRenderer, *stringRenderer, budget);
-    centerBudgetWindow();
-
-    graphWindow = new GraphWindow(MainWindowRenderer);
-    centerGraphWindow();
-
-    UiRects.push_back(&toolPalette.rect());
-    UiRects.push_back(&UiHeaderRect);
-
-    initOverlayTexture();
-    initMapTextures();
-
     while (!Exit)
     {
-        PendingTool = toolPalette.tool();
+        PendingTool = toolPalette->tool();
 
         sim_loop(SimulationStep);
-        
+
         pumpEvents();
 
         currentBudget = NumberToDollarDecimal(budget.CurrentFunds());
@@ -995,7 +965,7 @@ void gameInit()
         }
         else
         {
-            DrawPendingTool(toolPalette);
+            DrawPendingTool(*toolPalette);
 
             drawTopUi();
             drawMiniMapUi();
@@ -1003,9 +973,9 @@ void gameInit()
             if (MouseClicked)
             {
                 MouseClicked = false;
-                toolPalette.injectMouseClickPosition(MouseClickPosition);
+                toolPalette->injectMouseClickPosition(MouseClickPosition);
             }
-            toolPalette.draw();
+            toolPalette->draw();
 
             if (ShowGraphWindow) { graphWindow->draw(); }
             if (DrawDebug) { drawDebug(); }
@@ -1015,6 +985,43 @@ void gameInit()
 
         NewMap = false;
     }
+}
+
+
+void gameInit()
+{
+    sim_init();
+
+    Startup = -1;
+
+    PrimeGame(cityProperties, budget);
+
+    DrawMiniMap();
+    DrawBigMap();
+
+    SDL_TimerID zonePowerBlink = SDL_AddTimer(500, zonePowerBlinkTick, nullptr);
+    SDL_TimerID redrawMinimapTimer = SDL_AddTimer(1000, redrawMiniMapTick, nullptr);
+    SDL_TimerID simulationTimer = SDL_AddTimer(SimStepDefaultTime, simulationTick, nullptr);
+    SDL_TimerID animationTimer = SDL_AddTimer(AnimationStepDefaultTime, animationTick, nullptr);
+
+    stringRenderer = new StringRender(MainWindowRenderer);
+
+    toolPalette = new ToolPalette(MainWindowRenderer);
+    toolPalette->position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
+
+    budgetWindow = new BudgetWindow(MainWindowRenderer, *stringRenderer, budget);
+    centerBudgetWindow();
+
+    graphWindow = new GraphWindow(MainWindowRenderer);
+    centerGraphWindow();
+
+    UiRects.push_back(&toolPalette->rect());
+    UiRects.push_back(&UiHeaderRect);
+
+    initOverlayTexture();
+    initMapTextures();
+
+    GameLoop();
 
     SDL_RemoveTimer(zonePowerBlink);
     SDL_RemoveTimer(redrawMinimapTimer);
@@ -1029,6 +1036,7 @@ void cleanUp()
     delete MainBigFont;
     delete budgetWindow;
     delete graphWindow;
+    delete toolPalette;
     delete stringRenderer;
     delete fileIo;
 
