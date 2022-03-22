@@ -196,7 +196,6 @@ enum class ScenarioName
 
 void LoadScenario(int s, CityProperties& properties, Budget& budget)
 {
-    std::string name;
     std::string fname;
 
     properties.GameLevel(0);
@@ -206,7 +205,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
     switch (s)
     {
     case 1:
-        name = "Dullsville";
+        properties.CityName("Dullsville");
         fname = "snro.111";
         ScenarioID = 1;
         CityTime = ((1900 - 1900) * 48) + 2;
@@ -214,7 +213,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         break;
 
     case 2:
-        name = "San Francisco";
+        properties.CityName("San Francisco");
         fname = "snro.222";
         ScenarioID = 2;
         CityTime = ((1906 - 1900) * 48) + 2;
@@ -222,7 +221,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         break;
 
     case 3:
-        name = "Hamburg";
+        properties.CityName("Hamburg");
         fname = "snro.333";
         ScenarioID = 3;
         CityTime = ((1944 - 1900) * 48) + 2;
@@ -230,7 +229,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         break;
 
     case 4:
-        name = "Bern";
+        properties.CityName("Bern");
         fname = "snro.444";
         ScenarioID = 4;
         CityTime = ((1965 - 1900) * 48) + 2;
@@ -238,7 +237,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         break;
 
     case 5:
-        name = "Tokyo";
+        properties.CityName("Tokyo");
         fname = "snro.555";
         ScenarioID = 5;
         CityTime = ((1957 - 1900) * 48) + 2;
@@ -246,7 +245,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         break;
 
     case 6:
-        name = "Detroit";
+        properties.CityName("Detroit");
         fname = "snro.666";
         ScenarioID = 6;
         CityTime = ((1972 - 1900) * 48) + 2;
@@ -254,7 +253,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         break;
 
     case 7:
-        name = "Boston";
+        properties.CityName("Boston");
         fname = "snro.777";
         ScenarioID = 7;
         CityTime = ((2010 - 1900) * 48) + 2;
@@ -262,7 +261,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         break;
 
     case 8:
-        name = "Rio de Janeiro";
+        properties.CityName("Rio de Janeiro");
         fname = "snro.888";
         ScenarioID = 8;
         CityTime = ((2047 - 1900) * 48) + 2;
@@ -270,7 +269,6 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         break;
     }
 
-    properties.CityName(name);
     SimSpeed(SimulationSpeed::Normal);
 
     _load_file("scenarios/" + fname);
