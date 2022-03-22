@@ -155,12 +155,6 @@ bool saveFile(const std::string& filename, const CityProperties&, const Budget& 
 }
 
 
-void DidLoadScenario()
-{
-  Eval("UIDidLoadScenario");
-}
-
-
 bool LoadCity(const std::string& filename, CityProperties& properties, Budget& budget)
 {
     if(!loadFile(filename, properties, budget))
@@ -173,34 +167,15 @@ bool LoadCity(const std::string& filename, CityProperties& properties, Budget& b
 }
 
 
-void DoSaveCityAs()
-{
-    Eval("UISaveCityAs");
-}
-
-
-void DidSaveCity()
-{
-    Eval("UIDidSaveCity");
-}
-
-
-void DidntSaveCity(const std::string& msg)
-{
-    std::string buf = "UIDidntSaveCity {" + msg + "}";
-    Eval(buf);
-}
-
-
 void SaveCity(const std::string& filename, const CityProperties& properties, const Budget& budget)
 {
     if (saveFile(filename, properties, budget))
     {
-        DidSaveCity();
+        std::cout << "City saved as '" << filename << "'" << std::endl;
     }
     else
     {
-        DidntSaveCity("Unable to save the city to the file named '" + filename + "'.");
+        std::cout << "Unable to save the city to the file named '" << filename << "'" << std::endl;
     }
 }
 
@@ -304,5 +279,4 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
     InitSimLoad = 1;
     DoInitialEval = 0;
     DoSimInit(properties, budget);
-    DidLoadScenario();
 }
