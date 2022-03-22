@@ -987,6 +987,25 @@ void GameLoop()
     }
 }
 
+std::vector<SDL_TimerID> Timers;
+
+void initTimers()
+{
+    Timers.push_back(SDL_AddTimer(500, zonePowerBlinkTick, nullptr));
+    Timers.push_back(SDL_AddTimer(1000, redrawMiniMapTick, nullptr));
+    Timers.push_back(SDL_AddTimer(SimStepDefaultTime, simulationTick, nullptr));
+    Timers.push_back(SDL_AddTimer(AnimationStepDefaultTime, animationTick, nullptr));
+}
+
+
+void deinitTimers()
+{
+    for (auto timer : Timers)
+    {
+        SDL_RemoveTimer(timer);
+    }
+}
+
 
 void gameInit()
 {
@@ -999,10 +1018,7 @@ void gameInit()
     DrawMiniMap();
     DrawBigMap();
 
-    SDL_TimerID zonePowerBlink = SDL_AddTimer(500, zonePowerBlinkTick, nullptr);
-    SDL_TimerID redrawMinimapTimer = SDL_AddTimer(1000, redrawMiniMapTick, nullptr);
-    SDL_TimerID simulationTimer = SDL_AddTimer(SimStepDefaultTime, simulationTick, nullptr);
-    SDL_TimerID animationTimer = SDL_AddTimer(AnimationStepDefaultTime, animationTick, nullptr);
+    initTimers();
 
     stringRenderer = new StringRender(MainWindowRenderer);
 
@@ -1023,10 +1039,7 @@ void gameInit()
 
     GameLoop();
 
-    SDL_RemoveTimer(zonePowerBlink);
-    SDL_RemoveTimer(redrawMinimapTimer);
-    SDL_RemoveTimer(simulationTimer);
-    SDL_RemoveTimer(animationTimer);
+    deinitTimers();
 }
 
 
