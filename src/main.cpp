@@ -510,7 +510,7 @@ void clampViewOffset()
 }
 
 
-void setMiniMapSelectorSize()
+void updateMiniMapSelectorSize()
 {
     MiniMapSelector.w = static_cast<int>(std::ceil(WindowSize.x / 16.0f) * 3);
     MiniMapSelector.h = static_cast<int>(std::ceil(WindowSize.y / 16.0f) * 3);
@@ -534,7 +534,7 @@ void windowResized(const Vector<int>& size)
     windowSize();
     clampViewOffset();
 
-    setMiniMapSelectorSize();
+    updateMiniMapSelectorSize();
 
     updateMapDrawParameters();
     centerBudgetWindow();
@@ -792,7 +792,7 @@ void initViewParamters()
 
     MainMapTexture.dimensions = { SimWidth * 16, SimHeight * 16 };
 
-    setMiniMapSelectorSize();
+    updateMiniMapSelectorSize();
 
     UiHeaderRect.w = WindowSize.x - 20;
     UiHeaderRect.h = RCI_Indicator.dimensions.y + 10 + MainBigFont->height() + 10;
