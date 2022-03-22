@@ -138,18 +138,6 @@ void SetGameLevelFunds(int level, CityProperties& properties, Budget& budget)
 }
 
 
-void setAnyCityName(const char *name)
-{
-  /*
-  char buf[1024];
-
-  CityName = name;
-  sprintf(buf, "UISetCityName {%s}", CityName);
-  Eval(buf);
-  */
-}
-
-
 void SetYear(int year)
 {
     // Must prevent year from going negative, since it screws up the non-floored modulo arithmetic.

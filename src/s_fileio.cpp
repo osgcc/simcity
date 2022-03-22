@@ -42,7 +42,7 @@ namespace
 
     bool _load_file(const std::string filename, const std::string& dir)
     {
-        std::ifstream infile(filename, std::ofstream::binary);
+        std::ifstream infile(dir + filename, std::ofstream::binary);
         if (infile.fail())
         {
             infile.close();
@@ -270,10 +270,10 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         break;
     }
 
-    setAnyCityName(name.c_str());
+    properties.CityName(name);
     SimSpeed(SimulationSpeed::Normal);
 
-    _load_file(fname, "");
+    _load_file(fname, "scenarios/");
 
     InitWillStuff();
     UpdateFunds(budget);
