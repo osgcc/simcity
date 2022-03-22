@@ -1018,8 +1018,6 @@ void gameInit()
     DrawMiniMap();
     DrawBigMap();
 
-    initTimers();
-
     stringRenderer = new StringRender(MainWindowRenderer);
 
     toolPalette = new ToolPalette(MainWindowRenderer);
@@ -1038,8 +1036,6 @@ void gameInit()
     initMapTextures();
 
     GameLoop();
-
-    deinitTimers();
 }
 
 
@@ -1052,6 +1048,8 @@ void cleanUp()
     delete toolPalette;
     delete stringRenderer;
     delete fileIo;
+
+    deinitTimers();
 
     SDL_DestroyTexture(BigTileset.texture);
     SDL_DestroyTexture(RCI_Indicator.texture);
@@ -1086,6 +1084,7 @@ int main(int argc, char* argv[])
 
         initViewParamters();
         updateMapDrawParameters();
+        initTimers();
 
         gameInit();
 
