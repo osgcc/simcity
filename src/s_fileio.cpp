@@ -18,6 +18,7 @@
 #include "s_init.h"
 #include "s_sim.h"
 
+#include "w_sound.h"
 #include "w_tk.h"
 #include "w_update.h"
 #include "w_util.h"
@@ -102,7 +103,7 @@ bool loadFile(const std::string& filename, CityProperties& properties, Budget& b
     autoBudget(MiscHis[53]);
     autoGoto(MiscHis[54]);
 
-    //UserSoundOn = MiscHis[55];
+    userSoundOn(MiscHis[55]);
     budget.TaxRate(std::clamp(MiscHis[56], 0, 20));
     SimSpeed(static_cast<SimulationSpeed>(MiscHis[57]));
 
@@ -133,7 +134,7 @@ bool saveFile(const std::string& filename, const CityProperties&, const Budget& 
     MiscHis[52] = AutoBulldoze;
     MiscHis[53] = autoBudget(); 
     MiscHis[54] = autoGoto();
-    //MiscHis[55] = UserSoundOn;
+    MiscHis[55] = userSoundOn();
     MiscHis[57] = static_cast<int>(SimSpeed());
     MiscHis[56] = budget.TaxRate();
 
