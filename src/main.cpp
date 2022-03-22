@@ -357,12 +357,7 @@ void sim_init()
 
 void DoPlayNewCity(CityProperties& properties, Budget& budget)
 {
-    Eval("UIPlayNewCity");
-
-    properties.GameLevel(0);
-    properties.CityName("NowHere");
     GenerateNewCity(properties, budget);
-
     Resume();
     SimSpeed(SimulationSpeed::Normal);
 }
@@ -385,6 +380,7 @@ void PrimeGame(const int startFlag, CityProperties& properties, Budget& budget)
         }
 
     case -1:
+        properties.GameLevel(0);
         properties.CityName("NowHere");
         DoPlayNewCity(properties, budget);
         break;
