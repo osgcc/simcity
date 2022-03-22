@@ -565,7 +565,7 @@ void Destroy(int ox, int oy)
         }
         else
         {
-            Map[x][y] = (DoAnimation ? TINYEXP : (LASTTINYEXP - 3)) | BULLBIT | ANIMBIT;
+            Map[x][y] = (animationEnabled() ? TINYEXP : (LASTTINYEXP - 3)) | BULLBIT | ANIMBIT;
         }
     }
 }

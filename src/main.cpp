@@ -66,8 +66,6 @@
 
 const std::string MicropolisVersion = "4.0";
 
-int DoAnimation = 1;
-
 namespace
 {
     SDL_Rect MiniMapTileRect{ 0, 0, 3, 3 };
@@ -95,6 +93,7 @@ namespace
     bool Exit{ false };
     bool RedrawMinimap{ false };
     bool SimulationStep{ false };
+    bool AnimationEnabled{ true };
     bool AnimationStep{ false };
     bool AutoBudget{ false };
     bool ShowGraphWindow{ false };
@@ -230,6 +229,18 @@ bool autoGoto()
 void autoGoto(const bool b)
 {
     AutoGo = b;
+}
+
+
+bool animationEnabled()
+{
+    return AnimationEnabled;
+}
+
+
+void animationEnabled(bool b)
+{
+    AnimationEnabled = b;
 }
 
 

@@ -122,8 +122,6 @@ extern int ShakeNow;
 
 extern int RoadEffect, PoliceEffect, FireEffect;
 
-extern int DoAnimation;
-
 extern bool NoDisasters;
 extern bool AutoBulldoze;
 
@@ -165,6 +163,9 @@ void autoBudget(const bool b);
 
 bool autoGoto();
 void autoGoto(const bool b);
+
+bool animationEnabled();
+void animationEnabled(bool b);
 
 void sim_exit();
 const Point<int>& viewOffset();

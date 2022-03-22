@@ -623,7 +623,7 @@ void putRubble(const int mapX, const int mapY, const int size)
                 int cellValue = maskedTileValue(x, y);
                 if ((cellValue != RADTILE) && (cellValue != 0))
                 {
-                    Map[x][y] = (DoAnimation ? (TINYEXP + RandomRange(0, 2)) : SOMETINYEXP) | ANIMBIT | BULLBIT;
+                    Map[x][y] = (animationEnabled() ? (TINYEXP + RandomRange(0, 2)) : SOMETINYEXP) | ANIMBIT | BULLBIT;
                 }
             }
         }
