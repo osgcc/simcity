@@ -66,8 +66,6 @@
 
 const std::string MicropolisVersion = "4.0";
 
-
-int Startup = 0;
 int StartupGameLevel = 0;
 int DoAnimation = 1;
 
@@ -94,7 +92,6 @@ namespace
     Point<int> MouseClickPosition{};
 
     bool MouseClicked{};
-    bool DrawDebug{ false };
     bool BudgetWindowShown{ false };
     bool Exit{ false };
     bool RedrawMinimap{ false };
@@ -112,8 +109,8 @@ namespace
     std::array<unsigned int, 5> SpeedModifierTable{ 0, 0, 50, 75, 95 };
 
     std::string currentBudget{};
-    std::string StartupName;
 
+    std::vector<SDL_TimerID> Timers;
     std::vector<const SDL_Rect*> UiRects{};
 
     Budget budget{};
@@ -158,6 +155,22 @@ namespace
     {
         AnimationStep = true;
         return interval;
+    }
+
+    void initTimers()
+    {
+        Timers.push_back(SDL_AddTimer(500, zonePowerBlinkTick, nullptr));
+        Timers.push_back(SDL_AddTimer(1000, redrawMiniMapTick, nullptr));
+        Timers.push_back(SDL_AddTimer(SimStepDefaultTime, simulationTick, nullptr));
+        Timers.push_back(SDL_AddTimer(AnimationStepDefaultTime, animationTick, nullptr));
+    }
+
+    void deinitTimers()
+    {
+        for (auto timer : Timers)
+        {
+            SDL_RemoveTimer(timer);
+        }
     }
 };
 
@@ -354,36 +367,27 @@ void DoStartScenario(int scenario)
 }
 
 
-void PrimeGame(CityProperties& properties, Budget& budget)
+void PrimeGame(const int startFlag, CityProperties& properties, Budget& budget)
 {
-    switch (Startup)
+    switch (startFlag)
     {
-    case -2: /* Load a city */
-        if (LoadCity(StartupName, properties, budget))
+    case -2: // Load a city
+        if (LoadCity("filename", properties, budget))
         {
-            StartupName = "";
             break;
         }
 
     case -1:
-        if (!StartupName.empty())
-        {
-            properties.CityName(StartupName);
-            StartupName = "";
-        }
-        else
-        {
-            properties.CityName("NowHere");
-        }
+        properties.CityName("NowHere");
         DoPlayNewCity(properties, budget);
         break;
 
     case 0:
-        throw std::runtime_error("Unexpected startup switch: " + std::to_string(Startup));
+        throw std::runtime_error("Unexpected startup switch: " + std::to_string(startFlag));
         break;
 
-    default: /* scenario number */
-        DoStartScenario(Startup);
+    default: // scenario number
+        DoStartScenario(startFlag);
         break;
     }
 }
@@ -392,7 +396,7 @@ void PrimeGame(CityProperties& properties, Budget& budget)
 void ResetGame()
 {
     sim_init();
-    PrimeGame(cityProperties, budget);
+    PrimeGame(-1, cityProperties, budget);
     DrawMiniMap();
     DrawBigMap();
 }
@@ -441,6 +445,13 @@ void loadGraphics()
     buildBigTileset();
     RCI_Indicator = loadTexture(MainWindowRenderer, "images/demandg.xpm");
     SmallTileset = loadTexture(MainWindowRenderer, "images/tilessm.xpm");
+}
+
+
+void loadFonts()
+{
+    MainFont = new Font("res/raleway-medium.ttf", 12);
+    MainBigFont = new Font("res/raleway-medium.ttf", 14);
 }
 
 
@@ -628,10 +639,6 @@ void handleKeyEvent(SDL_Event& event)
     case SDLK_F10:
         BudgetWindowShown = !BudgetWindowShown;
         if (BudgetWindowShown) { budgetWindow->update(); }
-        break;
-
-    case SDLK_F11:
-        DrawDebug = !DrawDebug;
         break;
 
     default:
@@ -906,32 +913,57 @@ void DrawPendingTool(const ToolPalette& palette)
 }
 
 
-void drawDebug()
+void gameInit()
 {
-    stringRenderer->drawString(*MainFont, "Mouse Coords: " + std::to_string(MousePosition.x) + ", " + std::to_string(MousePosition.y), { 200, 100 });
-    stringRenderer->drawString(*MainFont, "Tile Pick Coords: " + std::to_string(TilePointedAt.x) + ", " + std::to_string(TilePointedAt.y), { 200, 100 + MainFont->height() });
-    
-    stringRenderer->drawString(*MainFont, "Speed: " + SpeedString(SimSpeed()), { 200, 100 + MainFont->height() * 3});
-    stringRenderer->drawString(*MainFont, "CityTime: " + std::to_string(CityTime), { 200, 100 + MainFont->height() * 4 });
+    sim_init();
 
-    stringRenderer->drawString(*MainFont, "RValve: " + std::to_string(RValve), { 200, 100 + MainFont->height() * 6 });
-    stringRenderer->drawString(*MainFont, "CValve: " + std::to_string(CValve), { 200, 100 + MainFont->height() * 7 });
-    stringRenderer->drawString(*MainFont, "IValve: " + std::to_string(IValve), { 200, 100 + MainFont->height() * 8 });
+    PrimeGame(-1, cityProperties, budget);
 
-    stringRenderer->drawString(*MainFont, "TotalPop: " + std::to_string(TotalPop), { 200, 100 + MainFont->height() * 10 });   
-    
-    std::stringstream sstream;
+    initViewParamters();
+    updateMapDrawParameters();
+    initTimers();
 
-    sstream << "Res: " << ResPop << " Com: " << ComPop << " Ind: " << IndPop << " Tot: " << TotalPop << " LastTot: " << LastTotalPop;
-    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 11 });
+    initOverlayTexture();
+    initMapTextures();
 
-    sstream.str("");
-    sstream << "TotalZPop: " << TotalZPop << " ResZ: " << ResZPop << " ComZ: " << ComZPop << " IndZ: " << IndZPop;
-    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 12 });
+    DrawMiniMap();
+    DrawBigMap();
 
-    sstream.str("");
-    sstream << "PolicePop: " << PolicePop << " FireStPop: " << FireStPop;
-    stringRenderer->drawString(*MainFont, sstream.str(), { 200, 100 + MainFont->height() * 13 });
+    fileIo = new FileIo(*MainWindow);
+
+    stringRenderer = new StringRender(MainWindowRenderer);
+
+    toolPalette = new ToolPalette(MainWindowRenderer);
+    toolPalette->position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
+
+    budgetWindow = new BudgetWindow(MainWindowRenderer, *stringRenderer, budget);
+    centerBudgetWindow();
+
+    graphWindow = new GraphWindow(MainWindowRenderer);
+    centerGraphWindow();
+
+    UiRects.push_back(&toolPalette->rect());
+    UiRects.push_back(&UiHeaderRect);
+}
+
+
+void cleanUp()
+{
+    delete MainFont;
+    delete MainBigFont;
+    delete budgetWindow;
+    delete graphWindow;
+    delete toolPalette;
+    delete stringRenderer;
+    delete fileIo;
+
+    deinitTimers();
+
+    SDL_DestroyTexture(BigTileset.texture);
+    SDL_DestroyTexture(RCI_Indicator.texture);
+
+    SDL_DestroyRenderer(MainWindowRenderer);
+    SDL_DestroyWindow(MainWindow);
 }
 
 
@@ -978,82 +1010,12 @@ void GameLoop()
             toolPalette->draw();
 
             if (ShowGraphWindow) { graphWindow->draw(); }
-            if (DrawDebug) { drawDebug(); }
         }
 
         SDL_RenderPresent(MainWindowRenderer);
 
         NewMap = false;
     }
-}
-
-std::vector<SDL_TimerID> Timers;
-
-void initTimers()
-{
-    Timers.push_back(SDL_AddTimer(500, zonePowerBlinkTick, nullptr));
-    Timers.push_back(SDL_AddTimer(1000, redrawMiniMapTick, nullptr));
-    Timers.push_back(SDL_AddTimer(SimStepDefaultTime, simulationTick, nullptr));
-    Timers.push_back(SDL_AddTimer(AnimationStepDefaultTime, animationTick, nullptr));
-}
-
-
-void deinitTimers()
-{
-    for (auto timer : Timers)
-    {
-        SDL_RemoveTimer(timer);
-    }
-}
-
-
-void gameInit()
-{
-    sim_init();
-
-    Startup = -1;
-
-    PrimeGame(cityProperties, budget);
-
-    DrawMiniMap();
-    DrawBigMap();
-
-    stringRenderer = new StringRender(MainWindowRenderer);
-
-    toolPalette = new ToolPalette(MainWindowRenderer);
-    toolPalette->position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
-
-    budgetWindow = new BudgetWindow(MainWindowRenderer, *stringRenderer, budget);
-    centerBudgetWindow();
-
-    graphWindow = new GraphWindow(MainWindowRenderer);
-    centerGraphWindow();
-
-    UiRects.push_back(&toolPalette->rect());
-    UiRects.push_back(&UiHeaderRect);
-
-    initOverlayTexture();
-    initMapTextures();
-}
-
-
-void cleanUp()
-{
-    delete MainFont;
-    delete MainBigFont;
-    delete budgetWindow;
-    delete graphWindow;
-    delete toolPalette;
-    delete stringRenderer;
-    delete fileIo;
-
-    deinitTimers();
-
-    SDL_DestroyTexture(BigTileset.texture);
-    SDL_DestroyTexture(RCI_Indicator.texture);
-
-    SDL_DestroyRenderer(MainWindowRenderer);
-    SDL_DestroyWindow(MainWindow);
 }
 
 
@@ -1074,15 +1036,7 @@ int main(int argc, char* argv[])
 
         initRenderer();
         loadGraphics();
-
-        MainFont = new Font("res/raleway-medium.ttf", 12);
-        MainBigFont = new Font("res/raleway-medium.ttf", 14);
-
-        fileIo = new FileIo(*MainWindow);
-
-        initViewParamters();
-        updateMapDrawParameters();
-        initTimers();
+        loadFonts();
 
         gameInit();
 
