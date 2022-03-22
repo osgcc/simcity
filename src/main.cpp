@@ -112,21 +112,23 @@ namespace
     std::vector<const SDL_Rect*> UiRects{};
 
     Budget budget{};
+    CityProperties cityProperties{};
 
     BudgetWindow* budgetWindow{ nullptr };
     GraphWindow* graphWindow{ nullptr };
     StringRender* stringRenderer{ nullptr };
     ToolPalette* toolPalette{ nullptr };
 
-    CityProperties cityProperties;
-
     FileIo* fileIo{ nullptr };
+
+    Font* MainFont{ nullptr };
+    Font* MainBigFont{ nullptr };
+
 
     unsigned int speedModifier()
     {
         return SpeedModifierTable[static_cast<unsigned int>(SimSpeed())];
     }
-
 
     unsigned int zonePowerBlinkTick(unsigned int interval, void*)
     {
@@ -134,20 +136,17 @@ namespace
         return interval;
     }
 
-
     unsigned int redrawMiniMapTick(unsigned int interval, void*)
     {
         RedrawMinimap = true;
         return interval;
     }
 
-
     unsigned int simulationTick(unsigned int interval, void*)
     {
         SimulationStep = true;
         return SimStepDefaultTime - speedModifier();
     }
-
 
     unsigned int animationTick(unsigned int interval, void*)
     {
@@ -173,11 +172,6 @@ namespace
 };
 
 
-const Point<int>& viewOffset()
-{
-    return MapViewOffset;
-}
-
 constexpr auto RciValveHeight = 20;
 
 SDL_Window* MainWindow = nullptr;
@@ -190,9 +184,6 @@ Texture BigTileset{};
 Texture SmallTileset{};
 Texture RCI_Indicator{};
 
-Font* MainFont{ nullptr };
-Font* MainBigFont{ nullptr };
-
 
 bool AutoBulldoze{ false };
 bool AutoGo{ false };
@@ -200,6 +191,12 @@ bool AutoGo{ false };
 int InitSimLoad;
 int ScenarioID;
 bool NoDisasters;
+
+
+const Point<int>& viewOffset()
+{
+    return MapViewOffset;
+}
 
 
 void showBudgetWindow()
