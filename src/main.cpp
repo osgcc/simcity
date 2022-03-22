@@ -1034,8 +1034,6 @@ void gameInit()
 
     initOverlayTexture();
     initMapTextures();
-
-    GameLoop();
 }
 
 
@@ -1087,6 +1085,8 @@ int main(int argc, char* argv[])
         initTimers();
 
         gameInit();
+
+        GameLoop();
 
         cleanUp();
 
