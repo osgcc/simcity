@@ -40,9 +40,9 @@ namespace
         }
     }
 
-    bool _load_file(const std::string filename, const std::string& dir)
+    bool _load_file(const std::string filename)
     {
-        std::ifstream infile(dir + filename, std::ofstream::binary);
+        std::ifstream infile(filename, std::ofstream::binary);
         if (infile.fail())
         {
             infile.close();
@@ -92,7 +92,7 @@ namespace
 
 bool loadFile(const std::string& filename, CityProperties& properties, Budget& budget)
 {
-    if (!_load_file(filename, ""))
+    if (!_load_file(filename))
     {
         return false;
     }
@@ -273,7 +273,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
     properties.CityName(name);
     SimSpeed(SimulationSpeed::Normal);
 
-    _load_file(fname, "scenarios/");
+    _load_file("scenarios/" + fname);
 
     InitWillStuff();
     UpdateFunds(budget);
