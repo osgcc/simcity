@@ -494,7 +494,7 @@ void updateMapDrawParameters()
 }
 
 
-void getWindowSize()
+void windowSize()
 {
     SDL_GetWindowSize(MainWindow, &WindowSize.x, &WindowSize.y);;
 }
@@ -531,7 +531,7 @@ void centerGraphWindow()
 
 void windowResized(const Vector<int>& size)
 {
-    getWindowSize();
+    windowSize();
     clampViewOffset();
 
     setMiniMapSelectorSize();
@@ -785,7 +785,7 @@ void initRenderer()
 
 void initViewParamters()
 {
-    getWindowSize();
+    windowSize();
 
     MiniMapTexture.texture = SDL_CreateTexture(MainWindowRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, SimWidth * 3, SimHeight * 3);
     MainMapTexture.texture = SDL_CreateTexture(MainWindowRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, SimWidth * 16, SimHeight * 16);
