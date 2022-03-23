@@ -659,6 +659,7 @@ void handleKeyEvent(SDL_Event& event)
 void handleMouseEvent(SDL_Event& event)
 {
     SDL_Point mouseMotionDelta{};
+    SDL_Point mousePosition = { EventHandling::MousePosition.x, EventHandling::MousePosition.y };
 
     switch (event.type)
     {
@@ -682,24 +683,25 @@ void handleMouseEvent(SDL_Event& event)
         if (event.button.button == SDL_BUTTON_LEFT)
         {
             EventHandling::MouseLeftDown = true;
-            SDL_Point mp{ event.button.x, event.button.y };
 
             for (auto rect : UiRects)
             {
-                if (SDL_PointInRect(&mp, rect))
+                if (SDL_PointInRect(&mousePosition, rect))
                 {
                     return;
                 }
             }
 
-            if (SDL_PointInRect(&mp, &budgetWindow->rect()))
+            toolStart(TilePointedAt);
+
+            if (SDL_PointInRect(&mousePosition, &budgetWindow->rect()))
             {
-                budgetWindow->injectMouseClickPosition(mp);
+                budgetWindow->injectMouseClickPosition(mousePosition);
             }
 
-            if (SDL_PointInRect(&mp, &graphWindow->rect()))
+            if (SDL_PointInRect(&mousePosition, &graphWindow->rect()))
             {
-                graphWindow->injectMouseDown(mp);
+                graphWindow->injectMouseDown(mousePosition);
             }
 
             if (!BudgetWindowShown)
@@ -719,6 +721,15 @@ void handleMouseEvent(SDL_Event& event)
 
             if (BudgetWindowShown) { budgetWindow->injectMouseUp(); }
             if (ShowGraphWindow) { graphWindow->injectMouseUp(); }
+
+            for (auto rect : UiRects)
+            {
+                if (SDL_PointInRect(&mousePosition, rect))
+                {
+                    return;
+                }
+            }
+            toolEnd(TilePointedAt);
         }
         break;
 

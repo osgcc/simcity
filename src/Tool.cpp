@@ -113,6 +113,12 @@ void toolEnd(const Point<int>& end)
 }
 
 
+const Vector<int> toolVectorFromTiles(const Point<int>& start, const Point<int>& end)
+{
+    return {};
+}
+
+
 ToolResult putDownPark(int mapH, int mapV, Budget& budget)
 {
     int tile{};

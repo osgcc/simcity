@@ -11,6 +11,7 @@
 #pragma once
 
 #include "Point.h"
+#include "Vector.h"
 
 #include <map>
 #include <string>
@@ -74,3 +75,4 @@ void pendingTool(const Tool);
 
 void toolStart(const Point<int>&);
 void toolEnd(const Point<int>&);
+const Vector<int> toolVectorFromTiles(const Point<int>& start, const Point<int>& end);
