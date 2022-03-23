@@ -45,26 +45,3 @@ void InitWillStuff()
     ResetLastKeys();
     DoNewGame();
 }
-
-
-void ResetMapState()
-{
-    /*
-    for (SimView* view = sim->map; view != NULL; view = view->next)
-    {
-        view->map_state = ALMAP;
-    }
-    */
-}
-
-
-void ResetEditorState()
-{
-    /*
-    for (SimView* view = sim->editor; view != NULL; view = view->next)
-    {
-        view->tool_state = dozeState;
-        view->tool_state_save = -1;
-    }
-    */
-}

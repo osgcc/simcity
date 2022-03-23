@@ -352,8 +352,6 @@ void sim_init()
 
     InitializeSound();
     StopEarthquake();
-    ResetMapState();
-    ResetEditorState();
     ClearMap();
     InitWillStuff();
     budget.CurrentFunds(5000);

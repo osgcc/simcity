@@ -578,8 +578,6 @@ void GenerateSomeCity(int seed, CityProperties& properties, Budget& budget)
     DoInitialEval = 0;
 
     InitWillStuff();
-    ResetMapState();
-    ResetEditorState();
     UpdateFunds(budget);
     DoSimInit(properties, budget);
     Eval("UIDidGenerateNewCity");
