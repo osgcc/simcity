@@ -37,24 +37,24 @@ Tool PendingTool{ Tool::None };
 
 std::map<Tool, ToolProperties> Tools =
 {
-    { Tool::Residential, { 100, 3, 1, "Residential" }},
-    { Tool::Commercial, { 100, 3, 1, "Commercial" }},
-    { Tool::Industrial, { 100, 3, 1, "Industrial" }},
-    { Tool::Fire, { 500, 3, 1, "Fire Department" }},
-    { Tool::Query, { 0, 1, 0, "Query" }},
-    { Tool::Police, { 500, 3, 1, "Police Department" }},
-    { Tool::Wire, { 5, 1, 0, "Power Line" }},
-    { Tool::Bulldoze, { 1, 1, 0, "Bulldoze" }},
-    { Tool::Rail, { 20, 1, 0, "Rail" }},
-    { Tool::Road, { 10, 1, 0, "Roads" }},
-    { Tool::Stadium, { 5000, 4, 1, "Stadium" }},
-    { Tool::Park, { 10, 1, 0, "Park" }},
-    { Tool::Seaport, { 3000, 4, 1, "Seaport" }},
-    { Tool::Coal, { 3000, 4, 1, "Coal Power" }},
-    { Tool::Nuclear, { 5000, 4, 1, "Nuclear Power" }},
-    { Tool::Airport, { 10000, 6, 1, "Airport" }},
-    { Tool::Network, { 100, 1, 0, "Network" }},
-    { Tool::None, { 0, 0, 0, "No Tool" } }
+    { Tool::Residential, { 100, 3, 1, false, "Residential" }},
+    { Tool::Commercial, { 100, 3, 1, false, "Commercial" }},
+    { Tool::Industrial, { 100, 3, 1, false, "Industrial" }},
+    { Tool::Fire, { 500, 3, 1, false, "Fire Department" }},
+    { Tool::Query, { 0, 1, 0, false, "Query" }},
+    { Tool::Police, { 500, 3, 1, false, "Police Department" }},
+    { Tool::Wire, { 5, 1, 0, false, "Power Line" }},
+    { Tool::Bulldoze, { 1, 1, 0, false, "Bulldoze" }},
+    { Tool::Rail, { 20, 1, 0, true, "Rail" }},
+    { Tool::Road, { 10, 1, 0, true, "Roads" }},
+    { Tool::Stadium, { 5000, 4, 1, false, "Stadium" }},
+    { Tool::Park, { 10, 1, 0, false, "Park" }},
+    { Tool::Seaport, { 3000, 4, 1, false, "Seaport" }},
+    { Tool::Coal, { 3000, 4, 1, false, "Coal Power" }},
+    { Tool::Nuclear, { 5000, 4, 1, false, "Nuclear Power" }},
+    { Tool::Airport, { 10000, 6, 1, false, "Airport" }},
+    { Tool::Network, { 100, 1, 0, false, "Network" }},
+    { Tool::None, { 0, 0, 0, false, "No Tool" } }
 };
 
 

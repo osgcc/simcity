@@ -43,6 +43,7 @@ struct ToolProperties
     int cost{};
     int size{};
     int offset{};
+    bool draggable{ false };
     const std::string name{};
 };
 
