@@ -667,6 +667,11 @@ void handleMouseEvent(SDL_Event& event)
         EventHandling::MousePosition = { event.motion.x, event.motion.y };
         mouseMotionDelta = { event.motion.xrel, event.motion.yrel };
 
+        if (pendingToolProperties().draggable && EventHandling::MouseLeftDown && toolStart() != TilePointedAt)
+        {
+            const auto vec = toolVectorFromTiles(toolStart(), TilePointedAt);
+        }
+
         calculateMouseToWorld();
 
         if (ShowGraphWindow) { graphWindow->injectMouseMotion(mouseMotionDelta); }

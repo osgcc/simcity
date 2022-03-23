@@ -107,15 +107,28 @@ void toolStart(const Point<int>& start)
 }
 
 
+const Point<int>& toolStart()
+{
+    return ToolStart;
+}
+
+
 void toolEnd(const Point<int>& end)
 {
     ToolEnd = end;
 }
 
+const Point<int>& toolEnd()
+{
+    return ToolEnd;
+}
+
 
 const Vector<int> toolVectorFromTiles(const Point<int>& start, const Point<int>& end)
 {
-    return {};
+    Vector<int> v{ end.x - start.x, end.y - start.y };
+
+    return v;
 }
 
 
