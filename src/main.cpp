@@ -86,7 +86,6 @@ namespace
     Point<int> MapViewOffset{};
     Point<int> TilePointedAt{};
     Point<int> MousePosition{};
-    Point<int> MouseClickPosition{};
 
     bool MouseClicked{};
     bool BudgetWindowShown{ false };
@@ -169,6 +168,13 @@ namespace
             SDL_RemoveTimer(timer);
         }
     }
+};
+
+
+namespace EventHandling
+{
+    bool MouseLeftDown{ false };
+    Point<int> MouseClickPosition{};
 };
 
 
@@ -676,6 +682,7 @@ void handleMouseEvent(SDL_Event& event)
     case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT)
         {
+            EventHandling::MouseLeftDown = true;
             SDL_Point mp{ event.button.x, event.button.y };
 
             for (auto rect : UiRects)
@@ -706,8 +713,10 @@ void handleMouseEvent(SDL_Event& event)
     case SDL_MOUSEBUTTONUP:
         if (event.button.button == SDL_BUTTON_LEFT)
         {
+            EventHandling::MouseLeftDown = false;
+            EventHandling::MouseClickPosition = { event.button.x, event.button.y };
+
             MouseClicked = true;
-            MouseClickPosition = { event.button.x, event.button.y };
 
             if (BudgetWindowShown) { budgetWindow->injectMouseUp(); }
             if (ShowGraphWindow) { graphWindow->injectMouseUp(); }
@@ -1008,7 +1017,7 @@ void GameLoop()
             if (MouseClicked)
             {
                 MouseClicked = false;
-                toolPalette->injectMouseClickPosition(MouseClickPosition);
+                toolPalette->injectMouseClickPosition(EventHandling::MouseClickPosition);
             }
             toolPalette->draw();
 
