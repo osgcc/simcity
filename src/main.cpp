@@ -66,8 +66,29 @@
 
 const std::string MicropolisVersion = "4.0";
 
+SDL_Window* MainWindow = nullptr;
+SDL_Renderer* MainWindowRenderer = nullptr;
+
+Texture MainMapTexture{};
+Texture MiniMapTexture{};
+
+Texture BigTileset{};
+Texture SmallTileset{};
+Texture RCI_Indicator{};
+
+
+bool AutoBulldoze{ false };
+bool AutoGo{ false };
+
+int InitSimLoad;
+int ScenarioID;
+bool NoDisasters;
+
+
 namespace
 {
+    constexpr auto RciValveHeight = 20;
+
     SDL_Rect MiniMapTileRect{ 0, 0, 3, 3 };
     SDL_Rect UiHeaderRect{ 10, 10, 0, 0 };
     SDL_Rect RciDestination{};
@@ -177,27 +198,6 @@ namespace EventHandling
     bool MouseLeftDown{ false };
     bool MouseClicked{ false };
 };
-
-
-constexpr auto RciValveHeight = 20;
-
-SDL_Window* MainWindow = nullptr;
-SDL_Renderer* MainWindowRenderer = nullptr;
-
-Texture MainMapTexture{};
-Texture MiniMapTexture{};
-
-Texture BigTileset{};
-Texture SmallTileset{};
-Texture RCI_Indicator{};
-
-
-bool AutoBulldoze{ false };
-bool AutoGo{ false };
-
-int InitSimLoad;
-int ScenarioID;
-bool NoDisasters;
 
 
 const Point<int>& viewOffset()
