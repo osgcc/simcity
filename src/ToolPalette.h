@@ -16,8 +16,7 @@
 
 #include "Point.h"
 #include "Texture.h"
-
-#include "w_tool.h"
+#include "Tool.h"
 
 
 class ToolPalette

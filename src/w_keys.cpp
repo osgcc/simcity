@@ -11,6 +11,7 @@
 #include "main.h"
 
 #include "Map.h"
+#include "Tool.h"
 
 #include "s_alloc.h"
 #include "s_disast.h"
@@ -19,8 +20,6 @@
 #include "w_sound.h"
 #include "Sprite.h"
 #include "w_tk.h"
-#include "w_tool.h"
-
 
 static char LastKeys[5];
 

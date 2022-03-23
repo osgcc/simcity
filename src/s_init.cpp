@@ -10,13 +10,14 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "Sprite.h"
+#include "Tool.h"
+
 #include "s_alloc.h"
 #include "s_msg.h"
 #include "s_sim.h"
 
 #include "w_keys.h"
-#include "Sprite.h"
-#include "w_tool.h"
 #include "w_update.h"
 #include "w_util.h"
 

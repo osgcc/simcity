@@ -11,13 +11,13 @@
 #include "Sprite.h"
 
 #include "Map.h"
+#include "Tool.h"
 
 #include "s_alloc.h"
 #include "s_msg.h"
 #include "s_sim.h"
 
 #include "w_sound.h"
-#include "w_tool.h"
 #include "w_util.h"
 
 #include <map>

@@ -11,8 +11,7 @@
 #include "Map.h"
 
 #include "Budget.h"
-
-#include "w_tool.h"
+#include "Tool.h"
 
 #include "s_alloc.h"
 #include "s_msg.h"

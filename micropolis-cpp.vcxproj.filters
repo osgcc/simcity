@@ -78,9 +78,6 @@
     <ClCompile Include="src\w_tk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_tool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\w_update.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -118,6 +115,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FileIo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -185,9 +185,6 @@
     <ClInclude Include="src\s_traf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\w_tool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\s_fileio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -249,6 +246,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\FileIo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

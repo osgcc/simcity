@@ -11,8 +11,8 @@
 #include "Map.h"
 
 #include "Budget.h"
+#include "Tool.h"
 
-#include "w_tool.h"
 #include "w_util.h"
 
 

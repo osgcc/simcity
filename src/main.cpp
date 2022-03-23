@@ -20,6 +20,7 @@
 #include "Font.h"
 #include "Graph.h"
 #include "Map.h"
+#include "Tool.h"
 
 #include "g_ani.h"
 #include "g_map.h"
@@ -39,7 +40,6 @@
 
 #include "w_eval.h"
 #include "w_sound.h"
-#include "w_tool.h"
 #include "w_tk.h"
 #include "w_update.h"
 #include "w_util.h"
