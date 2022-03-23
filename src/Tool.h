@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #pragma once
 
+#include "Point.h"
+
 #include <map>
 #include <string>
 
@@ -66,5 +68,9 @@ bool tally(int tileValue);
 
 const ToolProperties& toolProperties(const Tool);
 const ToolProperties& pendingToolProperties();
+
 Tool pendingTool();
 void pendingTool(const Tool);
+
+void toolStart(const Point<int>&);
+void toolEnd(const Point<int>&);

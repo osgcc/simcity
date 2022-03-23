@@ -71,6 +71,9 @@ namespace
         { ToolResult::RequiresBulldozing, "Bulldozing Required" },
         { ToolResult::Success, "Success!" }
     };
+
+    Point<int> ToolStart{};
+    Point<int> ToolEnd{};
 };
 
 
@@ -95,6 +98,18 @@ const ToolProperties& toolProperties(const Tool tool)
 const ToolProperties& pendingToolProperties()
 {
     return Tools.at(PendingTool);
+}
+
+
+void toolStart(const Point<int>& start)
+{
+    ToolStart = start;
+}
+
+
+void toolEnd(const Point<int>& end)
+{
+    ToolEnd = end;
 }
 
 
