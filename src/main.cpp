@@ -85,9 +85,7 @@ namespace
 
     Point<int> MapViewOffset{};
     Point<int> TilePointedAt{};
-    Point<int> MousePosition{};
 
-    bool MouseClicked{};
     bool BudgetWindowShown{ false };
     bool Exit{ false };
     bool RedrawMinimap{ false };
@@ -173,8 +171,11 @@ namespace
 
 namespace EventHandling
 {
-    bool MouseLeftDown{ false };
     Point<int> MouseClickPosition{};
+    Point<int> MousePosition{};
+
+    bool MouseLeftDown{ false };
+    bool MouseClicked{ false };
 };
 
 
@@ -552,7 +553,7 @@ void windowResized(const Vector<int>& size)
 
 void calculateMouseToWorld()
 {
-    auto screenCell = PositionToCell(MousePosition, MapViewOffset);
+    auto screenCell = PositionToCell(EventHandling::MousePosition, MapViewOffset);
     
     TilePointedAt =
     {
@@ -664,7 +665,7 @@ void handleMouseEvent(SDL_Event& event)
     switch (event.type)
     {
     case SDL_MOUSEMOTION:
-        MousePosition = { event.motion.x, event.motion.y };
+        EventHandling::MousePosition = { event.motion.x, event.motion.y };
         mouseMotionDelta = { event.motion.xrel, event.motion.yrel };
 
         calculateMouseToWorld();
@@ -716,7 +717,7 @@ void handleMouseEvent(SDL_Event& event)
             EventHandling::MouseLeftDown = false;
             EventHandling::MouseClickPosition = { event.button.x, event.button.y };
 
-            MouseClicked = true;
+            EventHandling::MouseClicked = true;
 
             if (BudgetWindowShown) { budgetWindow->injectMouseUp(); }
             if (ShowGraphWindow) { graphWindow->injectMouseUp(); }
@@ -1014,9 +1015,9 @@ void GameLoop()
             drawTopUi();
             drawMiniMapUi();
 
-            if (MouseClicked)
+            if (EventHandling::MouseClicked)
             {
-                MouseClicked = false;
+                EventHandling::MouseClicked = false;
                 toolPalette->injectMouseClickPosition(EventHandling::MouseClickPosition);
             }
             toolPalette->draw();
