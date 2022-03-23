@@ -33,42 +33,69 @@
 
 int specialBase = CHURCH;
 
-Tool PendingTool{ Tool::None };
-
-std::map<Tool, ToolProperties> Tools =
+namespace
 {
-    { Tool::Residential, { 100, 3, 1, false, "Residential" }},
-    { Tool::Commercial, { 100, 3, 1, false, "Commercial" }},
-    { Tool::Industrial, { 100, 3, 1, false, "Industrial" }},
-    { Tool::Fire, { 500, 3, 1, false, "Fire Department" }},
-    { Tool::Query, { 0, 1, 0, false, "Query" }},
-    { Tool::Police, { 500, 3, 1, false, "Police Department" }},
-    { Tool::Wire, { 5, 1, 0, false, "Power Line" }},
-    { Tool::Bulldoze, { 1, 1, 0, false, "Bulldoze" }},
-    { Tool::Rail, { 20, 1, 0, true, "Rail" }},
-    { Tool::Road, { 10, 1, 0, true, "Roads" }},
-    { Tool::Stadium, { 5000, 4, 1, false, "Stadium" }},
-    { Tool::Park, { 10, 1, 0, false, "Park" }},
-    { Tool::Seaport, { 3000, 4, 1, false, "Seaport" }},
-    { Tool::Coal, { 3000, 4, 1, false, "Coal Power" }},
-    { Tool::Nuclear, { 5000, 4, 1, false, "Nuclear Power" }},
-    { Tool::Airport, { 10000, 6, 1, false, "Airport" }},
-    { Tool::Network, { 100, 1, 0, false, "Network" }},
-    { Tool::None, { 0, 0, 0, false, "No Tool" } }
+    Tool PendingTool{ Tool::None };
+
+    std::map<Tool, ToolProperties> Tools =
+    {
+        { Tool::Residential, { 100, 3, 1, false, "Residential" }},
+        { Tool::Commercial, { 100, 3, 1, false, "Commercial" }},
+        { Tool::Industrial, { 100, 3, 1, false, "Industrial" }},
+        { Tool::Fire, { 500, 3, 1, false, "Fire Department" }},
+        { Tool::Query, { 0, 1, 0, false, "Query" }},
+        { Tool::Police, { 500, 3, 1, false, "Police Department" }},
+        { Tool::Wire, { 5, 1, 0, false, "Power Line" }},
+        { Tool::Bulldoze, { 1, 1, 0, false, "Bulldoze" }},
+        { Tool::Rail, { 20, 1, 0, true, "Rail" }},
+        { Tool::Road, { 10, 1, 0, true, "Roads" }},
+        { Tool::Stadium, { 5000, 4, 1, false, "Stadium" }},
+        { Tool::Park, { 10, 1, 0, false, "Park" }},
+        { Tool::Seaport, { 3000, 4, 1, false, "Seaport" }},
+        { Tool::Coal, { 3000, 4, 1, false, "Coal Power" }},
+        { Tool::Nuclear, { 5000, 4, 1, false, "Nuclear Power" }},
+        { Tool::Airport, { 10000, 6, 1, false, "Airport" }},
+        { Tool::Network, { 100, 1, 0, false, "Network" }},
+        { Tool::None, { 0, 0, 0, false, "No Tool" } }
+    };
+
+
+    std::map<ToolResult, std::string> ToolResultStringTable =
+    {
+        { ToolResult::CannotBulldoze, "Cannot Bulldoze" },
+        { ToolResult::InsufficientFunds, "Insufficient Funds" },
+        { ToolResult::InvalidLocation, "Invalid Location" },
+        { ToolResult::InvalidOperation, "Invalid Operation" },
+        { ToolResult::NetworkVotedNo, "Other players vetoed action" },
+        { ToolResult::OutOfBounds, "Out of Bounds" },
+        { ToolResult::RequiresBulldozing, "Bulldozing Required" },
+        { ToolResult::Success, "Success!" }
+    };
 };
 
 
-std::map<ToolResult, std::string> ToolResultStringTable =
+Tool pendingTool()
 {
-    { ToolResult::CannotBulldoze, "Cannot Bulldoze" },
-    { ToolResult::InsufficientFunds, "Insufficient Funds" },
-    { ToolResult::InvalidLocation, "Invalid Location" },
-    { ToolResult::InvalidOperation, "Invalid Operation" },
-    { ToolResult::NetworkVotedNo, "Other players vetoed action" },
-    { ToolResult::OutOfBounds, "Out of Bounds" },
-    { ToolResult::RequiresBulldozing, "Bulldozing Required" },
-    { ToolResult::Success, "Success!" }
-};
+    return PendingTool;
+}
+
+
+void pendingTool(const Tool tool)
+{
+    PendingTool = tool;
+}
+
+
+const ToolProperties& toolProperties(const Tool tool)
+{
+    return Tools.at(tool);
+}
+
+
+const ToolProperties& pendingToolProperties()
+{
+    return Tools.at(PendingTool);
+}
 
 
 ToolResult putDownPark(int mapH, int mapV, Budget& budget)

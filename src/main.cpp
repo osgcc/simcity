@@ -906,10 +906,10 @@ void DrawPendingTool(const ToolPalette& palette)
 
     const SDL_Rect toolRect
     {
-        TileHighlight.x - (Tools.at(PendingTool).offset * 16),
-        TileHighlight.y - (Tools.at(PendingTool).offset * 16),
-        Tools.at(PendingTool).size * 16,
-        Tools.at(PendingTool).size * 16
+        TileHighlight.x - (pendingToolProperties().offset * 16),
+        TileHighlight.y - (pendingToolProperties().offset * 16),
+        pendingToolProperties().size * 16,
+        pendingToolProperties().size * 16
     };
 
     if (palette.toolGost().texture)
@@ -984,7 +984,7 @@ void GameLoop()
 {
     while (!Exit)
     {
-        PendingTool = toolPalette->tool();
+        pendingTool(toolPalette->tool());
 
         sim_loop(SimulationStep);
 

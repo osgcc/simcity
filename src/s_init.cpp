@@ -32,7 +32,7 @@ void InitWillStuff()
     LastCityTime(-1);
     LastCityYear(1);
     LastCityMonth(0);
-    PendingTool = Tool::None;
+    pendingTool(Tool::None);
 
     MessageId(NotificationId::None);
 

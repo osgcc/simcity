@@ -64,6 +64,7 @@ enum class ToolResult
 void ToolDown(int mapX, int mapY, Budget& budget);
 bool tally(int tileValue);
 
-extern std::map<Tool, ToolProperties> Tools;
-
-extern Tool PendingTool;
+const ToolProperties& toolProperties(const Tool);
+const ToolProperties& pendingToolProperties();
+Tool pendingTool();
+void pendingTool(const Tool);
