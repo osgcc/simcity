@@ -1067,6 +1067,8 @@ int main(int argc, char* argv[])
 
         gameInit();
 
+        LoadScenario(1, cityProperties, budget);
+
         GameLoop();
 
         cleanUp();
