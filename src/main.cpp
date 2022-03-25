@@ -1067,7 +1067,7 @@ int main(int argc, char* argv[])
 
         gameInit();
 
-        LoadScenario(1, cityProperties, budget);
+        LoadScenario(Scenario::Dullsville, cityProperties, budget);
 
         GameLoop();
 

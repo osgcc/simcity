@@ -12,9 +12,21 @@
 
 #include <string>
 
+enum class Scenario
+{
+    Dullsville,
+    SanFransisco,
+    Hamburg,
+    Bern,
+    Tokyo,
+    Detroit,
+    Boston,
+    Rio
+};
+
 class Budget;
 class CityProperties;
 
 bool LoadCity(const std::string& filename, CityProperties&, Budget&);
-void LoadScenario(int s, CityProperties&, Budget&);
+void LoadScenario(Scenario, CityProperties&, Budget&);
 void SaveCity(const std::string&, const CityProperties&, const Budget&);

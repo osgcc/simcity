@@ -15,6 +15,7 @@
 #include "Map.h"
 
 #include "s_alloc.h"
+#include "s_fileio.h"
 #include "s_init.h"
 #include "s_sim.h"
 
@@ -181,30 +182,15 @@ void SaveCity(const std::string& filename, const CityProperties& properties, con
 }
 
 
-enum class ScenarioName
-{
-    Dullsville,
-    SanFransisco,
-    Hamburg,
-    Bern,
-    Tokyo,
-    Detroit,
-    Boston,
-    Rio
-};
-
-
-void LoadScenario(int s, CityProperties& properties, Budget& budget)
+void LoadScenario(Scenario scenario, CityProperties& properties, Budget& budget)
 {
     std::string fname;
 
     properties.GameLevel(0);
 
-    if ((s < 1) || (s > 8)) { s = 1; }
-
-    switch (s)
+    switch (scenario)
     {
-    case 1:
+    case Scenario::Dullsville:
         properties.CityName("Dullsville");
         fname = "snro.111";
         ScenarioID = 1;
@@ -212,7 +198,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         budget.CurrentFunds(5000);
         break;
 
-    case 2:
+    case Scenario::SanFransisco:
         properties.CityName("San Francisco");
         fname = "snro.222";
         ScenarioID = 2;
@@ -220,7 +206,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         budget.CurrentFunds(20000);
         break;
 
-    case 3:
+    case Scenario::Hamburg:
         properties.CityName("Hamburg");
         fname = "snro.333";
         ScenarioID = 3;
@@ -228,7 +214,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         budget.CurrentFunds(20000);
         break;
 
-    case 4:
+    case Scenario::Bern:
         properties.CityName("Bern");
         fname = "snro.444";
         ScenarioID = 4;
@@ -236,7 +222,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         budget.CurrentFunds(20000);
         break;
 
-    case 5:
+    case Scenario::Tokyo:
         properties.CityName("Tokyo");
         fname = "snro.555";
         ScenarioID = 5;
@@ -244,7 +230,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         budget.CurrentFunds(20000);
         break;
 
-    case 6:
+    case Scenario::Detroit:
         properties.CityName("Detroit");
         fname = "snro.666";
         ScenarioID = 6;
@@ -252,7 +238,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         budget.CurrentFunds(20000);
         break;
 
-    case 7:
+    case Scenario::Boston:
         properties.CityName("Boston");
         fname = "snro.777";
         ScenarioID = 7;
@@ -260,7 +246,7 @@ void LoadScenario(int s, CityProperties& properties, Budget& budget)
         budget.CurrentFunds(20000);
         break;
 
-    case 8:
+    case Scenario::Rio:
         properties.CityName("Rio de Janeiro");
         fname = "snro.888";
         ScenarioID = 8;
