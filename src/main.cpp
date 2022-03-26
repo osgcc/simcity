@@ -209,6 +209,7 @@ const Point<int>& viewOffset()
 void showBudgetWindow()
 {
     BudgetWindowShown = true;
+    budgetWindow->update();
 }
 
 
