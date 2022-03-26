@@ -867,8 +867,6 @@ void drawTopUi()
     SDL_RenderCopy(MainWindowRenderer, RCI_Indicator.texture, nullptr, &RciDestination);
     drawValve();
 
-    SDL_SetTextureColorMod(MainBigFont->texture(), 255, 255, 255);
-
     stringRenderer->drawString(*MainBigFont, MonthString(static_cast<Month>(LastCityMonth())), {UiHeaderRect.x + 5, UiHeaderRect.y + 5});
     stringRenderer->drawString(*MainBigFont, std::to_string(CurrentYear()), { UiHeaderRect.x + 35, UiHeaderRect.y + 5});
 
