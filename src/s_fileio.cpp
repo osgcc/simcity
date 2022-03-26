@@ -28,11 +28,33 @@
 #include <fstream>
 #include <iostream>
 #include <limits>
+#include <map>
 #include <string>
 
 
 namespace
 {
+    struct ScenarioProperties
+    {
+        const std::string FileName{};
+        const std::string CityName{};
+        const int Time{};
+        const int StartingFunds{};
+        const int Id{};
+    };
+
+    std::map<Scenario, ScenarioProperties> ScenarioPropertiesTable
+    {
+        { Scenario::Dullsville, { "snro.111", "Dullsville", ((1900 - 1900) * 48) + 2, 5000, 1 } },
+        { Scenario::SanFransisco, { "snro.222", "San Francisco", ((1906 - 1900) * 48) + 2, 20000, 2 } },
+        { Scenario::Hamburg, { "snro.333", "Hamburg", ((1944 - 1900) * 48) + 2, 20000, 3 } },
+        { Scenario::Bern, { "snro.444", "Bern", ((1965 - 1900) * 48) + 2, 20000, 4 } },
+        { Scenario::Tokyo, { "snro.555", "Tokyo", ((1957 - 1900) * 48) + 2, 20000, 5 } },
+        { Scenario::Detroit, { "snro.666", "Detroit", ((1972 - 1900) * 48) + 2, 20000, 6 } },
+        { Scenario::Boston, { "snro.777", "Boston", ((2010 - 1900) * 48) + 2, 20000, 7 } },
+        { Scenario::Rio, { "snro.888", "Rio de Janeiro", ((2047 - 1900) * 48) + 2, 20000, 8 } }
+    };
+
     void copyBufIntoArray(const int (&buf)[HistoryLength], GraphHistory& graph)
     {
         for (size_t i = 0; i < ResHis.size(); ++i)
@@ -184,80 +206,18 @@ void SaveCity(const std::string& filename, const CityProperties& properties, con
 
 void LoadScenario(Scenario scenario, CityProperties& properties, Budget& budget)
 {
-    std::string fname;
-
     properties.GameLevel(0);
 
-    switch (scenario)
-    {
-    case Scenario::Dullsville:
-        properties.CityName("Dullsville");
-        fname = "snro.111";
-        ScenarioID = 1;
-        CityTime = ((1900 - 1900) * 48) + 2;
-        budget.CurrentFunds(5000);
-        break;
+    const auto& scenarioProperties = ScenarioPropertiesTable.at(scenario);
 
-    case Scenario::SanFransisco:
-        properties.CityName("San Francisco");
-        fname = "snro.222";
-        ScenarioID = 2;
-        CityTime = ((1906 - 1900) * 48) + 2;
-        budget.CurrentFunds(20000);
-        break;
+    properties.CityName(scenarioProperties.CityName);
+    budget.CurrentFunds(scenarioProperties.StartingFunds);
+    CityTime = scenarioProperties.Time;
+    ScenarioID = scenarioProperties.Id;
 
-    case Scenario::Hamburg:
-        properties.CityName("Hamburg");
-        fname = "snro.333";
-        ScenarioID = 3;
-        CityTime = ((1944 - 1900) * 48) + 2;
-        budget.CurrentFunds(20000);
-        break;
-
-    case Scenario::Bern:
-        properties.CityName("Bern");
-        fname = "snro.444";
-        ScenarioID = 4;
-        CityTime = ((1965 - 1900) * 48) + 2;
-        budget.CurrentFunds(20000);
-        break;
-
-    case Scenario::Tokyo:
-        properties.CityName("Tokyo");
-        fname = "snro.555";
-        ScenarioID = 5;
-        CityTime = ((1957 - 1900) * 48) + 2;
-        budget.CurrentFunds(20000);
-        break;
-
-    case Scenario::Detroit:
-        properties.CityName("Detroit");
-        fname = "snro.666";
-        ScenarioID = 6;
-        CityTime = ((1972 - 1900) * 48) + 2;
-        budget.CurrentFunds(20000);
-        break;
-
-    case Scenario::Boston:
-        properties.CityName("Boston");
-        fname = "snro.777";
-        ScenarioID = 7;
-        CityTime = ((2010 - 1900) * 48) + 2;
-        budget.CurrentFunds(20000);
-        break;
-
-    case Scenario::Rio:
-        properties.CityName("Rio de Janeiro");
-        fname = "snro.888";
-        ScenarioID = 8;
-        CityTime = ((2047 - 1900) * 48) + 2;
-        budget.CurrentFunds(20000);
-        break;
-    }
+    _load_file("scenarios/" + scenarioProperties.FileName);
 
     SimSpeed(SimulationSpeed::Normal);
-
-    _load_file("scenarios/" + fname);
 
     InitWillStuff();
     UpdateFunds(budget);
