@@ -38,11 +38,13 @@ int _WireTable[16] = {
 };
 
 
-#define NeutralizeRoad(Tile) \
-  if (((Tile &= LOMASK) >= 64) && \
-      ((Tile & LOMASK) <= 207)) { \
-    Tile = (Tile & 0x000F) + 64; \
-  }
+void NeutralizeRoad(int tile)
+{
+    if (((tile &= LOMASK) >= 64) && ((tile & LOMASK) <= 207))
+    {
+        tile = (tile & 0x000F) + 64;
+    }
+}
 
 
 /* comefrom: ConnecTile */
