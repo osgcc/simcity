@@ -78,6 +78,3 @@ const Point<int>& toolStart();
 
 void toolEnd(const Point<int>&);
 const Point<int>& toolEnd();
-
-
-const Vector<int> toolVectorFromTiles(const Point<int>& start, const Point<int>& end);

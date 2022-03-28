@@ -44,3 +44,4 @@ void SetYear(int year);
 void SetGameLevelFunds(int level, CityProperties& properties, Budget&);
 bool CoordinatesValid(int x, int y, int width, int height);
 Point<int> PositionToCell(const Point<int>& position, const Point<int>& offset);
+const Vector<int> vectorFromPoints(const Point<int>& start, const Point<int>& end);

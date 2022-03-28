@@ -35,6 +35,12 @@ namespace
 };
 
 
+const Vector<int> vectorFromPoints(const Point<int>& start, const Point<int>& end)
+{
+    return { end.x - start.x, end.y - start.y };
+}
+
+
 Point<int> PositionToCell(const Point<int>& position, const Point<int>& offset)
 {
     return
