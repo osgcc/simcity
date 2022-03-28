@@ -66,6 +66,8 @@
 
 const std::string MicropolisVersion = "4.0";
 
+constexpr auto tileSize = 16;
+
 SDL_Window* MainWindow = nullptr;
 SDL_Renderer* MainWindowRenderer = nullptr;
 
@@ -103,6 +105,7 @@ namespace
     SDL_Rect IndustrialValveRect{ 0, 0, 4, 0 };
 
     Vector<int> WindowSize{};
+    Vector<int> DraggableToolVector{};
 
     Point<int> MapViewOffset{};
     Point<int> TilePointedAt{};
@@ -552,7 +555,7 @@ void windowResized(const Vector<int>& size)
 
 void calculateMouseToWorld()
 {
-    auto screenCell = PositionToCell(EventHandling::MousePosition, MapViewOffset);
+    const auto screenCell = PositionToCell(EventHandling::MousePosition, MapViewOffset);
     
     TilePointedAt =
     {
@@ -668,9 +671,10 @@ void handleMouseEvent(SDL_Event& event)
         EventHandling::MousePosition = { event.motion.x, event.motion.y };
         mouseMotionDelta = { event.motion.xrel, event.motion.yrel };
 
+        DraggableToolVector = {};
         if (pendingToolProperties().draggable && EventHandling::MouseLeftDown && toolStart() != TilePointedAt)
         {
-            const auto vec = toolVectorFromTiles(toolStart(), TilePointedAt);
+            DraggableToolVector = vectorFromPoints(toolStart(), TilePointedAt);
         }
 
         calculateMouseToWorld();
@@ -710,7 +714,7 @@ void handleMouseEvent(SDL_Event& event)
                 graphWindow->injectMouseDown(mousePosition);
             }
 
-            if (!BudgetWindowShown)
+            if (!BudgetWindowShown && !pendingToolProperties().draggable)
             {
                 ToolDown(TilePointedAt.x, TilePointedAt.y, budget);
             }
@@ -912,7 +916,7 @@ void drawMiniMapUi()
 
 void DrawPendingTool(const ToolPalette& palette)
 {
-    if (palette.tool() == Tool::None)
+    if (palette.tool() == Tool::None || (pendingToolProperties().draggable && EventHandling::MouseLeftDown))
     {
         return;
     }
@@ -929,6 +933,37 @@ void DrawPendingTool(const ToolPalette& palette)
     {
         SDL_RenderCopy(MainWindowRenderer, palette.toolGost().texture, &palette.toolGost().area, &toolRect);
         return;
+    }
+
+    SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
+    SDL_RenderFillRect(MainWindowRenderer, &toolRect);
+
+    SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(MainWindowRenderer, &toolRect);
+}
+
+
+void drawDraggableToolVector()
+{
+    if (!EventHandling::MouseLeftDown) { return; }
+    
+    SDL_Rect toolRect
+    {
+        (toolStart().x * tileSize) - MapViewOffset.x,
+        (toolStart().y * tileSize) - MapViewOffset.y,
+        tileSize, tileSize
+    };
+
+    const int axis = abs(DraggableToolVector.x) >= abs(DraggableToolVector.y) ? DraggableToolVector.x : DraggableToolVector.y;
+    const int size = (std::abs(axis) * tileSize) + tileSize;
+
+    const bool xAxisLarger = std::abs(DraggableToolVector.x) > std::abs(DraggableToolVector.y);
+    xAxisLarger ? toolRect.w = size : toolRect.h = size;
+
+    if (axis < 0)
+    {
+        const int startValue = size - tileSize;
+        xAxisLarger ? toolRect.x -= startValue : toolRect.y -= startValue;
     }
 
     SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
@@ -1024,6 +1059,7 @@ void GameLoop()
         else
         {
             DrawPendingTool(*toolPalette);
+            drawDraggableToolVector();
 
             drawTopUi();
             drawMiniMapUi();
