@@ -41,7 +41,6 @@ namespace
       214, 219, 218, 220
     };
 
-
     void NeutralizeRoad(int tile)
     {
         if (((tile &= LOMASK) >= 64) && ((tile & LOMASK) <= 207))
@@ -52,7 +51,6 @@ namespace
 }
 
 
-/* comefrom: ConnecTile */
 ToolResult _LayDoze(int x, int y, int* TileAdrPtr, Budget& budget)
 {
     int Tile;
@@ -88,21 +86,20 @@ ToolResult _LayDoze(int x, int y, int* TileAdrPtr, Budget& budget)
     case HPOWER:
     case VPOWER:
     case HRAIL:
-    case VRAIL:		/* Dozing over water, replace with water. */
+    case VRAIL: /* Dozing over water, replace with water. */
         (*TileAdrPtr) = RIVER;
         break;
 
-    default:		/* Dozing on land, replace with land.  Simple, eh? */
+    default: /* Dozing on land, replace with land.  Simple, eh? */
         (*TileAdrPtr) = DIRT;
         break;
     }
 
-    budget.Spend(1);			/* Costs $1.00....*/
+    budget.Spend(1); /* Costs $1.00....*/
     return ToolResult::Success;
 }
 
 
-/* comefrom: ConnecTile */
 ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
 {
     int Tile;
@@ -203,7 +200,6 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
 }
 
 
-/* comefrom: ConnecTile */
 ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
 {
     int Tile;
@@ -304,7 +300,6 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
 }
 
 
-/* comefrom: ConnecTile */
 ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
 {
     int Tile;
@@ -414,7 +409,6 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
 }
 
 
-/* comefrom: _FixZone */
 void _FixSingle(int x, int y, int* TileAdrPtr)
 {
     int Tile;
@@ -424,7 +418,6 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
     NeutralizeRoad(Tile);
     if ((Tile >= 66) && (Tile <= 76)) /* Cleanup Road */
     {
-
         if (y > 0)
         {
             Tile = TileAdrPtr[-1];
