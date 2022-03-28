@@ -158,6 +158,6 @@ void UpdateEvaluation()
 
 void UpdateFunds(Budget& budget)
 {
-    budget.CurrentFunds(std::clamp(budget.CurrentFunds(), 0, std::numeric_limits<int>::max()));
     budget.PreviousFunds(budget.CurrentFunds());
+    budget.CurrentFunds(std::clamp(budget.CurrentFunds(), 0, std::numeric_limits<int>::max()));
 }
