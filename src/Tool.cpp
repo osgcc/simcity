@@ -11,13 +11,13 @@
 #include "Map.h"
 
 #include "Budget.h"
+#include "Connection.h"
 #include "Tool.h"
 
 #include "s_alloc.h"
 #include "s_msg.h"
 #include "s_sim.h"
 
-#include "w_con.h"
 #include "w_resrc.h"
 #include "w_sound.h"
 #include "w_tk.h"

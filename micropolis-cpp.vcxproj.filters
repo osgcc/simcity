@@ -60,9 +60,6 @@
     <ClCompile Include="src\s_zone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_con.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\w_eval.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -118,6 +115,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Tool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Connection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -188,9 +188,6 @@
     <ClInclude Include="src\s_fileio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\w_con.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\g_ani.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -249,6 +246,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Tool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Connection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

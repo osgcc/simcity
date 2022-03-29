@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #pragma once
 
+#include "Tool.h"
+
 class Budget;
 
 ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command, Budget&);

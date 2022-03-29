@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\Budget.cpp" />
     <ClCompile Include="src\BudgetWindow.cpp" />
+    <ClCompile Include="src\Connection.cpp" />
     <ClCompile Include="src\FileIo.cpp" />
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\GraphWindow.cpp" />
@@ -46,7 +47,6 @@
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Tool.cpp" />
     <ClCompile Include="src\ToolPalette.cpp" />
-    <ClCompile Include="src\w_con.cpp" />
     <ClCompile Include="src\w_eval.cpp" />
     <ClCompile Include="src\w_keys.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
@@ -60,6 +60,7 @@
     <ClInclude Include="src\Budget.h" />
     <ClInclude Include="src\BudgetWindow.h" />
     <ClInclude Include="src\CityProperties.h" />
+    <ClInclude Include="src\Connection.h" />
     <ClInclude Include="src\FileIo.h" />
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Graph.h" />
@@ -87,7 +88,6 @@
     <ClInclude Include="src\ToolPalette.h" />
     <ClInclude Include="src\Vector.h" />
     <ClInclude Include="src\VectorSizeRange.h" />
-    <ClInclude Include="src\w_con.h" />
     <ClInclude Include="src\animtab.h" />
     <ClInclude Include="src\g_map.h" />
     <ClInclude Include="src\main.h" />
