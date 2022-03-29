@@ -22,4 +22,4 @@ enum class ToolOperation
 };
 
 ToolResult ConnectTile(int x, int y, int* TileAdrPtr, int Command, Budget&);
-ToolResult CanConnectTile(int x, int y, ToolOperation);
+ToolResult CanConnectTile(int x, int y, Tool, Budget&);

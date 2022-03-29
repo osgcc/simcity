@@ -17,8 +17,11 @@
 
 #include "w_util.h"
 
+
 namespace
 {
+    constexpr auto WaterConstructionMultiplier = 5;
+
     int _RoadTable[16]
     {
       66, 67, 66, 68,
@@ -43,7 +46,7 @@ namespace
       214, 219, 218, 220
     };
 
-    void NeutralizeRoad(int tile)
+    void NeutralizeRoad(int& tile)
     {
         if (((tile &= LOMASK) >= 64) && ((tile & LOMASK) <= 207))
         {
@@ -605,9 +608,9 @@ void _FixZone(int x, int y, int* TileAdrPtr)
 }
 
 
-ToolResult CanConnectTile(int x, int y, ToolOperation)
+ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
 {
-    return ToolResult::InvalidOperation;
+    return ToolResult::Success;
 }
 
 
