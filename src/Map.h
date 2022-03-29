@@ -49,6 +49,7 @@ constexpr auto ROADBASE = 64;
 constexpr auto HBRIDGE = 64;
 constexpr auto VBRIDGE = 65;
 constexpr auto ROADS = 66;
+constexpr auto ROADSV = 67;
 constexpr auto INTERSECTION = 76;
 constexpr auto HROADPOWER = 77;
 constexpr auto VROADPOWER = 78;

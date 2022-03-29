@@ -287,7 +287,7 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
         (*TileAdrPtr) = 238 | BURNBIT | BULLBIT;
         break;
 
-    case 67: // Rail on road #2
+    case ROADSV: // Rail on road #2
         (*TileAdrPtr) = 237 | BURNBIT | BULLBIT;
         break;
 
@@ -391,7 +391,7 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
         (*TileAdrPtr) = 77 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
-    case 67: // Wire on Road #2
+    case ROADSV: // Wire on Road #2
         (*TileAdrPtr) = 78 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
