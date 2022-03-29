@@ -11,6 +11,8 @@
 #include "Map.h"
 
 #include "Budget.h"
+#include "Connection.h"
+
 #include "Tool.h"
 
 #include "w_util.h"
@@ -600,6 +602,12 @@ void _FixZone(int x, int y, int* TileAdrPtr)
     {
         _FixSingle(x - 1, y, &TileAdrPtr[-SimHeight]);
     }
+}
+
+
+ToolResult CanConnectTile(int x, int y, ToolOperation)
+{
+    return ToolResult::InvalidOperation;
 }
 
 

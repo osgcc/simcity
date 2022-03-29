@@ -14,4 +14,12 @@
 
 class Budget;
 
+enum class ToolOperation
+{
+	Road,
+	Rail,
+	Wire
+};
+
 ToolResult ConnectTile(int x, int y, int* TileAdrPtr, int Command, Budget&);
+ToolResult CanConnectTile(int x, int y, ToolOperation);
