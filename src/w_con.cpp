@@ -57,14 +57,14 @@ ToolResult _LayDoze(int x, int y, int* TileAdrPtr, Budget& budget)
 
     if (budget.Broke())
     {
-        return ToolResult::InsufficientFunds;			/* no mas dinero. */
+        return ToolResult::InsufficientFunds; // no mas dinero.
     }
 
     Tile = (*TileAdrPtr);
 
     if (!(Tile & BULLBIT))
     {
-        return ToolResult::CannotBulldoze;			/* Check dozeable bit. */
+        return ToolResult::CannotBulldoze; // Check dozeable bit.
     }
 
     NeutralizeRoad(Tile);
@@ -86,16 +86,16 @@ ToolResult _LayDoze(int x, int y, int* TileAdrPtr, Budget& budget)
     case HPOWER:
     case VPOWER:
     case HRAIL:
-    case VRAIL: /* Dozing over water, replace with water. */
+    case VRAIL: // Dozing over water, replace with water.
         (*TileAdrPtr) = RIVER;
         break;
 
-    default: /* Dozing on land, replace with land.  Simple, eh? */
+    default: // Dozing on land, replace with land.  Simple, eh?
         (*TileAdrPtr) = DIRT;
         break;
     }
 
-    budget.Spend(1); /* Costs $1.00....*/
+    budget.Spend(1); // Costs $1.00...
     return ToolResult::Success;
 }
 
@@ -118,9 +118,9 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
         (*TileAdrPtr) = ROADS | BULLBIT | BURNBIT;
         break;
 
-    case RIVER: /* Road on Water */
+    case RIVER: // Road on Water
     case REDGE:
-    case CHANNEL: /* Check how to build bridges, if possible. */
+    case CHANNEL: // Check how to build bridges, if possible.
         if (budget.CurrentFunds() < 50)
         {
             return ToolResult::InsufficientFunds;
@@ -172,26 +172,26 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
             }
         }
 
-        /* Can't do road... */
+        // Can't do road...
         return ToolResult::InvalidOperation;
 
-    case LHPOWER: /* Road on power */
+    case LHPOWER: // Road on power
         (*TileAdrPtr) = VROADPOWER | CONDBIT | BURNBIT | BULLBIT;
         break;
 
-    case LVPOWER: /* Road on power #2 */
+    case LVPOWER: // Road on power #2
         (*TileAdrPtr) = HROADPOWER | CONDBIT | BURNBIT | BULLBIT;
         break;
 
-    case LHRAIL: /* Road on rail */
+    case LHRAIL: // Road on rail
         (*TileAdrPtr) = HRAILROAD | BURNBIT | BULLBIT;
         break;
 
-    case LVRAIL: /* Road on rail #2 */
+    case LVRAIL: // Road on rail #2
         (*TileAdrPtr) = VRAILROAD | BURNBIT | BULLBIT;
         break;
 
-    default: /* Can't do road */
+    default: // Can't do road
         return ToolResult::InvalidOperation;
     }
 
