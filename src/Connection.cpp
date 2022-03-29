@@ -46,12 +46,15 @@ namespace
       214, 219, 218, 220
     };
 
-    void NeutralizeRoad(int& tile)
+    unsigned int NeutralizeRoad(int tile)
     {
-        if (((tile &= LOMASK) >= 64) && ((tile & LOMASK) <= 207))
+        unsigned int outValue = tile & LOMASK;
+        if ((outValue >= 64) && (outValue <= 207))
         {
-            tile = (tile & 0x000F) + 64;
+            outValue = (tile & 0x000F) + 64;
         }
+
+        return outValue;
     }
 }
 
@@ -72,7 +75,7 @@ ToolResult _LayDoze(int x, int y, int* TileAdrPtr, Budget& budget)
         return ToolResult::CannotBulldoze; // Check dozeable bit.
     }
 
-    NeutralizeRoad(Tile);
+    Tile = NeutralizeRoad(Tile);
 
     switch (Tile)
     {
@@ -134,8 +137,7 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (x < (SimWidth - 1))
         {
-            int& adjTile = Map[x + 1][y];
-            NeutralizeRoad(adjTile);
+            const int adjTile = NeutralizeRoad(Map[x + 1][y]);
             if ((adjTile == VRAILROAD) || (adjTile == HBRIDGE) || ((adjTile >= ROADS) && (adjTile <= HROADPOWER)))
             {
                 Map[x][y] = HBRIDGE | BULLBIT;
@@ -145,8 +147,7 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (x > 0)
         {
-            int& adjTile = Map[x - 1][y];
-            NeutralizeRoad(adjTile);
+            const int adjTile = NeutralizeRoad(Map[x - 1][y]);
             if ((adjTile == VRAILROAD) || (adjTile == HBRIDGE) || ((adjTile >= ROADS) && (adjTile <= INTERSECTION)))
             {
                 Map[x][y] = HBRIDGE | BULLBIT;
@@ -156,8 +157,7 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (y < (SimHeight - 1))
         {
-            int& adjTile = Map[x][y + 1];
-            NeutralizeRoad(adjTile);
+            const int adjTile = NeutralizeRoad(Map[x][y + 1]);
             if ((adjTile == HRAILROAD) || (adjTile == VROADPOWER) || ((adjTile >= VBRIDGE) && (adjTile <= INTERSECTION)))
             {
                 Map[x][y] = VBRIDGE | BULLBIT;
@@ -167,8 +167,7 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (y > 0)
         {
-            int& adjTile = Map[x][y - 1];
-            NeutralizeRoad(adjTile);
+            const int adjTile = NeutralizeRoad(Map[x][y - 1]);
             if ((adjTile == HRAILROAD) || (adjTile == VROADPOWER) || ((adjTile >= VBRIDGE) && (adjTile <= INTERSECTION)))
             {
                 Map[x][y] = VBRIDGE | BULLBIT;
@@ -214,8 +213,7 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
         return ToolResult::InsufficientFunds;
     }
 
-    Tile = (*TileAdrPtr) & LOMASK;
-    NeutralizeRoad(Tile);
+    Tile = NeutralizeRoad((*TileAdrPtr) & LOMASK);
 
     switch (Tile)
     {
@@ -234,8 +232,7 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (x < (SimWidth - 1))
         {
-            Tile = TileAdrPtr[SimHeight];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[SimHeight]);
             if ((Tile == RAILHPOWERV) || (Tile == RAILBASE) || ((Tile >= LHRAIL) && (Tile <= HRAILROAD)))
             {
                 (*TileAdrPtr) = HRAIL | BULLBIT;
@@ -245,8 +242,7 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (x > 0)
         {
-            Tile = TileAdrPtr[-SimHeight];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[-SimHeight]);
             if ((Tile == RAILHPOWERV) || (Tile == RAILBASE) || ((Tile > VRAIL) && (Tile < VRAILROAD)))
             {
                 (*TileAdrPtr) = HRAIL | BULLBIT;
@@ -256,8 +252,7 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (y < (SimHeight - 1))
         {
-            Tile = TileAdrPtr[1];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[1]);
             if ((Tile == RAILVPOWERH) || (Tile == VRAILROAD) || ((Tile > HRAIL) && (Tile < HRAILROAD)))
             {
                 (*TileAdrPtr) = VRAIL | BULLBIT;
@@ -267,8 +262,7 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (y > 0)
         {
-            Tile = TileAdrPtr[-1];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[-1]);
             if ((Tile == RAILVPOWERH) || (Tile == VRAILROAD) || ((Tile > HRAIL) && (Tile < HRAILROAD)))
             {
                 (*TileAdrPtr) = VRAIL | BULLBIT;
@@ -306,7 +300,6 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
 
 ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
 {
-    int Tile;
     int cost = 5;
 
     if (budget.CurrentFunds() < 5)
@@ -314,8 +307,7 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
         return ToolResult::InsufficientFunds;
     }
 
-    Tile = (*TileAdrPtr) & LOMASK;
-    NeutralizeRoad(Tile);
+    int Tile = NeutralizeRoad((*TileAdrPtr) & LOMASK);
 
     switch (Tile)
     {
@@ -338,7 +330,7 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
             Tile = TileAdrPtr[SimHeight];
             if (Tile & CONDBIT)
             {
-                NeutralizeRoad(Tile);
+                Tile = NeutralizeRoad(Tile);
                 if ((Tile != 77) && (Tile != 221) && (Tile != 208))
                 {
                     (*TileAdrPtr) = 209 | CONDBIT | BULLBIT;
@@ -352,7 +344,7 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
             Tile = TileAdrPtr[-SimHeight];
             if (Tile & CONDBIT)
             {
-                NeutralizeRoad(Tile);
+                Tile = NeutralizeRoad(Tile);
                 if ((Tile != 77) && (Tile != 221) && (Tile != 208))
                 {
                     (*TileAdrPtr) = 209 | CONDBIT | BULLBIT;
@@ -365,7 +357,7 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
         {
             Tile = TileAdrPtr[1];
             if (Tile & CONDBIT) {
-                NeutralizeRoad(Tile);
+                Tile = NeutralizeRoad(Tile);
                 if ((Tile != 78) && (Tile != 222) && (Tile != 209))
                 {
                     (*TileAdrPtr) = 208 | CONDBIT | BULLBIT;
@@ -379,7 +371,7 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
             Tile = TileAdrPtr[-1];
             if (Tile & CONDBIT)
             {
-                NeutralizeRoad(Tile);
+                Tile = NeutralizeRoad(Tile);
                 if ((Tile != 78) && (Tile != 222) && (Tile != 209))
                 {
                     (*TileAdrPtr) = 208 | CONDBIT | BULLBIT;
@@ -418,19 +410,15 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
 
 void _FixSingle(int x, int y, int* TileAdrPtr)
 {
-    int Tile;
+    int Tile = NeutralizeRoad((*TileAdrPtr) & LOMASK);
     int adjTile = 0;
-
-    Tile = (*TileAdrPtr) & LOMASK;
-    NeutralizeRoad(Tile);
 
     // Cleanup Road
     if ((Tile >= 66) && (Tile <= 76))
     {
         if (y > 0)
         {
-            Tile = TileAdrPtr[-1];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[-1]);
             if (((Tile == 237) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 77) && (Tile != 238) && (Tile != 64))
             {
                 adjTile |= 0x0001;
@@ -439,8 +427,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (x < (SimWidth - 1))
         {
-            Tile = TileAdrPtr[SimHeight];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[SimHeight]);
             if (((Tile == 238) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 78) && (Tile != 237) && (Tile != 65))
             {
                 adjTile |= 0x0002;
@@ -449,8 +436,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (y < (SimHeight - 1))
         {
-            Tile = TileAdrPtr[1];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[1]);
             if (((Tile == 237) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 77) && (Tile != 238) && (Tile != 64))
             {
                 adjTile |= 0x0004;
@@ -459,8 +445,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (x > 0)
         {
-            Tile = TileAdrPtr[-SimHeight];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[-SimHeight]);
             if (((Tile == 238) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 78) && (Tile != 237) && (Tile != 65))
             {
                 adjTile |= 0x0008;
@@ -477,8 +462,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (y > 0)
         {
-            Tile = TileAdrPtr[-1];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[-1]);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 221) && (Tile != 237) && (Tile != 224))
             {
                 adjTile |= 0x0001;
@@ -487,8 +471,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (x < (SimWidth - 1))
         {
-            Tile = TileAdrPtr[SimHeight];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[SimHeight]);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 222) && (Tile != 238) && (Tile != 225))
             {
                 adjTile |= 0x0002;
@@ -497,8 +480,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (y < (SimHeight - 1))
         {
-            Tile = TileAdrPtr[1];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[1]);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 221) && (Tile != 237) && (Tile != 224))
             {
                 adjTile |= 0x0004;
@@ -507,8 +489,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (x > 0)
         {
-            Tile = TileAdrPtr[-SimHeight];
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(TileAdrPtr[-SimHeight]);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 222) && (Tile != 238) && (Tile != 225))
             {
                 adjTile |= 0x0008;
@@ -528,7 +509,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[-1];
             if (Tile & CONDBIT)
             {
-                NeutralizeRoad(Tile);
+                Tile = NeutralizeRoad(Tile);
                 if ((Tile != 209) && (Tile != 78) && (Tile != 222))
                 {
                     adjTile |= 0x0001;
@@ -541,7 +522,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[SimHeight];
             if (Tile & CONDBIT)
             {
-                NeutralizeRoad(Tile);
+                Tile = NeutralizeRoad(Tile);
                 if ((Tile != 208) && (Tile != 77) && (Tile != 221))
                 {
                     adjTile |= 0x0002;
@@ -554,7 +535,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[1];
             if (Tile & CONDBIT)
             {
-                NeutralizeRoad(Tile);
+                Tile = NeutralizeRoad(Tile);
                 if ((Tile != 209) && (Tile != 78) && (Tile != 222))
                 {
                     adjTile |= 0x0004;
@@ -567,7 +548,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[-SimHeight];
             if (Tile & CONDBIT)
             {
-                NeutralizeRoad(Tile);
+                Tile = NeutralizeRoad(Tile);
                 if ((Tile != 208) && (Tile != 77) && (Tile != 221))
                 {
                     adjTile |= 0x0008;
@@ -609,6 +590,75 @@ void _FixZone(int x, int y, int* TileAdrPtr)
 
 ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
 {
+    const int cost = toolProperties(tool).cost;
+    const int waterCost = cost * WaterConstructionMultiplier;
+
+    if (budget.CurrentFunds() < cost)
+    {
+        return ToolResult::InsufficientFunds;
+    }
+
+    switch (Map[x][y] & LOMASK)
+    {
+    case DIRT:
+        break;
+
+    case RIVER: // Road on Water
+    case REDGE:
+    case CHANNEL: // Check how to build bridges, if possible.
+        if (budget.CurrentFunds() < waterCost)
+        {
+            return ToolResult::InsufficientFunds;
+        }
+
+        if (x < (SimWidth - 1))
+        {
+            int adjTile = NeutralizeRoad(Map[x + 1][y]);
+            if ((adjTile == VRAILROAD) || (adjTile == HBRIDGE) || ((adjTile >= ROADS) && (adjTile <= HROADPOWER)))
+            {
+                break;
+            }
+        }
+
+        if (x > 0)
+        {
+            int adjTile = NeutralizeRoad(Map[x - 1][y]);
+            if ((adjTile == VRAILROAD) || (adjTile == HBRIDGE) || ((adjTile >= ROADS) && (adjTile <= INTERSECTION)))
+            {
+                break;
+            }
+        }
+
+        if (y < (SimHeight - 1))
+        {
+            int adjTile =  NeutralizeRoad(Map[x][y + 1]);
+            if ((adjTile == HRAILROAD) || (adjTile == VROADPOWER) || ((adjTile >= VBRIDGE) && (adjTile <= INTERSECTION)))
+            {
+                break;
+            }
+        }
+
+        if (y > 0)
+        {
+            int adjTile = NeutralizeRoad(Map[x][y - 1]);
+            if ((adjTile == HRAILROAD) || (adjTile == VROADPOWER) || ((adjTile >= VBRIDGE) && (adjTile <= INTERSECTION)))
+            {
+                break;
+            }
+        }
+
+        return ToolResult::InvalidOperation;
+
+    case LHPOWER:
+    case LVPOWER:
+    case LHRAIL:
+    case LVRAIL:
+        break;
+
+    default:
+        return ToolResult::InvalidOperation;
+    }
+
     return ToolResult::Success;
 }
 
@@ -622,7 +672,7 @@ ToolResult ConnectTile(int x, int y, int* TileAdrPtr, int Command, Budget& budge
     {
         if ((AutoBulldoze) && (budget.CurrentFunds() > 0) && ((Tile = (*TileAdrPtr)) & BULLBIT))
         {
-            NeutralizeRoad(Tile);
+            Tile = NeutralizeRoad(Tile);
             // Maybe this should check BULLBIT instead of checking tile values?
             if (((Tile >= TINYEXP) && (Tile <= LASTTINYEXP)) || ((Tile < 64) && (Tile != 0)))
             {

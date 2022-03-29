@@ -714,7 +714,7 @@ void handleMouseEvent(SDL_Event& event)
                 graphWindow->injectMouseDown(mousePosition);
             }
 
-            if (!BudgetWindowShown && !pendingToolProperties().draggable)
+            if (!BudgetWindowShown /* && !pendingToolProperties().draggable*/)
             {
                 ToolDown(TilePointedAt.x, TilePointedAt.y, budget);
             }
