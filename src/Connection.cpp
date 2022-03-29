@@ -603,7 +603,7 @@ void _FixZone(int x, int y, int* TileAdrPtr)
 }
 
 
-ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command, Budget& budget)
+ToolResult ConnectTile(int x, int y, int* TileAdrPtr, int Command, Budget& budget)
 {
     int Tile{};
 

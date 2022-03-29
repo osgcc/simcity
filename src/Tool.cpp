@@ -350,7 +350,7 @@ void doConnectTile(const int x, const int y, const int w, const int h, Budget& b
 {
     if (CoordinatesValid(x, y, w, h))
     {
-        ConnecTile(x, y, &Map[x][y], 0, budget);
+        ConnectTile(x, y, &Map[x][y], 0, budget);
     }
 }
 
@@ -773,7 +773,7 @@ ToolResult bulldozer_tool(int x, int y, Budget& budget)
         {
             if (budget.CanAfford(5)) /// \fixme Magic Number
             {
-                result = ConnecTile(x, y, &Map[x][y], 1, budget);
+                result = ConnectTile(x, y, &Map[x][y], 1, budget);
                 if (temp != (Map[x][y] & LOMASK))
                 {
                     budget.Spend(5);
@@ -786,7 +786,7 @@ ToolResult bulldozer_tool(int x, int y, Budget& budget)
         }
         else
         {
-            result = ConnecTile(x, y, &Map[x][y], 1, budget);
+            result = ConnectTile(x, y, &Map[x][y], 1, budget);
         }
     }
     UpdateFunds(budget);
@@ -801,7 +801,7 @@ ToolResult road_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnecTile(x, y, &Map[x][y], 2, budget);
+    ToolResult result = ConnectTile(x, y, &Map[x][y], 2, budget);
     UpdateFunds(budget);
     return result;
 }
@@ -814,7 +814,7 @@ ToolResult rail_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnecTile(x, y, &Map[x][y], 3, budget);
+    ToolResult result = ConnectTile(x, y, &Map[x][y], 3, budget);
     UpdateFunds(budget);
     return result;
 }
@@ -827,7 +827,7 @@ ToolResult wire_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnecTile(x, y, &Map[x][y], 4, budget);
+    ToolResult result = ConnectTile(x, y, &Map[x][y], 4, budget);
     UpdateFunds(budget);
     return result;
 }

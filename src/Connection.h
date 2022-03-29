@@ -14,4 +14,4 @@
 
 class Budget;
 
-ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command, Budget&);
+ToolResult ConnectTile(int x, int y, int* TileAdrPtr, int Command, Budget&);
