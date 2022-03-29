@@ -423,7 +423,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[-1];
             NeutralizeRoad(Tile);
             if (((Tile == 237) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 77) && (Tile != 238) && (Tile != 64))
+            {
                 adjTile |= 0x0001;
+            }
         }
 
         if (x < (SimWidth - 1))
@@ -431,7 +433,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[SimHeight];
             NeutralizeRoad(Tile);
             if (((Tile == 238) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 78) && (Tile != 237) && (Tile != 65))
+            {
                 adjTile |= 0x0002;
+            }
         }
 
         if (y < (SimHeight - 1))
@@ -439,7 +443,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[1];
             NeutralizeRoad(Tile);
             if (((Tile == 237) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 77) && (Tile != 238) && (Tile != 64))
+            {
                 adjTile |= 0x0004;
+            }
         }
 
         if (x > 0)
@@ -447,7 +453,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[-SimHeight];
             NeutralizeRoad(Tile);
             if (((Tile == 238) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 78) && (Tile != 237) && (Tile != 65))
+            {
                 adjTile |= 0x0008;
+            }
         }
 
         (*TileAdrPtr) = _RoadTable[adjTile] | BULLBIT | BURNBIT;
@@ -462,7 +470,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[-1];
             NeutralizeRoad(Tile);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 221) && (Tile != 237) && (Tile != 224))
+            {
                 adjTile |= 0x0001;
+            }
         }
 
         if (x < (SimWidth - 1))
@@ -470,7 +480,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[SimHeight];
             NeutralizeRoad(Tile);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 222) && (Tile != 238) && (Tile != 225))
+            {
                 adjTile |= 0x0002;
+            }
         }
 
         if (y < (SimHeight - 1))
@@ -478,7 +490,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[1];
             NeutralizeRoad(Tile);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 221) && (Tile != 237) && (Tile != 224))
+            {
                 adjTile |= 0x0004;
+            }
         }
 
         if (x > 0)
@@ -486,7 +500,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             Tile = TileAdrPtr[-SimHeight];
             NeutralizeRoad(Tile);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 222) && (Tile != 238) && (Tile != 225))
+            {
                 adjTile |= 0x0008;
+            }
         }
 
         (*TileAdrPtr) = _RailTable[adjTile] | BULLBIT | BURNBIT;
@@ -503,7 +519,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             {
                 NeutralizeRoad(Tile);
                 if ((Tile != 209) && (Tile != 78) && (Tile != 222))
+                {
                     adjTile |= 0x0001;
+                }
             }
         }
 
@@ -514,7 +532,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             {
                 NeutralizeRoad(Tile);
                 if ((Tile != 208) && (Tile != 77) && (Tile != 221))
+                {
                     adjTile |= 0x0002;
+                }
             }
         }
 
@@ -525,7 +545,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             {
                 NeutralizeRoad(Tile);
                 if ((Tile != 209) && (Tile != 78) && (Tile != 222))
+                {
                     adjTile |= 0x0004;
+                }
             }
         }
 
@@ -536,7 +558,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             {
                 NeutralizeRoad(Tile);
                 if ((Tile != 208) && (Tile != 77) && (Tile != 221))
+                {
                     adjTile |= 0x0008;
+                }
             }
         }
 
@@ -572,20 +596,17 @@ void _FixZone(int x, int y, int* TileAdrPtr)
 }
 
 
-/* comefrom: check3Border check4Border check5Border processWand */
 ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command, Budget& budget)
 {
-    int Tile;
+    int Tile{};
 
-    /* AutoDoze */
+    // AutoDoze
     if ((Command >= 2) && (Command <= 4))
     {
-        if ((AutoBulldoze) &&
-            (budget.CurrentFunds() > 0) &&
-            ((Tile = (*TileAdrPtr)) & BULLBIT))
+        if ((AutoBulldoze) && (budget.CurrentFunds() > 0) && ((Tile = (*TileAdrPtr)) & BULLBIT))
         {
             NeutralizeRoad(Tile);
-            /* Maybe this should check BULLBIT instead of checking tile values? */
+            // Maybe this should check BULLBIT instead of checking tile values?
             if (((Tile >= TINYEXP) && (Tile <= LASTTINYEXP)) || ((Tile < 64) && (Tile != 0)))
             {
                 budget.Spend(1);
@@ -597,30 +618,33 @@ ToolResult ConnecTile(int x, int y, int* TileAdrPtr, int Command, Budget& budget
     ToolResult result = ToolResult::Success;
     switch (Command)
     {
-    case 0:	/* Fix zone */
+    case 0:	// Fix zone
         _FixZone(x, y, TileAdrPtr);
         break;
 
-    case 1:	/* Doze zone */
+    case 1:	// Doze zone
         result = _LayDoze(x, y, TileAdrPtr, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 
-    case 2:	/* Lay Road */
+    case 2:	// Lay Road
         result = _LayRoad(x, y, TileAdrPtr, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 
-    case 3:	/* Lay Rail */
+    case 3:	// Lay Rail
         result = _LayRail(x, y, TileAdrPtr, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 
-    case 4:	/* Lay Wire */
+    case 4:	// Lay Wire
         result = _LayWire(x, y, TileAdrPtr, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 
+    default:
+        throw std::runtime_error("Unsupported flag");
+        break;
     }
 
     return result;
