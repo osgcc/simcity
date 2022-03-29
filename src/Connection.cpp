@@ -117,8 +117,6 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
         return ToolResult::InsufficientFunds;
     }
 
-    //int tile = Map[x][y] & LOMASK;
-
     switch (Map[x][y] & LOMASK)
     {
     case DIRT:
