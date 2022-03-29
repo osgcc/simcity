@@ -218,7 +218,7 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
     switch (Tile)
     {
     case DIRT: // Rail on Dirt
-        (*TileAdrPtr) = 226 | BULLBIT | BURNBIT;
+        (*TileAdrPtr) = LHRAIL | BULLBIT | BURNBIT;
         break;
 
     case RIVER: // Rail on Water
@@ -234,9 +234,9 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
         {
             Tile = TileAdrPtr[SimHeight];
             NeutralizeRoad(Tile);
-            if ((Tile == 221) || (Tile == 224) || ((Tile >= 226) && (Tile <= 237)))
+            if ((Tile == RAILHPOWERV) || (Tile == RAILBASE) || ((Tile >= LHRAIL) && (Tile <= HRAILROAD)))
             {
-                (*TileAdrPtr) = 224 | BULLBIT;
+                (*TileAdrPtr) = HRAIL | BULLBIT;
                 break;
             }
         }
@@ -245,9 +245,9 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
         {
             Tile = TileAdrPtr[-SimHeight];
             NeutralizeRoad(Tile);
-            if ((Tile == 221) || (Tile == 224) || ((Tile > 225) && (Tile < 238)))
+            if ((Tile == RAILHPOWERV) || (Tile == RAILBASE) || ((Tile > VRAIL) && (Tile < VRAILROAD)))
             {
-                (*TileAdrPtr) = 224 | BULLBIT;
+                (*TileAdrPtr) = HRAIL | BULLBIT;
                 break;
             }
         }
@@ -256,9 +256,9 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
         {
             Tile = TileAdrPtr[1];
             NeutralizeRoad(Tile);
-            if ((Tile == 222) || (Tile == 238) || ((Tile > 224) && (Tile < 237)))
+            if ((Tile == RAILVPOWERH) || (Tile == VRAILROAD) || ((Tile > HRAIL) && (Tile < HRAILROAD)))
             {
-                (*TileAdrPtr) = 225 | BULLBIT;
+                (*TileAdrPtr) = VRAIL | BULLBIT;
                 break;
             }
         }
@@ -267,9 +267,9 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
         {
             Tile = TileAdrPtr[-1];
             NeutralizeRoad(Tile);
-            if ((Tile == 222) || (Tile == 238) || ((Tile > 224) && (Tile < 237)))
+            if ((Tile == RAILVPOWERH) || (Tile == VRAILROAD) || ((Tile > HRAIL) && (Tile < HRAILROAD)))
             {
-                (*TileAdrPtr) = 225 | BULLBIT;
+                (*TileAdrPtr) = VRAIL | BULLBIT;
                 break;
             }
         }
@@ -278,19 +278,19 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
         return ToolResult::InvalidOperation;
 
     case LHPOWER: // Rail on power
-        (*TileAdrPtr) = 222 | CONDBIT | BURNBIT | BULLBIT;
+        (*TileAdrPtr) = RAILVPOWERH | CONDBIT | BURNBIT | BULLBIT;
         break;
 
     case LVPOWER: // Rail on power #2 
-        (*TileAdrPtr) = 221 | CONDBIT | BURNBIT | BULLBIT;
+        (*TileAdrPtr) = RAILHPOWERV | CONDBIT | BURNBIT | BULLBIT;
         break;
 
     case ROADS: // Rail on road
-        (*TileAdrPtr) = 238 | BURNBIT | BULLBIT;
+        (*TileAdrPtr) = VRAILROAD | BURNBIT | BULLBIT;
         break;
 
     case ROADSV: // Rail on road #2
-        (*TileAdrPtr) = 237 | BURNBIT | BULLBIT;
+        (*TileAdrPtr) = HRAILROAD | BURNBIT | BULLBIT;
         break;
 
     default: // Can't do rail
