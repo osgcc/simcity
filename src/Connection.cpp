@@ -107,7 +107,6 @@ ToolResult _LayDoze(int x, int y, int* TileAdrPtr, Budget& budget)
 
 ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
 {
-    int Tile;
     int cost = 10;
 
     if (budget.CurrentFunds() < 10)
@@ -115,12 +114,12 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
         return ToolResult::InsufficientFunds;
     }
 
-    Tile = (*TileAdrPtr) & LOMASK;
+    //int tile = Map[x][y] & LOMASK;
 
-    switch (Tile)
+    switch (Map[x][y] & LOMASK)
     {
     case DIRT:
-        (*TileAdrPtr) = ROADS | BULLBIT | BURNBIT;
+        Map[x][y] = ROADS | BULLBIT | BURNBIT;
         break;
 
     case RIVER: // Road on Water
@@ -135,44 +134,44 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (x < (SimWidth - 1))
         {
-            Tile = TileAdrPtr[SimHeight];
-            NeutralizeRoad(Tile);
-            if ((Tile == VRAILROAD) || (Tile == HBRIDGE) || ((Tile >= ROADS) && (Tile <= HROADPOWER)))
+            int& adjTile = Map[x + 1][y];
+            NeutralizeRoad(adjTile);
+            if ((adjTile == VRAILROAD) || (adjTile == HBRIDGE) || ((adjTile >= ROADS) && (adjTile <= HROADPOWER)))
             {
-                (*TileAdrPtr) = HBRIDGE | BULLBIT;
+                Map[x][y] = HBRIDGE | BULLBIT;
                 break;
             }
         }
 
         if (x > 0)
         {
-            Tile = TileAdrPtr[-SimHeight];
-            NeutralizeRoad(Tile);
-            if ((Tile == VRAILROAD) || (Tile == HBRIDGE) || ((Tile >= ROADS) && (Tile <= INTERSECTION)))
+            int& adjTile = Map[x - 1][y];
+            NeutralizeRoad(adjTile);
+            if ((adjTile == VRAILROAD) || (adjTile == HBRIDGE) || ((adjTile >= ROADS) && (adjTile <= INTERSECTION)))
             {
-                (*TileAdrPtr) = HBRIDGE | BULLBIT;
+                Map[x][y] = HBRIDGE | BULLBIT;
                 break;
             }
         }
 
         if (y < (SimHeight - 1))
         {
-            Tile = TileAdrPtr[1];
-            NeutralizeRoad(Tile);
-            if ((Tile == HRAILROAD) || (Tile == VROADPOWER) || ((Tile >= VBRIDGE) && (Tile <= INTERSECTION)))
+            int& adjTile = Map[x][y + 1];
+            NeutralizeRoad(adjTile);
+            if ((adjTile == HRAILROAD) || (adjTile == VROADPOWER) || ((adjTile >= VBRIDGE) && (adjTile <= INTERSECTION)))
             {
-                (*TileAdrPtr) = VBRIDGE | BULLBIT;
+                Map[x][y] = VBRIDGE | BULLBIT;
                 break;
             }
         }
 
         if (y > 0)
         {
-            Tile = TileAdrPtr[-1];
-            NeutralizeRoad(Tile);
-            if ((Tile == HRAILROAD) || (Tile == VROADPOWER) || ((Tile >= VBRIDGE) && (Tile <= INTERSECTION)))
+            int& adjTile = Map[x][y - 1];
+            NeutralizeRoad(adjTile);
+            if ((adjTile == HRAILROAD) || (adjTile == VROADPOWER) || ((adjTile >= VBRIDGE) && (adjTile <= INTERSECTION)))
             {
-                (*TileAdrPtr) = VBRIDGE | BULLBIT;
+                Map[x][y] = VBRIDGE | BULLBIT;
                 break;
             }
         }
@@ -181,19 +180,19 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
         return ToolResult::InvalidOperation;
 
     case LHPOWER: // Road on power
-        (*TileAdrPtr) = VROADPOWER | CONDBIT | BURNBIT | BULLBIT;
+        Map[x][y] = VROADPOWER | CONDBIT | BURNBIT | BULLBIT;
         break;
 
     case LVPOWER: // Road on power #2
-        (*TileAdrPtr) = HROADPOWER | CONDBIT | BURNBIT | BULLBIT;
+        Map[x][y] = HROADPOWER | CONDBIT | BURNBIT | BULLBIT;
         break;
 
     case LHRAIL: // Road on rail
-        (*TileAdrPtr) = HRAILROAD | BURNBIT | BULLBIT;
+        Map[x][y] = HRAILROAD | BURNBIT | BULLBIT;
         break;
 
     case LVRAIL: // Road on rail #2
-        (*TileAdrPtr) = VRAILROAD | BURNBIT | BULLBIT;
+        Map[x][y] = VRAILROAD | BURNBIT | BULLBIT;
         break;
 
     default: // Can't do road
