@@ -215,13 +215,13 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
 
     switch (Tile)
     {
-    case 0: /* Rail on Dirt */
+    case DIRT: // Rail on Dirt
         (*TileAdrPtr) = 226 | BULLBIT | BURNBIT;
         break;
 
-    case 2: /* Rail on Water */
-    case 3:
-    case 4: /* Check how to build underwater tunnel, if possible. */
+    case RIVER: // Rail on Water
+    case REDGE:
+    case CHANNEL: // Check how to build underwater tunnel, if possible.
         if (budget.CurrentFunds() < 100)
         {
             return ToolResult::InsufficientFunds;
@@ -272,26 +272,26 @@ ToolResult _LayRail(int x, int y, int* TileAdrPtr, Budget& budget)
             }
         }
 
-        /* Can't do rail... */
+        // Can't do rail...
         return ToolResult::InvalidOperation;
 
-    case 210: /* Rail on power */
+    case LHPOWER: // Rail on power
         (*TileAdrPtr) = 222 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
-    case 211: /* Rail on power #2 */
+    case LVPOWER: // Rail on power #2 
         (*TileAdrPtr) = 221 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
-    case 66: /* Rail on road */
+    case ROADS: // Rail on road
         (*TileAdrPtr) = 238 | BURNBIT | BULLBIT;
         break;
 
-    case 67: /* Rail on road #2 */
+    case 67: // Rail on road #2
         (*TileAdrPtr) = 237 | BURNBIT | BULLBIT;
         break;
 
-    default: /* Can't do rail */
+    default: // Can't do rail
         return ToolResult::InvalidOperation;
     }
 
@@ -315,15 +315,18 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
 
     switch (Tile)
     {
-    case 0: /* Wire on Dirt */
+    case DIRT: // Wire on Dirt
         (*TileAdrPtr) = 210 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
-    case 2: /* Wire on Water */
-    case 3:
-    case 4: /* Check how to lay underwater wire, if possible. */
+    case RIVER: // Wire on Water
+    case REDGE:
+    case CHANNEL: // Check how to lay underwater wire, if possible.
         if (budget.CurrentFunds() < 25)
+        {
             return ToolResult::InsufficientFunds;
+        }
+
         cost = 25;
 
         if (x < (SimWidth - 1))
@@ -381,26 +384,26 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
             }
         }
 
-        /* Can't do wire... */
+        // Can't do wire...
         return ToolResult::InvalidOperation;
 
-    case 66: /* Wire on Road */
+    case ROADS: // Wire on Road
         (*TileAdrPtr) = 77 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
-    case 67: /* Wire on Road #2 */
+    case 67: // Wire on Road #2
         (*TileAdrPtr) = 78 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
-    case 226: /* Wire on rail */
+    case LHRAIL: // Wire on rail
         (*TileAdrPtr) = 221 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
-    case 227: /* Wire on rail #2 */
+    case LVRAIL: // Wire on rail #2
         (*TileAdrPtr) = 222 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
-    default: /* Can't do wire */
+    default: // Can't do wire
         return ToolResult::InvalidOperation;
     }
 
@@ -416,7 +419,9 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
     Tile = (*TileAdrPtr) & LOMASK;
     NeutralizeRoad(Tile);
-    if ((Tile >= 66) && (Tile <= 76)) /* Cleanup Road */
+
+    // Cleanup Road
+    if ((Tile >= 66) && (Tile <= 76))
     {
         if (y > 0)
         {
@@ -462,7 +467,8 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
         return;
     }
 
-    if ((Tile >= 226) && (Tile <= 236)) /* Cleanup Rail */
+    // Cleanup Rail
+    if ((Tile >= 226) && (Tile <= 236))
     {
 
         if (y > 0)
@@ -509,7 +515,8 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
         return;
     }
 
-    if ((Tile >= 210) && (Tile <= 220)) /* Cleanup Wire */
+    // Cleanup Wire
+    if ((Tile >= 210) && (Tile <= 220))
     {
 
         if (y > 0)
@@ -569,7 +576,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
     }
 }
 
-/* comefrom: ConnecTile */
+
 void _FixZone(int x, int y, int* TileAdrPtr)
 {
     _FixSingle(x, y, &TileAdrPtr[0]);
