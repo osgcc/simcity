@@ -293,7 +293,7 @@ ToolResult _LayRail(int x, int y, int*, Budget& budget)
 }
 
 
-ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
+ToolResult _LayWire(int x, int y, int*, Budget& budget)
 {
     int cost = 5;
 
@@ -302,12 +302,10 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
         return ToolResult::InsufficientFunds;
     }
 
-    int Tile = NeutralizeRoad((*TileAdrPtr) & LOMASK);
-
-    switch (Tile)
+    switch (NeutralizeRoad(Map[x][y] & LOMASK))
     {
     case DIRT: // Wire on Dirt
-        (*TileAdrPtr) = 210 | CONDBIT | BURNBIT | BULLBIT;
+        Map[x][y] = 210 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
     case RIVER: // Wire on Water
@@ -322,13 +320,13 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (x < (SimWidth - 1))
         {
-            Tile = TileAdrPtr[SimHeight];
-            if (Tile & CONDBIT)
+            int adjTile = Map[x + 1][y];
+            if (adjTile & CONDBIT)
             {
-                Tile = NeutralizeRoad(Tile);
-                if ((Tile != 77) && (Tile != 221) && (Tile != 208))
+                adjTile = NeutralizeRoad(adjTile);
+                if ((adjTile != 77) && (adjTile != 221) && (adjTile != 208))
                 {
-                    (*TileAdrPtr) = 209 | CONDBIT | BULLBIT;
+                    Map[x][y] = 209 | CONDBIT | BULLBIT;
                     break;
                 }
             }
@@ -336,13 +334,13 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (x > 0)
         {
-            Tile = TileAdrPtr[-SimHeight];
-            if (Tile & CONDBIT)
+            int adjTile = Map[x - 1][y];
+            if (adjTile & CONDBIT)
             {
-                Tile = NeutralizeRoad(Tile);
-                if ((Tile != 77) && (Tile != 221) && (Tile != 208))
+                adjTile = NeutralizeRoad(adjTile);
+                if ((adjTile != 77) && (adjTile != 221) && (adjTile != 208))
                 {
-                    (*TileAdrPtr) = 209 | CONDBIT | BULLBIT;
+                    Map[x][y] = 209 | CONDBIT | BULLBIT;
                     break;
                 }
             }
@@ -350,12 +348,13 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (y < (SimHeight - 1))
         {
-            Tile = TileAdrPtr[1];
-            if (Tile & CONDBIT) {
-                Tile = NeutralizeRoad(Tile);
-                if ((Tile != 78) && (Tile != 222) && (Tile != 209))
+            int adjTile = Map[x][y + 1];
+            if (adjTile & CONDBIT)
+            {
+                adjTile = NeutralizeRoad(adjTile);
+                if ((adjTile != 78) && (adjTile != 222) && (adjTile != 209))
                 {
-                    (*TileAdrPtr) = 208 | CONDBIT | BULLBIT;
+                    Map[x][y] = 208 | CONDBIT | BULLBIT;
                     break;
                 }
             }
@@ -363,13 +362,13 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
 
         if (y > 0)
         {
-            Tile = TileAdrPtr[-1];
-            if (Tile & CONDBIT)
+            int adjTile = Map[x][y - 1];
+            if (adjTile & CONDBIT)
             {
-                Tile = NeutralizeRoad(Tile);
-                if ((Tile != 78) && (Tile != 222) && (Tile != 209))
+                adjTile = NeutralizeRoad(adjTile);
+                if ((adjTile != 78) && (adjTile != 222) && (adjTile != 209))
                 {
-                    (*TileAdrPtr) = 208 | CONDBIT | BULLBIT;
+                    Map[x][y] = 208 | CONDBIT | BULLBIT;
                     break;
                 }
             }
@@ -379,19 +378,19 @@ ToolResult _LayWire(int x, int y, int* TileAdrPtr, Budget& budget)
         return ToolResult::InvalidOperation;
 
     case ROADS: // Wire on Road
-        (*TileAdrPtr) = 77 | CONDBIT | BURNBIT | BULLBIT;
+        Map[x][y] = 77 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
     case ROADSV: // Wire on Road #2
-        (*TileAdrPtr) = 78 | CONDBIT | BURNBIT | BULLBIT;
+        Map[x][y] = 78 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
     case LHRAIL: // Wire on rail
-        (*TileAdrPtr) = 221 | CONDBIT | BURNBIT | BULLBIT;
+        Map[x][y] = 221 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
     case LVRAIL: // Wire on rail #2
-        (*TileAdrPtr) = 222 | CONDBIT | BURNBIT | BULLBIT;
+        Map[x][y] = 222 | CONDBIT | BURNBIT | BULLBIT;
         break;
 
     default: // Can't do wire
