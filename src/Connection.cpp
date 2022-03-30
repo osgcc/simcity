@@ -108,7 +108,7 @@ ToolResult _LayDoze(int x, int y, int* TileAdrPtr, Budget& budget)
 }
 
 
-ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
+ToolResult _LayRoad(int x, int y, Budget& budget)
 {
     int cost = 10;
 
@@ -201,7 +201,7 @@ ToolResult _LayRoad(int x, int y, int* TileAdrPtr, Budget& budget)
 }
 
 
-ToolResult _LayRail(int x, int y, int*, Budget& budget)
+ToolResult _LayRail(int x, int y, Budget& budget)
 {
     int cost = 20;
 
@@ -293,7 +293,7 @@ ToolResult _LayRail(int x, int y, int*, Budget& budget)
 }
 
 
-ToolResult _LayWire(int x, int y, int*, Budget& budget)
+ToolResult _LayWire(int x, int y, Budget& budget)
 {
     int cost = 5;
 
@@ -689,17 +689,17 @@ ToolResult ConnectTile(int x, int y, int* TileAdrPtr, int Command, Budget& budge
         break;
 
     case 2:	// Lay Road
-        result = _LayRoad(x, y, TileAdrPtr, budget);
+        result = _LayRoad(x, y, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 
     case 3:	// Lay Rail
-        result = _LayRail(x, y, TileAdrPtr, budget);
+        result = _LayRail(x, y, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 
     case 4:	// Lay Wire
-        result = _LayWire(x, y, TileAdrPtr, budget);
+        result = _LayWire(x, y, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 
