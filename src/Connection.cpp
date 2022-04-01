@@ -59,25 +59,19 @@ namespace
 }
 
 
-ToolResult _LayDoze(int x, int y, int* TileAdrPtr, Budget& budget)
+ToolResult _LayDoze(int x, int y, Budget& budget)
 {
-    int Tile;
-
     if (budget.Broke())
     {
         return ToolResult::InsufficientFunds; // no mas dinero.
     }
 
-    Tile = (*TileAdrPtr);
-
-    if (!(Tile & BULLBIT))
+    if (!(tileValue(x, y) & BULLBIT))
     {
         return ToolResult::CannotBulldoze; // Check dozeable bit.
     }
 
-    Tile = NeutralizeRoad(Tile);
-
-    switch (Tile)
+    switch (NeutralizeRoad(Map[x][y]))
     {
     case HBRIDGE:
     case VBRIDGE:
@@ -95,11 +89,11 @@ ToolResult _LayDoze(int x, int y, int* TileAdrPtr, Budget& budget)
     case VPOWER:
     case HRAIL:
     case VRAIL: // Dozing over water, replace with water.
-        (*TileAdrPtr) = RIVER;
+        Map[x][y] = RIVER;
         break;
 
     default: // Dozing on land, replace with land.  Simple, eh?
-        (*TileAdrPtr) = DIRT;
+        Map[x][y] = DIRT;
         break;
     }
 
@@ -592,7 +586,18 @@ ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
         return ToolResult::InsufficientFunds;
     }
 
-    switch (Map[x][y] & LOMASK)
+
+    if ((AutoBulldoze) && (budget.CurrentFunds() > 0) && (Map[x][y] & BULLBIT))
+    {
+        const int tile = NeutralizeRoad(Map[x][y]);
+        // Maybe this should check BULLBIT instead of checking tile values?
+        if (((tile >= TINYEXP) && (tile <= LASTTINYEXP)) || ((tile < 64) && (tile != 0)))
+        {
+            return ToolResult::Success;
+        }
+    }
+
+    switch (Map[x][y])
     {
     case DIRT:
         break;
@@ -600,47 +605,6 @@ ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
     case RIVER: // Road on Water
     case REDGE:
     case CHANNEL: // Check how to build bridges, if possible.
-        if (budget.CurrentFunds() < waterCost)
-        {
-            return ToolResult::InsufficientFunds;
-        }
-
-        if (x < (SimWidth - 1))
-        {
-            int adjTile = NeutralizeRoad(Map[x + 1][y]);
-            if ((adjTile == VRAILROAD) || (adjTile == HBRIDGE) || ((adjTile >= ROADS) && (adjTile <= HROADPOWER)))
-            {
-                break;
-            }
-        }
-
-        if (x > 0)
-        {
-            int adjTile = NeutralizeRoad(Map[x - 1][y]);
-            if ((adjTile == VRAILROAD) || (adjTile == HBRIDGE) || ((adjTile >= ROADS) && (adjTile <= INTERSECTION)))
-            {
-                break;
-            }
-        }
-
-        if (y < (SimHeight - 1))
-        {
-            int adjTile = NeutralizeRoad(Map[x][y + 1]);
-            if ((adjTile == HRAILROAD) || (adjTile == VROADPOWER) || ((adjTile >= VBRIDGE) && (adjTile <= INTERSECTION)))
-            {
-                break;
-            }
-        }
-
-        if (y > 0)
-        {
-            int adjTile = NeutralizeRoad(Map[x][y - 1]);
-            if ((adjTile == HRAILROAD) || (adjTile == VROADPOWER) || ((adjTile >= VBRIDGE) && (adjTile <= INTERSECTION)))
-            {
-                break;
-            }
-        }
-
         return ToolResult::InvalidOperation;
 
     case LHPOWER:
@@ -650,7 +614,8 @@ ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
         break;
 
     default:
-        return ToolResult::InvalidOperation;
+        return ToolResult::CannotBulldoze;
+        break;
     }
 
     return ToolResult::Success;
@@ -684,7 +649,7 @@ ToolResult ConnectTile(int x, int y, int* TileAdrPtr, int Command, Budget& budge
         break;
 
     case 1:	// Doze zone
-        result = _LayDoze(x, y, TileAdrPtr, budget);
+        result = _LayDoze(x, y, budget);
         _FixZone(x, y, TileAdrPtr);
         break;
 
