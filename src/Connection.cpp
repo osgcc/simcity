@@ -396,9 +396,9 @@ ToolResult _LayWire(int x, int y, Budget& budget)
 }
 
 
-void _FixSingle(int x, int y, int* TileAdrPtr)
+void _FixSingle(int x, int y)
 {
-    int Tile = NeutralizeRoad((*TileAdrPtr) & LOMASK);
+    int Tile = NeutralizeRoad(Map[x][y] & LOMASK);
     int adjTile = 0;
 
     // Cleanup Road
@@ -406,7 +406,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
     {
         if (y > 0)
         {
-            Tile = NeutralizeRoad(TileAdrPtr[-1]);
+            Tile = NeutralizeRoad(Map[x][y - 1]);
             if (((Tile == 237) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 77) && (Tile != 238) && (Tile != 64))
             {
                 adjTile |= 0x0001;
@@ -415,7 +415,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (x < (SimWidth - 1))
         {
-            Tile = NeutralizeRoad(TileAdrPtr[SimHeight]);
+            Tile = NeutralizeRoad(Map[x + 1][y]);
             if (((Tile == 238) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 78) && (Tile != 237) && (Tile != 65))
             {
                 adjTile |= 0x0002;
@@ -424,7 +424,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (y < (SimHeight - 1))
         {
-            Tile = NeutralizeRoad(TileAdrPtr[1]);
+            Tile = NeutralizeRoad(Map[x][y + 1]);
             if (((Tile == 237) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 77) && (Tile != 238) && (Tile != 64))
             {
                 adjTile |= 0x0004;
@@ -433,14 +433,14 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (x > 0)
         {
-            Tile = NeutralizeRoad(TileAdrPtr[-SimHeight]);
+            Tile = NeutralizeRoad(Map[x - 1][y]);
             if (((Tile == 238) || ((Tile >= 64) && (Tile <= 78))) && (Tile != 78) && (Tile != 237) && (Tile != 65))
             {
                 adjTile |= 0x0008;
             }
         }
 
-        (*TileAdrPtr) = _RoadTable[adjTile] | BULLBIT | BURNBIT;
+        Map[x][y] = _RoadTable[adjTile] | BULLBIT | BURNBIT;
         return;
     }
 
@@ -450,7 +450,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (y > 0)
         {
-            Tile = NeutralizeRoad(TileAdrPtr[-1]);
+            Tile = NeutralizeRoad(Map[x][y - 1]);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 221) && (Tile != 237) && (Tile != 224))
             {
                 adjTile |= 0x0001;
@@ -459,7 +459,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (x < (SimWidth - 1))
         {
-            Tile = NeutralizeRoad(TileAdrPtr[SimHeight]);
+            Tile = NeutralizeRoad(Map[x + 1][y]);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 222) && (Tile != 238) && (Tile != 225))
             {
                 adjTile |= 0x0002;
@@ -468,7 +468,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (y < (SimHeight - 1))
         {
-            Tile = NeutralizeRoad(TileAdrPtr[1]);
+            Tile = NeutralizeRoad(Map[x][y + 1]);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 221) && (Tile != 237) && (Tile != 224))
             {
                 adjTile |= 0x0004;
@@ -477,14 +477,14 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (x > 0)
         {
-            Tile = NeutralizeRoad(TileAdrPtr[-SimHeight]);
+            Tile = NeutralizeRoad(Map[x - 1][y]);
             if ((Tile >= 221) && (Tile <= 238) && (Tile != 222) && (Tile != 238) && (Tile != 225))
             {
                 adjTile |= 0x0008;
             }
         }
 
-        (*TileAdrPtr) = _RailTable[adjTile] | BULLBIT | BURNBIT;
+        Map[x][y] = _RailTable[adjTile] | BULLBIT | BURNBIT;
         return;
     }
 
@@ -494,7 +494,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (y > 0)
         {
-            Tile = TileAdrPtr[-1];
+            Tile = Map[x][y - 1];
             if (Tile & CONDBIT)
             {
                 Tile = NeutralizeRoad(Tile);
@@ -507,7 +507,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (x < (SimWidth - 1))
         {
-            Tile = TileAdrPtr[SimHeight];
+            Tile = Map[x + 1][y];
             if (Tile & CONDBIT)
             {
                 Tile = NeutralizeRoad(Tile);
@@ -520,7 +520,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (y < (SimHeight - 1))
         {
-            Tile = TileAdrPtr[1];
+            Tile = Map[x][y + 1];
             if (Tile & CONDBIT)
             {
                 Tile = NeutralizeRoad(Tile);
@@ -533,7 +533,7 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
 
         if (x > 0)
         {
-            Tile = TileAdrPtr[-SimHeight];
+            Tile = Map[x - 1][y];
             if (Tile & CONDBIT)
             {
                 Tile = NeutralizeRoad(Tile);
@@ -544,34 +544,34 @@ void _FixSingle(int x, int y, int* TileAdrPtr)
             }
         }
 
-        (*TileAdrPtr) = _WireTable[adjTile] | BULLBIT | BURNBIT | CONDBIT;
+        Map[x][y] = _WireTable[adjTile] | BULLBIT | BURNBIT | CONDBIT;
         return;
     }
 }
 
 
-void _FixZone(int x, int y, int* TileAdrPtr)
+void _FixZone(int x, int y)
 {
-    _FixSingle(x, y, &TileAdrPtr[0]);
+    _FixSingle(x, y);
 
     if (y > 0)
     {
-        _FixSingle(x, y - 1, &TileAdrPtr[-1]);
+        _FixSingle(x, y - 1);
     }
 
     if (x < (SimWidth - 1))
     {
-        _FixSingle(x + 1, y, &TileAdrPtr[SimHeight]);
+        _FixSingle(x + 1, y);
     }
 
     if (y < (SimHeight - 1))
     {
-        _FixSingle(x, y + 1, &TileAdrPtr[1]);
+        _FixSingle(x, y + 1);
     }
 
     if (x > 0)
     {
-        _FixSingle(x - 1, y, &TileAdrPtr[-SimHeight]);
+        _FixSingle(x - 1, y);
     }
 }
 
@@ -622,21 +622,21 @@ ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
 }
 
 
-ToolResult ConnectTile(int x, int y, int* TileAdrPtr, int Command, Budget& budget)
+ToolResult ConnectTile(int x, int y, int*, int Command, Budget& budget)
 {
-    int Tile{};
+    int Tile = Map[x][y];
 
     // AutoDoze
     if ((Command >= 2) && (Command <= 4))
     {
-        if ((AutoBulldoze) && (budget.CurrentFunds() > 0) && ((Tile = (*TileAdrPtr)) & BULLBIT))
+        if ((AutoBulldoze) && (budget.CurrentFunds() > 0) && (Tile & BULLBIT))
         {
             Tile = NeutralizeRoad(Tile);
             // Maybe this should check BULLBIT instead of checking tile values?
             if (((Tile >= TINYEXP) && (Tile <= LASTTINYEXP)) || ((Tile < 64) && (Tile != 0)))
             {
                 budget.Spend(1);
-                (*TileAdrPtr) = 0;
+                Map[x][y] = 0;
             }
         }
     }
@@ -645,27 +645,27 @@ ToolResult ConnectTile(int x, int y, int* TileAdrPtr, int Command, Budget& budge
     switch (Command)
     {
     case 0:	// Fix zone
-        _FixZone(x, y, TileAdrPtr);
+        _FixZone(x, y);
         break;
 
     case 1:	// Doze zone
         result = _LayDoze(x, y, budget);
-        _FixZone(x, y, TileAdrPtr);
+        _FixZone(x, y);
         break;
 
     case 2:	// Lay Road
         result = _LayRoad(x, y, budget);
-        _FixZone(x, y, TileAdrPtr);
+        _FixZone(x, y);
         break;
 
     case 3:	// Lay Rail
         result = _LayRail(x, y, budget);
-        _FixZone(x, y, TileAdrPtr);
+        _FixZone(x, y);
         break;
 
     case 4:	// Lay Wire
         result = _LayWire(x, y, budget);
-        _FixZone(x, y, TileAdrPtr);
+        _FixZone(x, y);
         break;
 
     default:
