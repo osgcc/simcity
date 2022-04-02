@@ -622,7 +622,7 @@ ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
 }
 
 
-ToolResult ConnectTile(int x, int y, int*, int Command, Budget& budget)
+ToolResult ConnectTile(int x, int y, int Command, Budget& budget)
 {
     int Tile = Map[x][y];
 

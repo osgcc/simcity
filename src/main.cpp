@@ -729,14 +729,14 @@ void executeDraggableTool()
     {
         for (int i = 0; std::abs(i) <= std::abs(DraggableToolVector.x); i += step)
         {
-            ConnectTile(toolStart().x + i, toolStart().y, nullptr, 2, budget);
+            ConnectTile(toolStart().x + i, toolStart().y, 2, budget);
         }
     }
     else
     {
         for (int i = 0; std::abs(i) <= std::abs(DraggableToolVector.y); i += step)
         {
-            ConnectTile(toolStart().x, toolStart().y + i, nullptr, 2, budget);
+            ConnectTile(toolStart().x, toolStart().y + i, 2, budget);
         }
     }
 }
