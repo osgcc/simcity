@@ -713,6 +713,35 @@ void validateDraggableToolVector(Vector<int>& toolVector)
 }
 
 
+void executeDraggableTool()
+{
+    if (DraggableToolVector == Vector<int>{ 0, 0 })
+    {
+        ToolDown(TilePointedAt.x, TilePointedAt.y, budget);
+        return;
+    }
+
+    const bool xAxisLarger = std::abs(DraggableToolVector.x) > std::abs(DraggableToolVector.y);
+    const int axis = longestAxis(DraggableToolVector);
+    const int step = axis < 0 ? -1 : 1;
+
+    if (xAxisLarger)
+    {
+        for (int i = 0; std::abs(i) <= std::abs(DraggableToolVector.x); i += step)
+        {
+            ConnectTile(toolStart().x + i, toolStart().y, nullptr, 2, budget);
+        }
+    }
+    else
+    {
+        for (int i = 0; std::abs(i) <= std::abs(DraggableToolVector.y); i += step)
+        {
+            ConnectTile(toolStart().x, toolStart().y + i, nullptr, 2, budget);
+        }
+    }
+}
+
+
 void handleMouseEvent(SDL_Event& event)
 {
     SDL_Point mouseMotionDelta{};
@@ -796,10 +825,7 @@ void handleMouseEvent(SDL_Event& event)
             toolEnd(TilePointedAt);
             if (pendingToolProperties().draggable)
             {
-                if (DraggableToolVector == Vector<int>{ 0, 0 })
-                {
-                    ToolDown(TilePointedAt.x, TilePointedAt.y, budget);
-                }
+                executeDraggableTool();
             }
         }
         break;
