@@ -403,6 +403,9 @@ void PrimeGame(const int startFlag, CityProperties& properties, Budget& budget)
         DoStartScenario(startFlag);
         break;
     }
+
+    DrawMiniMap();
+    DrawBigMap();
 }
 
 
@@ -410,8 +413,6 @@ void ResetGame()
 {
     sim_init();
     PrimeGame(-1, cityProperties, budget);
-    DrawMiniMap();
-    DrawBigMap();
 }
 
 
@@ -729,14 +730,14 @@ void executeDraggableTool()
     {
         for (int i = 0; std::abs(i) <= std::abs(DraggableToolVector.x); i += step)
         {
-            ConnectTile(toolStart().x + i, toolStart().y, 2, budget);
+            ConnectTile(toolStart().x + i, toolStart().y, pendingTool(), budget);
         }
     }
     else
     {
         for (int i = 0; std::abs(i) <= std::abs(DraggableToolVector.y); i += step)
         {
-            ConnectTile(toolStart().x, toolStart().y + i, 2, budget);
+            ConnectTile(toolStart().x, toolStart().y + i, pendingTool(), budget);
         }
     }
 }
@@ -822,7 +823,9 @@ void handleMouseEvent(SDL_Event& event)
                     return;
                 }
             }
+
             toolEnd(TilePointedAt);
+            
             if (pendingToolProperties().draggable)
             {
                 executeDraggableTool();
