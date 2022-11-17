@@ -45,7 +45,7 @@ namespace
         { Tool::Fire, { 500, 3, 1, false, "Fire Department" }},
         { Tool::Query, { 0, 1, 0, false, "Query" }},
         { Tool::Police, { 500, 3, 1, false, "Police Department" }},
-        { Tool::Wire, { 5, 1, 0, false, "Power Line" }},
+        { Tool::Wire, { 5, 1, 0, true, "Power Line" }},
         { Tool::Bulldoze, { 1, 1, 0, false, "Bulldoze" }},
         { Tool::Rail, { 20, 1, 0, true, "Rail" }},
         { Tool::Road, { 10, 1, 0, true, "Roads" }},
@@ -350,7 +350,7 @@ void doConnectTile(const int x, const int y, const int w, const int h, Budget& b
 {
     if (CoordinatesValid(x, y, w, h))
     {
-        ConnectTile(x, y, 0, budget);
+        ConnectTile(x, y, Tool::None, budget);
     }
 }
 
@@ -773,7 +773,7 @@ ToolResult bulldozer_tool(int x, int y, Budget& budget)
         {
             if (budget.CanAfford(5)) /// \fixme Magic Number
             {
-                result = ConnectTile(x, y, 1, budget);
+                result = ConnectTile(x, y, Tool::Bulldoze, budget);
                 if (temp != (Map[x][y] & LOMASK))
                 {
                     budget.Spend(5);
@@ -786,7 +786,7 @@ ToolResult bulldozer_tool(int x, int y, Budget& budget)
         }
         else
         {
-            result = ConnectTile(x, y, 1, budget);
+            result = ConnectTile(x, y, Tool::Bulldoze, budget);
         }
     }
     UpdateFunds(budget);
@@ -801,7 +801,7 @@ ToolResult road_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnectTile(x, y, 2, budget);
+    ToolResult result = ConnectTile(x, y, Tool::Road, budget);
     UpdateFunds(budget);
     return result;
 }
@@ -814,7 +814,7 @@ ToolResult rail_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnectTile(x, y, 3, budget);
+    ToolResult result = ConnectTile(x, y, Tool::Rail, budget);
     UpdateFunds(budget);
     return result;
 }
@@ -827,7 +827,7 @@ ToolResult wire_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnectTile(x, y, 4, budget);
+    ToolResult result = ConnectTile(x, y, Tool::Wire, budget);
     UpdateFunds(budget);
     return result;
 }

@@ -586,7 +586,6 @@ ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
         return ToolResult::InsufficientFunds;
     }
 
-
     if ((AutoBulldoze) && (budget.CurrentFunds() > 0) && (Map[x][y] & BULLBIT))
     {
         const int tile = NeutralizeRoad(Map[x][y]);
@@ -607,6 +606,8 @@ ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
     case CHANNEL: // Check how to build bridges, if possible.
         return ToolResult::InvalidOperation;
 
+    case ROADS:
+    case ROADSV:
     case LHPOWER:
     case LVPOWER:
     case LHRAIL:
@@ -622,12 +623,12 @@ ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
 }
 
 
-ToolResult ConnectTile(int x, int y, int Command, Budget& budget)
+ToolResult ConnectTile(int x, int y, Tool tool, Budget& budget)
 {
     int Tile = Map[x][y];
 
     // AutoDoze
-    if ((Command >= 2) && (Command <= 4))
+    if (tool == Tool::Rail || tool == Tool::Road || tool == Tool::Wire)
     {
         if ((AutoBulldoze) && (budget.CurrentFunds() > 0) && (Tile & BULLBIT))
         {
@@ -642,28 +643,28 @@ ToolResult ConnectTile(int x, int y, int Command, Budget& budget)
     }
 
     ToolResult result = ToolResult::Success;
-    switch (Command)
+    switch (tool)
     {
-    case 0:	// Fix zone
+    case Tool::None:
         _FixZone(x, y);
         break;
 
-    case 1:	// Doze zone
+    case Tool::Bulldoze:
         result = _LayDoze(x, y, budget);
         _FixZone(x, y);
         break;
 
-    case 2:	// Lay Road
+    case Tool::Road:
         result = _LayRoad(x, y, budget);
         _FixZone(x, y);
         break;
 
-    case 3:	// Lay Rail
+    case Tool::Rail:
         result = _LayRail(x, y, budget);
         _FixZone(x, y);
         break;
 
-    case 4:	// Lay Wire
+    case Tool::Wire:
         result = _LayWire(x, y, budget);
         _FixZone(x, y);
         break;
