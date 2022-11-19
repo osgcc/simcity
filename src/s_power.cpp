@@ -113,22 +113,18 @@ bool TestPowerBit(const int x, const int y)
 
 int TestForCond(int TFDir)
 {
-    int xsave = SimulationLocation.x;
-    int ysave = SimulationLocation.y;
+    Point<int> saved = SimulationLocation;
 
     if (MoveMapSim(TFDir))
     {
         if ((Map[SimulationLocation.x][SimulationLocation.y] & CONDBIT) && (!TestPowerBit(SimulationLocation.x, SimulationLocation.y)))
         {
-            SimulationLocation.x = xsave;
-            SimulationLocation.y = ysave;
-
+            SimulationLocation = saved;
             return true;
         }
     }
 
-    SimulationLocation.x = xsave;
-    SimulationLocation.y = ysave;
+    SimulationLocation = saved;
 
     return false;
 }
