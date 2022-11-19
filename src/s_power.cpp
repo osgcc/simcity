@@ -111,7 +111,7 @@ bool TestPowerBit(const int x, const int y)
 }
 
 
-int TestForCond(int TFDir)
+int TileIsConductive(int TFDir)
 {
     Point<int> saved = SimulationLocation;
 
@@ -185,7 +185,7 @@ void DoPowerScan()
             int Dir = 0;
             while ((Dir < 4) && (ConNum < 2))
             {
-                if (TestForCond(Dir))
+                if (TileIsConductive(Dir))
                 {
                     ConNum++;
                     ADir = Dir;
