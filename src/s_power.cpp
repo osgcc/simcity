@@ -111,7 +111,7 @@ bool TestPowerBit(const int x, const int y)
 }
 
 
-int TileIsConductive(int TFDir)
+bool TileIsConductive(int TFDir)
 {
     Point<int> saved = SimulationLocation;
 
