@@ -56,7 +56,6 @@ constexpr auto POWERMAPROW = ((SimWidth + 15) / 16);
 
 #define POWERWORD(x, y)		(((x) >>4) + ((y) <<3))
 
-#define SETPOWERBIT(x, y)	PowerMap[POWERWORD((x), (y))] |= 1 << ((x) & 15)
 constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 #define PWRSTKSIZE		((SimWidth * SimHeight) / 4)
 
