@@ -21,8 +21,8 @@
 
 int SMapX, SMapY;
 
-int CChr; // unmasked tile value
-int CChr9; // masked tile value
+int CurrentTile; // unmasked tile value
+int CurrentTileMasked; // masked tile value
 
 int RoadTotal, RailTotal, FirePop;
 

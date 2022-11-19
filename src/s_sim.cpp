@@ -257,7 +257,7 @@ bool DoBridge()
     VBRIDGE | BULLBIT, VBRIDGE | BULLBIT, RIVER };
   int z, x, y, MPtem;
 
-  if (CChr9 == BRWV) { /*  Vertical bridge close */
+  if (CurrentTileMasked == BRWV) { /*  Vertical bridge close */
     if ((!(Rand16() & 3)) &&
 	(GetBoatDis() > 340))
       for (z = 0; z < 7; z++) { /* Close  */
@@ -269,7 +269,7 @@ bool DoBridge()
       }
     return true;
   }
-  if (CChr9 == BRWH) { /*  Horizontal bridge close  */
+  if (CurrentTileMasked == BRWH) { /*  Horizontal bridge close  */
     if ((!(Rand16() & 3)) &&
 	(GetBoatDis() > 340))
       for (z = 0; z < 7; z++) { /* Close  */
@@ -283,7 +283,7 @@ bool DoBridge()
   }
 
   if ((GetBoatDis() < 300) || (!(Rand16() & 7))) {
-    if (CChr9 & 1) {
+    if (CurrentTileMasked & 1) {
       if (SMapX < (SimWidth - 1))
 	if (Map[SMapX + 1][SMapY] == CHANNEL) { /* Vertical open */
 	  for (z = 0; z < 7; z++) {
@@ -337,11 +337,11 @@ void DoRoad()
     {
         if (!(Rand16() & 511))
         {
-            if (!(CChr & CONDBIT))
+            if (!(CurrentTile & CONDBIT))
             {
                 if (RoadEffect < (Rand16() & 31))
                 {
-                    if (((CChr9 & 15) < 2) || ((CChr9 & 15) == 15))
+                    if (((CurrentTileMasked & 15) < 2) || ((CurrentTileMasked & 15) == 15))
                     {
                         Map[SMapX][SMapY] = RIVER;
                     }
@@ -355,7 +355,7 @@ void DoRoad()
         }
     }
 
-    if (!(CChr & BURNBIT)) /* If Bridge */
+    if (!(CurrentTile & BURNBIT)) /* If Bridge */
     {
         RoadTotal += 4;
         if (DoBridge())
@@ -366,11 +366,11 @@ void DoRoad()
 
     int trafficDensity{};
 
-    if (CChr9 < LTRFBASE)
+    if (CurrentTileMasked < LTRFBASE)
     {
         trafficDensity = 0;
     }
-    else if (CChr9 < HTRFBASE)
+    else if (CurrentTileMasked < HTRFBASE)
     {
         trafficDensity = 1;
     }
@@ -389,9 +389,9 @@ void DoRoad()
 
     if (trafficDensity != Density) /* tden 0..2   */
     {
-        int z = ((CChr9 - ROADBASE) & 15) + DensityTable[Density];
+        int z = ((CurrentTileMasked - ROADBASE) & 15) + DensityTable[Density];
         
-        z += CChr & (ALLBITS - ANIMBIT);
+        z += CurrentTile & (ALLBITS - ANIMBIT);
         
         if (Density)
         {
@@ -464,7 +464,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
     static int MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
     int z;
 
-    switch (CChr9)
+    switch (CurrentTileMasked)
     {
     case POWERPLANT:
         CoalPop++;
@@ -612,19 +612,19 @@ void MapScan(int x1, int x2, const CityProperties& properties)
     {
         for (int y = 0; y < SimHeight; y++)
         {
-            if (CChr = Map[x][y])
+            if (CurrentTile = Map[x][y])
             {
-                CChr9 = CChr & LOMASK;	// Mask off status bits
+                CurrentTileMasked = CurrentTile & LOMASK;	// Mask off status bits
 
                 const int tile = maskedTileValue(x, y);
 
-                if (CChr9 >= FLOOD)
+                if (CurrentTileMasked >= FLOOD)
                 {
                     SMapX = x;
                     SMapY = y;
-                    if (CChr9 < ROADBASE)
+                    if (CurrentTileMasked < ROADBASE)
                     {
-                        if (CChr9 >= FIREBASE)
+                        if (CurrentTileMasked >= FIREBASE)
                         {
                             FirePop++;
                             if (!(Rand16() & 3)) // 1 in 4 times
@@ -633,7 +633,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
                             }
                             continue;
                         }
-                        if (CChr9 < RADTILE)
+                        if (CurrentTileMasked < RADTILE)
                         {
                             DoFlood();
                         }
@@ -644,18 +644,18 @@ void MapScan(int x1, int x2, const CityProperties& properties)
                         continue;
                     }
 
-                    if (NewPower && (CChr & CONDBIT))
+                    if (NewPower && (CurrentTile & CONDBIT))
                     {
                         SetZPower();
                     }
 
-                    if ((CChr9 >= ROADBASE) && (CChr9 < POWERBASE))
+                    if ((CurrentTileMasked >= ROADBASE) && (CurrentTileMasked < POWERBASE))
                     {
                         DoRoad();
                         continue;
                     }
 
-                    if (CChr & ZONEBIT) // process Zones
+                    if (CurrentTile & ZONEBIT) // process Zones
                     {
                         DoZone(properties);
                         continue;
@@ -666,7 +666,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
                         DoRail({ x, y });
                         continue;
                     }
-                    if ((CChr9 >= SOMETINYEXP) && (CChr9 <= LASTTINYEXP)) // clear AniRubble
+                    if ((CurrentTileMasked >= SOMETINYEXP) && (CurrentTileMasked <= LASTTINYEXP)) // clear AniRubble
                     {
                         Map[x][y] = RUBBLE + (Rand16() & 3) + BULLBIT;
                     }
@@ -1095,7 +1095,7 @@ void DoNilPower()
             {
                 SMapX = x;
                 SMapY = y;
-                CChr = z;
+                CurrentTile = z;
                 SetZPower();
             }
         }

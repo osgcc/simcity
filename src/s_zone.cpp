@@ -29,9 +29,9 @@ bool SetZPower()		/* set bit in MapWord depending on powermap  */
   bool z = TestPowerBit();
 
   if (z)
-    Map[SMapX][SMapY] = CChr | PWRBIT;
+    Map[SMapX][SMapY] = CurrentTile | PWRBIT;
   else
-    Map[SMapX][SMapY] = CChr & (~PWRBIT);
+    Map[SMapX][SMapY] = CurrentTile & (~PWRBIT);
 
   return (z);
 }
@@ -59,7 +59,7 @@ void ZonePlop (int base)
     }
   base++;
   }
-  CChr = Map[SMapX][SMapY];
+  CurrentTile = Map[SMapX][SMapY];
   SetZPower();
   Map[SMapX][SMapY] |= ZONEBIT + BULLBIT;
 }
@@ -123,14 +123,14 @@ int IZPop(int Ch9)
 
 void DoHospChur()
 {
-  if (CChr9 == HOSPITAL) {
+  if (CurrentTileMasked == HOSPITAL) {
     HospPop++;
     if (!(CityTime & 15)) RepairZone (HOSPITAL, 3); /*post*/
     if (NeedHosp == -1)
       if (!RandomRange(0, 20))
 	ZonePlop(RESBASE);
   }
-  if (CChr9 == CHURCH) {
+  if (CurrentTileMasked == CHURCH) {
     ChurchPop++;
     if (!(CityTime & 15)) RepairZone (CHURCH, 3); /*post*/
     if (NeedChurch == -1)
@@ -158,8 +158,8 @@ void SetSmoke(int ZonePower)
   static int AniTabD[8] = { IND1,    0, IND3, IND5,    0,    0, IND7, IND9 };
   int z;
 
-  if (CChr9 < IZB) return;
-  z = (CChr9 - IZB) >>3;
+  if (CurrentTileMasked < IZB) return;
+  z = (CurrentTileMasked - IZB) >>3;
   z = z & 7;
   if (AniThis[z]) {
     int xx = SMapX + DX1[z];
@@ -319,7 +319,7 @@ void DoResIn(int pop, int value)
   z = PollutionMem[SMapX >>1][SMapY >>1];
   if (z > 128) return;
 
-  if (CChr9 == FREEZ) {
+  if (CurrentTileMasked == FREEZ) {
     if (pop < 8) {
       BuildHouse(value);
       IncROG(1);
@@ -461,7 +461,7 @@ void DoIndustrial(int ZonePwrFlg)
 
     SetSmoke(ZonePwrFlg);
 
-    tpop = IZPop(CChr9);
+    tpop = IZPop(CurrentTileMasked);
     IndPop += tpop;
 
     if (tpop > RandomRange(0, 5))
@@ -509,7 +509,7 @@ void DoCommercial(int ZonePwrFlg)
 
     ComZPop++;
 
-    int tpop = CZPop(CChr9);
+    int tpop = CZPop(CurrentTileMasked);
 
     ComPop += tpop;
    
@@ -559,13 +559,13 @@ void DoResidential(int ZonePwrFlg)
     int tpop, value, TrfGood;
 
     ResZPop++;
-    if (CChr9 == FREEZ)
+    if (CurrentTileMasked == FREEZ)
     {
         tpop = DoFreePop();
     }
     else
     {
-        tpop = RZPop(CChr9);
+        tpop = RZPop(CurrentTileMasked);
     }
 
     ResPop += tpop;
@@ -585,7 +585,7 @@ void DoResidential(int ZonePwrFlg)
         return;
     }
 
-    if ((CChr9 == FREEZ) || (!(Rand16() & 7)))
+    if ((CurrentTileMasked == FREEZ) || (!(Rand16() & 7)))
     {
         int locvalve = EvalRes(TrfGood);
         int zscore = RValve + locvalve;
@@ -622,19 +622,19 @@ void DoZone(const CityProperties& properties)
   if (ZonePwrFlg) PwrdZCnt++;
   else unPwrdZCnt++;
 
-  if (CChr9 > PORTBASE) {	/* do Special Zones  */
+  if (CurrentTileMasked > PORTBASE) {	/* do Special Zones  */
     DoSPZone(ZonePwrFlg, properties);
     return;
   }
-  if (CChr9 < HOSPITAL) {	
+  if (CurrentTileMasked < HOSPITAL) {	
     DoResidential(ZonePwrFlg);
     return;
   }
-  if (CChr9 < COMBASE) {
+  if (CurrentTileMasked < COMBASE) {
     DoHospChur();
     return;
   }
-  if (CChr9 < INDBASE)  {
+  if (CurrentTileMasked < INDBASE)  {
     DoCommercial(ZonePwrFlg);
     return;
   }

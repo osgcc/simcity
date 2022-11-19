@@ -93,7 +93,7 @@ void SetPowerBit()
 
 bool TestPowerBit()
 {
-    if ((CChr9 == NUCLEAR) || (CChr9 == POWERPLANT))
+    if ((CurrentTileMasked == NUCLEAR) || (CurrentTileMasked == POWERPLANT))
     {
         return true;
     }

@@ -102,8 +102,8 @@ constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 #define BLBNCNBIT	(BULLBIT+BURNBIT+CONDBIT)
 #define BNCNBIT		(BURNBIT+CONDBIT)
 
-extern int CChr; // unmasked tile value
-extern int CChr9; // masked tile value
+extern int CurrentTile; // unmasked tile value
+extern int CurrentTileMasked; // masked tile value
 
 extern int SMapX, SMapY;
 extern int RoadTotal, RailTotal, FirePop;
