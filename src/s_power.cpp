@@ -91,22 +91,23 @@ void SetPowerBit()
 }
 
 
-bool TestPowerBit()
+bool TestPowerBit(const int x, const int y)
 {
-    if ((CurrentTileMasked == NUCLEAR) || (CurrentTileMasked == POWERPLANT))
+    const auto tile = maskedTileValue(x, y);
+    if ((tile == NUCLEAR) || (tile == POWERPLANT))
     {
         return true;
     }
 
     /* XXX: assumes 120x100 */
-    int PowerWrd = (SMapX >> 4) + (SMapY << 3);
+    int PowerWrd = (x / 16) + (y * 8);
 
     if (PowerWrd >= PWRMAPSIZE)
     {
         return false;
     }
 
-    return ((PowerMap[PowerWrd] & (1 << (SMapX & 15))) ? 1 : 0);
+    return ((PowerMap[PowerWrd] & (1 << (x & 15))) ? true : false);
 }
 
 
@@ -117,7 +118,7 @@ int TestForCond(int TFDir)
 
     if (MoveMapSim(TFDir))
     {
-        if ((Map[SMapX][SMapY] & CONDBIT) && (!TestPowerBit()))
+        if ((Map[SMapX][SMapY] & CONDBIT) && (!TestPowerBit(SMapX, SMapY)))
         {
             SMapX = xsave;
             SMapY = ysave;

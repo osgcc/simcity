@@ -12,4 +12,4 @@
 
 void PushPowerStack();
 bool MoveMapSim(int MDir);
-bool TestPowerBit();
+bool TestPowerBit(const int x, const int y);
