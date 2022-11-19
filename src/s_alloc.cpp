@@ -84,7 +84,7 @@ GraphHistory PollutionHis120Years{};
 GraphHistory CrimeHis120Years{};
 GraphHistory MiscHis120Years{};
 
-std::array<int, PWRMAPSIZE> PowerMap{};
+std::array<int, PowerMapSize> PowerMap{};
 
 
 namespace

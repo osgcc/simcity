@@ -102,7 +102,7 @@ bool TestPowerBit(const int x, const int y)
     /* XXX: assumes 120x100 */
     int PowerWrd = (x / 16) + (y * 8);
 
-    if (PowerWrd >= PWRMAPSIZE)
+    if (PowerWrd >= PowerMapSize)
     {
         return false;
     }
@@ -154,7 +154,7 @@ void PullPowerStack()
 
 void DoPowerScan()
 {
-    for (int x = 0; x < PWRMAPSIZE; x++) // ClearPowerMem
+    for (int x = 0; x < PowerMapSize; x++) // ClearPowerMem
     {
         PowerMap[x] = 0;
     }

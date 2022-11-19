@@ -1182,7 +1182,7 @@ void SimLoadInit(CityProperties& properties)
 
     AvCityTax = (CityTime % 48) * 7; /* post */
 
-    for (int z = 0; z < PWRMAPSIZE; z++) /* set power Map */
+    for (int z = 0; z < PowerMapSize; z++) /* set power Map */
     {
         PowerMap[z] = ~0;
     }
