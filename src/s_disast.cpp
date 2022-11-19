@@ -206,8 +206,8 @@ void DoFlood()
         {
             if (RandomRange(0, 7) == 0)
             {
-                int x = SMapX + Dx[i];
-                int y = SMapY + Dy[i];
+                int x = SimulationLocation.x + Dx[i];
+                int y = SimulationLocation.y + Dy[i];
                 if (CoordinatesValid(x, y, SimWidth, SimHeight))
                 {
                     int cell = Map[x][y];
@@ -228,7 +228,7 @@ void DoFlood()
     {
         if (RandomRange(0, 15) == 0)
         {
-            Map[SMapX][SMapY] = 0;
+            Map[SimulationLocation.x][SimulationLocation.y] = 0;
         }
     }
 }

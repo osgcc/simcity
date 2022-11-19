@@ -67,8 +67,8 @@ void DoFire()
     {
         if (!(Rand16() & 7))
         {
-            int Xtem = SMapX + DX[z];
-            int Ytem = SMapY + DY[z];
+            int Xtem = SimulationLocation.x + DX[z];
+            int Ytem = SimulationLocation.y + DY[z];
             if (CoordinatesValid(Xtem, Ytem, SimWidth, SimHeight))
             {
                 int c = Map[Xtem][Ytem];
@@ -88,7 +88,7 @@ void DoFire()
         }
     }
    
-    int z = FireRate[SMapX >> 3][SMapY >> 3];
+    int z = FireRate[SimulationLocation.x >> 3][SimulationLocation.y >> 3];
     
     int Rate = 10;
     if (z)
@@ -105,7 +105,7 @@ void DoFire()
     }
     if (!RandomRange(0, Rate))
     {
-        Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
+        Map[SimulationLocation.x][SimulationLocation.y] = RUBBLE + (Rand16() & 3) + BULLBIT;
     }
 }
 
@@ -114,12 +114,12 @@ void DoAirport()
 {
     if (!(RandomRange(0, 5)))
     {
-        GeneratePlane(SMapX, SMapY);
+        GeneratePlane(SimulationLocation.x, SimulationLocation.y);
         return;
     }
     if (!(RandomRange(0, 12)))
     {
-        GenerateCopter(SMapX, SMapY);
+        GenerateCopter(SimulationLocation.x, SimulationLocation.y);
     }
 }
 
@@ -198,7 +198,7 @@ void DoRadTile()
 {
     if (RandomRange(0, 4095) == 0) // Radioactive decay
     {
-        Map[SMapX][SMapY] = DIRT;
+        Map[SimulationLocation.x][SimulationLocation.y] = DIRT;
     }
 }
 
@@ -206,8 +206,8 @@ void DoRadTile()
 int GetBoatDis()
 {
     int dist = 99999;
-    int mx = (SMapX * 16) + 8;
-    int my = (SMapY * 16) + 8;
+    int mx = (SimulationLocation.x * 16) + 8;
+    int my = (SimulationLocation.y * 16) + 8;
 
     /*
     for (SimSprite* sprite = sim->sprite; sprite != NULL; sprite = sprite->next)
@@ -261,8 +261,8 @@ bool DoBridge()
     if ((!(Rand16() & 3)) &&
 	(GetBoatDis() > 340))
       for (z = 0; z < 7; z++) { /* Close  */
-	x = SMapX + VDx[z];
-	y = SMapY + VDy[z];
+	x = SimulationLocation.x + VDx[z];
+	y = SimulationLocation.y + VDy[z];
 	if (CoordinatesValid(x, y, SimWidth, SimHeight))
 	  if ((Map[x][y] & LOMASK) == (VBRTAB[z] & LOMASK))
 	    Map[x][y] = VBRTAB2[z];
@@ -273,8 +273,8 @@ bool DoBridge()
     if ((!(Rand16() & 3)) &&
 	(GetBoatDis() > 340))
       for (z = 0; z < 7; z++) { /* Close  */
-	x = SMapX + HDx[z];
-	y = SMapY + HDy[z];
+	x = SimulationLocation.x + HDx[z];
+	y = SimulationLocation.y + HDy[z];
 	if (CoordinatesValid(x, y, SimWidth, SimHeight))
 	  if ((Map[x][y] & LOMASK) == (HBRTAB[z] & LOMASK))
 	    Map[x][y] = HBRTAB2[z];
@@ -284,11 +284,11 @@ bool DoBridge()
 
   if ((GetBoatDis() < 300) || (!(Rand16() & 7))) {
     if (CurrentTileMasked & 1) {
-      if (SMapX < (SimWidth - 1))
-	if (Map[SMapX + 1][SMapY] == CHANNEL) { /* Vertical open */
+      if (SimulationLocation.x < (SimWidth - 1))
+	if (Map[SimulationLocation.x + 1][SimulationLocation.y] == CHANNEL) { /* Vertical open */
 	  for (z = 0; z < 7; z++) {
-	    x = SMapX + VDx[z];
-	    y = SMapY + VDy[z];
+	    x = SimulationLocation.x + VDx[z];
+	    y = SimulationLocation.y + VDy[z];
 	    if (CoordinatesValid(x, y, SimWidth, SimHeight))  {
 	      MPtem = Map[x][y];
 	      if ((MPtem == CHANNEL) ||
@@ -300,11 +300,11 @@ bool DoBridge()
 	}
       return false;
     } else {
-      if (SMapY > 0)
-	if (Map[SMapX][SMapY - 1] == CHANNEL) { /* Horizontal open  */
+      if (SimulationLocation.y > 0)
+	if (Map[SimulationLocation.x][SimulationLocation.y - 1] == CHANNEL) { /* Horizontal open  */
 	  for (z = 0; z < 7; z++) {
-	    x = SMapX + HDx[z];
-	    y = SMapY + HDy[z];
+	    x = SimulationLocation.x + HDx[z];
+	    y = SimulationLocation.y + HDy[z];
 	    if (CoordinatesValid(x, y, SimWidth, SimHeight)) {
 	      MPtem = Map[x][y];
 	      if (((MPtem & 15) == (HBRTAB2[z] & 15)) ||
@@ -343,11 +343,11 @@ void DoRoad()
                 {
                     if (((CurrentTileMasked & 15) < 2) || ((CurrentTileMasked & 15) == 15))
                     {
-                        Map[SMapX][SMapY] = RIVER;
+                        Map[SimulationLocation.x][SimulationLocation.y] = RIVER;
                     }
                     else
                     {
-                        Map[SMapX][SMapY] = RUBBLE + (Rand16() & 3) + BULLBIT;
+                        Map[SimulationLocation.x][SimulationLocation.y] = RUBBLE + (Rand16() & 3) + BULLBIT;
                     }
                     return;
                 }
@@ -380,7 +380,7 @@ void DoRoad()
         trafficDensity = 2;
     }
 
-    int Density = TrfDensity[SMapX / 2][SMapY / 2] / 64;  // Set Traf Density
+    int Density = TrfDensity[SimulationLocation.x / 2][SimulationLocation.y / 2] / 64;  // Set Traf Density
    
     if (Density > 2)
     {
@@ -398,7 +398,7 @@ void DoRoad()
             z += ANIMBIT;
         }
 
-        Map[SMapX][SMapY] = z;
+        Map[SimulationLocation.x][SimulationLocation.y] = z;
     }
 }
 
@@ -413,8 +413,8 @@ void RepairZone(int ZCent, int zsize)
   cnt = 0;
   for (y = -1; y < zsize; y++)
     for (x = -1; x < zsize; x++) {
-      int xx = SMapX + x;
-      int yy = SMapY + y;
+      int xx = SimulationLocation.x + x;
+      int yy = SimulationLocation.y + y;
       cnt++;
       if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
 	ThCh = Map[xx][yy];
@@ -433,15 +433,15 @@ void RepairZone(int ZCent, int zsize)
 void DrawStadium(int z)
 {
     z = z - 5;
-    for (int y = (SMapY - 1); y < (SMapY + 3); y++)
+    for (int y = (SimulationLocation.y - 1); y < (SimulationLocation.y + 3); y++)
     {
-        for (int x = (SMapX - 1); x < (SMapX + 3); x++)
+        for (int x = (SimulationLocation.x - 1); x < (SimulationLocation.x + 3); x++)
         {
             Map[x][y] = (z++) | BNCNBIT;
         }
     }
  
-    Map[SMapX][SMapY] |= ZONEBIT | PWRBIT;
+    Map[SimulationLocation.x][SimulationLocation.y] |= ZONEBIT | PWRBIT;
 }
 
 
@@ -473,13 +473,13 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             RepairZone(POWERPLANT, 4);
         }
         PushPowerStack();
-        CoalSmoke(SMapX, SMapY);
+        CoalSmoke(SimulationLocation.x, SimulationLocation.y);
         return;
 
     case NUCLEAR:
         if (!NoDisasters && !RandomRange(0, MltdwnTab[properties.GameLevel()]))
         {
-            DoMeltdown(SMapX, SMapY);
+            DoMeltdown(SimulationLocation.x, SimulationLocation.y);
             return;
         }
         NuclearPop++;
@@ -511,7 +511,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             z = z / 2;
         }
 
-        FireStMap[SMapX >> 3][SMapY >> 3] += z;
+        FireStMap[SimulationLocation.x >> 3][SimulationLocation.y >> 3] += z;
         return;
 
     case POLICESTATION:
@@ -535,7 +535,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             z = z >> 1; /* post PD's need roads */
         }
 
-        PoliceMap[SMapX >> 3][SMapY >> 3] += z;
+        PoliceMap[SimulationLocation.x >> 3][SimulationLocation.y >> 3] += z;
         return;
 
     case STADIUM:
@@ -546,18 +546,18 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
         }
         if (PwrOn)
         {
-            if (!((CityTime + SMapX + SMapY) & 31)) // post release
+            if (!((CityTime + SimulationLocation.x + SimulationLocation.y) & 31)) // post release
             {
                 DrawStadium(FULLSTADIUM);
-                Map[SMapX + 1][SMapY] = FOOTBALLGAME1 + ANIMBIT;
-                Map[SMapX + 1][SMapY + 1] = FOOTBALLGAME2 + ANIMBIT;
+                Map[SimulationLocation.x + 1][SimulationLocation.y] = FOOTBALLGAME1 + ANIMBIT;
+                Map[SimulationLocation.x + 1][SimulationLocation.y + 1] = FOOTBALLGAME2 + ANIMBIT;
             }
         }
         return;
 
     case FULLSTADIUM:
         StadiumPop++;
-        if (!((CityTime + SMapX + SMapY) & 7))	/* post release */
+        if (!((CityTime + SimulationLocation.x + SimulationLocation.y) & 7))	/* post release */
         {
             DrawStadium(STADIUM);
         }
@@ -573,14 +573,14 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
 
         if (PwrOn) // post
         { 
-            if ((Map[SMapX + 1][SMapY - 1] & LOMASK) == RADAR)
+            if ((Map[SimulationLocation.x + 1][SimulationLocation.y - 1] & LOMASK) == RADAR)
             {
-                Map[SMapX + 1][SMapY - 1] = RADAR + ANIMBIT + CONDBIT + BURNBIT;
+                Map[SimulationLocation.x + 1][SimulationLocation.y - 1] = RADAR + ANIMBIT + CONDBIT + BURNBIT;
             }
         }
         else
         {
-            Map[SMapX + 1][SMapY - 1] = RADAR + CONDBIT + BURNBIT;
+            Map[SimulationLocation.x + 1][SimulationLocation.y - 1] = RADAR + CONDBIT + BURNBIT;
         }
 
         if (PwrOn)
@@ -620,8 +620,8 @@ void MapScan(int x1, int x2, const CityProperties& properties)
 
                 if (CurrentTileMasked >= FLOOD)
                 {
-                    SMapX = x;
-                    SMapY = y;
+                    SimulationLocation.x = x;
+                    SimulationLocation.y = y;
                     if (CurrentTileMasked < ROADBASE)
                     {
                         if (CurrentTileMasked >= FIREBASE)
@@ -1093,8 +1093,8 @@ void DoNilPower()
             int z = Map[x][y];
             if (z & ZONEBIT)
             {
-                SMapX = x;
-                SMapY = y;
+                SimulationLocation.x = x;
+                SimulationLocation.y = y;
                 CurrentTile = z;
                 SetZPower();
             }

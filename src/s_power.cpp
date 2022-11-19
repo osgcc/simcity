@@ -28,50 +28,50 @@ bool MoveMapSim(int MDir)
     switch (MDir)
     {
     case 0:
-        if (SMapY > 0)
+        if (SimulationLocation.y > 0)
         {
-            SMapY--;
+            SimulationLocation.y--;
             return true;
         }
-        if (SMapY < 0)
+        if (SimulationLocation.y < 0)
         {
-            SMapY = 0;
+            SimulationLocation.y = 0;
         }
         return false;
 
     case 1:
-        if (SMapX < (SimWidth - 1))
+        if (SimulationLocation.x < (SimWidth - 1))
         {
-            SMapX++;
+            SimulationLocation.x++;
             return true;
         }
-        if (SMapX > (SimWidth - 1))
+        if (SimulationLocation.x > (SimWidth - 1))
         {
-            SMapX = SimWidth - 1;
+            SimulationLocation.x = SimWidth - 1;
         }
         return false;
 
     case 2:
-        if (SMapY < (SimHeight - 1))
+        if (SimulationLocation.y < (SimHeight - 1))
         {
-            SMapY++;
+            SimulationLocation.y++;
             return true;
         }
-        if (SMapY > (SimHeight - 1))
+        if (SimulationLocation.y > (SimHeight - 1))
         {
-            SMapY = SimHeight - 1;
+            SimulationLocation.y = SimHeight - 1;
         }
         return false;
 
     case 3:
-        if (SMapX > 0)
+        if (SimulationLocation.x > 0)
         {
-            SMapX--;
+            SimulationLocation.x--;
             return true;
         }
-        if (SMapX < 0)
+        if (SimulationLocation.x < 0)
         {
-            SMapX = 0;
+            SimulationLocation.x = 0;
         }
         return false;
 
@@ -86,8 +86,8 @@ bool MoveMapSim(int MDir)
 void SetPowerBit()
 {
     /* XXX: assumes 120x100 */
-    int PowerWrd = (SMapX >> 4) + (SMapY << 3);
-    PowerMap[PowerWrd] |= 1 << (SMapX & 15);
+    int PowerWrd = (SimulationLocation.x >> 4) + (SimulationLocation.y << 3);
+    PowerMap[PowerWrd] |= 1 << (SimulationLocation.x & 15);
 }
 
 
@@ -113,22 +113,22 @@ bool TestPowerBit(const int x, const int y)
 
 int TestForCond(int TFDir)
 {
-    int xsave = SMapX;
-    int ysave = SMapY;
+    int xsave = SimulationLocation.x;
+    int ysave = SimulationLocation.y;
 
     if (MoveMapSim(TFDir))
     {
-        if ((Map[SMapX][SMapY] & CONDBIT) && (!TestPowerBit(SMapX, SMapY)))
+        if ((Map[SimulationLocation.x][SimulationLocation.y] & CONDBIT) && (!TestPowerBit(SimulationLocation.x, SimulationLocation.y)))
         {
-            SMapX = xsave;
-            SMapY = ysave;
+            SimulationLocation.x = xsave;
+            SimulationLocation.y = ysave;
 
             return true;
         }
     }
 
-    SMapX = xsave;
-    SMapY = ysave;
+    SimulationLocation.x = xsave;
+    SimulationLocation.y = ysave;
 
     return false;
 }
@@ -139,8 +139,8 @@ void PushPowerStack()
     if (PowerStackNum < (PWRSTKSIZE - 2))
     {
         PowerStackNum++;
-        PowerStackX[PowerStackNum] = SMapX;
-        PowerStackY[PowerStackNum] = SMapY;
+        PowerStackX[PowerStackNum] = SimulationLocation.x;
+        PowerStackY[PowerStackNum] = SimulationLocation.y;
     }
 }
 
@@ -149,8 +149,8 @@ void PullPowerStack()
 {
     if (PowerStackNum > 0)
     {
-        SMapX = PowerStackX[PowerStackNum];
-        SMapY = PowerStackY[PowerStackNum];
+        SimulationLocation.x = PowerStackX[PowerStackNum];
+        SimulationLocation.y = PowerStackY[PowerStackNum];
         PowerStackNum--;
     }
 }
@@ -183,7 +183,7 @@ void DoPowerScan()
             MoveMapSim(ADir);
             SetPowerBit();
 
-            PowerMap[(SMapX >> 4) + (SMapY << 3)] |= 1 << (SMapX & 15);
+            PowerMap[(SimulationLocation.x >> 4) + (SimulationLocation.y << 3)] |= 1 << (SimulationLocation.x & 15);
 
             ConNum = 0;
             int Dir = 0;

@@ -105,7 +105,6 @@ constexpr auto PWRMAPSIZE = (POWERMAPROW * SimHeight);
 extern int CurrentTile; // unmasked tile value
 extern int CurrentTileMasked; // masked tile value
 
-extern int SMapX, SMapY;
 extern int RoadTotal, RailTotal, FirePop;
 extern int ResPop, ComPop, IndPop, TotalPop, LastTotalPop;
 extern int ResZPop, ComZPop, IndZPop, TotalZPop;
