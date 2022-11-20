@@ -178,8 +178,6 @@ void DoPowerScan()
             MoveMapSim(ADir);
             SetPowerBit();
 
-            PowerMap[(SimulationLocation.x / 16) + (SimulationLocation.y * 8)] |= 1 << (SimulationLocation.x & 15);
-
             ConNum = 0;
             int Dir = 0;
             while ((Dir < 4) && (ConNum < 2))
