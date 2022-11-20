@@ -163,7 +163,7 @@ void DoPowerScan()
     int AvailablePower = (CoalPop * 700) + (NuclearPop * 2000); // post release
     int PowerConsumed = 0;
 
-    int ConNum{};
+    int ConductiveTileCount{};
     while (PowerStackNum)
     {
         PullPowerStack();
@@ -180,21 +180,21 @@ void DoPowerScan()
             MoveSimulationTarget(ADir);
             SetPowerBit();
 
-            ConNum = 0;
-            int Dir{0};
-            while ((Dir < 4) && (ConNum < 2))
+            ConductiveTileCount = 0;
+            int searchDirection{0};
+            while ((searchDirection < 4) && (ConductiveTileCount < 2))
             {
-                if (TileIsConductive(Dir))
+                if (TileIsConductive(searchDirection))
                 {
-                    ConNum++;
-                    ADir = Dir;
+                    ConductiveTileCount++;
+                    ADir = searchDirection;
                 }
-                Dir++;
+                searchDirection++;
             }
-            if (ConNum > 1)
+            if (ConductiveTileCount > 1)
             {
                 PushPowerStack();
             }
-        } while (ConNum);
+        } while (ConductiveTileCount);
     }
 }
