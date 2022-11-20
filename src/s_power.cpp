@@ -17,9 +17,11 @@
 
 /* Power Scan */
 
-
-int PowerStackNum;
-char PowerStackX[PWRSTKSIZE], PowerStackY[PWRSTKSIZE];
+namespace
+{
+    int PowerStackNum;
+    char PowerStackX[PWRSTKSIZE], PowerStackY[PWRSTKSIZE];
+};
 
 
 bool MoveSimulationTarget(int direction)

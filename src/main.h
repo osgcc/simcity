@@ -137,7 +137,6 @@ extern int ScoreType;
 extern int ScoreWait;
 extern int CityClass;
 extern int PolMaxX, PolMaxY;
-extern int PowerStackNum;
 extern int TrafficAverage;
 extern int CrashX, CrashY;
 extern int CCx, CCy;
