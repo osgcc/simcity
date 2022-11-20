@@ -50,8 +50,6 @@ extern GraphHistory PollutionHis;
 extern GraphHistory CrimeHis;
 extern GraphHistory MiscHis;
 
-extern std::array<int, PowerMapSize> PowerMap;
-
 extern GraphHistory ResHis120Years;
 extern GraphHistory ComHis120Years;
 extern GraphHistory IndHis120Years;

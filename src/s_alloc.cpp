@@ -11,6 +11,7 @@
 #include "s_alloc.h"
 
 #include "main.h"
+#include "s_power.h"
 
 #include <array>
 #include <vector>
@@ -83,9 +84,6 @@ GraphHistory MoneyHis120Years{};
 GraphHistory PollutionHis120Years{};
 GraphHistory CrimeHis120Years{};
 GraphHistory MiscHis120Years{};
-
-std::array<int, PowerMapSize> PowerMap{};
-
 
 namespace
 {

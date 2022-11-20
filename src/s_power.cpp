@@ -24,6 +24,9 @@ namespace
 };
 
 
+std::array<int, PowerMapSize> PowerMap{};
+
+
 void ResetPowerStackCount()
 {
     PowerStackNum = 0;

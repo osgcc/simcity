@@ -14,3 +14,5 @@ void ResetPowerStackCount();
 void PushPowerStack();
 bool MoveSimulationTarget(int MDir);
 bool TestPowerBit(const int x, const int y);
+
+extern std::array<int, PowerMapSize> PowerMap;
