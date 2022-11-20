@@ -20,7 +20,6 @@
 
 int PowerStackNum;
 char PowerStackX[PWRSTKSIZE], PowerStackY[PWRSTKSIZE];
-int MaxPower, NumPower;
 
 
 bool MoveSimulationTarget(int direction)
@@ -161,8 +160,8 @@ void DoPowerScan()
 {
     PowerMap.fill(0);
 
-    MaxPower = (CoalPop * 700) + (NuclearPop * 2000); // post release
-    NumPower = 0;
+    int MaxPower = (CoalPop * 700) + (NuclearPop * 2000); // post release
+    int NumPower = 0;
 
     int ConNum{};
     while (PowerStackNum)
