@@ -15,7 +15,7 @@
 
 #include <array>
 
-extern Point<int> SimulationLocation;
+extern Point<int> SimulationTarget;
 
 // 2X2 Maps  60 x 50
 extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PopDensity;

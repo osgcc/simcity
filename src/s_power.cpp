@@ -28,50 +28,50 @@ bool MoveSimulationTarget(int MDir)
     switch (MDir)
     {
     case 0:
-        if (SimulationLocation.y > 0)
+        if (SimulationTarget.y > 0)
         {
-            SimulationLocation.y--;
+            SimulationTarget.y--;
             return true;
         }
-        if (SimulationLocation.y < 0)
+        if (SimulationTarget.y < 0)
         {
-            SimulationLocation.y = 0;
+            SimulationTarget.y = 0;
         }
         return false;
 
     case 1:
-        if (SimulationLocation.x < (SimWidth - 1))
+        if (SimulationTarget.x < (SimWidth - 1))
         {
-            SimulationLocation.x++;
+            SimulationTarget.x++;
             return true;
         }
-        if (SimulationLocation.x > (SimWidth - 1))
+        if (SimulationTarget.x > (SimWidth - 1))
         {
-            SimulationLocation.x = SimWidth - 1;
+            SimulationTarget.x = SimWidth - 1;
         }
         return false;
 
     case 2:
-        if (SimulationLocation.y < (SimHeight - 1))
+        if (SimulationTarget.y < (SimHeight - 1))
         {
-            SimulationLocation.y++;
+            SimulationTarget.y++;
             return true;
         }
-        if (SimulationLocation.y > (SimHeight - 1))
+        if (SimulationTarget.y > (SimHeight - 1))
         {
-            SimulationLocation.y = SimHeight - 1;
+            SimulationTarget.y = SimHeight - 1;
         }
         return false;
 
     case 3:
-        if (SimulationLocation.x > 0)
+        if (SimulationTarget.x > 0)
         {
-            SimulationLocation.x--;
+            SimulationTarget.x--;
             return true;
         }
-        if (SimulationLocation.x < 0)
+        if (SimulationTarget.x < 0)
         {
-            SimulationLocation.x = 0;
+            SimulationTarget.x = 0;
         }
         return false;
 
@@ -86,14 +86,14 @@ bool MoveSimulationTarget(int MDir)
 void SetPowerBit()
 {
     /* XXX: assumes 120x100 */
-    int PowerWrd = (SimulationLocation.x / 16) + (SimulationLocation.y * 8);
-    PowerMap[PowerWrd] |= 1 << (SimulationLocation.x & 15);
+    int PowerWrd = (SimulationTarget.x / 16) + (SimulationTarget.y * 8);
+    PowerMap[PowerWrd] |= 1 << (SimulationTarget.x & 15);
 }
 
 
 bool PowerBitSet(const int x, const int y)
 {
-    int PowerWrd = (SimulationLocation.x / 16) + (SimulationLocation.y * 8);
+    int PowerWrd = (SimulationTarget.x / 16) + (SimulationTarget.y * 8);
     return ((PowerMap[PowerWrd] & (1 << (x & 15))) ? true : false);
 }
 
@@ -119,18 +119,18 @@ bool TestPowerBit(const int x, const int y)
 
 bool TileIsConductive(int TFDir)
 {
-    Point<int> saved = SimulationLocation;
+    Point<int> saved = SimulationTarget;
 
     if (MoveSimulationTarget(TFDir))
     {
-        if ((Map[SimulationLocation.x][SimulationLocation.y] & CONDBIT) && (!TestPowerBit(SimulationLocation.x, SimulationLocation.y)))
+        if ((Map[SimulationTarget.x][SimulationTarget.y] & CONDBIT) && (!TestPowerBit(SimulationTarget.x, SimulationTarget.y)))
         {
-            SimulationLocation = saved;
+            SimulationTarget = saved;
             return true;
         }
     }
 
-    SimulationLocation = saved;
+    SimulationTarget = saved;
 
     return false;
 }
@@ -141,8 +141,8 @@ void PushPowerStack()
     if (PowerStackNum < (PWRSTKSIZE - 2))
     {
         PowerStackNum++;
-        PowerStackX[PowerStackNum] = SimulationLocation.x;
-        PowerStackY[PowerStackNum] = SimulationLocation.y;
+        PowerStackX[PowerStackNum] = SimulationTarget.x;
+        PowerStackY[PowerStackNum] = SimulationTarget.y;
     }
 }
 
@@ -151,7 +151,7 @@ void PullPowerStack()
 {
     if (PowerStackNum > 0)
     {
-        SimulationLocation = { PowerStackX[PowerStackNum], PowerStackY[PowerStackNum] };
+        SimulationTarget = { PowerStackX[PowerStackNum], PowerStackY[PowerStackNum] };
         PowerStackNum--;
     }
 }

@@ -289,7 +289,7 @@ void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
       z = Map[x][y];
       if (z & ZONEBIT) {
 	z = z & LOMASK;
-    SimulationLocation = { x, y };
+    SimulationTarget = { x, y };
 	z = GetPDen(z) <<3;
 	if (z > 254)
 	  z = 254;

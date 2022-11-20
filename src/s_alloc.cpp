@@ -18,7 +18,7 @@
 
 /* Allocate Stuff */
 
-Point<int> SimulationLocation{};
+Point<int> SimulationTarget{};
 
 int CurrentTile; // unmasked tile value
 int CurrentTileMasked; // masked tile value

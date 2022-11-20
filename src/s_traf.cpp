@@ -36,15 +36,15 @@ int TrafMaxX, TrafMaxY;
 void PushPos()
 {
   PosStackN++;
-  SMapXStack[PosStackN] = SimulationLocation.x;
-  SMapYStack[PosStackN] = SimulationLocation.y;
+  SMapXStack[PosStackN] = SimulationTarget.x;
+  SMapYStack[PosStackN] = SimulationTarget.y;
 }
 
 
 /* comefrom: SetTrafMem */
 void PullPos()
 {
-    SimulationLocation = { SMapXStack[PosStackN], SMapYStack[PosStackN] };
+    SimulationTarget = { SMapXStack[PosStackN], SMapYStack[PosStackN] };
     PosStackN--;
 }
 
@@ -55,19 +55,19 @@ void SetTrafMem()
     for (int x = PosStackN; x > 0; x--)
     {
         PullPos();
-        if (CoordinatesValid(SimulationLocation.x, SimulationLocation.y, SimWidth, SimHeight))
+        if (CoordinatesValid(SimulationTarget.x, SimulationTarget.y, SimWidth, SimHeight))
         {
-            int z = maskedTileValue(SimulationLocation.x, SimulationLocation.y);
+            int z = maskedTileValue(SimulationTarget.x, SimulationTarget.y);
             if ((z >= ROADBASE) && (z < POWERBASE))
             {
                 /* check for rail */
-                z = TrfDensity[SimulationLocation.x / 2][SimulationLocation.y / 2];
+                z = TrfDensity[SimulationTarget.x / 2][SimulationTarget.y / 2];
                 z += 50;
                 if ((z > 240) && (RandomRange(0, 5) == 0))
                 {
                     z = 240;
-                    TrafMaxX = SimulationLocation.x * 16;
-                    TrafMaxY = SimulationLocation.y * 16;
+                    TrafMaxX = SimulationTarget.x * 16;
+                    TrafMaxY = SimulationTarget.y * 16;
 
                     SimSprite* sprite = GetSprite(SimSprite::Type::Helicopter);
                     if (sprite)
@@ -76,7 +76,7 @@ void SetTrafMem()
                         sprite->dest_y = TrafMaxY;
                     }
                 }
-                TrfDensity[SimulationLocation.x >> 1][SimulationLocation.y >> 1] = z;
+                TrfDensity[SimulationTarget.x >> 1][SimulationTarget.y >> 1] = z;
             }
         }
     }
@@ -111,12 +111,12 @@ bool FindPRoad()		/* look for road on edges of zone   */
   int tx, ty, z;
 
   for (z = 0; z < 12; z++) {
-	  tx = SimulationLocation.x + PerimX[z];
-	  ty = SimulationLocation.y + PerimY[z];
+	  tx = SimulationTarget.x + PerimX[z];
+	  ty = SimulationTarget.y + PerimY[z];
 	  if (CoordinatesValid(tx, ty, SimWidth, SimHeight)) {
 		  if (RoadTest(Map[tx][ty])) {
-              SimulationLocation.y = SMapYStack[PosStackN];
-              SimulationLocation = { tx, ty };
+              SimulationTarget.y = SMapYStack[PosStackN];
+              SimulationTarget = { tx, ty };
 			  return true;
 		  }
 	  }
@@ -132,8 +132,8 @@ bool FindPTele()		/* look for telecommunication on edges of zone */
   int tx, ty, z, tile;
 
   for (z = 0; z < 12; z++) {
-	  tx = SimulationLocation.x + PerimX[z];
-	  ty = SimulationLocation.y + PerimY[z];
+	  tx = SimulationTarget.x + PerimX[z];
+	  ty = SimulationTarget.y + PerimY[z];
 	  if (CoordinatesValid(tx, ty, SimWidth, SimHeight)) {
 	  	  tile = Map[tx][ty] & LOMASK;
 		  if ((tile >= TELEBASE) && (tile <= TELELAST)) {
@@ -151,29 +151,29 @@ int GetFromMap(int x)
     switch (x)
     {
     case 0:
-        if (SimulationLocation.y > 0)
+        if (SimulationTarget.y > 0)
         {
-            return (Map[SimulationLocation.x][SimulationLocation.y - 1] & LOMASK);
+            return (Map[SimulationTarget.x][SimulationTarget.y - 1] & LOMASK);
         }
         return 0;
     case 1:
-        if (SimulationLocation.x < (SimWidth - 1))
+        if (SimulationTarget.x < (SimWidth - 1))
         {
-            return (Map[SimulationLocation.x + 1][SimulationLocation.y] & LOMASK);
+            return (Map[SimulationTarget.x + 1][SimulationTarget.y] & LOMASK);
         }
         return 0;
 
     case 2:
-        if (SimulationLocation.y < (SimHeight - 1))
+        if (SimulationTarget.y < (SimHeight - 1))
         {
-            return (Map[SimulationLocation.x][SimulationLocation.y + 1] & LOMASK);
+            return (Map[SimulationTarget.x][SimulationTarget.y + 1] & LOMASK);
         }
         return 0;
 
     case 3:
-        if (SimulationLocation.x > 0)
+        if (SimulationTarget.x > 0)
         {
-            return (Map[SimulationLocation.x - 1][SimulationLocation.y] & LOMASK);
+            return (Map[SimulationTarget.x - 1][SimulationTarget.y] & LOMASK);
         }
         return 0;
 
@@ -262,7 +262,7 @@ bool TryDrive()
 /* comefrom: DoIndustrial DoCommercial DoResidential */
 int MakeTraf(int Zt)
 {
-    const auto simLocation = SimulationLocation;
+    const auto simLocation = SimulationTarget;
 
     Zsource = Zt;
     PosStackN = 0;
@@ -272,11 +272,11 @@ int MakeTraf(int Zt)
         if (TryDrive()) // attempt to drive somewhere
         {
             SetTrafMem(); // if sucessful, inc trafdensity
-            SimulationLocation = simLocation;
+            SimulationTarget = simLocation;
             return 1; // traffic passed
         }
 
-        SimulationLocation = simLocation;
+        SimulationTarget = simLocation;
         return 0; // traffic failed
     }
     else // no road found

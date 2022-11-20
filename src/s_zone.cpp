@@ -26,12 +26,12 @@
 
 bool SetZPower()		/* set bit in MapWord depending on powermap  */
 {
-  bool z = TestPowerBit(SimulationLocation.x, SimulationLocation.y);
+  bool z = TestPowerBit(SimulationTarget.x, SimulationTarget.y);
 
   if (z)
-    Map[SimulationLocation.x][SimulationLocation.y] = CurrentTile | PWRBIT;
+    Map[SimulationTarget.x][SimulationTarget.y] = CurrentTile | PWRBIT;
   else
-    Map[SimulationLocation.x][SimulationLocation.y] = CurrentTile & (~PWRBIT);
+    Map[SimulationTarget.x][SimulationTarget.y] = CurrentTile & (~PWRBIT);
 
   return (z);
 }
@@ -44,24 +44,24 @@ void ZonePlop (int base)
   static int Zy[9] = {-1,-1,-1, 0, 0, 0, 1, 1, 1};
 
   for (z = 0; z < 9; z++) {		/* check for fire  */
-    int xx = SimulationLocation.x + Zx[z];
-    int yy = SimulationLocation.y + Zy[z];
+    int xx = SimulationTarget.x + Zx[z];
+    int yy = SimulationTarget.y + Zy[z];
     if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
       x = Map[xx][yy] & LOMASK;
       if ((x >= FLOOD) && (x < ROADBASE)) return;
     }
   }
   for (z = 0; z < 9; z++) {
-    int xx = SimulationLocation.x + Zx[z];
-    int yy = SimulationLocation.y + Zy[z];
+    int xx = SimulationTarget.x + Zx[z];
+    int yy = SimulationTarget.y + Zy[z];
     if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
       Map[xx][yy] = base + BNCNBIT;
     }
   base++;
   }
-  CurrentTile = Map[SimulationLocation.x][SimulationLocation.y];
+  CurrentTile = Map[SimulationTarget.x][SimulationTarget.y];
   SetZPower();
-  Map[SimulationLocation.x][SimulationLocation.y] |= ZONEBIT + BULLBIT;
+  Map[SimulationTarget.x][SimulationTarget.y] |= ZONEBIT + BULLBIT;
 }
 
 
@@ -162,8 +162,8 @@ void SetSmoke(int ZonePower)
   z = (CurrentTileMasked - IZB) >>3;
   z = z & 7;
   if (AniThis[z]) {
-    int xx = SimulationLocation.x + DX1[z];
-    int yy = SimulationLocation.y + DY1[z];
+    int xx = SimulationTarget.x + DX1[z];
+    int yy = SimulationTarget.y + DY1[z];
     if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
       if (ZonePower) {
 	if ((Map[xx][yy] & LOMASK) == AniTabC[z]) {
@@ -204,8 +204,8 @@ int GetCRVal()
 {
   int LVal;
 
-  LVal = LandValueMem[SimulationLocation.x >>1][SimulationLocation.y >>1];
-  LVal -= PollutionMem[SimulationLocation.x >>1][SimulationLocation.y >>1];
+  LVal = LandValueMem[SimulationTarget.x >>1][SimulationTarget.y >>1];
+  LVal -= PollutionMem[SimulationTarget.x >>1][SimulationTarget.y >>1];
   if (LVal < 30) return (0);
   if (LVal < 80) return (1);
   if (LVal < 150) return (2);
@@ -243,8 +243,8 @@ int EvalRes (int traf)
 
   if (traf < 0) return (-3000);
 
-  Value = LandValueMem[SimulationLocation.x >>1][SimulationLocation.y >>1];
-  Value -= PollutionMem[SimulationLocation.x >>1][SimulationLocation.y >>1];
+  Value = LandValueMem[SimulationTarget.x >>1][SimulationTarget.y >>1];
+  Value -= PollutionMem[SimulationTarget.x >>1][SimulationTarget.y >>1];
 
   if (Value < 0) Value = 0;		/* Cap at 0 */
   else Value = Value <<5;
@@ -261,7 +261,7 @@ int EvalCom (int traf)
   int Value;
 
   if (traf < 0) return (-3000);
-  Value = ComRate[SimulationLocation.x >>3][SimulationLocation.y >>3];
+  Value = ComRate[SimulationTarget.x >>3][SimulationTarget.y >>3];
   return (Value);
 }
 
@@ -282,8 +282,8 @@ void BuildHouse(int value)
   BestLoc = 0;
   hscore = 0;
   for (z = 1; z < 9; z++) {
-    int xx = SimulationLocation.x + ZeX[z];
-    int yy = SimulationLocation.y + ZeY[z];
+    int xx = SimulationTarget.x + ZeX[z];
+    int yy = SimulationTarget.y + ZeY[z];
     if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
       score = EvalLot(xx, yy);
       if (score != 0) {
@@ -297,8 +297,8 @@ void BuildHouse(int value)
     }
   }
   if (BestLoc) {
-    int xx = SimulationLocation.x + ZeX[BestLoc];
-    int yy = SimulationLocation.y + ZeY[BestLoc];
+    int xx = SimulationTarget.x + ZeX[BestLoc];
+    int yy = SimulationTarget.y + ZeY[BestLoc];
     if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
       Map[xx][yy] = HOUSE + BLBNCNBIT + RandomRange(0, 2) + (value * 3);
     }
@@ -308,7 +308,7 @@ void BuildHouse(int value)
 
 void IncROG(int amount)
 {
-  RateOGMem[SimulationLocation.x>>3][SimulationLocation.y>>3] += amount<<2;
+  RateOGMem[SimulationTarget.x>>3][SimulationTarget.y>>3] += amount<<2;
 }
 
 
@@ -316,7 +316,7 @@ void DoResIn(int pop, int value)
 {
   int z;
 
-  z = PollutionMem[SimulationLocation.x >>1][SimulationLocation.y >>1];
+  z = PollutionMem[SimulationTarget.x >>1][SimulationTarget.y >>1];
   if (z > 128) return;
 
   if (CurrentTileMasked == FREEZ) {
@@ -325,7 +325,7 @@ void DoResIn(int pop, int value)
       IncROG(1);
       return;
     }
-    if (PopDensity[SimulationLocation.x >>1][SimulationLocation.y >>1] > 64) {
+    if (PopDensity[SimulationTarget.x >>1][SimulationTarget.y >>1] > 64) {
       ResPlop(0, value);
       IncROG(8);
       return;
@@ -343,7 +343,7 @@ void DoComIn(int pop, int value)
 {
   int z;
 
-  z = LandValueMem[SimulationLocation.x >>1][SimulationLocation.y >>1];
+  z = LandValueMem[SimulationTarget.x >>1][SimulationTarget.y >>1];
   z = z >>5;
   if (pop > z) return;
 
@@ -376,9 +376,9 @@ void DoResOut(int pop, int value)
   }
   if (pop == 16) {
     IncROG(-8);
-    Map[SimulationLocation.x][SimulationLocation.y] = (FREEZ | BLBNCNBIT | ZONEBIT);
-    for (x = SimulationLocation.x - 1; x <= SimulationLocation.x + 1; x++)
-      for (y = SimulationLocation.y - 1; y <= SimulationLocation.y + 1; y++)
+    Map[SimulationTarget.x][SimulationTarget.y] = (FREEZ | BLBNCNBIT | ZONEBIT);
+    for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
+      for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++)
 	if (x >= 0 && x < SimWidth &&
 	    y >= 0 && y < SimHeight) {
 	  if ((Map[x][y] & LOMASK) != FREEZ)
@@ -389,8 +389,8 @@ void DoResOut(int pop, int value)
   if (pop < 16) {
     IncROG(-1);
     z = 0;
-    for (x = SimulationLocation.x - 1; x <= SimulationLocation.x + 1; x++)
-      for (y = SimulationLocation.y - 1; y <= SimulationLocation.y + 1; y++) {
+    for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
+      for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++) {
 	if (x >= 0 && x < SimWidth &&
 	    y >= 0 && y < SimHeight) {
 	  loc = Map[x][y] & LOMASK;
@@ -440,8 +440,8 @@ int DoFreePop ()
   int loc, x, y;
 
   count = 0;
-  for (x = SimulationLocation.x - 1; x <= SimulationLocation.x + 1; x++)
-    for (y = SimulationLocation.y - 1; y <= SimulationLocation.y + 1; y++) {
+  for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
+    for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++) {
       if (x >= 0 && x < SimWidth &&
 	  y >= 0 && y < SimHeight) {
 	loc = Map[x][y] & LOMASK;
