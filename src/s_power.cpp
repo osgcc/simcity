@@ -160,10 +160,10 @@ void DoPowerScan()
 {
     PowerMap.fill(0);
 
-    int AvailablePower = (CoalPop * 700) + (NuclearPop * 2000); // post release
-    int PowerConsumed = 0;
+    int availablePower = (CoalPop * 700) + (NuclearPop * 2000); // post release
+    int powerConsumed = 0;
 
-    int ConductiveTileCount{};
+    int conductiveTileCount{};
     while (PowerStackNum)
     {
         PullPowerStack();
@@ -171,7 +171,7 @@ void DoPowerScan()
         int ADir{4};
         do
         {
-            if (++PowerConsumed > AvailablePower)
+            if (++powerConsumed > availablePower)
             {
                 SendMes(NotificationId::BrownoutsReported);
                 return;
@@ -180,21 +180,21 @@ void DoPowerScan()
             MoveSimulationTarget(ADir);
             SetPowerBit();
 
-            ConductiveTileCount = 0;
+            conductiveTileCount = 0;
             int searchDirection{0};
-            while ((searchDirection < 4) && (ConductiveTileCount < 2))
+            while ((searchDirection < 4) && (conductiveTileCount < 2))
             {
                 if (TileIsConductive(searchDirection))
                 {
-                    ConductiveTileCount++;
+                    conductiveTileCount++;
                     ADir = searchDirection;
                 }
                 searchDirection++;
             }
-            if (ConductiveTileCount > 1)
+            if (conductiveTileCount > 1)
             {
                 PushPowerStack();
             }
-        } while (ConductiveTileCount);
+        } while (conductiveTileCount);
     }
 }
