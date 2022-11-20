@@ -91,6 +91,13 @@ void SetPowerBit()
 }
 
 
+bool PowerBitSet(const int x, const int y)
+{
+    int PowerWrd = (SimulationLocation.x / 16) + (SimulationLocation.y * 8);
+    return ((PowerMap[PowerWrd] & (1 << (x & 15))) ? true : false);
+}
+
+
 bool TestPowerBit(const int x, const int y)
 {
     const auto tile = maskedTileValue(x, y);
@@ -101,13 +108,12 @@ bool TestPowerBit(const int x, const int y)
 
     /* XXX: assumes 120x100 */
     int PowerWrd = (x / 16) + (y * 8);
-
     if (PowerWrd >= PowerMapSize)
     {
         return false;
     }
 
-    return ((PowerMap[PowerWrd] & (1 << (x & 15))) ? true : false);
+    return PowerBitSet(x, y);
 }
 
 
