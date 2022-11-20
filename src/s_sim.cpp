@@ -620,8 +620,8 @@ void MapScan(int x1, int x2, const CityProperties& properties)
 
                 if (CurrentTileMasked >= FLOOD)
                 {
-                    SimulationLocation.x = x;
-                    SimulationLocation.y = y;
+                    SimulationLocation = { x, y };
+
                     if (CurrentTileMasked < ROADBASE)
                     {
                         if (CurrentTileMasked >= FIREBASE)
@@ -1093,8 +1093,7 @@ void DoNilPower()
             int z = Map[x][y];
             if (z & ZONEBIT)
             {
-                SimulationLocation.x = x;
-                SimulationLocation.y = y;
+                SimulationLocation = { x, y };
                 CurrentTile = z;
                 SetZPower();
             }

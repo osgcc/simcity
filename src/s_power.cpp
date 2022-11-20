@@ -86,7 +86,7 @@ bool MoveMapSim(int MDir)
 void SetPowerBit()
 {
     /* XXX: assumes 120x100 */
-    int PowerWrd = (SimulationLocation.x >> 4) + (SimulationLocation.y << 3);
+    int PowerWrd = (SimulationLocation.x / 16) + (SimulationLocation.y * 8);
     PowerMap[PowerWrd] |= 1 << (SimulationLocation.x & 15);
 }
 
@@ -145,8 +145,7 @@ void PullPowerStack()
 {
     if (PowerStackNum > 0)
     {
-        SimulationLocation.x = PowerStackX[PowerStackNum];
-        SimulationLocation.y = PowerStackY[PowerStackNum];
+        SimulationLocation = { PowerStackX[PowerStackNum], PowerStackY[PowerStackNum] };
         PowerStackNum--;
     }
 }
@@ -179,7 +178,7 @@ void DoPowerScan()
             MoveMapSim(ADir);
             SetPowerBit();
 
-            PowerMap[(SimulationLocation.x >> 4) + (SimulationLocation.y << 3)] |= 1 << (SimulationLocation.x & 15);
+            PowerMap[(SimulationLocation.x / 16) + (SimulationLocation.y * 8)] |= 1 << (SimulationLocation.x & 15);
 
             ConNum = 0;
             int Dir = 0;

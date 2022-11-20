@@ -44,9 +44,8 @@ void PushPos()
 /* comefrom: SetTrafMem */
 void PullPos()
 {
-  SimulationLocation.x = SMapXStack[PosStackN];
-  SimulationLocation.y = SMapYStack[PosStackN];
-  PosStackN--;
+    SimulationLocation = { SMapXStack[PosStackN], SMapYStack[PosStackN] };
+    PosStackN--;
 }
 
 
@@ -116,8 +115,8 @@ bool FindPRoad()		/* look for road on edges of zone   */
 	  ty = SimulationLocation.y + PerimY[z];
 	  if (CoordinatesValid(tx, ty, SimWidth, SimHeight)) {
 		  if (RoadTest(Map[tx][ty])) {
-			  SimulationLocation.x = tx;
-			  SimulationLocation.y = ty;
+              SimulationLocation.y = SMapYStack[PosStackN];
+              SimulationLocation = { tx, ty };
 			  return true;
 		  }
 	  }
@@ -263,8 +262,8 @@ bool TryDrive()
 /* comefrom: DoIndustrial DoCommercial DoResidential */
 int MakeTraf(int Zt)
 {
-    int xtem = SimulationLocation.x;
-    int ytem = SimulationLocation.y;
+    const auto simLocation = SimulationLocation;
+
     Zsource = Zt;
     PosStackN = 0;
 
@@ -273,12 +272,11 @@ int MakeTraf(int Zt)
         if (TryDrive()) // attempt to drive somewhere
         {
             SetTrafMem(); // if sucessful, inc trafdensity
-            SimulationLocation.x = xtem;
-            SimulationLocation.y = ytem;
+            SimulationLocation = simLocation;
             return 1; // traffic passed
         }
-        SimulationLocation.x = xtem;
-        SimulationLocation.y = ytem;
+
+        SimulationLocation = simLocation;
         return 0; // traffic failed
     }
     else // no road found
