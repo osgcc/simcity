@@ -23,7 +23,7 @@ char PowerStackX[PWRSTKSIZE], PowerStackY[PWRSTKSIZE];
 int MaxPower, NumPower;
 
 
-bool MoveMapSim(int MDir)
+bool MoveSimulationTarget(int MDir)
 {
     switch (MDir)
     {
@@ -121,7 +121,7 @@ bool TileIsConductive(int TFDir)
 {
     Point<int> saved = SimulationLocation;
 
-    if (MoveMapSim(TFDir))
+    if (MoveSimulationTarget(TFDir))
     {
         if ((Map[SimulationLocation.x][SimulationLocation.y] & CONDBIT) && (!TestPowerBit(SimulationLocation.x, SimulationLocation.y)))
         {
@@ -178,11 +178,11 @@ void DoPowerScan()
                 return;
             }
             
-            MoveMapSim(ADir);
+            MoveSimulationTarget(ADir);
             SetPowerBit();
 
             ConNum = 0;
-            int Dir = 0;
+            int Dir{0};
             while ((Dir < 4) && (ConNum < 2))
             {
                 if (TileIsConductive(Dir))

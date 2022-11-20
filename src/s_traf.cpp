@@ -196,7 +196,7 @@ bool TryGo(int z)
         }
         if (RoadTest(GetFromMap(realdir)))
         {
-            MoveMapSim(realdir);
+            MoveSimulationTarget(realdir);
             LDir = (realdir + 2) % 4;
             if (z & 1) // save pos every other move
             {

@@ -11,5 +11,5 @@
 #pragma once
 
 void PushPowerStack();
-bool MoveMapSim(int MDir);
+bool MoveSimulationTarget(int MDir);
 bool TestPowerBit(const int x, const int y);
