@@ -23,9 +23,9 @@ char PowerStackX[PWRSTKSIZE], PowerStackY[PWRSTKSIZE];
 int MaxPower, NumPower;
 
 
-bool MoveSimulationTarget(int MDir)
+bool MoveSimulationTarget(int direction)
 {
-    switch (MDir)
+    switch (direction)
     {
     case 0:
         if (SimulationTarget.y > 0)
