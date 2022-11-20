@@ -10,9 +10,12 @@
 // file, included in this distribution, for details.
 #pragma once
 
+#include <array>
+
+#include "main.h"
+
 void ResetPowerStackCount();
+void ResetPowerMap();
 void PushPowerStack();
 bool MoveSimulationTarget(int MDir);
 bool TestPowerBit(const int x, const int y);
-
-extern std::array<int, PowerMapSize> PowerMap;

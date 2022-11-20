@@ -1180,7 +1180,7 @@ void SimLoadInit(CityProperties& properties)
 
     AvCityTax = (CityTime % 48) * 7; /* post */
 
-    PowerMap.fill(0);
+    ResetPowerMap();
 
     DoNilPower();
 

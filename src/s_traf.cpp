@@ -11,9 +11,9 @@
 #include "main.h"
 
 #include "Map.h"
+#include "Power.h"
 
 #include "s_alloc.h"
-#include "s_power.h"
 #include "s_sim.h"
 
 #include "w_util.h"

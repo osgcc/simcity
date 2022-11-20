@@ -21,15 +21,20 @@ namespace
 {
     int PowerStackNum;
     char PowerStackX[PWRSTKSIZE], PowerStackY[PWRSTKSIZE];
+
+    std::array<int, PowerMapSize> PowerMap{};
 };
-
-
-std::array<int, PowerMapSize> PowerMap{};
 
 
 void ResetPowerStackCount()
 {
     PowerStackNum = 0;
+}
+
+
+void ResetPowerMap()
+{
+    PowerMap.fill(0);
 }
 
 
@@ -169,7 +174,7 @@ void PullPowerStack()
 
 void DoPowerScan()
 {
-    PowerMap.fill(0);
+    ResetPowerMap();
 
     int availablePower = (CoalPop * 700) + (NuclearPop * 2000); // post release
     int powerConsumed = 0;
