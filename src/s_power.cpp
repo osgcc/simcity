@@ -24,6 +24,12 @@ namespace
 };
 
 
+void ResetPowerStackCount()
+{
+    PowerStackNum = 0;
+}
+
+
 bool MoveSimulationTarget(int direction)
 {
     switch (direction)

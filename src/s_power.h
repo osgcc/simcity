@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #pragma once
 
+void ResetPowerStackCount();
 void PushPowerStack();
 bool MoveSimulationTarget(int MDir);
 bool TestPowerBit(const int x, const int y);
