@@ -159,10 +159,7 @@ void PullPowerStack()
 
 void DoPowerScan()
 {
-    for (int x = 0; x < PowerMapSize; x++) // ClearPowerMem
-    {
-        PowerMap[x] = 0;
-    }
+    PowerMap.fill(0);
 
     MaxPower = (CoalPop * 700L) + (NuclearPop * 2000L); // post release
     NumPower = 0;
