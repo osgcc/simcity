@@ -161,7 +161,7 @@ void DoPowerScan()
 {
     PowerMap.fill(0);
 
-    MaxPower = (CoalPop * 700L) + (NuclearPop * 2000L); // post release
+    MaxPower = (CoalPop * 700) + (NuclearPop * 2000); // post release
     NumPower = 0;
 
     int ConNum{};
