@@ -883,7 +883,7 @@ void ClearCensus()
     NuclearPop = 0;
     PortPop = 0;
     APortPop = 0;
-    PowerStackNum = 0; // Reset before Mapscan
+    ResetPowerStackCount(); // Reset before Mapscan
 
     for (int x = 0; x < SmX; x++)
     {
@@ -1075,8 +1075,7 @@ void InitSimMemory()
     DisasterEvent = 0;
     ScoreType = 0;
 
-    // This clears powermem
-    PowerStackNum = 0;
+    ResetPowerStackCount();
     DoPowerScan();
     NewPower = 1; // post rel
 
@@ -1181,10 +1180,7 @@ void SimLoadInit(CityProperties& properties)
 
     AvCityTax = (CityTime % 48) * 7; /* post */
 
-    for (int z = 0; z < PowerMapSize; z++) /* set power Map */
-    {
-        PowerMap[z] = ~0;
-    }
+    PowerMap.fill(0);
 
     DoNilPower();
 
