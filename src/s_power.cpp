@@ -160,8 +160,8 @@ void DoPowerScan()
 {
     PowerMap.fill(0);
 
-    int MaxPower = (CoalPop * 700) + (NuclearPop * 2000); // post release
-    int NumPower = 0;
+    int AvailablePower = (CoalPop * 700) + (NuclearPop * 2000); // post release
+    int PowerConsumed = 0;
 
     int ConNum{};
     while (PowerStackNum)
@@ -171,7 +171,7 @@ void DoPowerScan()
         int ADir{4};
         do
         {
-            if (++NumPower > MaxPower)
+            if (++PowerConsumed > AvailablePower)
             {
                 SendMes(NotificationId::BrownoutsReported);
                 return;
