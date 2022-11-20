@@ -169,7 +169,7 @@ void DoPowerScan()
     {
         PullPowerStack();
         
-        int ADir = 4;
+        int ADir{4};
         do
         {
             if (++NumPower > MaxPower)
