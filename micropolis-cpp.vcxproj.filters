@@ -45,7 +45,7 @@
     <ClCompile Include="src\s_msg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\s_power.cpp">
+    <ClCompile Include="src\Power.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\s_scan.cpp">
@@ -179,7 +179,7 @@
     <ClInclude Include="src\s_disast.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\s_power.h">
+    <ClInclude Include="src\Power.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\s_traf.h">

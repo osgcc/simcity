@@ -39,7 +39,7 @@
     <ClCompile Include="src\s_gen.cpp" />
     <ClCompile Include="src\s_init.cpp" />
     <ClCompile Include="src\s_msg.cpp" />
-    <ClCompile Include="src\s_power.cpp" />
+    <ClCompile Include="src\Power.cpp" />
     <ClCompile Include="src\s_scan.cpp" />
     <ClCompile Include="src\s_sim.cpp" />
     <ClCompile Include="src\s_traf.cpp" />
@@ -78,7 +78,7 @@
     <ClInclude Include="src\s_gen.h" />
     <ClInclude Include="src\s_init.h" />
     <ClInclude Include="src\s_msg.h" />
-    <ClInclude Include="src\s_power.h" />
+    <ClInclude Include="src\Power.h" />
     <ClInclude Include="src\s_scan.h" />
     <ClInclude Include="src\s_sim.h" />
     <ClInclude Include="src\s_traf.h" />

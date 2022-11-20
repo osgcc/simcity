@@ -11,7 +11,7 @@
 #include "s_alloc.h"
 
 #include "main.h"
-#include "s_power.h"
+#include "Power.h"
 
 #include <array>
 #include <vector>

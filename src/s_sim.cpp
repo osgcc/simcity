@@ -17,12 +17,12 @@
 #include "Map.h"
 
 #include "Point.h"
+#include "Power.h"
 
 #include "s_alloc.h"
 #include "s_disast.h"
 #include "s_eval.h"
 #include "s_msg.h"
-#include "s_power.h"
 #include "s_scan.h"
 #include "s_traf.h"
 #include "s_zone.h"
