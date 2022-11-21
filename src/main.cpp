@@ -119,6 +119,7 @@ namespace
     bool AnimationStep{ false };
     bool AutoBudget{ false };
     bool ShowGraphWindow{ false };
+    bool RightButtonDrag{ false };
 
     constexpr unsigned int SimStepDefaultTime{ 100 };
     constexpr unsigned int AnimationStepDefaultTime{ 150 };
@@ -770,6 +771,7 @@ void handleMouseEvent(SDL_Event& event)
             MapViewOffset -= { event.motion.xrel, event.motion.yrel };
             clampViewOffset();
             updateMapDrawParameters();
+            RightButtonDrag = true;
         }
         break;
 
@@ -830,6 +832,16 @@ void handleMouseEvent(SDL_Event& event)
             {
                 executeDraggableTool();
             }
+        }
+        else if (event.button.button == SDL_BUTTON_RIGHT)
+        {
+            if (!RightButtonDrag)
+            {
+                pendingTool(Tool::None);
+                toolPalette->cancelTool();
+            }
+
+            RightButtonDrag = false;
         }
         break;
 

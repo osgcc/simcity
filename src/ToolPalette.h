@@ -45,6 +45,8 @@ public:
     void position(const Point<int>& position);
     void injectMouseClickPosition(const Point<int>& mousePosition);
 
+    void cancelTool();
+
 private:
     struct ButtonMeta
     {

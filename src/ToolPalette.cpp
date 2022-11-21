@@ -214,3 +214,15 @@ void ToolPalette::drawBackground()
     SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
     SDL_RenderDrawRect(mRenderer, &mRect);
 }
+
+
+void ToolPalette::cancelTool()
+{
+    for (auto& item : mToolButtons)
+    {
+        item.state = NormalState;
+    }
+
+    mSelectedIndex = NoSelection;
+    mTool = Tool::None;
+}
