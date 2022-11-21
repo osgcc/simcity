@@ -48,8 +48,8 @@ void ResetPowerMap()
 void SetPowerBit()
 {
     /* XXX: assumes 120x100 */
-    int PowerWrd = (SimulationTarget.x / 16) + (SimulationTarget.y * 8);
-    PowerMap[PowerWrd] |= 1 << (SimulationTarget.x & 15);
+    const auto powerWrd = (SimulationTarget.x / 16) + (SimulationTarget.y * 8);
+    PowerMap[powerWrd] |= 1 << (SimulationTarget.x & 15);
 }
 
 
