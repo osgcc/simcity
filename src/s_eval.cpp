@@ -25,7 +25,7 @@
 int EvalValid;
 int CityYes, CityNo;
 std::array<int, PROBNUM> ProblemTable;
-int ProblemTaken[PROBNUM];
+std::array<int, PROBNUM> ProblemTaken;
 std::array<int, PROBNUM> ProblemVotes; /* these are the votes for each  */
 int ProblemOrder[4];			/* sorted index to above  */
 int CityPop, deltaCityPop;
@@ -48,7 +48,7 @@ void EvalInit()
     EvalValid = 1;
     
     ProblemVotes.fill(0);
-    std::fill_n(ProblemOrder, 4, 0);
+    ProblemTaken.fill(0);
 }
 
 
