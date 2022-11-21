@@ -15,6 +15,11 @@
 
 #include <array>
 
+enum class SearchDirection
+{
+	Left, Down, Right, Up, Undefined
+};
+
 extern Point<int> SimulationTarget;
 
 // 2X2 Maps  60 x 50
@@ -63,4 +68,4 @@ extern int ComHisMax;
 extern int IndHisMax;
 
 void initMapArrays();
-bool MoveSimulationTarget(int direction);
+bool MoveSimulationTarget(SearchDirection direction);

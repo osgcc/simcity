@@ -150,11 +150,11 @@ void initMapArrays()
 }
 
 
-bool MoveSimulationTarget(int direction)
+bool MoveSimulationTarget(SearchDirection direction)
 {
     switch (direction)
     {
-    case 0:
+    case SearchDirection::Left:
         if (SimulationTarget.y > 0)
         {
             SimulationTarget.y--;
@@ -166,7 +166,7 @@ bool MoveSimulationTarget(int direction)
         }
         return false;
 
-    case 1:
+    case SearchDirection::Down:
         if (SimulationTarget.x < (SimWidth - 1))
         {
             SimulationTarget.x++;
@@ -178,7 +178,7 @@ bool MoveSimulationTarget(int direction)
         }
         return false;
 
-    case 2:
+    case SearchDirection::Right:
         if (SimulationTarget.y < (SimHeight - 1))
         {
             SimulationTarget.y++;
@@ -190,7 +190,7 @@ bool MoveSimulationTarget(int direction)
         }
         return false;
 
-    case 3:
+    case SearchDirection::Up:
         if (SimulationTarget.x > 0)
         {
             SimulationTarget.x--;
@@ -202,7 +202,7 @@ bool MoveSimulationTarget(int direction)
         }
         return false;
 
-    case 4:
+    case SearchDirection::Undefined:
         return true;
     }
 

@@ -79,7 +79,7 @@ bool testPowerBit(const Point<int>& location)
 }
 
 
-bool isTileConductive(int direction)
+bool isTileConductive(SearchDirection direction)
 {
     const auto saved = SimulationTarget;
 
@@ -139,14 +139,14 @@ void doPowerScan()
                 return;
             }
 
-            MoveSimulationTarget(ADir);
+            MoveSimulationTarget(static_cast<SearchDirection>(ADir));
             setPowerBit(SimulationTarget);
 
             conductiveTileCount = 0;
             int searchDirection{ 0 };
             while ((searchDirection < 4) && (conductiveTileCount < 2))
             {
-                if (isTileConductive(searchDirection))
+                if (isTileConductive(static_cast<SearchDirection>(searchDirection)))
                 {
                     conductiveTileCount++;
                     ADir = searchDirection;
