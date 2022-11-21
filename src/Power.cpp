@@ -26,7 +26,7 @@ namespace
     constexpr auto PowerMapSize = (PowerMapRow * SimHeight);
     constexpr auto PowerStackSize = ((SimWidth * SimHeight) / 4);
 
-    int PowerStackNum{};
+    int PowerStackCount{};
 
     std::array<Point<int>, PowerStackSize> PowerStack;
     std::array<int, PowerMapSize> PowerMap{};
@@ -35,7 +35,7 @@ namespace
 
 void ResetPowerStackCount()
 {
-    PowerStackNum = 0;
+    PowerStackCount = 0;
 }
 
 
@@ -100,20 +100,20 @@ bool TileIsConductive(int direction)
 
 void PushPowerStack()
 {
-    if (PowerStackNum < (PowerStackSize - 2))
+    if (PowerStackCount < (PowerStackSize - 2))
     {
-        PowerStackNum++;
-        PowerStack[PowerStackNum] = SimulationTarget;
+        PowerStackCount++;
+        PowerStack[PowerStackCount] = SimulationTarget;
     }
 }
 
 
 void PullPowerStack()
 {
-    if (PowerStackNum > 0)
+    if (PowerStackCount > 0)
     {
-        SimulationTarget = PowerStack[PowerStackNum];
-        PowerStackNum--;
+        SimulationTarget = PowerStack[PowerStackCount];
+        PowerStackCount--;
     }
 }
 
@@ -126,11 +126,11 @@ void DoPowerScan()
     int powerConsumed = 0;
 
     int conductiveTileCount{};
-    while (PowerStackNum)
+    while (PowerStackCount)
     {
         PullPowerStack();
-        
-        int ADir{4};
+
+        int ADir{ 4 };
         do
         {
             if (++powerConsumed > powerAvailable)
@@ -138,12 +138,12 @@ void DoPowerScan()
                 SendMes(NotificationId::BrownoutsReported);
                 return;
             }
-            
+
             MoveSimulationTarget(ADir);
             SetPowerBit(SimulationTarget);
 
             conductiveTileCount = 0;
-            int searchDirection{0};
+            int searchDirection{ 0 };
             while ((searchDirection < 4) && (conductiveTileCount < 2))
             {
                 if (TileIsConductive(searchDirection))
