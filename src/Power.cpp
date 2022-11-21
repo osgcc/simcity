@@ -55,8 +55,8 @@ void SetPowerBit()
 
 bool PowerBitSet(const int x, const int y)
 {
-    int PowerWrd = (SimulationTarget.x / 16) + (SimulationTarget.y * 8);
-    return ((PowerMap[PowerWrd] & (1 << (x & 15))) ? true : false);
+    const auto powerWord = (x / 16) + (y * 8);
+    return (PowerMap[powerWord] & (1 << (x & 15))) != 0;
 }
 
 
