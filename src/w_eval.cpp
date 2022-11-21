@@ -16,11 +16,10 @@
 #include "w_util.h"
 
 
+#include <array>
 #include <string>
 
-
-extern int ProblemVotes[PROBNUM];
-
+extern std::array<int, PROBNUM> ProblemVotes;
 
 namespace
 {

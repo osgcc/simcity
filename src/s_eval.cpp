@@ -26,7 +26,7 @@ int EvalValid;
 int CityYes, CityNo;
 std::array<int, PROBNUM> ProblemTable;
 int ProblemTaken[PROBNUM];
-int ProblemVotes[PROBNUM];		/* these are the votes for each  */
+std::array<int, PROBNUM> ProblemVotes; /* these are the votes for each  */
 int ProblemOrder[4];			/* sorted index to above  */
 int CityPop, deltaCityPop;
 int CityAssessedValue;               /* assessed city value */
@@ -47,7 +47,7 @@ void EvalInit()
     deltaCityScore = 0;
     EvalValid = 1;
     
-    std::fill_n(ProblemVotes, PROBNUM, 0);
+    ProblemVotes.fill(0);
     std::fill_n(ProblemOrder, 4, 0);
 }
 
@@ -100,10 +100,7 @@ void DoPopNum()
 
 void VoteProblems()
 {
-    for (int i{}; i < PROBNUM; ++i)
-    {
-        ProblemVotes[i] = 0;
-    }
+    ProblemVotes.fill(0);
 
     int x{}, z{}, count{};
     while ((z < 100) && (count < 600))
