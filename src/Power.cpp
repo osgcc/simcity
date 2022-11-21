@@ -19,6 +19,9 @@
 
 namespace
 {
+    constexpr int CoalPowerProvided{ 700 };
+    constexpr int NuclearPowerProvided{ 2000 };
+
     int PowerStackNum{};
     char PowerStackX[PWRSTKSIZE]{}, PowerStackY[PWRSTKSIZE]{};
 
@@ -176,7 +179,7 @@ void DoPowerScan()
 {
     ResetPowerMap();
 
-    int powerAvailable = (CoalPop * 700) + (NuclearPop * 2000); // post release
+    int powerAvailable = (CoalPop * CoalPowerProvided) + (NuclearPop * NuclearPowerProvided);
     int powerConsumed = 0;
 
     int conductiveTileCount{};
