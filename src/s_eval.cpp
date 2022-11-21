@@ -151,13 +151,12 @@ int AverageTrf()
 
 int GetUnemployment()
 {
-    float r;
-    int b;
+    float r{ 0.0f };
 
-    b = (ComPop + IndPop) << 3;
+    int b{ (ComPop + IndPop) * 8 };
     if (b)
     {
-        r = ((float)ResPop) / b;
+        r = (static_cast<float>(ResPop)) / b;
     }
     else
     {
@@ -169,6 +168,7 @@ int GetUnemployment()
     {
         b = 255;
     }
+
     return b;
 }
 
