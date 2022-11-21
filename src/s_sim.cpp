@@ -503,7 +503,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
         }
         else /* from the funding ratio  */
         {
-            z = FireEffect >> 1;
+            z = FireEffect / 2;
         }
 
         if (!FindPRoad()) /* post FD's need roads  */
@@ -532,7 +532,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
 
         if (!FindPRoad())
         {
-            z = z >> 1; /* post PD's need roads */
+            z = z / 2; /* post PD's need roads */
         }
 
         PoliceMap[SimulationTarget.x >> 3][SimulationTarget.y >> 3] += z;
