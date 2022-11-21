@@ -45,11 +45,11 @@ void ResetPowerMap()
 }
 
 
-void SetPowerBit()
+void SetPowerBit(const Point<int>& location)
 {
     /* XXX: assumes 120x100 */
-    const auto powerWrd = (SimulationTarget.x / 16) + (SimulationTarget.y * 8);
-    PowerMap[powerWrd] |= 1 << (SimulationTarget.x & 15);
+    const auto powerWrd = (location.x / 16) + (location.y * 8);
+    PowerMap[powerWrd] |= 1 << (location.x & 15);
 }
 
 
@@ -141,7 +141,7 @@ void DoPowerScan()
             }
             
             MoveSimulationTarget(ADir);
-            SetPowerBit();
+            SetPowerBit(SimulationTarget);
 
             conductiveTileCount = 0;
             int searchDirection{0};
