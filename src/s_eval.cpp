@@ -287,14 +287,11 @@ void DoVotes()
 
 void DoProblems(const Budget& budget)
 {
-    int x, z;
-    int ThisProb, Max;
-
     ProblemTable.fill(0);
 
     ProblemTable[0] = CrimeAverage; /* Crime */
     ProblemTable[1] = PolluteAverage; /* Pollution */
-    ProblemTable[2] = static_cast<int>(LVAverage * .7); /* Housing */
+    ProblemTable[2] = static_cast<int>(LVAverage * 0.7f); /* Housing */
     ProblemTable[3] = budget.TaxRate() * 10; /* Taxes */
     ProblemTable[4] = AverageTrf(); /* Traffic */
     ProblemTable[5] = GetUnemployment(); /* Unemployment */
@@ -302,30 +299,31 @@ void DoProblems(const Budget& budget)
 
     VoteProblems();
     
-    for (z = 0; z < PROBNUM; z++)
+    for (int i = 0; i < PROBNUM; ++i)
     {
-        ProblemTaken[z] = 0;
+        ProblemTaken[i] = 0;
     }
 
-    for (z = 0; z < 4; z++)
+    int thisProblem{};
+    for (int problemIndex = 0; problemIndex < 4; ++problemIndex) //fixme: Magic number
     {
-        Max = 0;
-        for (x = 0; x < 7; x++)
+        int max{};
+        for (int votesIndex = 0; votesIndex < 7; ++votesIndex) //fixme: Magic number
         {
-            if ((ProblemVotes[x] > Max) && (!ProblemTaken[x]))
+            if ((ProblemVotes[votesIndex] > max) && (!ProblemTaken[votesIndex]))
             {
-                ThisProb = x;
-                Max = ProblemVotes[x];
+                thisProblem = votesIndex;
+                max = ProblemVotes[votesIndex];
             }
         }
-        if (Max)
+        if (max)
         {
-            ProblemTaken[ThisProb] = 1;
-            ProblemOrder[z] = ThisProb;
+            ProblemTaken[thisProblem] = 1;
+            ProblemOrder[problemIndex] = thisProblem;
         }
         else
         {
-            ProblemOrder[z] = 7;
+            ProblemOrder[problemIndex] = 7;
             ProblemTable[7] = 0;
         }
     }
