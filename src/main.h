@@ -52,12 +52,6 @@ constexpr auto PROBNUM = 10;
 constexpr auto HistoryLength = 120;
 constexpr auto MISCHISTLEN = 240;
 
-constexpr auto POWERMAPROW = ((SimWidth + 15) / 16);
-
-#define POWERWORD(x, y)		(((x) >>4) + ((y) <<3))
-
-constexpr auto PowerMapSize = (POWERMAPROW * SimHeight);
-
 #define ALMAP 0 /* all */
 #define REMAP 1 /* residential */
 #define COMAP 2 /* commercial */
