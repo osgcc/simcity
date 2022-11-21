@@ -22,8 +22,8 @@ namespace
     constexpr int CoalPowerProvided{ 700 };
     constexpr int NuclearPowerProvided{ 2000 };
 
-    constexpr auto POWERMAPROW = ((SimWidth + 15) / 16);
-    constexpr auto PowerMapSize = (POWERMAPROW * SimHeight);
+    constexpr auto PowerMapRow = ((SimWidth + 15) / 16);
+    constexpr auto PowerMapSize = (PowerMapRow * SimHeight);
     constexpr auto PowerStackSize = ((SimWidth * SimHeight) / 4);
 
     int PowerStackNum{};

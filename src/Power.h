@@ -17,5 +17,5 @@
 void ResetPowerStackCount();
 void ResetPowerMap();
 void PushPowerStack();
-bool MoveSimulationTarget(int MDir);
+bool MoveSimulationTarget(int direction);
 bool TestPowerBit(const int x, const int y);
