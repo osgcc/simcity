@@ -176,7 +176,7 @@ void DoPowerScan()
 {
     ResetPowerMap();
 
-    int availablePower = (CoalPop * 700) + (NuclearPop * 2000); // post release
+    int powerAvailable = (CoalPop * 700) + (NuclearPop * 2000); // post release
     int powerConsumed = 0;
 
     int conductiveTileCount{};
@@ -187,7 +187,7 @@ void DoPowerScan()
         int ADir{4};
         do
         {
-            if (++powerConsumed > availablePower)
+            if (++powerConsumed > powerAvailable)
             {
                 SendMes(NotificationId::BrownoutsReported);
                 return;
