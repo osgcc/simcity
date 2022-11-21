@@ -472,7 +472,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
         {
             RepairZone(POWERPLANT, 4);
         }
-        PushPowerStack();
+        pushPowerStack();
         CoalSmoke(SimulationTarget.x, SimulationTarget.y);
         return;
 
@@ -487,7 +487,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
         {
             RepairZone(NUCLEAR, 4);
         }
-        PushPowerStack();
+        pushPowerStack();
         return;
 
     case FIRESTATION:
@@ -883,7 +883,7 @@ void ClearCensus()
     NuclearPop = 0;
     PortPop = 0;
     APortPop = 0;
-    ResetPowerStackCount(); // Reset before Mapscan
+    resetPowerStackCount(); // Reset before Mapscan
 
     for (int x = 0; x < SmX; x++)
     {
@@ -1075,8 +1075,8 @@ void InitSimMemory()
     DisasterEvent = 0;
     ScoreType = 0;
 
-    ResetPowerStackCount();
-    DoPowerScan();
+    resetPowerStackCount();
+    doPowerScan();
     NewPower = 1; // post rel
 
     InitSimLoad = 0;
@@ -1180,7 +1180,7 @@ void SimLoadInit(CityProperties& properties)
 
     AvCityTax = (CityTime % 48) * 7; /* post */
 
-    ResetPowerMap();
+    resetPowerMap();
 
     DoNilPower();
 
@@ -1313,7 +1313,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
     case 11:
         if (!(Scycle % PowerScanFrequency[speed]))
         {
-            DoPowerScan();
+            doPowerScan();
             NewMapFlags[PRMAP] = 1;
             NewPower = 1; /* post-release change */
         }
@@ -1385,7 +1385,7 @@ void DoSimInit(CityProperties& properties, Budget& budget)
     SetValves(properties, budget);
     ClearCensus();
     MapScan(0, SimWidth, properties); /* XXX are you sure ??? */
-    DoPowerScan();
+    doPowerScan();
     NewPower = 1;		/* post rel */
     PTLScan();
     CrimeScan();

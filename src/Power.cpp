@@ -33,19 +33,19 @@ namespace
 };
 
 
-void ResetPowerStackCount()
+void resetPowerStackCount()
 {
     PowerStackCount = 0;
 }
 
 
-void ResetPowerMap()
+void resetPowerMap()
 {
     PowerMap.fill(0);
 }
 
 
-void SetPowerBit(const Point<int>& location)
+void setPowerBit(const Point<int>& location)
 {
     /* XXX: assumes 120x100 */
     const auto powerWrd = (location.x / 16) + (location.y * 8);
@@ -53,14 +53,14 @@ void SetPowerBit(const Point<int>& location)
 }
 
 
-bool PowerBitSet(const Point<int>& location)
+bool powerBitSet(const Point<int>& location)
 {
     const auto powerWord = (location.x / 16) + (location.y * 8);
     return (PowerMap[powerWord] & (1 << (location.x & 15))) != 0;
 }
 
 
-bool TestPowerBit(const Point<int>& location)
+bool testPowerBit(const Point<int>& location)
 {
     const auto tile = maskedTileValue(location.x, location.y);
     if ((tile == NUCLEAR) || (tile == POWERPLANT))
@@ -75,17 +75,17 @@ bool TestPowerBit(const Point<int>& location)
         return false;
     }
 
-    return PowerBitSet(location);
+    return powerBitSet(location);
 }
 
 
-bool TileIsConductive(int direction)
+bool isTileConductive(int direction)
 {
     const auto saved = SimulationTarget;
 
     if (MoveSimulationTarget(direction))
     {
-        if ((tileValue(SimulationTarget) & CONDBIT) && !TestPowerBit(SimulationTarget))
+        if ((tileValue(SimulationTarget) & CONDBIT) && !testPowerBit(SimulationTarget))
         {
             SimulationTarget = saved;
             return true;
@@ -98,7 +98,7 @@ bool TileIsConductive(int direction)
 }
 
 
-void PushPowerStack()
+void pushPowerStack()
 {
     if (PowerStackCount < (PowerStackSize - 2))
     {
@@ -108,7 +108,7 @@ void PushPowerStack()
 }
 
 
-void PullPowerStack()
+void pullPowerStack()
 {
     if (PowerStackCount > 0)
     {
@@ -118,9 +118,9 @@ void PullPowerStack()
 }
 
 
-void DoPowerScan()
+void doPowerScan()
 {
-    ResetPowerMap();
+    resetPowerMap();
 
     int powerAvailable = (CoalPop * CoalPowerProvided) + (NuclearPop * NuclearPowerProvided);
     int powerConsumed = 0;
@@ -128,7 +128,7 @@ void DoPowerScan()
     int conductiveTileCount{};
     while (PowerStackCount)
     {
-        PullPowerStack();
+        pullPowerStack();
 
         int ADir{ 4 };
         do
@@ -140,13 +140,13 @@ void DoPowerScan()
             }
 
             MoveSimulationTarget(ADir);
-            SetPowerBit(SimulationTarget);
+            setPowerBit(SimulationTarget);
 
             conductiveTileCount = 0;
             int searchDirection{ 0 };
             while ((searchDirection < 4) && (conductiveTileCount < 2))
             {
-                if (TileIsConductive(searchDirection))
+                if (isTileConductive(searchDirection))
                 {
                     conductiveTileCount++;
                     ADir = searchDirection;
@@ -155,7 +155,7 @@ void DoPowerScan()
             }
             if (conductiveTileCount > 1)
             {
-                PushPowerStack();
+                pushPowerStack();
             }
         } while (conductiveTileCount);
     }

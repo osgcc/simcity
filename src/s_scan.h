@@ -10,7 +10,7 @@
 // file, included in this distribution, for details.
 #pragma once
 
-void DoPowerScan();
+void doPowerScan();
 void PTLScan();
 void CrimeScan();
 void PopDenScan();

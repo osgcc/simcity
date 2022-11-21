@@ -135,7 +135,7 @@ namespace
          MiscHis120Years.fill(0);
 
          MiscHis.fill(0);
-         ResetPowerMap();
+         resetPowerMap();
     }
 };
 

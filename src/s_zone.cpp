@@ -26,7 +26,7 @@
 
 bool SetZPower()		/* set bit in MapWord depending on powermap  */
 {
-  bool z = TestPowerBit(SimulationTarget);
+  bool z = testPowerBit(SimulationTarget);
 
   if (z)
     Map[SimulationTarget.x][SimulationTarget.y] = CurrentTile | PWRBIT;
