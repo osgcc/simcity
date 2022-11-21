@@ -148,3 +148,63 @@ void initMapArrays()
 
     resetHistoryArrays();
 }
+
+
+bool MoveSimulationTarget(int direction)
+{
+    switch (direction)
+    {
+    case 0:
+        if (SimulationTarget.y > 0)
+        {
+            SimulationTarget.y--;
+            return true;
+        }
+        if (SimulationTarget.y < 0)
+        {
+            SimulationTarget.y = 0;
+        }
+        return false;
+
+    case 1:
+        if (SimulationTarget.x < (SimWidth - 1))
+        {
+            SimulationTarget.x++;
+            return true;
+        }
+        if (SimulationTarget.x > (SimWidth - 1))
+        {
+            SimulationTarget.x = SimWidth - 1;
+        }
+        return false;
+
+    case 2:
+        if (SimulationTarget.y < (SimHeight - 1))
+        {
+            SimulationTarget.y++;
+            return true;
+        }
+        if (SimulationTarget.y > (SimHeight - 1))
+        {
+            SimulationTarget.y = SimHeight - 1;
+        }
+        return false;
+
+    case 3:
+        if (SimulationTarget.x > 0)
+        {
+            SimulationTarget.x--;
+            return true;
+        }
+        if (SimulationTarget.x < 0)
+        {
+            SimulationTarget.x = 0;
+        }
+        return false;
+
+    case 4:
+        return true;
+    }
+
+    return false;
+}
