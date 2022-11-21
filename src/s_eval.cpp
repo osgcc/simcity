@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include <array>
+
 #include "Budget.h"
 
 #include "s_alloc.h"
@@ -22,7 +24,7 @@
 
 int EvalValid;
 int CityYes, CityNo;
-int ProblemTable[PROBNUM];
+std::array<int, PROBNUM> ProblemTable;
 int ProblemTaken[PROBNUM];
 int ProblemVotes[PROBNUM];		/* these are the votes for each  */
 int ProblemOrder[4];			/* sorted index to above  */
@@ -288,10 +290,7 @@ void DoProblems(const Budget& budget)
     int x, z;
     int ThisProb, Max;
 
-    for (z = 0; z < PROBNUM; z++)
-    {
-        ProblemTable[z] = 0;
-    }
+    ProblemTable.fill(0);
 
     ProblemTable[0] = CrimeAverage; /* Crime */
     ProblemTable[1] = PolluteAverage; /* Pollution */
