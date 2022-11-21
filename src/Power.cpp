@@ -21,6 +21,7 @@ namespace
 {
     constexpr int CoalPowerProvided{ 700 };
     constexpr int NuclearPowerProvided{ 2000 };
+    constexpr auto PowerStackSize = ((SimWidth * SimHeight) / 4);
 
     int PowerStackNum{};
     char PowerStackX[PowerStackSize]{}, PowerStackY[PowerStackSize]{};

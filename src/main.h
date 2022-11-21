@@ -57,7 +57,6 @@ constexpr auto POWERMAPROW = ((SimWidth + 15) / 16);
 #define POWERWORD(x, y)		(((x) >>4) + ((y) <<3))
 
 constexpr auto PowerMapSize = (POWERMAPROW * SimHeight);
-constexpr auto PowerStackSize = ((SimWidth * SimHeight) / 4);
 
 #define ALMAP 0 /* all */
 #define REMAP 1 /* residential */
