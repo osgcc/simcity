@@ -118,7 +118,7 @@ void VoteProblems()
             z++;
         }
         x++;
-        if (x > PROBNUM)
+        if (x >= PROBNUM)
         {
             x = 0;
         }
