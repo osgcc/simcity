@@ -100,29 +100,27 @@ void DoPopNum()
 
 void VoteProblems()
 {
-    int x, z, count;
-
-    for (z = 0; z < PROBNUM; z++)
+    for (int i{}; i < PROBNUM; ++i)
     {
-        ProblemVotes[z] = 0;
+        ProblemVotes[i] = 0;
     }
 
-    x = 0;
-    z = 0;
-    count = 0;
+    int x{}, z{}, count{};
     while ((z < 100) && (count < 600))
     {
         if (RandomRange(0, 300) < ProblemTable[x])
         {
-            ProblemVotes[x]++;
-            z++;
+            ++ProblemVotes[x];
+            ++z;
         }
-        x++;
+        
+        ++x;
+
         if (x >= PROBNUM)
         {
             x = 0;
         }
-        count++;
+        ++count;
     }
 }
 
