@@ -23,7 +23,7 @@ namespace
     constexpr int NuclearPowerProvided{ 2000 };
 
     int PowerStackNum{};
-    char PowerStackX[PWRSTKSIZE]{}, PowerStackY[PWRSTKSIZE]{};
+    char PowerStackX[PowerStackSize]{}, PowerStackY[PowerStackSize]{};
 
     std::array<int, PowerMapSize> PowerMap{};
 };
@@ -156,7 +156,7 @@ bool TileIsConductive(int TFDir)
 
 void PushPowerStack()
 {
-    if (PowerStackNum < (PWRSTKSIZE - 2))
+    if (PowerStackNum < (PowerStackSize - 2))
     {
         PowerStackNum++;
         PowerStackX[PowerStackNum] = SimulationTarget.x;
