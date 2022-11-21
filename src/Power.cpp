@@ -27,8 +27,8 @@ namespace
     constexpr auto PowerStackSize = ((SimWidth * SimHeight) / 4);
 
     int PowerStackNum{};
-    char PowerStackX[PowerStackSize]{}, PowerStackY[PowerStackSize]{};
 
+    std::array<Point<int>, PowerStackSize> PowerStack;
     std::array<int, PowerMapSize> PowerMap{};
 };
 
@@ -103,8 +103,7 @@ void PushPowerStack()
     if (PowerStackNum < (PowerStackSize - 2))
     {
         PowerStackNum++;
-        PowerStackX[PowerStackNum] = SimulationTarget.x;
-        PowerStackY[PowerStackNum] = SimulationTarget.y;
+        PowerStack[PowerStackNum] = SimulationTarget;
     }
 }
 
@@ -113,7 +112,7 @@ void PullPowerStack()
 {
     if (PowerStackNum > 0)
     {
-        SimulationTarget = { PowerStackX[PowerStackNum], PowerStackY[PowerStackNum] };
+        SimulationTarget = PowerStack[PowerStackNum];
         PowerStackNum--;
     }
 }
