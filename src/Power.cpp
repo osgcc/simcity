@@ -19,8 +19,8 @@
 
 namespace
 {
-    int PowerStackNum;
-    char PowerStackX[PWRSTKSIZE], PowerStackY[PWRSTKSIZE];
+    int PowerStackNum{};
+    char PowerStackX[PWRSTKSIZE]{}, PowerStackY[PWRSTKSIZE]{};
 
     std::array<int, PowerMapSize> PowerMap{};
 };
