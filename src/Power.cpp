@@ -53,39 +53,39 @@ void SetPowerBit(const Point<int>& location)
 }
 
 
-bool PowerBitSet(const int x, const int y)
+bool PowerBitSet(const Point<int>& location)
 {
-    const auto powerWord = (x / 16) + (y * 8);
-    return (PowerMap[powerWord] & (1 << (x & 15))) != 0;
+    const auto powerWord = (location.x / 16) + (location.y * 8);
+    return (PowerMap[powerWord] & (1 << (location.x & 15))) != 0;
 }
 
 
-bool TestPowerBit(const int x, const int y)
+bool TestPowerBit(const Point<int>& location)
 {
-    const auto tile = maskedTileValue(x, y);
+    const auto tile = maskedTileValue(location.x, location.y);
     if ((tile == NUCLEAR) || (tile == POWERPLANT))
     {
         return true;
     }
 
     /* XXX: assumes 120x100 */
-    int PowerWrd = (x / 16) + (y * 8);
+    int PowerWrd = (location.x / 16) + (location.y * 8);
     if (PowerWrd >= PowerMapSize)
     {
         return false;
     }
 
-    return PowerBitSet(x, y);
+    return PowerBitSet(location);
 }
 
 
-bool TileIsConductive(int TFDir)
+bool TileIsConductive(int direction)
 {
-    Point<int> saved = SimulationTarget;
+    const auto saved = SimulationTarget;
 
-    if (MoveSimulationTarget(TFDir))
+    if (MoveSimulationTarget(direction))
     {
-        if ((Map[SimulationTarget.x][SimulationTarget.y] & CONDBIT) && (!TestPowerBit(SimulationTarget.x, SimulationTarget.y)))
+        if ((Map[SimulationTarget.x][SimulationTarget.y] & CONDBIT) && (!TestPowerBit(SimulationTarget)))
         {
             SimulationTarget = saved;
             return true;
