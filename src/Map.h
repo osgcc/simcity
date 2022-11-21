@@ -166,6 +166,7 @@ extern std::array<std::array<int, SimHeight>, SimWidth> Map; // Main Map 120 x 1
 void DrawBigMapSegment(const Point<int>& begin, const Point<int>& end);
 void DrawBigMap();
 
+unsigned int tileValue(const Point<int>& location);
 unsigned int tileValue(const int x, const int y);
 unsigned int maskedTileValue(const int x, const int y);
 unsigned int maskedTileValue(unsigned int tile);

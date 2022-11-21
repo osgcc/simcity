@@ -55,6 +55,12 @@ void ResetMap()
 }
 
 
+unsigned int tileValue(const Point<int>& location)
+{
+	return tileValue(location.x, location.y);
+}
+
+
 unsigned int tileValue(const int x, const int y)
 {
 	return static_cast<unsigned int>(Map[x][y]);
