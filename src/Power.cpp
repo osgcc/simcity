@@ -85,7 +85,7 @@ bool TileIsConductive(int direction)
 
     if (MoveSimulationTarget(direction))
     {
-        if ((Map[SimulationTarget.x][SimulationTarget.y] & CONDBIT) && (!TestPowerBit(SimulationTarget)))
+        if ((tileValue(SimulationTarget) & CONDBIT) && !TestPowerBit(SimulationTarget))
         {
             SimulationTarget = saved;
             return true;
