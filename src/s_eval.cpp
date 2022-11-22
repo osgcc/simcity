@@ -156,15 +156,15 @@ void GetAssessedValue()
 
 void DoPopNum()
 {
-    int OldCityPop = CityPop;
-    CityPop = ((ResPop)+(ComPop * 8) + (IndPop * 8)) * 20;
+    int oldCityPop{ CityPop };
+    CityPop = (ResPop + (ComPop * 8) + (IndPop * 8)) * 20;
 
-    if (OldCityPop == -1)
+    if (oldCityPop == -1) // fixme: magic number (sentinel, use named value)
     {
-        OldCityPop = CityPop;
+        oldCityPop = CityPop;
     }
 
-    deltaCityPop = CityPop - OldCityPop;
+    deltaCityPop = CityPop - oldCityPop;
 
     /**
      * 0 == village
