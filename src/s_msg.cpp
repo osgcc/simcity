@@ -12,6 +12,7 @@
 
 #include "Budget.h"
 
+#include "s_eval.h"
 #include "s_sim.h"
 
 #include "w_resrc.h"
@@ -199,35 +200,35 @@ void DoScenarioScore(int type)
     switch (type)
     {
     case 1:	/* Dullsville */
-        if (CityClass >= 4)
+        if (cityClass() >= 4)
         {
             z = -100;
         }
         break;
 
     case 2:	/* San Francisco */
-        if (CityClass >= 4)
+        if (cityClass() >= 4)
         {
             z = -100;
         }
         break;
 
     case 3:	/* Hamburg */
-        if (CityClass >= 4)
+        if (cityClass() >= 4)
         {
             z = -100;
         }
         break;
 
     case 4:	/* Bern */
-        if (TrafficAverage < 80)
+        if (trafficAverage() < 80)
         {
             z = -100;
         }
         break;
 
     case 5:	/* Tokyo */
-        if (CityScore > 500)
+        if (cityScore() > 500)
         {
             z = -100;
         }
@@ -241,14 +242,14 @@ void DoScenarioScore(int type)
         break;
 
     case 7:	/* Boston */
-        if (CityScore > 500)
+        if (cityScore() > 500)
         {
             z = -100;
         }
         break;
 
     case 8:	/* Rio de Janeiro */
-        if (CityScore > 500)
+        if (cityScore() > 500)
         {
             z = -100;
         }
@@ -472,7 +473,7 @@ void SendMessages(const Budget& budget)
         break;
 
     case 63:
-        if (TrafficAverage > 60)
+        if (trafficAverage() > 60)
         {
             SendMes(NotificationId::TrafficJamsReported);
         }

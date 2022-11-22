@@ -14,6 +14,7 @@
 #include "Tool.h"
 
 #include "s_alloc.h"
+#include "s_eval.h"
 #include "s_msg.h"
 #include "s_sim.h"
 
@@ -27,8 +28,8 @@ void InitWillStuff()
     RoadEffect = 32;
     PoliceEffect = 1000;
     FireEffect = 1000;
-    CityScore = 500;
-    CityPop = -1;
+    cityScore(500);
+    cityPopulation(-1);
     LastCityTime(-1);
     LastCityYear(1);
     LastCityMonth(0);

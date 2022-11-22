@@ -8,9 +8,7 @@
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
 // file, included in this distribution, for details.
-#include "main.h"
-
-#include <array>
+#include "s_eval.h"
 
 #include "Budget.h"
 
@@ -19,20 +17,108 @@
 
 #include "w_eval.h"
 
+
 /* City Evaluation */
+namespace
+{
+    int EvalValid{};
+    int CityYes{}, CityNo{};
+
+    std::array<int, PROBNUM> ProblemTable;
+    std::array<int, PROBNUM> ProblemTaken;
+    std::array<int, PROBNUM> ProblemVotes; /* these are the votes for each  */
+    std::array<int, 4> ProblemOrder{}; /* sorted index to above  */
+    
+    int CityPop{}, deltaCityPop{};
+    int CityAssessedValue; /* assessed city value */
+    int CityClass; /*  0..5  */
+    int CityScore{}, DeltaCityScore{}, AverageCityScore{};
+    int TrafficAverage{};
+};
 
 
-int EvalValid;
-int CityYes, CityNo;
-std::array<int, PROBNUM> ProblemTable;
-std::array<int, PROBNUM> ProblemTaken;
-std::array<int, PROBNUM> ProblemVotes; /* these are the votes for each  */
-int ProblemOrder[4];			/* sorted index to above  */
-int CityPop, deltaCityPop;
-int CityAssessedValue;               /* assessed city value */
-int CityClass;                  /*  0..5  */
-int CityScore, deltaCityScore, AverageCityScore;
-int TrafficAverage;
+const std::array<int, 4>& problemOrder()
+{
+    return ProblemOrder;
+}
+
+
+const std::array<int, PROBNUM>& problemVotes()
+{
+    return ProblemVotes;
+}
+
+
+int trafficAverage()
+{
+    return TrafficAverage;
+}
+
+
+int cityAssessedValue()
+{
+    return CityAssessedValue;
+}
+
+
+int cityScore()
+{
+    return CityScore;
+}
+
+
+void cityScore(const int score)
+{
+    CityScore = score;
+}
+
+
+int deltaCityScore()
+{
+    return DeltaCityScore;
+}
+
+
+int cityClass()
+{
+    return CityClass;
+}
+
+
+void cityClass(const int value)
+{
+    CityClass = value;
+}
+
+
+int cityYes()
+{
+    return CityYes;
+}
+
+
+int cityNo()
+{
+    return CityNo;
+}
+
+
+int cityPopulation()
+{
+    return CityPop;
+}
+
+
+void cityPopulation(const int val)
+{
+    CityPop = val;
+}
+
+
+int deltaCityPopulation()
+{
+    return deltaCityPop;
+}
 
 
 void EvalInit()
@@ -44,7 +130,7 @@ void EvalInit()
     CityAssessedValue = 0;
     CityClass = 0;
     CityScore = 500;
-    deltaCityScore = 0;
+    DeltaCityScore = 0;
     EvalValid = 1;
     
     ProblemVotes.fill(0);
@@ -256,7 +342,7 @@ void GetScore(const Budget& budget)
 
     CityScore = (CityScore + z) / 2;
 
-    deltaCityScore = CityScore - OldCityScore;
+    DeltaCityScore = CityScore - OldCityScore;
 }
 
 

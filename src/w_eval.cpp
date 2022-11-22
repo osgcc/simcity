@@ -12,6 +12,7 @@
 
 #include "CityProperties.h"
 
+#include "s_eval.h"
 #include "w_tk.h"
 #include "w_util.h"
 
@@ -19,12 +20,12 @@
 #include <array>
 #include <string>
 
-extern std::array<int, PROBNUM> ProblemVotes;
 
 namespace
 {
 	bool EvalChanged{ false };
 }
+
 
 const std::string cityClassStr[6] =
 {
@@ -117,23 +118,23 @@ void doScoreCard(const CityProperties& properties)
 {
 	const Strings strings
 	{
-		std::to_string(deltaCityScore),
-		std::to_string(CityScore),
-		ProblemVotes[ProblemOrder[0]] ? probStr[ProblemOrder[0]] : " ",
-		ProblemVotes[ProblemOrder[1]] ? probStr[ProblemOrder[1]] : " ",
-		ProblemVotes[ProblemOrder[2]] ? probStr[ProblemOrder[2]] : " ",
-		ProblemVotes[ProblemOrder[3]] ? probStr[ProblemOrder[3]] : " ",
-		ProblemVotes[ProblemOrder[0]] ? std::to_string(ProblemVotes[ProblemOrder[0]]) + "%" : " ",
-		ProblemVotes[ProblemOrder[1]] ? std::to_string(ProblemVotes[ProblemOrder[1]]) + "%" : " ",
-		ProblemVotes[ProblemOrder[2]] ? std::to_string(ProblemVotes[ProblemOrder[2]]) + "%" : " ",
-		ProblemVotes[ProblemOrder[3]] ? std::to_string(ProblemVotes[ProblemOrder[3]]) + "%" : " ",
-		std::to_string(CityPop),
-		std::to_string(deltaCityPop),
-		NumberToDollarDecimal(CityAssessedValue),
-		cityClassStr[CityClass],
+		std::to_string(deltaCityScore()),
+		std::to_string(cityScore()),
+		problemVotes()[problemOrder()[0]] ? probStr[problemOrder()[0]] : " ",
+		problemVotes()[problemOrder()[1]] ? probStr[problemOrder()[1]] : " ",
+		problemVotes()[problemOrder()[2]] ? probStr[problemOrder()[2]] : " ",
+		problemVotes()[problemOrder()[3]] ? probStr[problemOrder()[3]] : " ",
+		problemVotes()[problemOrder()[0]] ? std::to_string(problemVotes()[problemOrder()[0]]) + "%" : " ",
+		problemVotes()[problemOrder()[1]] ? std::to_string(problemVotes()[problemOrder()[1]]) + "%" : " ",
+		problemVotes()[problemOrder()[2]] ? std::to_string(problemVotes()[problemOrder()[2]]) + "%" : " ",
+		problemVotes()[problemOrder()[3]] ? std::to_string(problemVotes()[problemOrder()[3]]) + "%" : " ",
+		std::to_string(cityPopulation()),
+		std::to_string(deltaCityPopulation()),
+		NumberToDollarDecimal(cityAssessedValue()),
+		cityClassStr[cityClass()],
 		cityLevelStr[properties.GameLevel()],
-		std::to_string(CityYes) + "%",
-		std::to_string(CityNo) + "%",
+		std::to_string(cityYes()) + "%",
+		std::to_string(cityNo()) + "%",
 		std::to_string(CurrentYear())
 	};
 

@@ -700,8 +700,8 @@ void SetValves(const CityProperties& properties, const Budget& budget)
     MiscHis[13] = CrimeAverage;
     MiscHis[14] = PolluteAverage;
     MiscHis[15] = properties.GameLevel();
-    MiscHis[16] = CityClass;
-    MiscHis[17] = CityScore;
+    MiscHis[16] = cityClass();
+    MiscHis[17] = cityScore();
 
     NormResPop = static_cast<float>(ResPop / 8);
     LastTotalPop = TotalPop;
@@ -1162,16 +1162,16 @@ void SimLoadInit(CityProperties& properties)
 
     SetCommonInits();
 
-    CityClass = MiscHis[16];
-    CityScore = MiscHis[17];
+    cityClass(MiscHis[16]);
+    cityScore(MiscHis[17]);
 
-    if ((CityClass > 5) || (CityClass < 0))
+    if ((cityClass() > 5) || (cityClass() < 0))
     {
-        CityClass = 0;
+        cityClass(0);
     }
-    if ((CityScore > 999) || (CityScore < 1))
+    if ((cityScore() > 999) || (cityScore() < 1))
     {
-        CityScore = 500;
+        cityScore(500);
     }
 
     ResCap = 0;

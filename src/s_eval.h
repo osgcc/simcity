@@ -10,7 +10,33 @@
 // file, included in this distribution, for details.
 #pragma once
 
+#include <array>
+
 class Budget;
+constexpr auto PROBNUM = 10;
+
+int cityAssessedValue();
+
+int cityClass();
+void cityClass(const int value);
 
 void CityEvaluation(const Budget& budget);
+
+int cityPopulation();
+void cityPopulation(const int val);
+
+int cityScore();
+void cityScore(const int score);
+
+int cityNo();
+int cityYes();
+
+int deltaCityPopulation();
+int deltaCityScore();
+
 void EvalInit();
+
+int trafficAverage();
+
+const std::array<int, PROBNUM>& problemVotes();
+const std::array<int, 4>& problemOrder();

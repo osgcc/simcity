@@ -47,8 +47,6 @@ constexpr auto EightWorldHeight = (SimHeight + 7) / 8;
 constexpr auto SmX = SimWidth / 8;
 constexpr auto SmY = (SimHeight + 7) / 8;
 
-constexpr auto PROBNUM = 10;
-
 constexpr auto HistoryLength = 120;
 constexpr auto MISCHISTLEN = 240;
 
@@ -124,19 +122,11 @@ extern int RValve, CValve, IValve;
 extern int PwrdZCnt;
 extern int unPwrdZCnt;
 
-extern int CityScore;
-extern int deltaCityScore;
 extern int ScoreType;
 extern int ScoreWait;
-extern int CityClass;
 extern int PolMaxX, PolMaxY;
-extern int TrafficAverage;
 extern int CrashX, CrashY;
 extern int CCx, CCy;
-extern int CityPop, deltaCityPop;
-extern int CityYes, CityNo;
-extern int ProblemOrder[4];
-extern int CityAssessedValue;
 
 extern int InitSimLoad;
 extern int DoInitialEval;
