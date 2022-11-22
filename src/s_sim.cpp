@@ -79,16 +79,16 @@ void DoFire()
                         FireZone(Xtem, Ytem, c);
                         if ((c & LOMASK) > IZB) //  Explode
                         {
-                            MakeExplosionAt((Xtem << 4) + 8, (Ytem << 4) + 8);
+                            MakeExplosionAt((Xtem * 16) + 8, (Ytem * 16) + 8);
                         }
                     }
-                    Map[Xtem][Ytem] = FIRE + (Rand16() & 3) + ANIMBIT;
+                    Map[Xtem][Ytem] = FIRE + RandomRange(0, 3) + ANIMBIT;
                 }
             }
         }
     }
    
-    int z = FireRate[SimulationTarget.x >> 3][SimulationTarget.y >> 3];
+    int z = FireRate[SimulationTarget.x / 8][SimulationTarget.y / 8];
     
     int Rate = 10;
     if (z)
@@ -105,7 +105,7 @@ void DoFire()
     }
     if (!RandomRange(0, Rate))
     {
-        Map[SimulationTarget.x][SimulationTarget.y] = RUBBLE + (Rand16() & 3) + BULLBIT;
+        Map[SimulationTarget.x][SimulationTarget.y] = RUBBLE + RandomRange(0, 3) + BULLBIT;
     }
 }
 
