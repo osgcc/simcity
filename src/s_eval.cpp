@@ -188,20 +188,20 @@ void VoteProblems()
 {
     ProblemVotes.fill(0);
 
-    int x{}, z{}, count{};
-    while ((z < 100) && (count < 600))
+    int problemIndex{}, voteCount{}, count{};
+    while ((voteCount < 100) && (count < 600))
     {
-        if (RandomRange(0, 300) < ProblemTable[x])
+        if (RandomRange(0, 300) < ProblemTable[problemIndex])
         {
-            ++ProblemVotes[x];
-            ++z;
+            ++ProblemVotes[problemIndex];
+            ++voteCount;
         }
         
-        ++x;
+        ++problemIndex;
 
-        if (x >= PROBNUM)
+        if (problemIndex >= PROBNUM)
         {
-            x = 0;
+            problemIndex = 0;
         }
         ++count;
     }
