@@ -232,25 +232,25 @@ int AverageTraffic()
 
 int GetUnemployment()
 {
-    float r{ 0.0f };
+    float ratio{ 0.0f };
 
-    int b{ (ComPop + IndPop) * 8 };
-    if (b)
+    int base{ (ComPop + IndPop) * 8 };
+    if (base)
     {
-        r = (static_cast<float>(ResPop)) / b;
+        ratio = (static_cast<float>(ResPop)) / base;
     }
     else
     {
         return 0;
     }
 
-    b = static_cast<int>((r - 1) * 255);
-    if (b > 255)
+    base = static_cast<int>((ratio - 1) * 255);
+    if (base > 255)
     {
-        b = 255;
+        base = 255;
     }
 
-    return b;
+    return base;
 }
 
 
