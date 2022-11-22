@@ -11,8 +11,8 @@
 #include "main.h"
 
 #include "Budget.h"
+#include "Evaluation.h"
 
-#include "s_eval.h"
 #include "s_sim.h"
 
 #include "w_resrc.h"

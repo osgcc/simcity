@@ -12,6 +12,7 @@
 
 #include "Budget.h"
 #include "CityProperties.h"
+#include "Evaluation.h"
 
 #include "main.h"
 #include "Map.h"
@@ -21,7 +22,6 @@
 
 #include "s_alloc.h"
 #include "s_disast.h"
-#include "s_eval.h"
 #include "s_msg.h"
 #include "s_scan.h"
 #include "s_traf.h"

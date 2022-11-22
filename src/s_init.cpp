@@ -10,11 +10,11 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
+#include "Evaluation.h"
 #include "Sprite.h"
 #include "Tool.h"
 
 #include "s_alloc.h"
-#include "s_eval.h"
 #include "s_msg.h"
 #include "s_sim.h"
 

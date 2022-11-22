@@ -22,6 +22,7 @@
     <ClCompile Include="src\Budget.cpp" />
     <ClCompile Include="src\BudgetWindow.cpp" />
     <ClCompile Include="src\Connection.cpp" />
+    <ClCompile Include="src\Evaluation.cpp" />
     <ClCompile Include="src\FileIo.cpp" />
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\GraphWindow.cpp" />
@@ -34,7 +35,6 @@
     <ClCompile Include="src\StringRender.cpp" />
     <ClCompile Include="src\s_alloc.cpp" />
     <ClCompile Include="src\s_disast.cpp" />
-    <ClCompile Include="src\s_eval.cpp" />
     <ClCompile Include="src\s_fileio.cpp" />
     <ClCompile Include="src\s_gen.cpp" />
     <ClCompile Include="src\s_init.cpp" />
@@ -61,6 +61,7 @@
     <ClInclude Include="src\BudgetWindow.h" />
     <ClInclude Include="src\CityProperties.h" />
     <ClInclude Include="src\Connection.h" />
+    <ClInclude Include="src\Evaluation.h" />
     <ClInclude Include="src\FileIo.h" />
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Graph.h" />
@@ -73,7 +74,6 @@
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\StringRender.h" />
     <ClInclude Include="src\s_disast.h" />
-    <ClInclude Include="src\s_eval.h" />
     <ClInclude Include="src\s_fileio.h" />
     <ClInclude Include="src\s_gen.h" />
     <ClInclude Include="src\s_init.h" />

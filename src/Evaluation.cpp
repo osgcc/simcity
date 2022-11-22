@@ -8,7 +8,7 @@
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
 // file, included in this distribution, for details.
-#include "s_eval.h"
+#include "Evaluation.h"
 
 #include "Budget.h"
 
