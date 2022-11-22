@@ -208,27 +208,25 @@ void VoteProblems()
 }
 
 
-int AverageTrf()
+int AverageTraffic()
 {
-    int TrfTotal;
-    int x, y, count;
-
-    TrfTotal = 0;
-    count = 1;
-    for (x = 0; x < HalfWorldWidth; x++)
+    int trafficTotal{};
+    int count{ 1 };
+    
+    for (int x{}; x < HalfWorldWidth; ++x)
     {
-        for (y = 0; y < HalfWorldHeight; y++)
+        for (int y{}; y < HalfWorldHeight; ++y)
         {
             if (LandValueMem[x][y])
             {
-                TrfTotal += TrfDensity[x][y];
-                count++;
+                trafficTotal += TrfDensity[x][y];
+                ++count;
             }
         }
     }
 
-    TrafficAverage = static_cast<int>((TrfTotal / count) * 2.4);
-    return(TrafficAverage);
+    TrafficAverage = static_cast<int>((static_cast<float>(trafficTotal) / count) * 2.4f);
+    return TrafficAverage;
 }
 
 
@@ -369,7 +367,7 @@ void DoProblems(const Budget& budget)
     ProblemTable[1] = PolluteAverage; /* Pollution */
     ProblemTable[2] = static_cast<int>(LVAverage * 0.7f); /* Housing */
     ProblemTable[3] = budget.TaxRate() * 10; /* Taxes */
-    ProblemTable[4] = AverageTrf(); /* Traffic */
+    ProblemTable[4] = AverageTraffic(); /* Traffic */
     ProblemTable[5] = GetUnemployment(); /* Unemployment */
     ProblemTable[6] = GetFire(); /* Fire */
 
