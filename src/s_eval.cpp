@@ -258,17 +258,13 @@ int GetUnemployment()
 
 int GetFire()
 {
-    int z;
-
-    z = FirePop * 5;
+    int z{ FirePop * 5 };
     if (z > 255)
     {
-        return(255);
+        return 255;
     }
-    else
-    {
-        return(z);
-    }
+
+    return z;
 }
 
 
@@ -348,11 +344,9 @@ void GetScore(const Budget& budget)
 
 void DoVotes()
 {
-    int z;
-
     CityYes = 0;
     CityNo = 0;
-    for (z = 0; z < 100; z++)
+    for (int z{}; z < 100; z++)
     {
         if (RandomRange(0, 1000) < CityScore)
         {
@@ -369,6 +363,7 @@ void DoVotes()
 void DoProblems(const Budget& budget)
 {
     ProblemTable.fill(0);
+    ProblemTaken.fill(0);
 
     ProblemTable[0] = CrimeAverage; /* Crime */
     ProblemTable[1] = PolluteAverage; /* Pollution */
@@ -380,11 +375,6 @@ void DoProblems(const Budget& budget)
 
     VoteProblems();
     
-    for (int i = 0; i < PROBNUM; ++i)
-    {
-        ProblemTaken[i] = 0;
-    }
-
     int thisProblem{};
     for (int problemIndex = 0; problemIndex < 4; ++problemIndex) //fixme: Magic number
     {
