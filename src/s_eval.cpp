@@ -140,17 +140,17 @@ void EvalInit()
 
 void GetAssessedValue()
 {
-    int z = RoadTotal * 5;
-    z += RailTotal * 10;
-    z += PolicePop * 1000;
-    z += FireStPop * 1000;
-    z += HospPop * 400;
-    z += StadiumPop * 3000;
-    z += PortPop * 5000;
-    z += APortPop * 10000;
-    z += CoalPop * 3000;
-    z += NuclearPop * 6000;
-    CityAssessedValue = z * 1000;
+    int assesedValue = RoadTotal * 5;
+    assesedValue += RailTotal * 10;
+    assesedValue += PolicePop * 1000;
+    assesedValue += FireStPop * 1000;
+    assesedValue += HospPop * 400;
+    assesedValue += StadiumPop * 3000;
+    assesedValue += PortPop * 5000;
+    assesedValue += APortPop * 10000;
+    assesedValue += CoalPop * 3000;
+    assesedValue += NuclearPop * 6000;
+    CityAssessedValue = assesedValue * 1000;
 }
 
 
