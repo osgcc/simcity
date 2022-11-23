@@ -16,6 +16,8 @@
 #include "s_sim.h"
 #include "s_zone.h"
 
+#include "Vector.h"
+
 
 /* Map Updates */
 
@@ -29,7 +31,6 @@ namespace
     Point<int> CrimeMax;
 
     Point<int> CityCenter;
-    Point<int> CityCenter2;
 
     std::array<int, NMAPS> NewMapFlags;
 
@@ -277,23 +278,34 @@ int GetPValue(int loc)
 /* comefrom: PTLScan DistIntMarket */
 int GetDisCC(int x, int y)
 {
-  int xdis, ydis, z;
+    const Vector<int> radius = { CityCenter.x / 2, (CityCenter.y / 2) };
 
-  if (x > CityCenter2.x)
-    xdis = x - CityCenter2.x;
-  else
-    xdis = CityCenter2.x - x;
+    Vector<int> distance{};
+    if (x > radius.x)
+    {
+        distance.x = x - radius.x;
+    }
+    else
+    {
+        distance.x = radius.x - x;
+    }
 
-  if (y > CityCenter2.y)
-    ydis = y - CityCenter2.y;
-  else
-    ydis = CityCenter2.y - y;
+    if (y > radius.y)
+    {
+        distance.y = y - radius.y;
+    }
+    else
+    {
+        distance.y = radius.y - y;
+    }
 
-  z = (xdis + ydis);
-  if (z > 32)
-    return (32);
-  else
-    return (z);
+    int totalDistance = (distance.x + distance.y);
+    if (totalDistance > 32) // fixme: magic number
+    {
+        return 32;
+    }
+
+    return totalDistance;
 }
 
 
@@ -357,8 +369,6 @@ void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
     {
         CityCenter = { HalfWorldWidth, HalfWorldHeight };
     }
-
-    CityCenter2 = { CityCenter.x / 2, CityCenter.y / 2 };
     
     NewMapFlags[DYMAP] = NewMapFlags[PDMAP] = NewMapFlags[RGMAP] = 1;
 }
