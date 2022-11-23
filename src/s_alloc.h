@@ -39,8 +39,8 @@ extern int RateOGMem[SmX][SmY];
 extern int FireStMap[SmX][SmY];
 extern int PoliceMap[SmX][SmY];
 
-extern std::array<std::array<int, EightWorldHeight>, EightWorldWidth> PoliceMapEffect;
-extern std::array<std::array<int, EightWorldHeight>, EightWorldWidth> FireRate;
+extern std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> PoliceMapEffect;
+extern std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> FireRate;
 
 extern int ComRate[SmX][SmY];
 extern int STem[SmX][SmY];

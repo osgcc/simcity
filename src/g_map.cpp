@@ -198,15 +198,15 @@ void drawOverlayPoints(Texture& overlay, const std::array<std::array<int, HalfWo
 }
 
 
-void drawOverlayPointsSm(Texture& overlay, const std::array<std::array<int, EightWorldHeight>, EightWorldWidth>& arr)
+void drawOverlayPointsSm(Texture& overlay, const std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth>& arr)
 {
 	SDL_SetRenderTarget(MainWindowRenderer, overlay.texture);
 	turnOffBlending(overlay);
 	clearOverlay();
 
-	for (int x = 0; x < EightWorldWidth; x++)
+	for (int x = 0; x < EighthWorldWidth; x++)
 	{
-		for (int y = 0; y < EightWorldHeight; y++)
+		for (int y = 0; y < EighthWorldHeight; y++)
 		{
 			drawPointToCurrentOverlay(x, y, GetColorIndex(arr[x][y]));
 		}
@@ -255,9 +255,9 @@ void drawRateOfGrowth()
 	turnOffBlending(RateOfGrowth);
 	clearOverlay();
 
-	for (int x = 0; x < EightWorldWidth; x++)
+	for (int x = 0; x < EighthWorldWidth; x++)
 	{
-		for (int y = 0; y < EightWorldHeight; y++)
+		for (int y = 0; y < EighthWorldHeight; y++)
 		{
 			const int index = rateOfGrowthColorIndex(RateOGMem[x][y]);
 			drawPointToCurrentOverlay(x, y, index);
@@ -321,7 +321,7 @@ void initOverlayTexture()
 	initTexture(Pollution, HalfWorldWidth, HalfWorldHeight);
 	initTexture(LandValue, HalfWorldWidth, HalfWorldHeight);
 
-	initTexture(PoliceRadius, EightWorldWidth, EightWorldHeight);
-	initTexture(FireRadius, EightWorldWidth, EightWorldHeight);
-	initTexture(RateOfGrowth, EightWorldWidth, EightWorldHeight);
+	initTexture(PoliceRadius, EighthWorldWidth, EighthWorldHeight);
+	initTexture(FireRadius, EighthWorldWidth, EighthWorldHeight);
+	initTexture(RateOfGrowth, EighthWorldWidth, EighthWorldHeight);
 }

@@ -60,8 +60,8 @@ int PoliceMap[SmX][SmY];
 
 
 //int PoliceMapEffect[SmX][SmY];
-std::array<std::array<int, EightWorldHeight>, EightWorldWidth> PoliceMapEffect{};
-std::array<std::array<int, EightWorldHeight>, EightWorldWidth> FireRate{};
+std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> PoliceMapEffect{};
+std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> FireRate{};
 
 int ComRate[SmX][SmY];
 int STem[SmX][SmY];
