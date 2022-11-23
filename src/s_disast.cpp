@@ -14,6 +14,7 @@
 #include "Map.h"
 
 #include "s_alloc.h"
+#include "s_scan.h"
 #include "s_sim.h"
 
 #include "s_msg.h"
@@ -109,7 +110,7 @@ void FireBomb()
 void MakeEarthquake()
 {
     DoEarthQuake();
-    SendMesAt(NotificationId::EarthquakeReported, CCx, CCy);
+    SendMesAt(NotificationId::EarthquakeReported, cityCenterOfMass().x, cityCenterOfMass().y);
 
     int time = RandomRange(0, 700) + 300;
 

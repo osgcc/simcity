@@ -18,7 +18,7 @@
 
 
 /* Map Updates */
-int CCx, CCy, CCx2, CCy2;
+int CCx2, CCy2;
 
 namespace
 {
@@ -28,6 +28,8 @@ namespace
 
     Point<int> PollutionMax;
     Point<int> CrimeMax;
+
+    Point<int> CC;
 
     std::array<int, NMAPS> NewMapFlags;
 
@@ -46,6 +48,13 @@ namespace
         }
     }
 };
+
+
+const Point<int>& cityCenterOfMass()
+{
+    return CC;
+}
+
 
 bool newMap()
 {
@@ -306,48 +315,53 @@ void DistIntMarket()
 /* comefrom: Simulate SpecialInit */
 void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
 {
-  int Xtot, Ytot, Ztot;
-  int x, y, z;
+    int Xtot, Ytot, Ztot;
+    int x, y, z;
 
-  ClrTemArray();
-  Xtot = 0;
-  Ytot = 0;
-  Ztot = 0;
-  for (x = 0; x < SimWidth; x++)
-    for (y = 0; y < SimHeight; y++) {
-      z = Map[x][y];
-      if (z & ZONEBIT) {
-	z = z & LOMASK;
-    SimulationTarget = { x, y };
-	z = GetPDen(z) <<3;
-	if (z > 254)
-	  z = 254;
-	tem[x >>1][y >>1] = z;
-	Xtot += x;
-	Ytot += y;
-	Ztot++;
-      }
+    ClrTemArray();
+    Xtot = 0;
+    Ytot = 0;
+    Ztot = 0;
+    for (x = 0; x < SimWidth; x++)
+        for (y = 0; y < SimHeight; y++) {
+            z = Map[x][y];
+            if (z & ZONEBIT) {
+                z = z & LOMASK;
+                SimulationTarget = { x, y };
+                z = GetPDen(z) << 3;
+                if (z > 254)
+                    z = 254;
+                tem[x >> 1][y >> 1] = z;
+                Xtot += x;
+                Ytot += y;
+                Ztot++;
+            }
+        }
+
+    DoSmooth(); /* T1 -> T2 */
+    DoSmooth2(); /* T2 -> T1 */
+    DoSmooth(); /* T1 -> T2 */
+
+    for (x = 0; x < HalfWorldWidth; x++)
+        for (y = 0; y < HalfWorldHeight; y++)
+            PopDensity[x][y] = tem2[x][y] << 1;
+
+    DistIntMarket();		/* set ComRate w/ (/ComMap) */
+
+    
+    if (Ztot) /* Find Center of Mass for City */
+    {
+        CC = { Xtot / Ztot, Ytot / Ztot };
     }
-  DoSmooth();			/* T1 -> T2 */
-  DoSmooth2();			/* T2 -> T1 */
-  DoSmooth();			/* T1 -> T2 */
+    else /* if pop=0 center of Map is CC */
+    {
+        CC = { HalfWorldWidth, HalfWorldHeight };
+    }
 
-  for (x = 0; x < HalfWorldWidth; x++)
-    for (y = 0; y < HalfWorldHeight; y++)
-      PopDensity[x][y] = tem2[x][y] <<1;
-
-  DistIntMarket();		/* set ComRate w/ (/ComMap) */
-
-  if (Ztot) {			/* Find Center of Mass for City */
-    CCx = Xtot / Ztot;
-    CCy = Ytot / Ztot;
-  } else {
-    CCx = HalfWorldWidth;		/* if pop=0 center of Map is CC */
-    CCy = HalfWorldHeight;
-  }
-  CCx2 = CCx >>1;
-  CCy2 = CCy >>1;
-  NewMapFlags[DYMAP] = NewMapFlags[PDMAP] = NewMapFlags[RGMAP] = 1;
+    CCx2 = CC.x / 2;
+    CCy2 = CC.y / 2;
+    
+    NewMapFlags[DYMAP] = NewMapFlags[PDMAP] = NewMapFlags[RGMAP] = 1;
 }
 
 

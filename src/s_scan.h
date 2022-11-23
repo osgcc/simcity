@@ -48,3 +48,5 @@ void FireAnalysis();
 
 bool newMap();
 void newMap(bool value);
+
+const Point<int>& cityCenterOfMass();
