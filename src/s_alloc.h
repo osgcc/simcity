@@ -35,15 +35,15 @@ extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem;
 
 
 /* 8X8 Maps  15 x 13 */
-extern int RateOGMem[SmX][SmY];
-extern int FireStMap[SmX][SmY];
-extern int PoliceMap[SmX][SmY];
+extern int RateOGMem[EighthWorldWidth][EighthWorldHeight];
+extern int FireStMap[EighthWorldWidth][EighthWorldHeight];
+extern int PoliceMap[EighthWorldWidth][EighthWorldHeight];
 
 extern std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> PoliceMapEffect;
 extern std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> FireRate;
 
-extern int ComRate[SmX][SmY];
-extern int STem[SmX][SmY];
+extern int ComRate[EighthWorldWidth][EighthWorldHeight];
+extern int STem[EighthWorldWidth][EighthWorldHeight];
 
 using GraphHistory = std::array<int, HistoryLength>;
 

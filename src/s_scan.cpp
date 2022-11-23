@@ -53,18 +53,18 @@ void SmoothFSMap()
 {
   int x, y, edge;
 
-  for (x = 0; x < SmX; x++)
-    for (y = 0; y < SmY; y++) {
+  for (x = 0; x < EighthWorldWidth; x++)
+    for (y = 0; y < EighthWorldHeight; y++) {
       edge = 0;
       if (x) edge += FireStMap[x - 1][y];
-      if (x < (SmX - 1)) edge += FireStMap[x + 1][y];
+      if (x < (EighthWorldWidth - 1)) edge += FireStMap[x + 1][y];
       if (y) edge += FireStMap[x][y - 1];
-      if (y < (SmY - 1)) edge += FireStMap[x][y + 1];
+      if (y < (EighthWorldHeight - 1)) edge += FireStMap[x][y + 1];
       edge = (edge >>2) + FireStMap[x][y];
       STem[x][y] = edge >>1;
     }
-  for (x = 0; x < SmX; x++)
-    for (y = 0; y < SmY; y++)
+  for (x = 0; x < EighthWorldWidth; x++)
+    for (y = 0; y < EighthWorldHeight; y++)
       FireStMap[x][y] = STem[x][y];
 }
 
@@ -77,8 +77,8 @@ void FireAnalysis()		/* Make firerate map from firestation map  */
   SmoothFSMap();
   SmoothFSMap();
   SmoothFSMap();
-  for (x = 0; x < SmX; x++)
-    for (y = 0; y < SmY; y++)
+  for (x = 0; x < EighthWorldWidth; x++)
+    for (y = 0; y < EighthWorldHeight; y++)
       FireRate[x][y] = FireStMap[x][y];
 
   NewMapFlags[DYMAP] = NewMapFlags[FIMAP] = 1;
@@ -264,8 +264,8 @@ void DistIntMarket()
 {
   int x, y, z;
 
-  for (x = 0; x < SmX; x++)
-    for (y = 0; y < SmY; y++) {
+  for (x = 0; x < EighthWorldWidth; x++)
+    for (y = 0; y < EighthWorldHeight; y++) {
       z = GetDisCC(x <<2,y <<2);
       z = z <<2;
       z = 64 - z;
@@ -362,18 +362,18 @@ void SmoothPSMap()
 {
   int x, y, edge;
 
-  for (x = 0; x < SmX; x++)
-    for (y = 0; y < SmY; y++) {
+  for (x = 0; x < EighthWorldWidth; x++)
+    for (y = 0; y < EighthWorldHeight; y++) {
       edge = 0;
       if (x) edge += PoliceMap[x - 1][y];
-      if (x < (SmX - 1)) edge += PoliceMap[x + 1][y];
+      if (x < (EighthWorldWidth - 1)) edge += PoliceMap[x + 1][y];
       if (y) edge += PoliceMap[x][y - 1];
-      if (y < (SmY - 1)) edge += PoliceMap[x][y + 1];
+      if (y < (EighthWorldHeight - 1)) edge += PoliceMap[x][y + 1];
       edge = (edge >>2) + PoliceMap[x][y];
       STem[x][y] = edge >>1;
     }
-  for (x = 0; x < SmX; x++)
-    for (y = 0; y < SmY; y++)
+  for (x = 0; x < EighthWorldWidth; x++)
+    for (y = 0; y < EighthWorldHeight; y++)
       PoliceMap[x][y] = STem[x][y];
 }
 
@@ -508,8 +508,8 @@ void CrimeScan()
     CrimeAverage = totz / numz;
   else
     CrimeAverage = 0;
-  for (x = 0; x < SmX; x++)
-    for (y = 0; y < SmY; y++)
+  for (x = 0; x < EighthWorldWidth; x++)
+    for (y = 0; y < EighthWorldHeight; y++)
       PoliceMapEffect[x][y] = PoliceMap[x][y];
   NewMapFlags[DYMAP] = NewMapFlags[CRMAP] = NewMapFlags[POMAP] = 1;
 }

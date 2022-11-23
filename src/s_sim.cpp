@@ -885,9 +885,9 @@ void ClearCensus()
     APortPop = 0;
     resetPowerStackCount(); // Reset before Mapscan
 
-    for (int x = 0; x < SmX; x++)
+    for (int x = 0; x < EighthWorldWidth; x++)
     {
-        for (int y = 0; y < SmY; y++)
+        for (int y = 0; y < EighthWorldHeight; y++)
         {
             FireStMap[x][y] = 0;
             PoliceMap[x][y] = 0;
@@ -1004,9 +1004,9 @@ void CollectTax(const CityProperties& properties, Budget& budget)
 // ROG == Rate Of Growth
 void DecROGMem()
 {
-    for (int x = 0; x < SmX; x++)
+    for (int x = 0; x < EighthWorldWidth; x++)
     {
-        for (int y = 0; y < SmY; y++)
+        for (int y = 0; y < EighthWorldHeight; y++)
         {
             int z = RateOGMem[x][y];
             if (z == 0)

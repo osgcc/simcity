@@ -31,9 +31,6 @@ constexpr auto QuarterWorldHeight = SimHeight / 4;
 constexpr auto EighthWorldWidth = SimWidth / 8;
 constexpr auto EighthWorldHeight = (SimHeight + 7) / 8;
 
-constexpr auto SmX = SimWidth / 8;
-constexpr auto SmY = (SimHeight + 7) / 8;
-
 constexpr auto HistoryLength = 120;
 constexpr auto MISCHISTLEN = 240;
 

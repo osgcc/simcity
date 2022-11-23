@@ -54,17 +54,17 @@ std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem{};
 std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
 
 
-int RateOGMem[SmX][SmY];
-int FireStMap[SmX][SmY];
-int PoliceMap[SmX][SmY];
+int RateOGMem[EighthWorldWidth][EighthWorldHeight];
+int FireStMap[EighthWorldWidth][EighthWorldHeight];
+int PoliceMap[EighthWorldWidth][EighthWorldHeight];
 
 
-//int PoliceMapEffect[SmX][SmY];
+//int PoliceMapEffect[EighthWorldWidth][EighthWorldHeight];
 std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> PoliceMapEffect{};
 std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> FireRate{};
 
-int ComRate[SmX][SmY];
-int STem[SmX][SmY];
+int ComRate[EighthWorldWidth][EighthWorldHeight];
+int STem[EighthWorldWidth][EighthWorldHeight];
 
 
 GraphHistory ResHis{};
