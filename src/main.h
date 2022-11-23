@@ -13,19 +13,6 @@
 #include "Point.h"
 #include "Texture.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <ctype.h>
-#include <setjmp.h>
-#include <malloc.h>
-#include <errno.h>
-#include <signal.h>
-#include <math.h>
-#include <sys/types.h>
-#include <time.h>
-#include <io.h>
-
 #include <string>
 
 #include <SDL2/SDL.h>
