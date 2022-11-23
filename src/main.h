@@ -58,8 +58,8 @@ constexpr auto MiscHistoryLength = 240;
 
 
 /* These adjust frequency in Simulate() */
-#define CensusRate 4
-#define TaxFrequency 48
+constexpr auto CensusRate = 4;
+constexpr auto TaxFrequency = 48;
 
 
 /* Status Bits */
