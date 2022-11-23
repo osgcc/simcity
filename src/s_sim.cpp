@@ -1278,16 +1278,16 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         break;
 
     case 9:
-        if (!(CityTime % CENSUSRATE))
+        if (!(CityTime % CensusRate))
         {
             TakeCensus(budget);
         }
-        if (!(CityTime % (CENSUSRATE * 12)))
+        if (!(CityTime % (CensusRate * 12)))
         {
             Take2Census();
         }
 
-        if (!(CityTime % TAXFREQ))
+        if (!(CityTime % TaxFrequency))
         {
             CollectTax(properties, budget);
             CityEvaluation(budget);
