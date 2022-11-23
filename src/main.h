@@ -32,7 +32,7 @@ constexpr auto EighthWorldWidth = SimWidth / 8;
 constexpr auto EighthWorldHeight = (SimHeight + 7) / 8;
 
 constexpr auto HistoryLength = 120;
-constexpr auto MISCHISTLEN = 240;
+constexpr auto MiscHistoryLength = 240;
 
 #define ALMAP 0 /* all */
 #define REMAP 1 /* residential */
