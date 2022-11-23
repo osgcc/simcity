@@ -147,7 +147,7 @@ void autoGoto(const bool b);
 bool animationEnabled();
 void animationEnabled(bool b);
 
-void sim_exit();
+void simExit();
 const Point<int>& viewOffset();
 
 SDL_Rect& miniMapTileRect();

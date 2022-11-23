@@ -260,13 +260,13 @@ SDL_Rect& miniMapTileRect()
 }
 
 
-void sim_exit()
+void simExit()
 {
     Exit = true;
 }
 
 
-void sim_update()
+void simUpdate()
 {
     updateDate();
 
@@ -276,7 +276,7 @@ void sim_update()
 }
 
 
-void DrawMiniMap()
+void drawMiniMap()
 {
     SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
 
@@ -295,7 +295,7 @@ void DrawMiniMap()
 }
 
 
-void sim_loop(bool doSim)
+void simLoop(bool doSim)
 {
     // \fixme Find a better way to do this
     if (BudgetWindowShown) { return; }
@@ -328,15 +328,15 @@ void sim_loop(bool doSim)
 
     if (RedrawMinimap)
     {
-        DrawMiniMap();
+        drawMiniMap();
         RedrawMinimap = false;
     }  
 
-    sim_update();
+    simUpdate();
 }
 
 
-void sim_init()
+void simInit()
 {
     userSoundOn(true);
 
@@ -366,7 +366,7 @@ void sim_init()
 }
 
 
-void DoPlayNewCity(CityProperties& properties, Budget& budget)
+void doPlayNewCity(CityProperties& properties, Budget& budget)
 {
     GenerateNewCity(properties, budget);
     Resume();
@@ -374,13 +374,13 @@ void DoPlayNewCity(CityProperties& properties, Budget& budget)
 }
 
 
-void DoStartScenario(int scenario)
+void doStartScenario(int scenario)
 {
     Eval("UIStartScenario " + std::to_string(scenario));
 }
 
 
-void PrimeGame(const int startFlag, CityProperties& properties, Budget& budget)
+void primeGame(const int startFlag, CityProperties& properties, Budget& budget)
 {
     switch (startFlag)
     {
@@ -393,7 +393,7 @@ void PrimeGame(const int startFlag, CityProperties& properties, Budget& budget)
     case -1:
         properties.GameLevel(0);
         properties.CityName("NowHere");
-        DoPlayNewCity(properties, budget);
+        doPlayNewCity(properties, budget);
         break;
 
     case 0:
@@ -401,19 +401,19 @@ void PrimeGame(const int startFlag, CityProperties& properties, Budget& budget)
         break;
 
     default: // scenario number
-        DoStartScenario(startFlag);
+        doStartScenario(startFlag);
         break;
     }
 
-    DrawMiniMap();
+    drawMiniMap();
     DrawBigMap();
 }
 
 
-void ResetGame()
+void resetGame()
 {
-    sim_init();
-    PrimeGame(-1, cityProperties, budget);
+    simInit();
+    primeGame(-1, cityProperties, budget);
 }
 
 
@@ -587,7 +587,7 @@ void handleKeyEvent(SDL_Event& event)
     switch (event.key.keysym.sym)
     {
     case SDLK_ESCAPE:
-        sim_exit();
+        simExit();
         break;
 
     case SDLK_0:
@@ -630,7 +630,7 @@ void handleKeyEvent(SDL_Event& event)
     case SDLK_F3:
         if (fileIo->pickOpenFile())
         {
-            ResetGame();
+            resetGame();
             LoadCity(fileIo->fullPath(), cityProperties, budget);
         }
         break;
@@ -643,7 +643,7 @@ void handleKeyEvent(SDL_Event& event)
         break;
 
     case SDLK_F7:
-        ResetGame();
+        resetGame();
         break;
 
     case SDLK_F9:
@@ -883,7 +883,7 @@ void pumpEvents()
             break;
 
         case SDL_QUIT:
-            sim_exit();
+            simExit();
             break;
 
         case SDL_WINDOWEVENT:
@@ -1078,9 +1078,9 @@ void drawDraggableToolVector()
 
 void gameInit()
 {
-    sim_init();
+    simInit();
 
-    PrimeGame(-1, cityProperties, budget);
+    primeGame(-1, cityProperties, budget);
 
     initViewParamters();
     updateMapDrawParameters();
@@ -1089,7 +1089,7 @@ void gameInit()
     initOverlayTexture();
     initMapTextures();
 
-    DrawMiniMap();
+    drawMiniMap();
     DrawBigMap();
 
     fileIo = new FileIo(*MainWindow);
@@ -1136,7 +1136,7 @@ void GameLoop()
     {
         pendingTool(toolPalette->tool());
 
-        sim_loop(SimulationStep);
+        simLoop(SimulationStep);
 
         pumpEvents();
 
