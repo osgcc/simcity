@@ -23,8 +23,6 @@
 
 namespace
 {
-    constexpr auto DonDither = 0;
-
     bool NewMap{ false };
 
     Point<int> PollutionMax;
@@ -164,23 +162,6 @@ int GetPDen(int Ch9)
 /* comefrom: PopDenScan */
 void DoSmooth ()        /* smooths data in tem[x][y] into tem2[x][y]  */
 {
-  if (DonDither & 2) {
-    int x, y = 0, z = 0, dir = 1;
-
-    for (x = 0; x < HalfWorldWidth; x++) {
-      for (; y != HalfWorldHeight && y != -1; y += dir) {
-	z += tem[(x == 0) ? x : (x - 1)][y] +
-	     tem[(x == (HalfWorldWidth - 1)) ? x : (x + 1)][y] +
-	     tem[x][(y == 0) ? (0) : (y - 1)] +
-	     tem[x][(y == (HalfWorldHeight - 1)) ? y : (y + 1)] +
-	     tem[x][y];
-	tem2[x][y] = (unsigned char)(((unsigned int)z) >>2);
-	z &= 3;
-      }
-      dir = -dir;
-      y += dir;
-    }
-  } else {
     int x,y,z;
 
     for (x = 0; x < HalfWorldWidth; x++) {
@@ -195,30 +176,13 @@ void DoSmooth ()        /* smooths data in tem[x][y] into tem2[x][y]  */
 	tem2[x][y] = (unsigned char)z;
       }
     }
-  }
+  
 }
 
 
 /* comefrom: PopDenScan */
 void DoSmooth2 ()        /* smooths data in tem2[x][y] into tem[x][y]  */
 {
-  if (DonDither & 4) {
-    int x, y = 0, z = 0, dir = 1;
-
-    for (x = 0; x < HalfWorldWidth; x++) {
-      for (; y != HalfWorldHeight && y != -1; y += dir) {
-	z += tem2[(x == 0) ? x : (x - 1)][y] +
-	    tem2[(x == (HalfWorldWidth - 1)) ? x : (x + 1)][y] +
-	    tem2[x][(y == 0) ? (0) : (y - 1)] +
-	    tem2[x][(y == (HalfWorldHeight - 1)) ? y : (y + 1)] +
-	    tem2[x][y];
-	tem[x][y] = (unsigned char)(((unsigned char)z) >>2);
-	z &= 3;
-      }
-      dir = -dir;
-      y += dir;
-    }
-  } else {
     int x,y,z;
 
     for (x = 0; x < HalfWorldWidth; x++) {
@@ -233,7 +197,7 @@ void DoSmooth2 ()        /* smooths data in tem2[x][y] into tem[x][y]  */
 	tem[x][y] = (unsigned char)z;
       }
     }
-  }
+  
 }
 
 
@@ -359,23 +323,6 @@ void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
 /* comefrom: PTLScan */
 void SmoothTerrain()
 {
-  if (DonDither & 1) {
-    int x, y = 0, z = 0, dir = 1;
-
-    for (x = 0; x < QuarterWorldWidth; x++) {
-      for (; y != QuarterWorldHeight && y != -1; y += dir) {
-	z += Qtem[(x == 0) ? x : (x - 1)][y] +
-	     Qtem[(x == (QuarterWorldWidth - 1)) ? x : (x + 1)][y] +
-	     Qtem[x][(y == 0) ? (0) : (y - 1)] +
-	     Qtem[x][(y == (QuarterWorldHeight - 1)) ? y : (y + 1)] +
-	     (Qtem[x][y] <<2);
-	TerrainMem[x][y] = (unsigned char)(((unsigned)z) >>3);
-	z &= 0x7;
-      }
-      dir = -dir;
-      y += dir;
-    }
-  } else {
     int x,y,z;
 
     for (x = 0; x < QuarterWorldWidth; x++)
@@ -387,7 +334,6 @@ void SmoothTerrain()
 	if (y < (QuarterWorldHeight - 1)) z += Qtem[x][y + 1];
 	TerrainMem[x][y] = (unsigned char)((z >>2) + Qtem[x][y]) >>1;
       }
-  }
 }
 
 
