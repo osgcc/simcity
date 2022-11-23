@@ -18,12 +18,13 @@
 
 
 /* Map Updates */
-bool NewMap;
 int CCx, CCy, CCx2, CCy2;
 
 namespace
 {
     constexpr auto DonDither = 0;
+
+    bool NewMap{ false };
 
     Point<int> PollutionMax;
     Point<int> CrimeMax;
@@ -45,6 +46,17 @@ namespace
         }
     }
 };
+
+bool newMap()
+{
+    return NewMap;
+}
+
+
+void newMap(bool value)
+{
+    NewMap = value;
+}
 
 
 const Point<int>& pollutionMax()

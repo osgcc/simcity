@@ -1178,7 +1178,7 @@ void GameLoop()
 
         SDL_RenderPresent(MainWindowRenderer);
 
-        NewMap = false;
+        newMap(false);
     }
 }
 

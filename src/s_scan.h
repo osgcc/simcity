@@ -46,4 +46,5 @@ void CrimeScan();
 void PopDenScan();
 void FireAnalysis();
 
-extern bool NewMap;
+bool newMap();
+void newMap(bool value);

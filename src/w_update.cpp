@@ -128,7 +128,7 @@ void updateDate()
 
         NewMonth = true;
 
-        if (month == 0 && !autoBudget() && !NewMap)
+        if (month == 0 && !autoBudget() && !newMap())
         {
             showBudgetWindow();
         }
