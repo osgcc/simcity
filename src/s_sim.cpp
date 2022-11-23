@@ -1211,17 +1211,17 @@ void SimLoadInit(CityProperties& properties)
 
 namespace
 {
-    int PowerScanFrequency[4] = { 1,  2,  4,  5 };
-    int PollutionScanFrequency[4] = { 1,  2,  7, 17 };
-    int CrimeScanFrequency[4] = { 1,  1,  8, 18 };
-    int PopulationDensityScanFrequency[4] = { 1,  1,  9, 19 };
-    int FireAnalysisFrequency[4] = { 1,  1, 10, 20 };
+    int PowerScanFrequency[5] = { 1,  2,  4,  5, 6 };
+    int PollutionScanFrequency[5] = { 1,  2,  7, 17, 27 };
+    int CrimeScanFrequency[5] = { 1,  1,  8, 18, 28 };
+    int PopulationDensityScanFrequency[5] = { 1,  1,  9, 19, 29 };
+    int FireAnalysisFrequency[5] = { 1,  1, 10, 20, 30 };
 };
 
 
 void Simulate(int mod16, CityProperties& properties, Budget& budget)
 {
-    int speed = static_cast<int>(SimulationSpeed()); // ew, find a better way to do this
+    int speed = static_cast<int>(SimSpeed()); // ew, find a better way to do this
 
     switch (mod16)
     {
