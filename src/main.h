@@ -35,11 +35,6 @@ constexpr auto HistoryLength = 120;
 constexpr auto MiscHistoryLength = 240;
 
 
-/* These adjust frequency in Simulate() */
-constexpr auto CensusRate = 4;
-constexpr auto TaxFrequency = 48;
-
-
 /* Status Bits */
 #define PWRBIT	0x8000 /* 20 bit 15 */
 #define CONDBIT	0x4000 /* 10 bit 14 */

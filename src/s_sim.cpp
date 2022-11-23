@@ -40,6 +40,9 @@
 
 /* Simulation */
 
+constexpr auto CensusRate = 4;
+constexpr auto TaxFrequency = 48;
+
 int CrimeRamp, PolluteRamp ;
 int RValve, CValve, IValve;
 int ResCap, ComCap, IndCap;
@@ -1042,11 +1045,6 @@ void SetCommonInits()
     RoadEffect = 32;
     PoliceEffect = 1000;
     FireEffect = 1000;
-    //TaxFund = 0;
-    /*
-      if ((GameLevel > 2) || (GameLevel < 0)) GameLevel = 0;
-      setGameLevel(GameLevel);
-    */
 }
 
 
