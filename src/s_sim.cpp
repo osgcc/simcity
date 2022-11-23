@@ -1300,13 +1300,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
             DecROGMem();
         }
         DecTrafficMem();
-        NewMapFlags[TDMAP] = 1;
-        NewMapFlags[RDMAP] = 1;
-        NewMapFlags[ALMAP] = 1;
-        NewMapFlags[REMAP] = 1;
-        NewMapFlags[COMAP] = 1;
-        NewMapFlags[INMAP] = 1;
-        NewMapFlags[DYMAP] = 1;
+        resetNewMapFlags();
         SendMessages(budget);
         break;
 
@@ -1314,7 +1308,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         if (!(Scycle % PowerScanFrequency[speed]))
         {
             doPowerScan();
-            NewMapFlags[PRMAP] = 1;
+            newMapFlags()[PRMAP] = 1;
             NewPower = 1; /* post-release change */
         }
         break;

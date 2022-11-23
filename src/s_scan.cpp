@@ -8,27 +8,31 @@
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
 // file, included in this distribution, for details.
-#include "main.h"
+#include "s_scan.h"
 
 #include "Map.h"
+#include "Point.h"
 
 #include "s_alloc.h"
 #include "s_sim.h"
 #include "s_zone.h"
 
+#include <array>
+
 /* Map Updates */
 
 
 bool NewMap;
-int NewMapFlags[NMAPS];
 int CCx, CCy, CCx2, CCy2;
 int PolMaxX, PolMaxY;
 int CrimeMaxX, CrimeMaxY;
-int DonDither = 0;
-
 
 namespace
 {
+    constexpr auto DonDither = 0;
+
+    std::array<int, NMAPS> NewMapFlags;
+
     std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> tem;
     std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> tem2;
 
@@ -46,6 +50,16 @@ namespace
 };
 
 
+std::array<int, NMAPS>& newMapFlags()
+{
+    return NewMapFlags;
+}
+
+
+void resetNewMapFlags()
+{
+    NewMapFlags.fill(1);
+}
 
 
 /* comefrom: FireAnalysis */

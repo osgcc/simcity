@@ -34,28 +34,6 @@ constexpr auto EighthWorldHeight = (SimHeight + 7) / 8;
 constexpr auto HistoryLength = 120;
 constexpr auto MiscHistoryLength = 240;
 
-#define ALMAP 0 /* all */
-#define REMAP 1 /* residential */
-#define COMAP 2 /* commercial */
-#define INMAP 3 /* industrial */
-
-#define PRMAP 4 /* power */
-#define RDMAP 5 /* road */
-
-#define PDMAP 6 /* population density */
-#define RGMAP 7 /* rate of growth */
-
-#define TDMAP 8 /* traffic density */
-#define PLMAP 9 /* pollution */
-#define CRMAP 10 /* crime */
-#define LVMAP 11 /* land value */
-
-#define FIMAP 12 /* fire radius */
-#define POMAP 13 /* police radius */
-#define DYMAP 14 /* dynamic */
-
-#define NMAPS 15
-
 
 /* These adjust frequency in Simulate() */
 constexpr auto CensusRate = 4;
@@ -114,8 +92,6 @@ extern int CCx, CCy;
 
 extern int InitSimLoad;
 extern int DoInitialEval;
-
-extern int NewMapFlags[NMAPS];
 
 extern SDL_Renderer* MainWindowRenderer;
 extern Texture SmallTileset;
