@@ -11,25 +11,22 @@
 #include "s_scan.h"
 
 #include "Map.h"
-#include "Point.h"
 
 #include "s_alloc.h"
 #include "s_sim.h"
 #include "s_zone.h"
 
-#include <array>
 
 /* Map Updates */
-
-
 bool NewMap;
 int CCx, CCy, CCx2, CCy2;
-int PolMaxX, PolMaxY;
-int CrimeMaxX, CrimeMaxY;
 
 namespace
 {
     constexpr auto DonDither = 0;
+
+    Point<int> PollutionMax;
+    Point<int> CrimeMax;
 
     std::array<int, NMAPS> NewMapFlags;
 
@@ -48,6 +45,12 @@ namespace
         }
     }
 };
+
+
+const Point<int>& pollutionMax()
+{
+    return PollutionMax;
+}
 
 
 std::array<int, NMAPS>& newMapFlags()
@@ -465,8 +468,7 @@ void PTLScan()   	/* Does pollution, terrain, land value   */
 	if ((z > pmax) ||
 	    ((z == pmax) && (!(Rand16() & 3)))) {
 	  pmax = z;
-	  PolMaxX = x <<1;
-	  PolMaxY = y <<1;
+      PollutionMax = { x * 2, y * 2 };
 	}
       }
     }
@@ -511,8 +513,7 @@ void CrimeScan()
 	if ((z > cmax) ||
 	    ((z == cmax) && (!(Rand16() & 3)))) {
 	  cmax = z;
-	  CrimeMaxX = x <<1;
-	  CrimeMaxY = y <<1;
+      CrimeMax = { x * 2, y * 2 };
 	}
       } else {
 	CrimeMem[x][y] = 0;

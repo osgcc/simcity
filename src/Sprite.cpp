@@ -15,6 +15,7 @@
 
 #include "s_alloc.h"
 #include "s_msg.h"
+#include "s_scan.h"
 #include "s_sim.h"
 
 #include "w_sound.h"
@@ -147,8 +148,8 @@ void InitSprite(SimSprite& sprite, int x, int y)
             sprite.frame = 4;
         }
         sprite.count = 1000;
-        sprite.dest_x = PolMaxX << 4;
-        sprite.dest_y = PolMaxY << 4;
+        sprite.dest_x = pollutionMax().x * 16;
+        sprite.dest_y = pollutionMax().y * 16;
         sprite.orig_x = sprite.x;
         sprite.orig_y = sprite.y;
         break;

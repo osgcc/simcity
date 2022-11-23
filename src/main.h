@@ -86,7 +86,6 @@ extern int unPwrdZCnt;
 
 extern int ScoreType;
 extern int ScoreWait;
-extern int PolMaxX, PolMaxY;
 extern int CrashX, CrashY;
 extern int CCx, CCy;
 

@@ -12,6 +12,8 @@
 
 #include <array>
 
+#include "Point.h"
+
 #define ALMAP 0 /* all */
 #define REMAP 1 /* residential */
 #define COMAP 2 /* commercial */
@@ -36,6 +38,7 @@
 
 
 std::array<int, NMAPS>& newMapFlags();
+const Point<int>& pollutionMax();
 void resetNewMapFlags();
 void doPowerScan();
 void PTLScan();
