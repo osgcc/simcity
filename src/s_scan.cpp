@@ -18,7 +18,6 @@
 
 
 /* Map Updates */
-int CCx2, CCy2;
 
 namespace
 {
@@ -30,6 +29,7 @@ namespace
     Point<int> CrimeMax;
 
     Point<int> CC;
+    Point<int> CC2;
 
     std::array<int, NMAPS> NewMapFlags;
 
@@ -279,15 +279,15 @@ int GetDisCC(int x, int y)
 {
   int xdis, ydis, z;
 
-  if (x > CCx2)
-    xdis = x - CCx2;
+  if (x > CC2.x)
+    xdis = x - CC2.x;
   else
-    xdis = CCx2 - x;
+    xdis = CC2.x - x;
 
-  if (y > CCy2)
-    ydis = y - CCy2;
+  if (y > CC2.y)
+    ydis = y - CC2.y;
   else
-    ydis = CCy2 - y;
+    ydis = CC2.y - y;
 
   z = (xdis + ydis);
   if (z > 32)
@@ -358,8 +358,7 @@ void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
         CC = { HalfWorldWidth, HalfWorldHeight };
     }
 
-    CCx2 = CC.x / 2;
-    CCy2 = CC.y / 2;
+    CC2 = { CC.x / 2, CC.y / 2 };
     
     NewMapFlags[DYMAP] = NewMapFlags[PDMAP] = NewMapFlags[RGMAP] = 1;
 }
