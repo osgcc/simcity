@@ -28,8 +28,8 @@ namespace
     Point<int> PollutionMax;
     Point<int> CrimeMax;
 
-    Point<int> CC;
-    Point<int> CC2;
+    Point<int> CityCenter;
+    Point<int> CityCenter2;
 
     std::array<int, NMAPS> NewMapFlags;
 
@@ -52,7 +52,7 @@ namespace
 
 const Point<int>& cityCenterOfMass()
 {
-    return CC;
+    return CityCenter;
 }
 
 
@@ -279,15 +279,15 @@ int GetDisCC(int x, int y)
 {
   int xdis, ydis, z;
 
-  if (x > CC2.x)
-    xdis = x - CC2.x;
+  if (x > CityCenter2.x)
+    xdis = x - CityCenter2.x;
   else
-    xdis = CC2.x - x;
+    xdis = CityCenter2.x - x;
 
-  if (y > CC2.y)
-    ydis = y - CC2.y;
+  if (y > CityCenter2.y)
+    ydis = y - CityCenter2.y;
   else
-    ydis = CC2.y - y;
+    ydis = CityCenter2.y - y;
 
   z = (xdis + ydis);
   if (z > 32)
@@ -351,14 +351,14 @@ void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
     
     if (Ztot) /* Find Center of Mass for City */
     {
-        CC = { Xtot / Ztot, Ytot / Ztot };
+        CityCenter = { Xtot / Ztot, Ytot / Ztot };
     }
     else /* if pop=0 center of Map is CC */
     {
-        CC = { HalfWorldWidth, HalfWorldHeight };
+        CityCenter = { HalfWorldWidth, HalfWorldHeight };
     }
 
-    CC2 = { CC.x / 2, CC.y / 2 };
+    CityCenter2 = { CityCenter.x / 2, CityCenter.y / 2 };
     
     NewMapFlags[DYMAP] = NewMapFlags[PDMAP] = NewMapFlags[RGMAP] = 1;
 }
