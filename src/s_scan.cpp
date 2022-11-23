@@ -169,15 +169,6 @@ void DoSmooth ()        /* smooths data in tem[x][y] into tem2[x][y]  */
 
     for (x = 0; x < HalfWorldWidth; x++) {
       for (; y != HalfWorldHeight && y != -1; y += dir) {
-/*
-	z += tem[(x == 0) ? x : (x - 1)][y] +
-	     tem[(x == (HalfWorldWidth - 1)) ? x : (x + 1)][y] +
-	     tem[x][(y == 0) ? (0) : (y - 1)] +
-	     tem[x][(y == (HalfWorldHeight - 1)) ? y : (y + 1)] +
-	     tem[x][y];
-	tem2[x][y] = (unsigned char)(((unsigned int)z) >>2);
-	z &= 0x3;
-*/
 	z += tem[(x == 0) ? x : (x - 1)][y] +
 	     tem[(x == (HalfWorldWidth - 1)) ? x : (x + 1)][y] +
 	     tem[x][(y == 0) ? (0) : (y - 1)] +
@@ -216,15 +207,6 @@ void DoSmooth2 ()        /* smooths data in tem2[x][y] into tem[x][y]  */
 
     for (x = 0; x < HalfWorldWidth; x++) {
       for (; y != HalfWorldHeight && y != -1; y += dir) {
-/*
-	z += tem2[(x == 0) ? x : (x - 1)][y] +
-	     tem2[(x == (HalfWorldWidth - 1)) ? x : (x + 1)][y] +
-	     tem2[x][(y == 0) ? (0) : (y - 1)] +
-	     tem2[x][(y == (HalfWorldHeight - 1)) ? y : (y + 1)] +
-	     tem2[x][y];
-	tem[x][y] = (unsigned char)(z >>2);
-	z &= 0x3;
-*/
 	z += tem2[(x == 0) ? x : (x - 1)][y] +
 	    tem2[(x == (HalfWorldWidth - 1)) ? x : (x + 1)][y] +
 	    tem2[x][(y == 0) ? (0) : (y - 1)] +
@@ -276,7 +258,7 @@ int GetPValue(int loc)
 
 
 /* comefrom: PTLScan DistIntMarket */
-int GetDisCC(int x, int y)
+int distanceToCityCenter(int x, int y)
 {
     const Vector<int> radius = { CityCenter.x / 2, (CityCenter.y / 2) };
 
@@ -316,7 +298,7 @@ void DistIntMarket()
 
   for (x = 0; x < EighthWorldWidth; x++)
     for (y = 0; y < EighthWorldHeight; y++) {
-      z = GetDisCC(x <<2,y <<2);
+      z = distanceToCityCenter(x <<2,y <<2);
       z = z <<2;
       z = 64 - z;
       ComRate[x][y] = z;
@@ -468,7 +450,7 @@ void PTLScan()   	/* Does pollution, terrain, land value   */
 	Plevel = 255;
       tem[x][y] = Plevel;
       if (LVflag) {			/* LandValue Equation */
-	dis = 34 - GetDisCC(x, y);
+	dis = 34 - distanceToCityCenter(x, y);
 	dis = dis <<2;
 	dis += (TerrainMem[x >>1][y >>1] );
 	dis -= (PollutionMem[x][y]);
