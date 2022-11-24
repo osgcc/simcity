@@ -50,6 +50,7 @@
 #include "ToolPalette.h"
 
 #include <algorithm>
+#include <cstdint>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
@@ -72,6 +73,8 @@ constexpr auto tileSize = 16;
 
 SDL_Window* MainWindow = nullptr;
 SDL_Renderer* MainWindowRenderer = nullptr;
+
+uint32_t MainWindowId{};
 
 Texture MainMapTexture{};
 Texture MiniMapTexture{};
@@ -862,7 +865,16 @@ void handleWindowEvent(SDL_Event& event)
         break;
 
     case SDL_WINDOWEVENT_CLOSE:
-        simExit();
+        if (event.window.windowID == miniMapWindow->id())
+        {
+            miniMapWindow->hide();
+        }
+
+        if (event.window.windowID == MainWindowId)
+        {
+            simExit();
+        }
+
         break;
 
     default:
@@ -917,6 +929,8 @@ void initRenderer()
         throw std::runtime_error("startGame(): Unable to create renderer: " + std::string(SDL_GetError()));
     }
     SDL_SetRenderDrawBlendMode(MainWindowRenderer, SDL_BLENDMODE_BLEND);
+
+    MainWindowId = SDL_GetWindowID(MainWindow);
 }
 
 
