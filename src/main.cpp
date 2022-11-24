@@ -14,6 +14,7 @@
 
 #include "BudgetWindow.h"
 #include "GraphWindow.h"
+#include "MiniMapWindow.h"
 
 #include "CityProperties.h"
 #include "Connection.h"
@@ -141,6 +142,7 @@ namespace
     GraphWindow* graphWindow{ nullptr };
     StringRender* stringRenderer{ nullptr };
     ToolPalette* toolPalette{ nullptr };
+    MiniMapWindow* miniMapWindow{ nullptr };
 
     FileIo* fileIo{ nullptr };
 
@@ -1092,6 +1094,12 @@ void gameInit()
     drawMiniMap();
     DrawBigMap();
 
+    Point<int> windowPosition{};
+    SDL_GetWindowPosition(MainWindow, &windowPosition.x, &windowPosition.y);
+
+    miniMapWindow = new MiniMapWindow(windowPosition - Vector<int>{ 10, 10 }, { SimWidth * 3, SimHeight * 3 });
+
+
     fileIo = new FileIo(*MainWindow);
 
     stringRenderer = new StringRender(MainWindowRenderer);
@@ -1119,6 +1127,7 @@ void cleanUp()
     delete toolPalette;
     delete stringRenderer;
     delete fileIo;
+    delete miniMapWindow;
 
     deinitTimers();
 
