@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "MiniMapWindow.h"
 
+#include "Map.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -17,7 +19,17 @@
 #include <iostream>
 
 
-MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size)
+/**
+ * Constructs a minimap window
+ * 
+ * \param position  Position to open the window at
+ * \param size      Width/Height of the map in tiles
+ * \param tileSize  Size of large and mini tiles in pixels. X == Full Size, Y == Mini.
+ */
+MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size, const Vector<int>& tileSize):
+    MiniTileSize{ tileSize.y },
+    TileSize{ tileSize.x },
+    mMapSize{ size }
 {
     if (!SDL_WasInit(SDL_INIT_VIDEO))
     {
@@ -25,7 +37,11 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
         SDL_Init(SDL_INIT_VIDEO);
     }
 
-    mWindow = SDL_CreateWindow("Mini Map", position.x, position.y, size.x, size.y, SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_UTILITY);
+    mWindow = SDL_CreateWindow("Mini Map",
+        position.x, position.y,
+        size.x * MiniTileSize, size.y * MiniTileSize,
+        SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_UTILITY);
+
     if (!mWindow)
     {
         throw std::runtime_error("MiniMapWindow::MiniMapWindow(): Unable to create primary window: " + std::string(SDL_GetError()));
@@ -37,8 +53,15 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
         throw std::runtime_error("MiniMapWindow::MiniMapWindow(): Unable to create renderer: " + std::string(SDL_GetError()));
     }
 
-    SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+    //SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderTarget(mRenderer, mTexture.texture);
+
+    SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 150);
+
     mWindowID = SDL_GetWindowID(mWindow);
+
+    mTiles = loadTexture(mRenderer, "images/tilessm.xpm");
+    mTexture.texture = SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, size.x * MiniTileSize, size.y * MiniTileSize);
 }
 
 
@@ -52,6 +75,28 @@ MiniMapWindow::~MiniMapWindow()
 Uint32 MiniMapWindow::id() const
 {
     return mWindowID;
+}
+
+
+void MiniMapWindow::updateMapViewPosition(const Point<int>& position)
+{
+    
+    mSelector.x = (position.x / TileSize) * MiniTileSize;
+    mSelector.y = (position.y / TileSize) * MiniTileSize;
+}
+
+
+void MiniMapWindow::updateViewportSize(const Vector<int>& viewportSize)
+{
+    mSelector.w = static_cast<int>(std::ceil(viewportSize.x / static_cast<float>(TileSize)) * MiniTileSize);
+    mSelector.h = static_cast<int>(std::ceil(viewportSize.y / static_cast<float>(TileSize)) * MiniTileSize);
+}
+
+
+void MiniMapWindow::updateTilePointedAt(const Point<int>& tilePointedAt)
+{
+    mTileHighlight.x = tilePointedAt.x * MiniTileSize;
+    mTileHighlight.y = tilePointedAt.y * MiniTileSize;
 }
 
 
@@ -69,5 +114,41 @@ void MiniMapWindow::show()
 
 void MiniMapWindow::draw()
 {
-    
+    SDL_Rect miniMapDrawRect{ 0, 0, MiniTileSize, MiniTileSize };
+
+    for (int row = 0; row < mMapSize.x; row++)
+    {
+        for (int col = 0; col < mMapSize.y; col++)
+        {
+            miniMapDrawRect = { row * MiniTileSize, col * MiniTileSize, miniMapDrawRect.w, miniMapDrawRect.h };
+            mTileRect.y = maskedTileValue(tileValue(row, col)) * MiniTileSize;
+            SDL_RenderCopy(mRenderer, mTiles.texture, &mTileRect, &miniMapDrawRect);
+        }
+    }
+}
+
+
+void MiniMapWindow::drawUI()
+{
+    SDL_RenderCopy(mRenderer, mTexture.texture, nullptr, nullptr);
+
+    //SDL_RenderCopy(MainWindowRenderer, powerMapTexture().texture, nullptr, &MiniMapDestination);
+
+    // \todo Make this only draw when an overlay flag is set
+    //SDL_RenderCopy(MainWindowRenderer, crimeOverlayTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, populationDensityTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, pollutionTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, landValueTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, policeRadiusTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, fireRadiusTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, rateOfGrowthTexture().texture, nullptr, &MiniMapDestination);
+
+    // traffic map
+    //SDL_RenderCopy(MainWindowRenderer, transitMapTexture().texture, nullptr, &MiniMapDestination);
+    //SDL_RenderCopy(MainWindowRenderer, trafficDensityTexture().texture, nullptr, &MiniMapDestination);
+
+    SDL_RenderDrawRect(mRenderer, &mSelector);
+    SDL_RenderDrawRect(mRenderer, &mTileHighlight);
+
+    SDL_RenderPresent(mRenderer);
 }

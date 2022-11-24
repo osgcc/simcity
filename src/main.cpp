@@ -69,7 +69,8 @@
 
 const std::string MicropolisVersion = "4.0";
 
-constexpr auto tileSize = 16;
+constexpr auto TileSize = 16;
+constexpr auto MiniTileSize = 3;
 
 SDL_Window* MainWindow = nullptr;
 SDL_Renderer* MainWindowRenderer = nullptr;
@@ -77,10 +78,8 @@ SDL_Renderer* MainWindowRenderer = nullptr;
 uint32_t MainWindowId{};
 
 Texture MainMapTexture{};
-Texture MiniMapTexture{};
 
 Texture BigTileset{};
-Texture SmallTileset{};
 Texture RCI_Indicator{};
 
 
@@ -96,14 +95,9 @@ namespace
 {
     constexpr auto RciValveHeight = 20;
 
-    SDL_Rect MiniMapTileRect{ 0, 0, 3, 3 };
     SDL_Rect UiHeaderRect{ 10, 10, 0, 0 };
     SDL_Rect RciDestination{};
     SDL_Rect FullMapViewRect{};
-
-    SDL_Rect MiniMapSelector{};
-    SDL_Rect MiniMapDestination{ 10, 0, SimWidth * 3, SimHeight * 3 };
-    SDL_Rect MiniMapBorder{};
 
     SDL_Rect ResidentialValveRect{ 0, 0, 4, 0 };
     SDL_Rect CommercialValveRect{ 0, 0, 4, 0 };
@@ -128,8 +122,7 @@ namespace
     constexpr unsigned int SimStepDefaultTime{ 100 };
     constexpr unsigned int AnimationStepDefaultTime{ 150 };
 
-    SDL_Rect TileHighlight{ 0, 0, 16, 16 };
-    SDL_Rect TileMiniHighlight{ 0, 0, 3, 3 };
+    SDL_Rect TileHighlight{ 0, 0, TileSize, TileSize };
 
     std::array<unsigned int, 5> SpeedModifierTable{ 0, 0, 50, 75, 95 };
 
@@ -259,12 +252,6 @@ void animationEnabled(bool b)
 }
 
 
-SDL_Rect& miniMapTileRect()
-{
-    return MiniMapTileRect;
-}
-
-
 void simExit()
 {
     Exit = true;
@@ -278,25 +265,6 @@ void simUpdate()
     if (newMonth() && ShowGraphWindow) { graphWindow->update(); }
 
     scoreDoer(cityProperties);
-}
-
-
-void drawMiniMap()
-{
-    SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
-
-    SDL_SetRenderTarget(MainWindowRenderer, MiniMapTexture.texture);
-    for (int row = 0; row < SimWidth; row++)
-    {
-        for (int col = 0; col < SimHeight; col++)
-        {
-            miniMapDrawRect = { row * 3, col * 3, miniMapDrawRect.w, miniMapDrawRect.h };
-            MiniMapTileRect.y = maskedTileValue(tileValue(row, col)) * 3;
-            SDL_RenderCopy(MainWindowRenderer, SmallTileset.texture, &MiniMapTileRect, &miniMapDrawRect);
-        }
-    }
-    SDL_RenderPresent(MainWindowRenderer);
-    SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
 
 
@@ -321,11 +289,11 @@ void simLoop(bool doSim)
             MoveObjects();
         }
 
-        const Point<int> begin{ MapViewOffset.x / 16, MapViewOffset.y / 16 };
+        const Point<int> begin{ MapViewOffset.x / TileSize, MapViewOffset.y / TileSize };
         const Point<int> end
         {
-            std::clamp((MapViewOffset.x + WindowSize.x) / 16 + 1, 0, SimWidth),
-            std::clamp((MapViewOffset.y + WindowSize.y) / 16 + 1, 0, SimHeight)
+            std::clamp((MapViewOffset.x + WindowSize.x) / TileSize + 1, 0, SimWidth),
+            std::clamp((MapViewOffset.y + WindowSize.y) / TileSize + 1, 0, SimHeight)
         };
 
         DrawBigMapSegment(begin, end);
@@ -333,7 +301,7 @@ void simLoop(bool doSim)
 
     if (RedrawMinimap)
     {
-        drawMiniMap();
+        miniMapWindow->draw();
         RedrawMinimap = false;
     }  
 
@@ -409,9 +377,6 @@ void primeGame(const int startFlag, CityProperties& properties, Budget& budget)
         doStartScenario(startFlag);
         break;
     }
-
-    drawMiniMap();
-    DrawBigMap();
 }
 
 
@@ -432,13 +397,13 @@ void buildBigTileset()
         srcSurface->format->Bmask,
         srcSurface->format->Amask);
 
-    SDL_Rect srcRect{ 0, 0, 16, 16 };
-    SDL_Rect dstRect{ 0, 0, 16, 16 };
+    SDL_Rect srcRect{ 0, 0, TileSize, TileSize };
+    SDL_Rect dstRect{ 0, 0, TileSize, TileSize };
 
     for (int i = 0; i < TILE_COUNT; ++i)
     {
-        srcRect.y = i * 16;
-        dstRect = { (i % 32) * 16, (i / 32) * 16, 16, 16 };
+        srcRect.y = i * TileSize;
+        dstRect = { (i % (TileSize * 2)) * TileSize, (i / (TileSize * 2)) * TileSize, TileSize, TileSize };
         SDL_BlitSurface(srcSurface, &srcRect, dstSurface, &dstRect);
     }
 
@@ -464,7 +429,6 @@ void loadGraphics()
 {
     buildBigTileset();
     RCI_Indicator = loadTexture(MainWindowRenderer, "images/demandg.xpm");
-    SmallTileset = loadTexture(MainWindowRenderer, "images/tilessm.xpm");
 }
 
 
@@ -485,29 +449,7 @@ void updateMapDrawParameters()
         WindowSize.y
     };
 
-    MiniMapDestination =
-    {
-        MiniMapDestination.x,
-        WindowSize.y - MiniMapDestination.h - 10,
-        MiniMapDestination.w,
-        MiniMapDestination.h
-    };
-
-    MiniMapBorder =
-    {
-        MiniMapDestination.x - 2,
-        MiniMapDestination.y - 2,
-        MiniMapDestination.w + 4,
-        MiniMapDestination.h + 4
-    };
-
-    MiniMapSelector =
-    {
-        MiniMapDestination.x + ((MapViewOffset.x / 16) * 3),
-        MiniMapDestination.y + ((MapViewOffset.y / 16) * 3),
-        MiniMapSelector.w,
-        MiniMapSelector.h
-    };
+    miniMapWindow->updateMapViewPosition(MapViewOffset);
 }
 
 
@@ -524,13 +466,6 @@ void clampViewOffset()
         std::clamp(MapViewOffset.x, 0, std::max(0, MainMapTexture.dimensions.x - WindowSize.x)),
         std::clamp(MapViewOffset.y, 0, std::max(0, MainMapTexture.dimensions.y - WindowSize.y))
     };
-}
-
-
-void updateMiniMapSelectorSize()
-{
-    MiniMapSelector.w = static_cast<int>(std::ceil(WindowSize.x / 16.0f) * 3);
-    MiniMapSelector.h = static_cast<int>(std::ceil(WindowSize.y / 16.0f) * 3);
 }
 
 
@@ -551,7 +486,7 @@ void windowResized(const Vector<int>& size)
     windowSize();
     clampViewOffset();
 
-    updateMiniMapSelectorSize();
+    miniMapWindow->updateViewportSize(WindowSize);
 
     updateMapDrawParameters();
     centerBudgetWindow();
@@ -567,23 +502,18 @@ void calculateMouseToWorld()
     
     TilePointedAt =
     {
-       screenCell.x + (MapViewOffset.x / 16),
-       screenCell.y + (MapViewOffset.y / 16)
+       screenCell.x + (MapViewOffset.x / TileSize),
+       screenCell.y + (MapViewOffset.y / TileSize)
     };
 
     TileHighlight =
     {
-        (screenCell.x * 16) - MapViewOffset.x % 16,
-        (screenCell.y * 16) - MapViewOffset.y % 16,
-        16, 16
+        (screenCell.x * TileSize) - MapViewOffset.x % TileSize,
+        (screenCell.y * TileSize) - MapViewOffset.y % TileSize,
+        TileSize, TileSize
     };
 
-    TileMiniHighlight =
-    {
-        MiniMapDestination.x + TilePointedAt.x * 3,
-        MiniMapDestination.y + TilePointedAt.y * 3,
-        3, 3
-    };
+    miniMapWindow->updateTilePointedAt(TilePointedAt);
 }
 
 
@@ -938,12 +868,10 @@ void initViewParamters()
 {
     windowSize();
 
-    MiniMapTexture.texture = SDL_CreateTexture(MainWindowRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, SimWidth * 3, SimHeight * 3);
+    miniMapWindow->updateViewportSize(WindowSize);
+
     MainMapTexture.texture = SDL_CreateTexture(MainWindowRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, SimWidth * 16, SimHeight * 16);
-
     MainMapTexture.dimensions = { SimWidth * 16, SimHeight * 16 };
-
-    updateMiniMapSelectorSize();
 
     UiHeaderRect.w = WindowSize.x - 20;
     UiHeaderRect.h = RCI_Indicator.dimensions.y + 10 + MainBigFont->height() + 10;
@@ -1004,36 +932,7 @@ void drawTopUi()
 }
 
 
-void drawMiniMapUi()
-{
-    SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 65);
-    SDL_RenderFillRect(MainWindowRenderer, &MiniMapBorder);
 
-    SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 255);
-    SDL_RenderDrawRect(MainWindowRenderer, &MiniMapBorder);
-
-    SDL_RenderCopy(MainWindowRenderer, MiniMapTexture.texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, powerMapTexture().texture, nullptr, &MiniMapDestination);
-
-    // \todo Make this only draw when an overlay flag is set
-    //SDL_RenderCopy(MainWindowRenderer, crimeOverlayTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, populationDensityTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, pollutionTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, landValueTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, policeRadiusTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, fireRadiusTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, rateOfGrowthTexture().texture, nullptr, &MiniMapDestination);
-
-    // traffic map
-    //SDL_RenderCopy(MainWindowRenderer, transitMapTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, trafficDensityTexture().texture, nullptr, &MiniMapDestination);
-
-    SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 150);
-    SDL_RenderDrawRect(MainWindowRenderer, &MiniMapSelector);
-    SDL_RenderDrawRect(MainWindowRenderer, &TileMiniHighlight);
-
-    SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 255);
-}
 
 
 void DrawPendingTool(const ToolPalette& palette)
@@ -1045,10 +944,10 @@ void DrawPendingTool(const ToolPalette& palette)
 
     const SDL_Rect toolRect
     {
-        TileHighlight.x - (pendingToolProperties().offset * 16),
-        TileHighlight.y - (pendingToolProperties().offset * 16),
-        pendingToolProperties().size * 16,
-        pendingToolProperties().size * 16
+        TileHighlight.x - (pendingToolProperties().offset * TileSize),
+        TileHighlight.y - (pendingToolProperties().offset * TileSize),
+        pendingToolProperties().size * TileSize,
+        pendingToolProperties().size * TileSize
     };
 
     if (palette.toolGost().texture)
@@ -1071,20 +970,20 @@ void drawDraggableToolVector()
     
     SDL_Rect toolRect
     {
-        (toolStart().x * tileSize) - MapViewOffset.x,
-        (toolStart().y * tileSize) - MapViewOffset.y,
-        tileSize, tileSize
+        (toolStart().x * TileSize) - MapViewOffset.x,
+        (toolStart().y * TileSize) - MapViewOffset.y,
+        TileSize, TileSize
     };
 
     const int axis = longestAxis(DraggableToolVector);
-    const int size = (std::abs(axis) * tileSize) + tileSize;
+    const int size = (std::abs(axis) * TileSize) + TileSize;
 
     const bool xAxisLarger = std::abs(DraggableToolVector.x) > std::abs(DraggableToolVector.y);
     xAxisLarger ? toolRect.w = size : toolRect.h = size;
 
     if (axis < 0)
     {
-        const int startValue = size - tileSize;
+        const int startValue = size - TileSize;
         xAxisLarger ? toolRect.x -= startValue : toolRect.y -= startValue;
     }
 
@@ -1109,15 +1008,17 @@ void gameInit()
     initOverlayTexture();
     initMapTextures();
 
-    drawMiniMap();
+    miniMapWindow->draw();
     DrawBigMap();
 
+}
+
+
+void initUI()
+{
     Point<int> windowPosition{};
     SDL_GetWindowPosition(MainWindow, &windowPosition.x, &windowPosition.y);
-
-    miniMapWindow = new MiniMapWindow(windowPosition - Vector<int>{ 10, 10 }, { SimWidth * 3, SimHeight * 3 });
-
-
+    miniMapWindow = new MiniMapWindow(windowPosition - Vector<int>{ 10, 10 }, { SimWidth, SimHeight }, { TileSize, MiniTileSize });
     fileIo = new FileIo(*MainWindow);
 
     stringRenderer = new StringRender(MainWindowRenderer);
@@ -1191,7 +1092,6 @@ void GameLoop()
             drawDraggableToolVector();
 
             drawTopUi();
-            drawMiniMapUi();
 
             if (EventHandling::MouseClicked)
             {
@@ -1204,6 +1104,7 @@ void GameLoop()
         }
 
         SDL_RenderPresent(MainWindowRenderer);
+        miniMapWindow->drawUI();
 
         newMap(false);
     }
@@ -1228,6 +1129,8 @@ int main(int argc, char* argv[])
         initRenderer();
         loadGraphics();
         loadFonts();
+
+        initUI();
 
         gameInit();
 
