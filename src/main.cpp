@@ -687,6 +687,8 @@ void executeDraggableTool()
 
 void handleMouseEvent(SDL_Event& event)
 {
+    if (event.window.windowID != MainWindowId) { return; }
+
     SDL_Point mouseMotionDelta{};
     SDL_Point mousePosition = { EventHandling::MousePosition.x, EventHandling::MousePosition.y };
 
