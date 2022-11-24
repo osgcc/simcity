@@ -38,6 +38,7 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
     }
 
     SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+    mWindowID = SDL_GetWindowID(mWindow);
 }
 
 
@@ -48,7 +49,25 @@ MiniMapWindow::~MiniMapWindow()
 }
 
 
+Uint32 MiniMapWindow::id() const
+{
+    return mWindowID;
+}
+
+
+void MiniMapWindow::hide()
+{
+    SDL_HideWindow(mWindow);
+}
+
+
+void MiniMapWindow::show()
+{
+    SDL_ShowWindow(mWindow);
+}
+
+
 void MiniMapWindow::draw()
 {
-
+    
 }

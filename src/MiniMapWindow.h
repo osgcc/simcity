@@ -13,6 +13,9 @@
 #include "Point.h"
 #include "Vector.h"
 
+#include <cstdint>
+
+
 struct SDL_Window;
 struct SDL_Renderer;
 
@@ -25,10 +28,16 @@ public:
 
 	~MiniMapWindow();
 
+	uint32_t id() const;
+
+	void hide();
+	void show();
 
 	void draw();
 
 private:
 	SDL_Window* mWindow{ nullptr };
 	SDL_Renderer* mRenderer{ nullptr };
+
+	uint32_t mWindowID{};
 };
