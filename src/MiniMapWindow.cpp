@@ -10,13 +10,16 @@
 // file, included in this distribution, for details.
 #include "MiniMapWindow.h"
 
+#include "BindFunction.h"
 #include "Map.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include <stdexcept>
+
 #include <iostream>
+#include <stdexcept>
+
 
 
 /**
@@ -75,6 +78,18 @@ Uint32 MiniMapWindow::id() const
 }
 
 
+void MiniMapWindow::viewportChangedBind(fnPointIntParam fn)
+{
+    BindFuncPtr<std::vector<fnPointIntParam>, fnPointIntParam>(mViewpointChangedCallbacks, fn);
+}
+
+
+void MiniMapWindow::viewportChangedUnbind(fnPointIntParam fn)
+{
+    UnbindFuncPtr<std::vector<fnPointIntParam>, fnPointIntParam>(mViewpointChangedCallbacks, fn);
+}
+
+
 void MiniMapWindow::updateMapViewPosition(const Point<int>& position)
 {
     
@@ -100,6 +115,7 @@ void MiniMapWindow::updateTilePointedAt(const Point<int>& tilePointedAt)
 void MiniMapWindow::hide()
 {
     SDL_HideWindow(mWindow);
+    mLeftButtonDown = false;
 }
 
 
@@ -183,6 +199,29 @@ void MiniMapWindow::injectEvent(const SDL_Event& event)
 
 void MiniMapWindow::handleMouseEvent(const SDL_Event& event)
 {
+    switch (event.type)
+    {
+    case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == SDL_BUTTON_LEFT)
+        {
+            mLeftButtonDown = true;
+        }
+        break;
+
+    case SDL_MOUSEBUTTONUP:
+        if (event.button.button == SDL_BUTTON_RIGHT)
+        {
+            mLeftButtonDown = false;
+        }
+        break;
+
+    case SDL_MOUSEMOTION:
+        handleMouseMotion(event);
+        break;
+
+    default:
+        break;
+    }
 }
 
 
@@ -191,5 +230,23 @@ void MiniMapWindow::handleWindowEvent(const SDL_Event& event)
     if(event.window.event == SDL_WINDOWEVENT_MINIMIZED)
     {
         hide();
+    }
+}
+
+
+void MiniMapWindow::handleMouseMotion(const SDL_Event& event)
+{
+    if (event.motion.state & SDL_BUTTON_LMASK)
+    {
+        focusViewpoint({ event.motion.x, event.motion.y });
+    }
+}
+
+
+void MiniMapWindow::focusViewpoint(const Point<int>& point)
+{
+    for (auto callback : mViewpointChangedCallbacks)
+    {
+        callback(point);
     }
 }

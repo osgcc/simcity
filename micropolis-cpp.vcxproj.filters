@@ -257,6 +257,9 @@
     <ClInclude Include="src\MiniMapWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\BindFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="micropolis-sdl2.rc">
