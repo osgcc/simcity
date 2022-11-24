@@ -60,7 +60,6 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
 
     mTiles = loadTexture(mRenderer, "images/tilessm.xpm");
     mTexture.texture = SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, size.x * MiniTileSize, size.y * MiniTileSize);
-    //SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 150);
 }
 
