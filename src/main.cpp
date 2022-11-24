@@ -861,6 +861,10 @@ void handleWindowEvent(SDL_Event& event)
         windowResized(Vector<int>{event.window.data1, event.window.data2});
         break;
 
+    case SDL_WINDOWEVENT_CLOSE:
+        simExit();
+        break;
+
     default:
         break;
     }
