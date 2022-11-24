@@ -414,14 +414,15 @@ void buildBigTileset()
 
     if (!texture)
     {
-        std::cout << SDL_GetError() << std::endl;
-        throw std::runtime_error(std::string("loadTexture(): ") + SDL_GetError());
+        const std::string message(std::string("buildBigTileset(): ") + SDL_GetError());
+        std::cout << message << std::endl;
+        throw std::runtime_error(message);
     }
 
-    int width = 0, height = 0;
-    SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+    Vector<int> size{};
+    SDL_QueryTexture(texture, nullptr, nullptr, &size.x, &size.y);
 
-    BigTileset = { texture, SDL_Rect{ 0, 0, width, height }, { width, height } };
+    BigTileset = { texture, SDL_Rect{ 0, 0, size.x, size.y }, { size.x, size.y } };
 }
 
 
@@ -865,6 +866,7 @@ void initRenderer()
     {
         throw std::runtime_error("startGame(): Unable to create renderer: " + std::string(SDL_GetError()));
     }
+
     SDL_SetRenderDrawBlendMode(MainWindowRenderer, SDL_BLENDMODE_BLEND);
 
     MainWindowId = SDL_GetWindowID(MainWindow);
@@ -1015,6 +1017,7 @@ void initUI()
 {
     Point<int> windowPosition{};
     SDL_GetWindowPosition(MainWindow, &windowPosition.x, &windowPosition.y);
+
     miniMapWindow = new MiniMapWindow(windowPosition - Vector<int>{ 10, 10 }, { SimWidth, SimHeight }, { TileSize, MiniTileSize });
     miniMapWindow->updateViewportSize(WindowSize);
 
