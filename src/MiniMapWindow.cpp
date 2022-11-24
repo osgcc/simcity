@@ -105,6 +105,7 @@ void MiniMapWindow::hide()
 
 void MiniMapWindow::show()
 {
+    SDL_RestoreWindow(mWindow);
     SDL_ShowWindow(mWindow);
 }
 
@@ -152,4 +153,43 @@ void MiniMapWindow::drawUI()
     SDL_RenderDrawRect(mRenderer, &mTileHighlight);
 
     SDL_RenderPresent(mRenderer);
+}
+
+
+void MiniMapWindow::injectEvent(const SDL_Event& event)
+{
+    if (event.window.windowID != id())
+    {
+        return;
+    }
+
+    switch (event.type)
+    {
+    case SDL_MOUSEMOTION:
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+        handleMouseEvent(event);
+        break;
+
+    case SDL_WINDOWEVENT:
+        handleWindowEvent(event);
+        break;
+
+    default:
+        break;
+    }
+}
+
+
+void MiniMapWindow::handleMouseEvent(const SDL_Event& event)
+{
+}
+
+
+void MiniMapWindow::handleWindowEvent(const SDL_Event& event)
+{
+    if(event.window.event == SDL_WINDOWEVENT_MINIMIZED)
+    {
+        hide();
+    }
 }

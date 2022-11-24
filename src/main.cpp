@@ -823,6 +823,8 @@ void pumpEvents()
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
+        miniMapWindow->injectEvent(event);
+
         switch (event.type)
         {
         case SDL_KEYDOWN:

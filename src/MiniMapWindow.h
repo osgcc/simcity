@@ -19,10 +19,6 @@
 #include <SDL2/SDL.h>
 
 
-struct SDL_Window;
-struct SDL_Renderer;
-
-
 class MiniMapWindow
 {
 public:
@@ -46,6 +42,12 @@ public:
 
 	void draw();
 	void drawUI();
+
+	void injectEvent(const SDL_Event& event);
+
+private:
+	void handleMouseEvent(const SDL_Event& event);
+	void handleWindowEvent(const SDL_Event& event);
 
 private:
 	SDL_Window* mWindow{ nullptr };
