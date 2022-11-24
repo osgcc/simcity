@@ -16,7 +16,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-
+#include <algorithm>
 #include <iostream>
 #include <stdexcept>
 
@@ -91,9 +91,8 @@ void MiniMapWindow::viewportChangedUnbind(fnPointIntParam fn)
 
 void MiniMapWindow::updateMapViewPosition(const Point<int>& position)
 {
-    
-    mSelector.x = (position.x / TileSize) * MiniTileSize;
-    mSelector.y = (position.y / TileSize) * MiniTileSize;
+    mSelector.x = std::clamp((position.x / TileSize) * MiniTileSize, 0, mMapSize.x * MiniTileSize);
+    mSelector.y = std::clamp((position.y / TileSize) * MiniTileSize, 0, mMapSize.y * MiniTileSize);
 }
 
 
