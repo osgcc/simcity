@@ -30,6 +30,7 @@
     <ClCompile Include="src\g_map.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\MiniMapWindow.cpp" />
     <ClCompile Include="src\SmallMaps.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\StringRender.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="src\GraphWindow.h" />
     <ClInclude Include="src\g_ani.h" />
     <ClInclude Include="src\Map.h" />
+    <ClInclude Include="src\MiniMapWindow.h" />
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\PointInRectangleRange.h" />
     <ClInclude Include="src\SmallMaps.h" />
