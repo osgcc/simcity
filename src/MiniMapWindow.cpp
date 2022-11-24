@@ -53,15 +53,12 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
         throw std::runtime_error("MiniMapWindow::MiniMapWindow(): Unable to create renderer: " + std::string(SDL_GetError()));
     }
 
-    //SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderTarget(mRenderer, mTexture.texture);
-
-    SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 150);
-
     mWindowID = SDL_GetWindowID(mWindow);
 
     mTiles = loadTexture(mRenderer, "images/tilessm.xpm");
     mTexture.texture = SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, size.x * MiniTileSize, size.y * MiniTileSize);
+    //SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 150);
 }
 
 
@@ -116,6 +113,7 @@ void MiniMapWindow::draw()
 {
     SDL_Rect miniMapDrawRect{ 0, 0, MiniTileSize, MiniTileSize };
 
+    SDL_SetRenderTarget(mRenderer, mTexture.texture);
     for (int row = 0; row < mMapSize.x; row++)
     {
         for (int col = 0; col < mMapSize.y; col++)
@@ -125,6 +123,9 @@ void MiniMapWindow::draw()
             SDL_RenderCopy(mRenderer, mTiles.texture, &mTileRect, &miniMapDrawRect);
         }
     }
+
+    SDL_RenderPresent(mRenderer);
+    SDL_SetRenderTarget(mRenderer, nullptr);
 }
 
 
