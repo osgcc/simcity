@@ -21,8 +21,6 @@
 int DynamicData[32];
 
 
-extern Texture MiniMapTexture; // from main.cpp
-
 namespace
 {
     Texture TransitMapTexture;
@@ -48,6 +46,7 @@ void initMapTextures()
 }
 
 
+/*
 void drawRes()
 {
     SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
@@ -212,6 +211,7 @@ void drawPower()
     SDL_RenderPresent(MainWindowRenderer);
     SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
+*/
 
 
 int dynamicFilter(int col, int row)

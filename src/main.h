@@ -87,7 +87,6 @@ extern int InitSimLoad;
 extern int DoInitialEval;
 
 extern SDL_Renderer* MainWindowRenderer;
-extern Texture SmallTileset;
 
 void showBudgetWindow();
 
@@ -102,5 +101,3 @@ void animationEnabled(bool b);
 
 void simExit();
 const Point<int>& viewOffset();
-
-SDL_Rect& miniMapTileRect();
