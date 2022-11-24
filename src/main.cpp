@@ -875,8 +875,6 @@ void initViewParamters()
 {
     windowSize();
 
-    miniMapWindow->updateViewportSize(WindowSize);
-
     MainMapTexture.texture = SDL_CreateTexture(MainWindowRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, SimWidth * 16, SimHeight * 16);
     MainMapTexture.dimensions = { SimWidth * 16, SimHeight * 16 };
 
@@ -937,9 +935,6 @@ void drawTopUi()
     const Point<int> budgetPosition{ UiHeaderRect.x + UiHeaderRect.w - 5 - MainBigFont->width(currentBudget), UiHeaderRect.y + 5 };
     stringRenderer->drawString(*MainBigFont, currentBudget, budgetPosition);
 }
-
-
-
 
 
 void DrawPendingTool(const ToolPalette& palette)
@@ -1008,7 +1003,6 @@ void gameInit()
 
     primeGame(-1, cityProperties, budget);
 
-    initViewParamters();
     updateMapDrawParameters();
     initTimers();
 
@@ -1022,10 +1016,11 @@ void initUI()
     Point<int> windowPosition{};
     SDL_GetWindowPosition(MainWindow, &windowPosition.x, &windowPosition.y);
     miniMapWindow = new MiniMapWindow(windowPosition - Vector<int>{ 10, 10 }, { SimWidth, SimHeight }, { TileSize, MiniTileSize });
+    miniMapWindow->updateViewportSize(WindowSize);
+
     fileIo = new FileIo(*MainWindow);
 
     stringRenderer = new StringRender(MainWindowRenderer);
-
     toolPalette = new ToolPalette(MainWindowRenderer);
     toolPalette->position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
 
@@ -1136,6 +1131,7 @@ int main(int argc, char* argv[])
         loadGraphics();
         loadFonts();
 
+        initViewParamters();
         initUI();
 
         gameInit();
