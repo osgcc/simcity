@@ -16,13 +16,19 @@
 Texture loadTexture(SDL_Renderer* renderer, const std::string& filename)
 {
     SDL_Surface* temp = IMG_Load(filename.c_str());
+    if (!temp)
+    {
+        std::cout << "loadTexture(): Unable to load '" + filename + "': " + SDL_GetError() << std::endl;
+        throw std::runtime_error("loadTexture(): Unable to load '" + filename + "': " + SDL_GetError());
+    }
+
     SDL_Texture* out = SDL_CreateTextureFromSurface(renderer, temp);
     SDL_FreeSurface(temp);
 
     if (!out)
     {
-        std::cout << SDL_GetError() << std::endl;
-        throw std::runtime_error(std::string("loadTexture(): ") + SDL_GetError());
+        std::cout << "loadTexture(): Unable to load '" + filename + "': " + SDL_GetError() << std::endl;
+        throw std::runtime_error("loadTexture(): Unable to load '" + filename + "': " + SDL_GetError());
     }
 
     int width = 0, height = 0;
