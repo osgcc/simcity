@@ -570,6 +570,11 @@ void handleKeyEvent(SDL_Event& event)
         }
         break;
 
+    case SDLK_F4:
+        miniMapWindow->show();
+        SDL_SetWindowInputFocus(MainWindow);
+        break;
+
     case SDLK_F5:
         //MakeTornado();
         //MakeFlood();
@@ -1007,10 +1012,6 @@ void gameInit()
 
     initOverlayTexture();
     initMapTextures();
-
-    miniMapWindow->draw();
-    DrawBigMap();
-
 }
 
 
@@ -1060,6 +1061,9 @@ void cleanUp()
 
 void GameLoop()
 {
+    miniMapWindow->draw();
+    DrawBigMap();
+
     while (!Exit)
     {
         pendingTool(toolPalette->tool());
