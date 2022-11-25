@@ -77,22 +77,22 @@ Uint32 MiniMapWindow::id() const
 }
 
 
-void MiniMapWindow::viewportChangedBind(fnPointIntParam fn)
+void MiniMapWindow::focusOnMapCoordBind(fnPointIntParam fn)
 {
-    BindFuncPtr<std::vector<fnPointIntParam>, fnPointIntParam>(mViewpointChangedCallbacks, fn);
+    BindFuncPtr<std::vector<fnPointIntParam>, fnPointIntParam>(mFocusOnTileCallbacks, fn);
 }
 
 
-void MiniMapWindow::viewportChangedUnbind(fnPointIntParam fn)
+void MiniMapWindow::focusOnMapCoordUnbind(fnPointIntParam fn)
 {
-    UnbindFuncPtr<std::vector<fnPointIntParam>, fnPointIntParam>(mViewpointChangedCallbacks, fn);
+    UnbindFuncPtr<std::vector<fnPointIntParam>, fnPointIntParam>(mFocusOnTileCallbacks, fn);
 }
 
 
 void MiniMapWindow::updateMapViewPosition(const Point<int>& position)
 {
-    mSelector.x = std::clamp((position.x / TileSize) * MiniTileSize, 0, mMapSize.x * MiniTileSize);
-    mSelector.y = std::clamp((position.y / TileSize) * MiniTileSize, 0, mMapSize.y * MiniTileSize);
+    mSelector.x = std::clamp((position.x / TileSize) * MiniTileSize, 0, (mMapSize.x * MiniTileSize) - mSelector.w);
+    mSelector.y = std::clamp((position.y / TileSize) * MiniTileSize, 0, (mMapSize.y * MiniTileSize) - mSelector.h);
 }
 
 
@@ -113,7 +113,6 @@ void MiniMapWindow::updateTilePointedAt(const Point<int>& tilePointedAt)
 void MiniMapWindow::hide()
 {
     SDL_HideWindow(mWindow);
-    mLeftButtonDown = false;
 }
 
 
@@ -202,14 +201,7 @@ void MiniMapWindow::handleMouseEvent(const SDL_Event& event)
     case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT)
         {
-            mLeftButtonDown = true;
-        }
-        break;
-
-    case SDL_MOUSEBUTTONUP:
-        if (event.button.button == SDL_BUTTON_RIGHT)
-        {
-            mLeftButtonDown = false;
+            focusViewpoint({ event.button.x, event.button.y });
         }
         break;
 
@@ -242,9 +234,13 @@ void MiniMapWindow::handleMouseMotion(const SDL_Event& event)
 
 
 void MiniMapWindow::focusViewpoint(const Point<int>& point)
-{
-    for (auto callback : mViewpointChangedCallbacks)
+{   
+    const Point<int> adjustedPosition{ point - Vector<int>{mSelector.w / 2, mSelector.h / 2} };
+
+    updateMapViewPosition(adjustedPosition.skewBy({ TileSize, TileSize }).skewInverseBy({ MiniTileSize,MiniTileSize }));
+
+    for (auto callback : mFocusOnTileCallbacks)
     {
-        callback(point);
+        callback({ mSelector.x, mSelector.y });
     }
 }

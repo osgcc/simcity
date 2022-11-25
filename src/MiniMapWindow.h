@@ -36,8 +36,8 @@ public:
 
 	uint32_t id() const;
 
-	void viewportChangedBind(fnPointIntParam);
-	void viewportChangedUnbind(fnPointIntParam);
+	void focusOnMapCoordBind(fnPointIntParam);
+	void focusOnMapCoordUnbind(fnPointIntParam);
 
 	void updateMapViewPosition(const Point<int>& position);
 	void updateViewportSize(const Vector<int>& viewportSize);
@@ -73,7 +73,5 @@ private:
 
 	Vector<int> mMapSize{};
 
-	std::vector<fnPointIntParam> mViewpointChangedCallbacks;
-
-	bool mLeftButtonDown{ false };
+	std::vector<fnPointIntParam> mFocusOnTileCallbacks;
 };
