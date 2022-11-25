@@ -93,7 +93,7 @@ namespace
     constexpr auto RciValveHeight = 20;
     constexpr auto TileSize = 16;
     constexpr auto MiniTileSize = 3;
-    const auto MiniMapTileMultiplier = static_cast<int>(std::ceil(static_cast<double>(TileSize) / MiniTileSize));
+    constexpr auto MiniMapTileMultiplier = (TileSize + MiniTileSize - 1) / MiniTileSize;
 
     SDL_Rect UiHeaderRect{ 10, 10, 0, 0 };
     SDL_Rect RciDestination{};
