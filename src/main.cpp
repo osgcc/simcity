@@ -871,6 +871,8 @@ void initRenderer()
         throw std::runtime_error("startGame(): Unable to create primary window: " + std::string(SDL_GetError()));
     }
 
+    SDL_SetWindowMinimumSize(MainWindow, 800, 600);
+
     MainWindowRenderer = SDL_CreateRenderer(MainWindow, -1, SDL_RENDERER_ACCELERATED);
     if (!MainWindow)
     {
