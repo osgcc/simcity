@@ -71,6 +71,7 @@ const std::string MicropolisVersion = "4.0";
 
 constexpr auto TileSize = 16;
 constexpr auto MiniTileSize = 3;
+const auto MiniMapTileMultiplier = static_cast<int>(std::ceil(static_cast<double>(TileSize) / MiniTileSize));
 
 SDL_Window* MainWindow = nullptr;
 SDL_Renderer* MainWindowRenderer = nullptr;
@@ -467,6 +468,14 @@ void clampViewOffset()
         std::clamp(MapViewOffset.x, 0, std::max(0, MainMapTexture.dimensions.x - WindowSize.x)),
         std::clamp(MapViewOffset.y, 0, std::max(0, MainMapTexture.dimensions.y - WindowSize.y))
     };
+}
+
+
+void minimapViewUpdated(const Point<int>& newOffset)
+{
+    MapViewOffset = newOffset.skewBy({ MiniMapTileMultiplier, MiniMapTileMultiplier });
+    clampViewOffset();
+    updateMapDrawParameters();
 }
 
 
@@ -1022,6 +1031,7 @@ void initUI()
 
     miniMapWindow = new MiniMapWindow(windowPosition - Vector<int>{ 10, 10 }, { SimWidth, SimHeight }, { TileSize, MiniTileSize });
     miniMapWindow->updateViewportSize(WindowSize);
+    miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
 
     fileIo = new FileIo(*MainWindow);
 
