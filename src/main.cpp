@@ -1025,10 +1025,19 @@ void gameInit()
 
 void initUI()
 {
-    Point<int> windowPosition{};
-    SDL_GetWindowPosition(MainWindow, &windowPosition.x, &windowPosition.y);
+    Point<int> mainWindowPosition{};
+    SDL_GetWindowPosition(MainWindow, &mainWindowPosition.x, &mainWindowPosition.y);
 
-    miniMapWindow = new MiniMapWindow(windowPosition - Vector<int>{ 10, 10 }, { SimWidth, SimHeight }, { TileSize, MiniTileSize });
+    SDL_DisplayMode mode{};
+    SDL_GetDesktopDisplayMode(0, &mode);
+
+    const Point<int> miniMapWindowPosition
+    {
+        std::clamp(mainWindowPosition.x - (SimWidth * MiniTileSize) - 10, 10, mode.w),
+        std::clamp(mainWindowPosition.y, 10, mode.h)
+    };
+
+    miniMapWindow = new MiniMapWindow(miniMapWindowPosition, { SimWidth, SimHeight }, { TileSize, MiniTileSize });
     miniMapWindow->updateViewportSize(WindowSize);
     miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
 
