@@ -109,14 +109,12 @@ namespace
     Point<int> MapViewOffset{};
     Point<int> TilePointedAt{};
 
-    bool BudgetWindowShown{ false };
     bool Exit{ false };
     bool RedrawMinimap{ false };
     bool SimulationStep{ false };
     bool AnimationEnabled{ true };
     bool AnimationStep{ false };
     bool AutoBudget{ false };
-    bool ShowGraphWindow{ false };
     bool RightButtonDrag{ false };
 
     constexpr unsigned int SimStepDefaultTime{ 100 };
@@ -211,7 +209,7 @@ const Point<int>& viewOffset()
 
 void showBudgetWindow()
 {
-    BudgetWindowShown = true;
+    budgetWindow->show();
     budgetWindow->update();
 }
 
@@ -262,7 +260,7 @@ void simUpdate()
 {
     updateDate();
 
-    if (newMonth() && ShowGraphWindow) { graphWindow->update(); }
+    if (newMonth() && graphWindow->visible()) { graphWindow->update(); }
 
     scoreDoer(cityProperties);
 }
@@ -271,7 +269,7 @@ void simUpdate()
 void simLoop(bool doSim)
 {
     // \fixme Find a better way to do this
-    if (BudgetWindowShown) { return; }
+    if (budgetWindow->visible()) { return; }
 
     if (doSim)
     {
@@ -596,13 +594,13 @@ void handleKeyEvent(SDL_Event& event)
         break;
 
     case SDLK_F9:
-        ShowGraphWindow = !ShowGraphWindow;
-        if (ShowGraphWindow) { graphWindow->update(); }
+        graphWindow->toggleVisible();
+        if (graphWindow) { graphWindow->update(); }
         break;
 
     case SDLK_F10:
-        BudgetWindowShown = !BudgetWindowShown;
-        if (BudgetWindowShown) { budgetWindow->update(); }
+        budgetWindow->toggleVisible();
+        if (budgetWindow->visible()) { budgetWindow->update(); }
         break;
 
     default:
@@ -715,7 +713,7 @@ void handleMouseEvent(SDL_Event& event)
 
         calculateMouseToWorld();
 
-        if (ShowGraphWindow) { graphWindow->injectMouseMotion(mouseMotionDelta); }
+        if (graphWindow->visible()) { graphWindow->injectMouseMotion(mouseMotionDelta); }
 
         if ((SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON_RMASK) != 0)
         {
@@ -751,7 +749,7 @@ void handleMouseEvent(SDL_Event& event)
                 graphWindow->injectMouseDown(mousePosition);
             }
 
-            if (!BudgetWindowShown && !pendingToolProperties().draggable)
+            if (!budgetWindow->visible() && !pendingToolProperties().draggable)
             {
                 ToolDown(TilePointedAt.x, TilePointedAt.y, budget);
             }
@@ -766,8 +764,8 @@ void handleMouseEvent(SDL_Event& event)
 
             EventHandling::MouseClicked = true;
 
-            if (BudgetWindowShown) { budgetWindow->injectMouseUp(); }
-            if (ShowGraphWindow) { graphWindow->injectMouseUp(); }
+            if (budgetWindow->visible()) { budgetWindow->injectMouseUp(); }
+            if (graphWindow->visible()) { graphWindow->injectMouseUp(); }
 
             for (auto rect : UiRects)
             {
@@ -1100,7 +1098,7 @@ void GameLoop()
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
         DrawObjects();
 
-        if (budget.NeedsAttention() || BudgetWindowShown)
+        if (budget.NeedsAttention() || budgetWindow->visible())
         {
             SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 175);
             SDL_RenderFillRect(MainWindowRenderer, nullptr);
@@ -1109,7 +1107,7 @@ void GameLoop()
             if (budgetWindow->accepted())
             {
                 budgetWindow->reset();
-                BudgetWindowShown = false;
+                budgetWindow->hide();
             }
         }
         else
@@ -1126,7 +1124,7 @@ void GameLoop()
             }
             toolPalette->draw();
 
-            if (ShowGraphWindow) { graphWindow->draw(); }
+            if (graphWindow->visible()) { graphWindow->draw(); }
         }
 
         SDL_RenderPresent(MainWindowRenderer);
