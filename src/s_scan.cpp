@@ -543,7 +543,7 @@ void PTLScan()
 {
     int ptot, LVtot;
     int x, y, z, dis;
-    int Plevel, LVflag, loc, zx, zy, Mx, My, pnum, LVnum, pmax;
+    int Plevel, LVflag, loc, Mx, My, pnum, LVnum, pmax;
 
     for (x = 0; x < QuarterWorldWidth; x++)
     {
@@ -561,8 +561,8 @@ void PTLScan()
         {
             Plevel = 0;
             LVflag = 0;
-            zx *= 2;
-            zy *= 2;
+            int zx = x * 2;
+            int zy = y * 2;
             for (Mx = zx; Mx <= zx + 1; Mx++)
             {
                 for (My = zy; My <= zy + 1; My++)
