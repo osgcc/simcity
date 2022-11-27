@@ -11,6 +11,8 @@ public:
 	virtual ~WindowBase() = default;
 
 	bool visible() const { return mVisible; }
+
+	void toggleVisible() { mVisible = !mVisible; }
 	
 	void show() { mVisible = true; }
 	void hide() { mVisible = false; }
@@ -20,5 +22,5 @@ public:
 
 private:
 
-	bool mVisible{ true };
+	bool mVisible{ false };
 };
