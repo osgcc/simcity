@@ -315,16 +315,44 @@ int GetChar(int x, int y)
 
 int TurnTo(int p, int d)
 {
-  if (p == d) return(p);
-  if (p < d)
-    if ((d - p) < 4) p++;
-    else p--;
-  else
-    if ((p - d) < 4) p--;
-    else p++;
-  if (p > 8) p = 1;
-  if (p < 1) p = 8;
-  return(p);
+    if (p == d)
+    {
+        return p;
+    }
+
+    if (p < d)
+    {
+        if ((d - p) < 4)
+        {
+            p++;
+        }
+        else
+        {
+            p--;
+        }
+    }
+    else
+    {
+        if ((p - d) < 4)
+        {
+            p--;
+        }
+        else
+        {
+            p++;
+        }
+    }
+
+    if (p > 8)
+    {
+        p = 1;
+    }
+    if (p < 1)
+    {
+        p = 8;
+    }
+
+    return p;
 }
 
 
@@ -862,9 +890,10 @@ void DoShipSprite(SimSprite* sprite)
 
     if (!sprite->sound_count)
     {
-        if ((Rand16() & 3) == 1)
+        if (RandomRange(0, 3) == 1)
         {
-            if ((ScenarioID == 2) && /* San Francisco */                (RandomRange(0, 10) < 5))
+            if ((ScenarioID == 2) && /* San Francisco */
+                (RandomRange(0, 10) < 5))
             {
                 MakeSound("city", "HonkHonk-Low -speed 80");
             }
@@ -890,7 +919,7 @@ void DoShipSprite(SimSprite* sprite)
             return;
         }
 
-        tem = Rand16() & 7;
+        tem = RandomRange(0, 7);
         for (pem = tem; pem < (tem + 8); pem++)
         {
             z = (pem & 7) + 1;
@@ -920,7 +949,7 @@ void DoShipSprite(SimSprite* sprite)
         if (pem == (tem + 8))
         {
             sprite->dir = 10;
-            sprite->new_dir = (Rand16() & 7) + 1;
+            sprite->new_dir = RandomRange(0, 7) + 1;
         }
     }
     else
