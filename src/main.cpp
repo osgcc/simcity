@@ -534,6 +534,7 @@ void handleKeyEvent(SDL_Event& event)
 
     case SDLK_0:
     case SDLK_p:
+    case SDLK_SPACE:
         Paused() ? Resume() : Pause();
         break;
 
