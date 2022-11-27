@@ -116,8 +116,8 @@ void SmoothFSMap()
                 edge += FireStMap[x][y + 1];
             }
 
-            edge = (edge >> 2) + FireStMap[x][y];
-            STem[x][y] = edge >> 1;
+            edge = (edge / 4) + FireStMap[x][y];
+            STem[x][y] = edge / 2;
         }
     }
 
@@ -380,8 +380,8 @@ void DistIntMarket()
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            z = distanceToCityCenter(x << 2, y << 2);
-            z = z << 2;
+            z = distanceToCityCenter(x * 4 , y * 4);
+            z *= 4;
             z = 64 - z;
             ComRate[x][y] = z;
         }
@@ -518,8 +518,8 @@ void SmoothPSMap()
                 edge += PoliceMap[x][y + 1];
             }
 
-            edge = (edge >> 2) + PoliceMap[x][y];
-            STem[x][y] = edge >> 1;
+            edge = (edge / 4) + PoliceMap[x][y];
+            STem[x][y] = edge / 2;
         }
     }
 
@@ -561,8 +561,8 @@ void PTLScan()
         {
             Plevel = 0;
             LVflag = 0;
-            zx = x << 1;
-            zy = y << 1;
+            zx *= 2;
+            zy *= 2;
             for (Mx = zx; Mx <= zx + 1; Mx++)
             {
                 for (My = zy; My <= zy + 1; My++)
@@ -595,8 +595,8 @@ void PTLScan()
             if (LVflag) /* LandValue Equation */
             {
                 dis = 34 - distanceToCityCenter(x, y);
-                dis = dis << 2;
-                dis += (TerrainMem[x >> 1][y >> 1]);
+                dis = dis * 4;
+                dis += (TerrainMem[x / 2][y / 2]);
                 dis -= (PollutionMem[x][y]);
 
                 if (CrimeMem[x][y] > 190)
@@ -708,7 +708,7 @@ void CrimeScan()
                     z = 300;
                 }
 
-                z -= PoliceMap[x >> 2][y >> 2];
+                z -= PoliceMap[x / 4][y / 4];
 
                 if (z > 250)
                 {
