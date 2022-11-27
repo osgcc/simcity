@@ -868,7 +868,7 @@ void initRenderer()
     MainWindow = SDL_CreateWindow("Micropolis", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_RESIZABLE);// | SDL_WINDOW_MAXIMIZED);
     if (!MainWindow)
     {
-        throw std::runtime_error("startGame(): Unable to create primary window: " + std::string(SDL_GetError()));
+        throw std::runtime_error("initRenderer(): Unable to create primary window: " + std::string(SDL_GetError()));
     }
 
     SDL_SetWindowMinimumSize(MainWindow, 800, 600);
@@ -876,7 +876,7 @@ void initRenderer()
     MainWindowRenderer = SDL_CreateRenderer(MainWindow, -1, SDL_RENDERER_ACCELERATED);
     if (!MainWindow)
     {
-        throw std::runtime_error("startGame(): Unable to create renderer: " + std::string(SDL_GetError()));
+        throw std::runtime_error("initRenderer(): Unable to create renderer: " + std::string(SDL_GetError()));
     }
 
     SDL_SetRenderDrawBlendMode(MainWindowRenderer, SDL_BLENDMODE_BLEND);
