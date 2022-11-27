@@ -104,19 +104,19 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.x_offset = 32; sprite.y_offset = -16;
         sprite.x_hot = 48; sprite.y_hot = 0;
 
-        if (x < (4 << 4))
+        if (x < 64)
         {
             sprite.frame = 3;
         }
-        else if (x >= ((SimWidth - 4) << 4))
+        else if (x >= ((SimWidth - 4) * 16))
         {
             sprite.frame = 7;
         }
-        else if (y < (4 << 4))
+        else if (y < 64)
         {
             sprite.frame = 5;
         }
-        else if (y >= ((SimHeight - 4) << 4))
+        else if (y >= ((SimHeight - 4) * 16))
         {
             sprite.frame = 1;
         }
@@ -209,6 +209,9 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.dir = 1;
         break;
 
+    default:
+        throw std::runtime_error("Undefined sprite type");
+        break;
     }
 }
 
