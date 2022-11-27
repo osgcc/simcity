@@ -14,14 +14,18 @@
 
 #include "Graph.h"
 #include "Texture.h"
+#include "WindowBase.h"
 
 
-class GraphWindow
+class GraphWindow : public WindowBase
 {
 public:
 	GraphWindow() = delete;
+	GraphWindow(const GraphWindow&) = delete;
+	const GraphWindow& operator=(const GraphWindow&) = delete;
+
 	GraphWindow(SDL_Renderer*);
-	~GraphWindow() = default;
+	~GraphWindow() override = default;
 
 	void move(const SDL_Point&);
 	void position(const SDL_Point&);
@@ -32,9 +36,8 @@ public:
 
 	const SDL_Rect& rect() const { return mArea; }
 
-	void draw();
-
-	void update();
+	void draw() override;
+	void update() override;
 
 private:
 	void fillGraphPoints(Graph::PointsList&, const GraphHistory&);

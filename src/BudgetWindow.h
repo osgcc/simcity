@@ -17,9 +17,10 @@
 #include "Point.h"
 #include "StringRender.h"
 #include "Texture.h"
+#include "WindowBase.h"
 
 
-class BudgetWindow
+class BudgetWindow : public WindowBase
 {
 public:
 	const std::string Title{ "Annual Fiscal Budget" };
@@ -47,7 +48,7 @@ public:
 	const BudgetWindow& operator=(const BudgetWindow&) = delete;
 
 	BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRenderer, Budget& budget);
-	~BudgetWindow();
+	~BudgetWindow() override;
 
 	const SDL_Rect& rect() const { return mRect; }
 
@@ -60,21 +61,21 @@ public:
 	void injectMouseClickPosition(const SDL_Point& pos);
 	void injectMouseUp();
 
-	void draw();
-
-	void update();
+	void draw() override;
+	void update() override;
 
 private:
 	void handleMouseDown(const ButtonId id);
 
 	Budget& mBudget;
 	bool mAccepted{ false };
+
 	SDL_Rect mRect{ 0, 0, 456, 422 };
 
 	SDL_Renderer* mRenderer{ nullptr };
 	const StringRender& mStringRenderer;
 
-	Font* mFont;
+	Font* mFont{ nullptr };
 
 	Texture mTexture{};
 
