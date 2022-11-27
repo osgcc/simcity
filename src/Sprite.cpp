@@ -128,6 +128,7 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.new_dir = sprite.frame;
         sprite.dir = 10;
         sprite.count = 1;
+        GetObjectXpms(SimSprite::Type::Ship, 8, sprite.frames);
         break;
 
     case SimSprite::Type::Monster:
@@ -844,43 +845,69 @@ void DoShipSprite(SimSprite* sprite)
     static int BDy[9] = { 0, -1, -1,  0,  1,  1,  1,  0, -1 };
     static int BPx[9] = { 0,  0,  2,  2,  2,  0, -2, -2, -2 };
     static int BPy[9] = { 0, -2, -2,  0,  2,  2,  2,  0, -2 };
-    static int BtClrTab[8] = { RIVER, CHANNEL, POWERBASE, POWERBASE + 1,
-                     RAILBASE, RAILBASE + 1, BRWH, BRWV };
+
+    static int BtClrTab[8] =
+    {
+        RIVER, CHANNEL, POWERBASE, POWERBASE + 1,
+        RAILBASE, RAILBASE + 1, BRWH, BRWV
+    };
+
     int x, y, z, t = RIVER;
     int tem, pem;
 
-    if (sprite->sound_count > 0) sprite->sound_count--;
-    if (!sprite->sound_count) {
-        if ((Rand16() & 3) == 1) {
-            if ((ScenarioID == 2) && /* San Francisco */
-                (RandomRange(0, 10) < 5)) {
+    if (sprite->sound_count > 0)
+    {
+        sprite->sound_count--;
+    }
+
+    if (!sprite->sound_count)
+    {
+        if ((Rand16() & 3) == 1)
+        {
+            if ((ScenarioID == 2) && /* San Francisco */                (RandomRange(0, 10) < 5))
+            {
                 MakeSound("city", "HonkHonk-Low -speed 80");
             }
-            else {
+            else
+            {
                 MakeSound("city", "HonkHonk-Low");
             }
         }
         sprite->sound_count = 200;
     }
 
-    if (sprite->count > 0) sprite->count--;
-    if (!sprite->count) {
+    if (sprite->count > 0)
+    {
+        sprite->count--;
+    }
+
+    if (!sprite->count)
+    {
         sprite->count = 9;
-        if (sprite->frame != sprite->new_dir) {
+        if (sprite->frame != sprite->new_dir)
+        {
             sprite->frame = TurnTo(sprite->frame, sprite->new_dir);
             return;
         }
+
         tem = Rand16() & 7;
-        for (pem = tem; pem < (tem + 8); pem++) {
+        for (pem = tem; pem < (tem + 8); pem++)
+        {
             z = (pem & 7) + 1;
 
-            if (z == sprite->dir) continue;
+            if (z == sprite->dir)
+            {
+                continue;
+            }
+
             x = ((sprite->x + (48 - 1)) >> 4) + BDx[z];
             y = (sprite->y >> 4) + BDy[z];
-            if (CoordinatesValid(x, y, SimWidth, SimHeight)) {
+
+            if (CoordinatesValid(x, y, SimWidth, SimHeight))
+            {
                 t = Map[x][y] & LOMASK;
-                if ((t == CHANNEL) || (t == BRWH) || (t == BRWV) ||
-                    TryOther(t, sprite->dir, z)) {
+                if ((t == CHANNEL) || (t == BRWH) || (t == BRWV) || TryOther(t, sprite->dir, z))
+                {
                     sprite->new_dir = z;
                     sprite->frame = TurnTo(sprite->frame, sprite->new_dir);
                     sprite->dir = z + 4;
@@ -889,25 +916,32 @@ void DoShipSprite(SimSprite* sprite)
                 }
             }
         }
-        if (pem == (tem + 8)) {
+
+        if (pem == (tem + 8))
+        {
             sprite->dir = 10;
             sprite->new_dir = (Rand16() & 7) + 1;
         }
     }
-    else {
+    else
+    {
         z = sprite->frame;
-        if (z == sprite->new_dir) {
+        if (z == sprite->new_dir)
+        {
             sprite->x += BPx[z];
             sprite->y += BPy[z];
         }
     }
-    if (SpriteNotInBounds(sprite)) {
+    if (SpriteNotInBounds(sprite))
+    {
         sprite->frame = 0;
         return;
     }
-    for (z = 0; z < 8; z++) {
+    for (z = 0; z < 8; z++)
+    {
         if (t == BtClrTab[z]) break;
-        if (z == 7) {
+        if (z == 7)
+        {
             ExplodeSprite(sprite);
             Destroy(sprite->x + 48, sprite->y);
         }
