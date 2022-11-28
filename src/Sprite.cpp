@@ -867,7 +867,7 @@ void DoAirplaneSprite(SimSprite* sprite)
 }
 
 
-void DoShipSprite(SimSprite* sprite)
+void DoShipSprite(SimSprite& sprite)
 {
     static const std::array<Vector<int>, 9> CheckDirection{ {{0,0}, {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}} };
     static const std::array<Vector<int>, 9> MoveVector{ {{0,0}, {0,-2}, {2,-2}, {2,0}, {2,2}, {0,2}, {-2,2}, {-2,0}, {-2,-2}} };
@@ -876,12 +876,12 @@ void DoShipSprite(SimSprite* sprite)
     int t = RIVER;
     int tem, pem;
 
-    if (sprite->sound_count > 0)
+    if (sprite.sound_count > 0)
     {
-        sprite->sound_count--;
+        sprite.sound_count--;
     }
 
-    if (!sprite->sound_count)
+    if (!sprite.sound_count)
     {
         if (RandomRange(0, 3) == 1)
         {
@@ -895,20 +895,20 @@ void DoShipSprite(SimSprite* sprite)
                 MakeSound("city", "HonkHonk-Low");
             }
         }
-        sprite->sound_count = 200;
+        sprite.sound_count = 200;
     }
 
-    if (sprite->count > 0)
+    if (sprite.count > 0)
     {
-        sprite->count--;
+        sprite.count--;
     }
 
-    if (!sprite->count)
+    if (!sprite.count)
     {
-        sprite->count = 9;
-        if (sprite->frame != sprite->new_dir)
+        sprite.count = 9;
+        if (sprite.frame != sprite.new_dir)
         {
-            sprite->frame = TurnTo(sprite->frame, sprite->new_dir);
+            sprite.frame = TurnTo(sprite.frame, sprite.new_dir);
             return;
         }
 
@@ -917,24 +917,24 @@ void DoShipSprite(SimSprite* sprite)
         {
             const int z = (pem & 7) + 1;
 
-            if (z == sprite->dir)
+            if (z == sprite.dir)
             {
                 continue;
             }
 
-            const Point<int> position{ ((sprite->x + (48 - 1)) / 16) + CheckDirection[z].x, (sprite->y / 16) + CheckDirection[z].y };
+            const Point<int> position{ ((sprite.x + (48 - 1)) / 16) + CheckDirection[z].x, (sprite.y / 16) + CheckDirection[z].y };
             if (CoordinatesValid(position.x, position.y, SimWidth, SimHeight))
             {
                 t = maskedTileValue(position.x, position.y);
-                if ((t == CHANNEL) || (t == BRWH) || (t == BRWV) || TryOther(t, sprite->dir, z))
+                if ((t == CHANNEL) || (t == BRWH) || (t == BRWV) || TryOther(t, sprite.dir, z))
                 {
-                    sprite->new_dir = z;
-                    sprite->frame = TurnTo(sprite->frame, sprite->new_dir);
-                    sprite->dir = z + 4;
+                    sprite.new_dir = z;
+                    sprite.frame = TurnTo(sprite.frame, sprite.new_dir);
+                    sprite.dir = z + 4;
 
-                    if (sprite->dir > 8)
+                    if (sprite.dir > 8)
                     {
-                        sprite->dir -= 8;
+                        sprite.dir -= 8;
                     }
 
                     break;
@@ -944,22 +944,22 @@ void DoShipSprite(SimSprite* sprite)
 
         if (pem == (tem + 8))
         {
-            sprite->dir = 10;
-            sprite->new_dir = RandomRange(0, 7) + 1;
+            sprite.dir = 10;
+            sprite.new_dir = RandomRange(0, 7) + 1;
         }
     }
     else
     {
-        if (sprite->frame == sprite->new_dir)
+        if (sprite.frame == sprite.new_dir)
         {
-            sprite->x += MoveVector[sprite->frame].x;
-            sprite->y += MoveVector[sprite->frame].y;
+            sprite.x += MoveVector[sprite.frame].x;
+            sprite.y += MoveVector[sprite.frame].y;
         }
     }
 
-    if (SpriteNotInBounds(sprite))
+    if (SpriteNotInBounds(&sprite))
     {
-        sprite->active = false;
+        sprite.active = false;
         return;
     }
 
@@ -972,8 +972,8 @@ void DoShipSprite(SimSprite* sprite)
         }
     }
 
-    ExplodeSprite(sprite);
-    Destroy(sprite->x + 48, sprite->y);
+    ExplodeSprite(&sprite);
+    Destroy(sprite.x + 48, sprite.y);
 }
 
 
@@ -1585,7 +1585,7 @@ void MoveObjects()
                 break;
 
             case SimSprite::Type::Ship:
-                DoShipSprite(&sprite);
+                DoShipSprite(sprite);
                 break;
 
             case SimSprite::Type::Monster:
