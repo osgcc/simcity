@@ -72,8 +72,7 @@ void SetTrafMem()
                     SimSprite* sprite = GetSprite(SimSprite::Type::Helicopter);
                     if (sprite)
                     {
-                        sprite->dest_x = TrafMaxX;
-                        sprite->dest_y = TrafMaxY;
+                        sprite->destination = { TrafMaxX, TrafMaxY };
                     }
                 }
                 TrfDensity[SimulationTarget.x >> 1][SimulationTarget.y >> 1] = z;

@@ -64,13 +64,11 @@ void GetObjectXpms(SimSprite::Type type, int frames, std::vector<Texture>& frame
 
 void InitSprite(SimSprite& sprite, int x, int y)
 {
-    sprite.x = x;
-    sprite.y = y;
+    sprite.position = { x, y };
+    sprite.origin = {};
+    sprite.destination = {};
+    sprite.size = {};
     sprite.frame = 0;
-    sprite.orig_x = 0;
-    sprite.orig_y = 0;
-    sprite.dest_x = 0;
-    sprite.dest_y = 0;
     sprite.count = 0;
     sprite.sound_count = 0;
     sprite.dir = 0;
@@ -87,21 +85,18 @@ void InitSprite(SimSprite& sprite, int x, int y)
     {
 
     case SimSprite::Type::Train:
-        sprite.width = 32;
-        sprite.height = 32;
-        sprite.x_offset = 32;
-        sprite.y_offset = -16;
-        sprite.x_hot = 40;
-        sprite.y_hot = -8;
+        sprite.size = { 32, 32 };
+        sprite.offset = { 32, -16 };
+        sprite.hot = { 40, -8 };
         sprite.frame = 1;
         sprite.dir = 4;
         GetObjectXpms(SimSprite::Type::Train, 5, sprite.frames);
         break;
 
     case SimSprite::Type::Ship:
-        sprite.width = sprite.height = 48;
-        sprite.x_offset = 32; sprite.y_offset = -16;
-        sprite.x_hot = 48; sprite.y_hot = 0;
+        sprite.size = { 48, 48 };
+        sprite.offset = { 32, -16 };
+        sprite.hot = { 48, 0 };
 
         if (x < 64)
         {
@@ -131,9 +126,12 @@ void InitSprite(SimSprite& sprite, int x, int y)
         break;
 
     case SimSprite::Type::Monster:
-        sprite.width = sprite.height = 48;
-        sprite.x_offset = 24; sprite.y_offset = 0;
-        sprite.x_hot = 40; sprite.y_hot = 16;
+        sprite.size = { 48, 48 };
+        sprite.offset = { 24, 0 };
+        sprite.hot = { 40, 16 };
+        sprite.destination = { pollutionMax().x * 16, pollutionMax().y * 16 };
+        sprite.origin = { x, y };
+
         if (x > ((SimWidth << 4) / 2))
         {
             if (y > ((SimHeight << 4) / 2)) sprite.frame = 10;
@@ -148,55 +146,50 @@ void InitSprite(SimSprite& sprite, int x, int y)
             sprite.frame = 4;
         }
         sprite.count = 1000;
-        sprite.dest_x = pollutionMax().x * 16;
-        sprite.dest_y = pollutionMax().y * 16;
-        sprite.orig_x = sprite.x;
-        sprite.orig_y = sprite.y;
         break;
 
     case SimSprite::Type::Helicopter:
-        sprite.width = sprite.height = 32;
-        sprite.x_offset = 32; sprite.y_offset = -16;
-        sprite.x_hot = 40; sprite.y_hot = -8;
+        sprite.size = { 32, 32 };
+        sprite.offset = { 32, -16 };
+        sprite.hot = { 40, -8 };
+        sprite.destination = { RandomRange(0, SimWidth - 1), RandomRange(0, SimHeight - 1) };
+        sprite.origin = { x - 30, y };
         sprite.frame = 5;
         sprite.count = 1500;
-        sprite.dest_x = RandomRange(0, SimWidth - 1);
-        sprite.dest_y = RandomRange(0, SimHeight - 1);
-        sprite.orig_x = x - 30;
-        sprite.orig_y = y;
         break;
 
     case SimSprite::Type::Airplane:
-        sprite.width = sprite.height = 48;
-        sprite.x_offset = 24; sprite.y_offset = 0;
-        sprite.x_hot = 48; sprite.y_hot = 16;
+        sprite.size = { 48, 48 };
+        sprite.offset = { 24, 0 };
+        sprite.hot = { 48, 16 };
+
         if (x > ((SimWidth - 20) << 4))
         {
-            sprite.x -= 100 + 48;
-            sprite.dest_x = sprite.x - 200;
+            sprite.position.x -= 100 + 48;
+            sprite.destination.x = sprite.position.x - 200;
             sprite.frame = 7;
         }
         else
         {
-            sprite.dest_x = sprite.x + 200;
+            sprite.destination.x = sprite.position.x + 200;
             sprite.frame = 11;
         }
-        sprite.dest_y = sprite.y;
+        sprite.destination.y = sprite.position.y;
         break;
 
     case SimSprite::Type::Tornado:
-        sprite.width = sprite.height = 48;
-        sprite.x_offset = 24; sprite.y_offset = 0;
-        sprite.x_hot = 40; sprite.y_hot = 36;
+        sprite.size = { 48, 48 };
+        sprite.offset = { 24, 0 };
+        sprite.hot = { 40, 36 };
         sprite.frame = 0;
         sprite.count = 200;
         GetObjectXpms(SimSprite::Type::Tornado, 3, sprite.frames);
         break;
 
     case SimSprite::Type::Explosion:
-        sprite.width = sprite.height = 48;
-        sprite.x_offset = 24; sprite.y_offset = 0;
-        sprite.x_hot = 40; sprite.y_hot = 16;
+        sprite.size = { 48, 48 };
+        sprite.offset = { 24, 0 };
+        sprite.hot = { 40, 16 };
         sprite.frame = 0;
         GetObjectXpms(SimSprite::Type::Explosion, 6, sprite.frames);
         break;
@@ -251,8 +244,7 @@ void MakeSprite(SimSprite::Type type, int x, int y)
         if (sprite.type == type)
         {
             sprite.active = true;
-            sprite.x = x;
-            sprite.y = y;
+            sprite.position = { x, y };
             return;
         }
     }
@@ -274,8 +266,8 @@ void DrawSprite(SimSprite& sprite)
 
     const SDL_Rect dstRect
     {
-        sprite.x - viewOffset().x + sprite.x_offset,
-        sprite.y - viewOffset().y + sprite.y_offset,
+        sprite.position.x - viewOffset().x + sprite.offset.x,
+        sprite.position.y - viewOffset().y + sprite.offset.y,
         spriteFrame.dimensions.x,
         spriteFrame.dimensions.y
     };
@@ -373,8 +365,8 @@ bool TryOther(int Tpoo, int Told, int Tnew)
 
 int SpriteNotInBounds(SimSprite *sprite)
 {
-  int x = sprite->x + sprite->x_hot;
-  int y = sprite->y + sprite->y_hot;
+  int x = sprite->position.x + sprite->hot.x;
+  int y = sprite->position.y + sprite->hot.y;
 
   if ((x < 0) || (y < 0) ||
       (x >= (SimWidth <<4)) ||
@@ -471,7 +463,7 @@ int CanDriveOn(int x, int y)
 bool CheckSpriteCollision(SimSprite* s1, SimSprite* s2)
 {
     return ((s1->active) && (s2->active) &&
-        GetDis(s1->x + s1->x_hot, s1->y + s1->y_hot, s2->x + s2->x_hot, s2->y + s2->y_hot) < 30);
+        GetDis(s1->position.x + s1->hot.x, s1->position.y + s1->hot.y, s2->position.x + s2->hot.x, s2->position.y + s2->hot.y) < 30);
 }
 
 
@@ -601,8 +593,8 @@ void ExplodeSprite(SimSprite* sprite)
 
     sprite->frame = 0;
 
-    x = sprite->x + sprite->x_hot;
-    y = sprite->y + sprite->y_hot;
+    x = sprite->position.x + sprite->hot.x;
+    y = sprite->position.y + sprite->hot.y;
     MakeExplosionAt(x, y);
 
     x = (x >> 4);
@@ -654,8 +646,7 @@ void DoTrainSprite(SimSprite& sprite)
         sprite.frame = TrainPic2[sprite.dir];
     }
 
-    sprite.x += Dx[sprite.dir];
-    sprite.y += Dy[sprite.dir];
+    sprite.position = { Dx[sprite.dir], Dy[sprite.dir] };
 
     int dir = RandomRange(0, 4);
     for (int z = dir; z < (dir + 4); z++)
@@ -670,7 +661,7 @@ void DoTrainSprite(SimSprite& sprite)
             }
         }
 
-        int c = GetChar(sprite.x + Cx[dir2] + 48, sprite.y + Cy[dir2]);
+        int c = GetChar(sprite.position.x + Cx[dir2] + 48, sprite.position.y + Cy[dir2]);
 
         if (((c >= RAILBASE) && (c <= LASTRAIL)) || /* track? */
             (c == RAILVPOWERH) ||
@@ -808,7 +799,7 @@ void DoAirplaneSprite(SimSprite* sprite)
         }
         else /* goto destination */
         {
-            d = GetDir(sprite->x, sprite->y, sprite->dest_x, sprite->dest_y);
+            d = GetDir(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
             z = TurnTo(z, d);
             sprite->frame = z;
         }
@@ -816,8 +807,7 @@ void DoAirplaneSprite(SimSprite* sprite)
 
     if (absDist < 50) /* at destination  */
     {
-        sprite->dest_x = RandomRange(0, SimWidth) - 50;
-        sprite->dest_y = RandomRange(0, SimHeight) - 50;
+        sprite->destination = { RandomRange(0, SimWidth) - 50, RandomRange(0, SimHeight) - 50 };
     }
 
     /* deh added test for !Disasters */
@@ -842,8 +832,7 @@ void DoAirplaneSprite(SimSprite* sprite)
         }
     }
 
-    sprite->x += CDx[z];
-    sprite->y += CDy[z];
+    sprite->position += Vector<int>{ CDx[z], CDy[z] };
 
     if (SpriteNotInBounds(sprite))
     {
@@ -907,7 +896,12 @@ void DoShipSprite(SimSprite& sprite)
                 continue;
             }
 
-            const Point<int> position{ ((sprite.x + (48 - 1)) / 16) + CheckDirection[z].x, (sprite.y / 16) + CheckDirection[z].y };
+            const Point<int> position
+            {
+                ((sprite.position.x + (sprite.hot.x - 1)) / 16) + CheckDirection[z].x, 
+                ((sprite.position.y + sprite.hot.y) / 16) + CheckDirection[z].y
+            };
+            
             if (CoordinatesValid(position.x, position.y, SimWidth, SimHeight))
             {
                 t = maskedTileValue(position.x, position.y);
@@ -937,8 +931,7 @@ void DoShipSprite(SimSprite& sprite)
     {
         if (sprite.frame == sprite.new_dir)
         {
-            sprite.x += MoveVector[sprite.frame].x;
-            sprite.y += MoveVector[sprite.frame].y;
+            sprite.position += MoveVector[sprite.frame];
         }
     }
 
@@ -958,7 +951,7 @@ void DoShipSprite(SimSprite& sprite)
     }
 
     ExplodeSprite(&sprite);
-    Destroy(sprite.x + 48, sprite.y);
+    Destroy(sprite.position.x + 48, sprite.position.y);
 }
 
 
@@ -996,15 +989,14 @@ void DoMonsterSprite(SimSprite* sprite)
                 z--;
             }
 
-            c = GetDir(sprite->x, sprite->y, sprite->dest_x, sprite->dest_y);
+            c = GetDir(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
 
             if (absDist < 18)
             {
                 sprite->control = -1;
                 sprite->count = 1000;
                 sprite->flag = 1;
-                sprite->dest_x = sprite->orig_x;
-                sprite->dest_y = sprite->orig_y;
+                sprite->destination = sprite->origin;
             }
             else
             {
@@ -1066,14 +1058,13 @@ void DoMonsterSprite(SimSprite* sprite)
                     z--;
                 }
 
-                GetDir(sprite->x, sprite->y, sprite->dest_x, sprite->dest_y);
+                GetDir(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
                 if (absDist < 60)
                 {
                     if (sprite->flag == 0)
                     {
                         sprite->flag = 1;
-                        sprite->dest_x = sprite->orig_x;
-                        sprite->dest_y = sprite->orig_y;
+                        sprite->destination = sprite->origin;
                     }
                     else
                     {
@@ -1082,7 +1073,7 @@ void DoMonsterSprite(SimSprite* sprite)
                     }
                 }
 
-                c = GetDir(sprite->x, sprite->y, sprite->dest_x, sprite->dest_y);
+                c = GetDir(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
                 c = (c - 1) / 2;
 
                 if ((c != d) && (!RandomRange(0, 10)))
@@ -1160,14 +1151,13 @@ void DoMonsterSprite(SimSprite* sprite)
     }
 
     sprite->frame = z;
-    sprite->x += Gx[d];
-    sprite->y += Gy[d];
+    sprite->position += Vector<int>{ Gx[d], Gy[d] };
 
     if (sprite->count > 0)
     {
         sprite->count--;
     }
-    c = GetChar(sprite->x + sprite->x_hot, sprite->y + sprite->y_hot);
+    c = GetChar(sprite->position.x + sprite->hot.x, sprite->position.y + sprite->hot.y);
     if ((c == -1) ||
         ((c == RIVER) &&
             (sprite->count != 0) &&
@@ -1192,7 +1182,7 @@ void DoMonsterSprite(SimSprite* sprite)
     }
     */
 
-    Destroy(sprite->x + 48, sprite->y + 16);
+    Destroy(sprite->position.x + 48, sprite->position.y + 16);
 }
 
 
@@ -1230,8 +1220,8 @@ void DoTornadoSprite(SimSprite& sprite)
     */
 
     const int newDirection = RandomRange(0, 5);
-    sprite.x += CDx[newDirection];
-    sprite.y += CDy[newDirection];
+    sprite.position += Vector<int>{ CDx[newDirection], CDy[newDirection] };
+
     if (SpriteNotInBounds(&sprite))
     {
         sprite.active = false;
@@ -1242,7 +1232,7 @@ void DoTornadoSprite(SimSprite& sprite)
         sprite.active = false;
     }
 
-    Destroy(sprite.x + 48, sprite.y + 40);
+    Destroy(sprite.position.x + 48, sprite.position.y + 40);
 }
 
 
@@ -1252,8 +1242,8 @@ void DoExplosionSprite(SimSprite& sprite)
     {
         MakeSound("city", "Explosion-High"); // explosion
             
-        int x = (sprite.x / 16) + 3;
-        int y = (sprite.y / 16);
+        int x = (sprite.position.x / 16) + 3;
+        int y = (sprite.position.y / 16);
             
         SendMesAt(NotificationId::ExplosionReported, x, y);
     }
@@ -1265,11 +1255,11 @@ void DoExplosionSprite(SimSprite& sprite)
         sprite.frame = 0;
         sprite.active = false;
 
-        StartFire(sprite.x + 48 - 8, sprite.y + 16);
-        StartFire(sprite.x + 48 - 24, sprite.y);
-        StartFire(sprite.x + 48 + 8, sprite.y);
-        StartFire(sprite.x + 48 - 24, sprite.y + 32);
-        StartFire(sprite.x + 48 + 8, sprite.y + 32);
+        StartFire(sprite.position.x + 48 - 8, sprite.position.y + 16);
+        StartFire(sprite.position.x + 48 - 24, sprite.position.y);
+        StartFire(sprite.position.x + 48 + 8, sprite.position.y);
+        StartFire(sprite.position.x + 48 - 24, sprite.position.y + 32);
+        StartFire(sprite.position.x + 48 + 8, sprite.position.y + 32);
         return;
     }
 }

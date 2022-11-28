@@ -10,7 +10,9 @@
 // file, included in this distribution, for details.
 #pragma once
 
+#include "Point.h"
 #include "Texture.h"
+#include "Vector.h"
 
 #include <string>
 #include <vector>
@@ -32,15 +34,22 @@ struct SimSprite
 
 	Type type{ 0 };
 	int frame{ 0 };
-	int x{ 0 }, y{ 0 };
-	int width{ 0 }, height{ 0 };
-	int x_offset{ 0 }, y_offset{ 0 };
-	int x_hot{ 0 }, y_hot{ 0 };
-	int orig_x{ 0 }, orig_y{ 0 };
-	int dest_x{ 0 }, dest_y{ 0 };
-	int count{ 0 }, sound_count{ 0 };
-	int dir{ 0 }, new_dir{ 0 };
-	int step{ 0 }, flag{ 0 }, control{ 0 };
+	
+	Point<int> position{};
+	Point<int> origin{};
+	Point<int> offset{};
+	Point<int> hot{};
+	Point<int> destination{};
+
+	Vector<int> size{};
+	
+	int count{ 0 };
+	int sound_count{ 0 };
+	int dir{ 0 };
+	int new_dir{ 0 };
+	int step{ 0 };
+	int flag{ 0 };
+	int control{ 0 };
 	int turn{ 0 };
 	int accel{ 0 };
 	int speed{ 0 };
