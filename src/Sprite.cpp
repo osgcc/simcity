@@ -48,8 +48,6 @@ namespace
         { SimSprite::Type::Explosion, "7" },
         { SimSprite::Type::Bus, "8" }
     };
-
-    const std::array<int, 8> DirectionToFrameTable{ 0, 1, 2, 3, 4, 5, 6, 7 };
 };
 
 
@@ -108,29 +106,29 @@ void InitSprite(SimSprite& sprite, int x, int y)
 
         if (x < 64)
         {
-            sprite.frame = 3;
+            sprite.frame = 2;
         }
         else if (x >= ((SimWidth - 4) * 16))
         {
-            sprite.frame = 7;
+            sprite.frame = 6;
         }
         else if (y < 64)
         {
-            sprite.frame = 5;
+            sprite.frame = 4;
         }
         else if (y >= ((SimHeight - 4) * 16))
         {
-            sprite.frame = 1;
+            sprite.frame = 0;
         }
         else
         {
-            sprite.frame = 3;
+            sprite.frame = 2;
         }
 
         sprite.new_dir = sprite.frame;
-        sprite.dir = 10;
+        sprite.dir = 0;
         sprite.count = 1;
-        GetObjectXpms(SimSprite::Type::Ship, 8, sprite.frames);
+        GetObjectXpms(SimSprite::Type::Ship, 9, sprite.frames);
         break;
 
     case SimSprite::Type::Monster:
@@ -370,7 +368,7 @@ bool TryOther(int Tpoo, int Told, int Tnew)
 
     if (Tnew != z)
     {
-        return(0);
+        return false;
     }
 
     if ((Tpoo == POWERBASE) || (Tpoo == POWERBASE + 1) || (Tpoo == RAILBASE) || (Tpoo == RAILBASE + 1))
@@ -481,7 +479,7 @@ int CanDriveOn(int x, int y)
 
 bool CheckSpriteCollision(SimSprite* s1, SimSprite* s2)
 {
-    return ((s1->frame != 0) && (s2->frame != 0) &&
+    return ((s1->active) && (s2->active) &&
         GetDis(s1->x + s1->x_hot, s1->y + s1->y_hot, s2->x + s2->x_hot, s2->y + s2->y_hot) < 30);
 }
 
@@ -871,16 +869,11 @@ void DoAirplaneSprite(SimSprite* sprite)
 
 void DoShipSprite(SimSprite* sprite)
 {
-    static const std::array<Point<int>, 9> BD{ {{0,0}, {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}} };
-    static const std::array<Point<int>, 9> BP{ {{0,0}, {0,-2}, {2,-2}, {2,0}, {2,2}, {0,2}, {-2,2}, {-2,0}, {-2,-2}} };
+    static const std::array<Vector<int>, 9> CheckDirection{ {{0,0}, {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}} };
+    static const std::array<Vector<int>, 9> MoveVector{ {{0,0}, {0,-2}, {2,-2}, {2,0}, {2,2}, {0,2}, {-2,2}, {-2,0}, {-2,-2}} };
+    static const std::array<int, 8> BtClrTab{ RIVER, CHANNEL, POWERBASE, POWERBASE + 1, RAILBASE, RAILBASE + 1, BRWH, BRWV };
 
-    static int BtClrTab[8] =
-    {
-        RIVER, CHANNEL, POWERBASE, POWERBASE + 1,
-        RAILBASE, RAILBASE + 1, BRWH, BRWV
-    };
-
-    int x, y, z, t = RIVER;
+    int t = RIVER;
     int tem, pem;
 
     if (sprite->sound_count > 0)
@@ -922,19 +915,17 @@ void DoShipSprite(SimSprite* sprite)
         tem = RandomRange(0, 7);
         for (pem = tem; pem < (tem + 8); pem++)
         {
-            z = (pem & 7) + 1;
+            const int z = (pem & 7) + 1;
 
             if (z == sprite->dir)
             {
                 continue;
             }
 
-            x = ((sprite->x + (48 - 1)) >> 4) + BD[z].x;
-            y = (sprite->y >> 4) + BD[z].y;
-
-            if (CoordinatesValid(x, y, SimWidth, SimHeight))
+            const Point<int> position{ ((sprite->x + (48 - 1)) / 16) + CheckDirection[z].x, (sprite->y / 16) + CheckDirection[z].y };
+            if (CoordinatesValid(position.x, position.y, SimWidth, SimHeight))
             {
-                t = Map[x][y] & LOMASK;
+                t = maskedTileValue(position.x, position.y);
                 if ((t == CHANNEL) || (t == BRWH) || (t == BRWV) || TryOther(t, sprite->dir, z))
                 {
                     sprite->new_dir = z;
@@ -959,33 +950,30 @@ void DoShipSprite(SimSprite* sprite)
     }
     else
     {
-        z = sprite->frame;
-        if (z == sprite->new_dir)
+        if (sprite->frame == sprite->new_dir)
         {
-            sprite->x += BP[z].x;
-            sprite->y += BP[z].y;
+            sprite->x += MoveVector[sprite->frame].x;
+            sprite->y += MoveVector[sprite->frame].y;
         }
     }
 
     if (SpriteNotInBounds(sprite))
     {
-        sprite->frame = 0;
+        sprite->active = false;
         return;
     }
 
-    for (z = 0; z < 8; z++)
-    {
-        if (t == BtClrTab[z])
-        {
-            break;
-        }
 
-        if (z == 7)
+    for (const auto tileValue : BtClrTab)
+    {
+        if (t == tileValue)
         {
-            ExplodeSprite(sprite);
-            Destroy(sprite->x + 48, sprite->y);
+            return;
         }
     }
+
+    ExplodeSprite(sprite);
+    Destroy(sprite->x + 48, sprite->y);
 }
 
 
@@ -1646,7 +1634,7 @@ void GenerateBus(int x, int y)
 
 void MakeShipHere(int x, int y, int z)
 {
-    MakeSprite(SimSprite::Type::Ship, (x << 4) - (48 - 1), (y << 4));
+    MakeSprite(SimSprite::Type::Ship, (x * 16) - (48 - 1), (y * 16));
 }
 
 
