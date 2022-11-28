@@ -25,8 +25,7 @@ struct SimSprite
 		Ship,
 		Monster,
 		Tornado,
-		Explosion,
-		Bus
+		Explosion
 	};
 
 	std::string name{};

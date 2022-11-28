@@ -633,12 +633,6 @@ void ExplodeSprite(SimSprite* sprite)
         CrashY = y;
         SendMesAt(NotificationId::HelicopterCrashed, x, y);
         break;
-
-    case SimSprite::Type::Bus:
-        CrashX = x;
-        CrashY = y;
-        SendMesAt(NotificationId::TrainCrashed, x, y); /* XXX for now */
-        break;
     }
 
     MakeSound("city", "Explosion-High"); /* explosion */
@@ -1339,17 +1333,6 @@ void GenerateTrain(int x, int y)
     {
         MakeSprite(SimSprite::Type::Train, x * 16 + TRA_GROOVE_X, y * 16 + TRA_GROOVE_Y);
     }
-}
-
-
-void GenerateBus(int x, int y)
-{
-    /*
-    if ((GetSprite(BUS) == NULL) && (!RandomRange(0, 25)))
-    {
-        MakeSprite(BUS, (x << 4) + BUS_GROOVE_X, (y << 4) + BUS_GROOVE_Y);
-    }
-    */
 }
 
 

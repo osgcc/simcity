@@ -334,7 +334,6 @@ void DoRoad()
     };
 
     RoadTotal++;
-    // GenerateBus(SMapX, SMapY);
 
     if (RoadEffect < 30) // Deteriorating Roads
     {
