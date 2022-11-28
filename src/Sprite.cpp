@@ -48,6 +48,8 @@ namespace
         { SimSprite::Type::Explosion, "7" },
         { SimSprite::Type::Bus, "8" }
     };
+
+    const std::array<int, 8> DirectionToFrameTable{ 0, 1, 2, 3, 4, 5, 6, 7 };
 };
 
 
@@ -869,10 +871,8 @@ void DoAirplaneSprite(SimSprite* sprite)
 
 void DoShipSprite(SimSprite* sprite)
 {
-    static int BDx[9] = { 0,  0,  1,  1,  1,  0, -1, -1, -1 };
-    static int BDy[9] = { 0, -1, -1,  0,  1,  1,  1,  0, -1 };
-    static int BPx[9] = { 0,  0,  2,  2,  2,  0, -2, -2, -2 };
-    static int BPy[9] = { 0, -2, -2,  0,  2,  2,  2,  0, -2 };
+    static const std::array<Point<int>, 9> BD{ {{0,0}, {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}} };
+    static const std::array<Point<int>, 9> BP{ {{0,0}, {0,-2}, {2,-2}, {2,0}, {2,2}, {0,2}, {-2,2}, {-2,0}, {-2,-2}} };
 
     static int BtClrTab[8] =
     {
@@ -929,8 +929,8 @@ void DoShipSprite(SimSprite* sprite)
                 continue;
             }
 
-            x = ((sprite->x + (48 - 1)) >> 4) + BDx[z];
-            y = (sprite->y >> 4) + BDy[z];
+            x = ((sprite->x + (48 - 1)) >> 4) + BD[z].x;
+            y = (sprite->y >> 4) + BD[z].y;
 
             if (CoordinatesValid(x, y, SimWidth, SimHeight))
             {
@@ -940,7 +940,12 @@ void DoShipSprite(SimSprite* sprite)
                     sprite->new_dir = z;
                     sprite->frame = TurnTo(sprite->frame, sprite->new_dir);
                     sprite->dir = z + 4;
-                    if (sprite->dir > 8) sprite->dir -= 8;
+
+                    if (sprite->dir > 8)
+                    {
+                        sprite->dir -= 8;
+                    }
+
                     break;
                 }
             }
@@ -957,18 +962,24 @@ void DoShipSprite(SimSprite* sprite)
         z = sprite->frame;
         if (z == sprite->new_dir)
         {
-            sprite->x += BPx[z];
-            sprite->y += BPy[z];
+            sprite->x += BP[z].x;
+            sprite->y += BP[z].y;
         }
     }
+
     if (SpriteNotInBounds(sprite))
     {
         sprite->frame = 0;
         return;
     }
+
     for (z = 0; z < 8; z++)
     {
-        if (t == BtClrTab[z]) break;
+        if (t == BtClrTab[z])
+        {
+            break;
+        }
+
         if (z == 7)
         {
             ExplodeSprite(sprite);
