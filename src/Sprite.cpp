@@ -223,10 +223,9 @@ void DestroySprite(SimSprite& sprite)
 
 SimSprite* GetSprite(SimSprite::Type type)
 {
-    for (size_t i = 0; i < Sprites.size(); ++i)
+    for (auto& sprite : Sprites)
     {
-        auto& sprite = Sprites[i];
-        if (sprite.type == type)
+        if(sprite.type == type)
         {
             return &sprite;
         }
