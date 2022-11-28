@@ -207,20 +207,6 @@ void DestroyAllSprites()
 }
 
 
-void DestroySprite(SimSprite& sprite)
-{
-    for (size_t i = 0; i < Sprites.size(); ++i)
-    {
-        auto& existing = Sprites[i];
-        if (existing.type == sprite.type)
-        {
-            Sprites.erase(Sprites.begin() + i);
-            return;
-        }
-    }
-}
-
-
 SimSprite* GetSprite(SimSprite::Type type)
 {
     for (auto& sprite : Sprites)
