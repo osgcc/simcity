@@ -597,8 +597,9 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
         {
             RepairZone(PORT, 4);
         }
-        if (PwrOn &&
-            (GetSprite(SimSprite::Type::Ship) == NULL))
+
+        SimSprite* shipSprite = GetSprite(SimSprite::Type::Ship);
+        if (PwrOn && shipSprite == nullptr || shipSprite != nullptr && !shipSprite->active)
         {
             GenerateShip();
         }
