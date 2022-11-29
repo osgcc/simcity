@@ -1432,6 +1432,16 @@ void GeneratePlane(const Point<int>& position)
         return;
     }
 
+    // set a new destination if we're generating a new airplane
+    if (sprite != nullptr)
+    {
+        sprite->destination =
+        {
+            RandomRange(0, (SimWidth * 16) + 100) - 50,
+            RandomRange(0, (SimHeight * 16) + 100) - 50
+        };
+    }
+
     MakeSprite(SimSprite::Type::Airplane, position.skewBy({ 16, 16 }) + Vector<int>{ 48, 12 });
 }
 
