@@ -27,7 +27,6 @@
 #include <SDL2/SDL.h>
 
 
-int CrashX, CrashY;
 int absDist;
 int Cycle;
 
@@ -47,7 +46,21 @@ namespace
         { SimSprite::Type::Tornado, "6" },
         { SimSprite::Type::Explosion, "7" }
     };
+
+    Point<int> CrashPosition{};
 };
+
+
+Point<int>& crashPosition()
+{
+    return CrashPosition;
+}
+
+
+void crashPosition(const Point<int>& position)
+{
+    CrashPosition = position;
+}
 
 
 void GetObjectXpms(SimSprite::Type type, int frames, std::vector<Texture>& frameList)
@@ -581,26 +594,22 @@ void ExplodeSprite(SimSprite* sprite)
     switch (sprite->type)
     {
     case SimSprite::Type::Airplane:
-        CrashX = location.x;
-        CrashY = location.y;
+        CrashPosition = location;
         SendMesAt(NotificationId::PlaneCrashed, location.x, location.y);
         break;
 
     case SimSprite::Type::Ship:
-        CrashX = location.x;
-        CrashY = location.y;
+        CrashPosition = location;
         SendMesAt(NotificationId::ShipWrecked, location.x, location.y);
         break;
 
     case SimSprite::Type::Train:
-        CrashX = location.x;
-        CrashY = location.y;
+        CrashPosition = location;
         SendMesAt(NotificationId::TrainCrashed, location.x, location.y);
         break;
 
     case SimSprite::Type::Helicopter:
-        CrashX = location.x;
-        CrashY = location.y;
+        CrashPosition = location;
         SendMesAt(NotificationId::HelicopterCrashed, location.x, location.y);
         break;
     }

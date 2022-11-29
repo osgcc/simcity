@@ -8,8 +8,6 @@
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
 // file, included in this distribution, for details.
-#include "main.h"
-
 #include "CityProperties.h"
 #include "Map.h"
 
@@ -96,11 +94,10 @@ void MakeMeltdown()
 
 void FireBomb()
 {
-    CrashX = RandomRange(0, SimWidth - 1);
-    CrashY = RandomRange(0, SimHeight - 1);
-    MakeExplosion({ CrashX, CrashY });
+    crashPosition({ RandomRange(0, SimWidth - 1), RandomRange(0, SimHeight - 1) });
+    MakeExplosion(crashPosition());
     ClearMes();
-    SendMesAt(NotificationId::FirebombingReported, CrashX, CrashY);
+    SendMesAt(NotificationId::FirebombingReported, crashPosition().x, crashPosition().y);
 }
 
 

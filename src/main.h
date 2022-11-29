@@ -81,7 +81,6 @@ extern int unPwrdZCnt;
 
 extern int ScoreType;
 extern int ScoreWait;
-extern int CrashX, CrashY;
 
 extern int InitSimLoad;
 extern int DoInitialEval;
