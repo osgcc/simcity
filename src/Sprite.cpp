@@ -223,9 +223,8 @@ SimSprite* GetSprite(SimSprite::Type type)
 
 void MakeSprite(SimSprite::Type type, int x, int y)
 {
-    for (size_t i = 0; i < Sprites.size(); ++i)
+    for (auto& sprite : Sprites)
     {
-        auto& sprite = Sprites[i];
         if (sprite.type == type)
         {
             sprite.active = true;
@@ -263,9 +262,9 @@ void DrawSprite(SimSprite& sprite)
 
 void DrawObjects()
 {
-    for (size_t i = 0; i < Sprites.size(); ++i)
+    for (auto& sprite : Sprites)
     {
-        DrawSprite(Sprites[i]);
+        DrawSprite(sprite);
     }
 }
 
@@ -576,7 +575,7 @@ void ExplodeSprite(SimSprite* sprite)
 {
     int x, y;
 
-    sprite->frame = 0;
+    sprite->active = false;
 
     x = sprite->position.x + sprite->hot.x;
     y = sprite->position.y + sprite->hot.y;
@@ -1259,9 +1258,8 @@ void MoveObjects()
 
     Cycle++;
 
-    for (size_t i = 0; i < Sprites.size(); ++i)
+    for (auto& sprite : Sprites)
     {
-        auto& sprite = Sprites[i];
         if (sprite.active)
         {
             switch (sprite.type)
