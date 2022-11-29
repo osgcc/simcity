@@ -616,10 +616,9 @@ void ExplodeSprite(SimSprite* sprite)
 
 void DoTrainSprite(SimSprite& sprite)
 {
-    static int Cx[4] = { 0,  16,   0, -16 };
-    static int Cy[4] = { -16,   0,  16,   0 };
-    static int Dx[5] = { 0,   4,   0,  -4,   0 };
-    static int Dy[5] = { -4,   0,   4,   0,   0 };
+    static const std::array<Vector<int>, 4> CheckVector{{ {0, -16}, {16, 0}, {0, 16}, {-16, 0} }};
+    static const std::array<Vector<int>, 5> DirectionVector{{ {0, -4}, {4, 0}, {0, 4}, {-4, 0}, {0, 0} }};
+
 
     static int TrainPic2[5] = { 0, 1, 0, 1, 4 };
 
@@ -628,30 +627,30 @@ void DoTrainSprite(SimSprite& sprite)
         sprite.frame = TrainPic2[sprite.dir];
     }
 
-    sprite.position += { Dx[sprite.dir], Dy[sprite.dir] };
+    sprite.position += DirectionVector[sprite.dir];
 
     int dir = RandomRange(0, 4);
     for (int z = dir; z < (dir + 4); z++)
     {
-        int dir2 = z % 4;
+        int checkDirection = z % 4;
 
         if (sprite.dir != 4)
         {
-            if (dir2 == ((sprite.dir + 2) % 4))
+            if (checkDirection == ((sprite.dir + 2) % 4))
             {
                 continue;
             }
         }
 
-        int c = GetChar(sprite.position.x + Cx[dir2] + 48, sprite.position.y + Cy[dir2]);
+        int c = GetChar(sprite.position.x + CheckVector[checkDirection].x + 48, sprite.position.y + CheckVector[checkDirection].y);
 
         if (((c >= RAILBASE) && (c <= LASTRAIL)) || /* track? */
             (c == RAILVPOWERH) ||
             (c == RAILHPOWERV))
         {
-            if ((sprite.dir != dir2) && (sprite.dir != 4))
+            if ((sprite.dir != checkDirection) && (sprite.dir != 4))
             {
-                if ((sprite.dir + dir2) == 3)
+                if ((sprite.dir + checkDirection) == 3)
                 {
                     sprite.frame = 2;
                 }
@@ -662,7 +661,7 @@ void DoTrainSprite(SimSprite& sprite)
             }
             else
             {
-                sprite.frame = TrainPic2[dir2];
+                sprite.frame = TrainPic2[checkDirection];
             }
 
             if ((c == RAILBASE) || (c == (RAILBASE + 1)))
@@ -670,7 +669,7 @@ void DoTrainSprite(SimSprite& sprite)
                 sprite.frame = 4;
             }
 
-            sprite.dir = dir2;
+            sprite.dir = checkDirection;
             return;
         }
     }
