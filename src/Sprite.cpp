@@ -1301,12 +1301,12 @@ void MoveObjects()
 
 void GenerateTrain(const Point<int>& position)
 {
-    constexpr auto TRA_GROOVE_X = -39;
-    constexpr auto TRA_GROOVE_Y = 6;
+    // What exactly does 'train groove' mean?
+    constexpr Vector<int> TrainGroove{-39, 6};
 
     if (TotalPop > 20 && GetSprite(SimSprite::Type::Train) == nullptr && RandomRange(0, 25) == 0)
     {
-        MakeSprite(SimSprite::Type::Train, position.skewBy({ 16, 16 }) + Vector<int>{ TRA_GROOVE_X, TRA_GROOVE_Y });
+        MakeSprite(SimSprite::Type::Train, position.skewBy({ 16, 16 }) + TrainGroove);
     }
 }
 
