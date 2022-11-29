@@ -571,41 +571,37 @@ void Destroy(const Point<int>& location)
 
 void ExplodeSprite(SimSprite* sprite)
 {
-    int x, y;
-
     sprite->active = false;
+    Point<int> location{ sprite->position.x + sprite->hot.x, sprite->position.y + sprite->hot.y };
+    
+    MakeExplosionAt(location);
 
-    x = sprite->position.x + sprite->hot.x;
-    y = sprite->position.y + sprite->hot.y;
-    MakeExplosionAt({ x, y });
-
-    x = (x >> 4);
-    y = (y >> 4);
+    location = location.skewInverseBy({ 16, 16 });
 
     switch (sprite->type)
     {
     case SimSprite::Type::Airplane:
-        CrashX = x;
-        CrashY = y;
-        SendMesAt(NotificationId::PlaneCrashed, x, y);
+        CrashX = location.x;
+        CrashY = location.y;
+        SendMesAt(NotificationId::PlaneCrashed, location.x, location.y);
         break;
 
     case SimSprite::Type::Ship:
-        CrashX = x;
-        CrashY = y;
-        SendMesAt(NotificationId::ShipWrecked, x, y);
+        CrashX = location.x;
+        CrashY = location.y;
+        SendMesAt(NotificationId::ShipWrecked, location.x, location.y);
         break;
 
     case SimSprite::Type::Train:
-        CrashX = x;
-        CrashY = y;
-        SendMesAt(NotificationId::TrainCrashed, x, y);
+        CrashX = location.x;
+        CrashY = location.y;
+        SendMesAt(NotificationId::TrainCrashed, location.x, location.y);
         break;
 
     case SimSprite::Type::Helicopter:
-        CrashX = x;
-        CrashY = y;
-        SendMesAt(NotificationId::HelicopterCrashed, x, y);
+        CrashX = location.x;
+        CrashY = location.y;
+        SendMesAt(NotificationId::HelicopterCrashed, location.x, location.y);
         break;
     }
 
