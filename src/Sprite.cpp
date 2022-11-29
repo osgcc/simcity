@@ -169,6 +169,7 @@ void InitSprite(SimSprite& sprite, const Point<int>& position)
         sprite.origin = position + Vector<int>{ -30, 0 };
         sprite.frame = 5;
         sprite.count = 1500;
+        GetObjectXpms(SimSprite::Type::Helicopter, 9, sprite.frames);
         break;
 
     case SimSprite::Type::Airplane:
@@ -1413,14 +1414,13 @@ void MakeMonster()
 
 void GenerateCopter(const Point<int>& position)
 {
-    /*
-    if (GetSprite(COP) != nullptr)
+    SimSprite* sprite{ GetSprite(SimSprite::Type::Helicopter) };
+    if (sprite != nullptr && sprite->active)
     {
         return;
     }
 
-    MakeSprite(COP, (x << 4), (y << 4) + 30);
-    */
+    MakeSprite(SimSprite::Type::Helicopter, position.skewBy({ 16, 16 }) + Vector<int>{ 0, 30 });
 }
 
 
