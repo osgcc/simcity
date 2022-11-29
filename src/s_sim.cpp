@@ -170,7 +170,7 @@ void DoMeltdown(const int x, const int y)
 void DoRail(const Point<int>& position)
 {
     RailTotal++;
-    GenerateTrain(position.x, position.y);
+    GenerateTrain(position);
    
     if (RoadEffect < 30) // Deteriorating  Rail
     {

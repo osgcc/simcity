@@ -70,7 +70,7 @@ void DestroyAllSprites();
 void GenerateCopter(int x, int y);
 void GeneratePlane(int x, int y);
 void GenerateShip();
-void GenerateTrain(int x, int y);
+void GenerateTrain(const Point<int>& position);
 
 void MakeExplosionAt(int x, int y);
 void MakeExplosion(int x, int y);

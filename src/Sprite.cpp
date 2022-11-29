@@ -500,72 +500,70 @@ void OFireZone(int Xloc, int Yloc, int ch)
 }
 
 
-void StartFire(int x, int y)
+void StartFire(const Point<int>& location)
 {
-    // egad, modifying parameters
-    x >>= 4;
-    y >>= 4;
-    if ((x >= SimWidth) || (y >= SimHeight) || (x < 0) || (y < 0))
+    const Point<int> mapCoords = { location.skewInverseBy({16, 16}) };
+
+    if (!CoordinatesValid(mapCoords.x, mapCoords.y, SimWidth, SimHeight))
     {
         return;
     }
 
-    const int z = Map[x][y];
-    const int t = z & LOMASK;
+    const int unmaskedTile = tileValue(mapCoords.x, mapCoords.y);
+    const int tile = maskedTileValue(mapCoords.x, mapCoords.y);
 
-    if ((!(z & BURNBIT)) && (t != 0))
+    if ((!(unmaskedTile & BURNBIT)) && (tile != 0))
     {
         return;
     }
 
-    if (z & ZONEBIT)
+    if (unmaskedTile & ZONEBIT)
     {
         return;
     }
 
-    Map[x][y] = FIRE + (Rand16() & 3) + ANIMBIT;
+    Map[mapCoords.x][mapCoords.y] = FIRE + RandomRange(0, 3) + ANIMBIT;
 }
 
 
-void Destroy(int ox, int oy)
+void Destroy(const Point<int>& location)
 {
-    int x = ox >> 4; // ox == offset? Origin?
-    int y = oy >> 4;
+    const Point<int> mapCoords = { location.skewInverseBy({16, 16}) };
 
-    if (!CoordinatesValid(x, y, SimWidth, SimHeight))
+    if (!CoordinatesValid(mapCoords.x, mapCoords.y, SimWidth, SimHeight))
     {
         return;
     }
 
-    int z = Map[x][y];
-    int t = z & LOMASK;
+    const int unmaskedTile = tileValue(mapCoords.x, mapCoords.y);
+    const int tile = maskedTileValue(mapCoords.x, mapCoords.y);
 
-    if (t >= TREEBASE)
+    if (tile >= TREEBASE)
     {
         /* TILE_IS_BRIDGE(t) */
-        if (!(z & BURNBIT))
+        if (!(unmaskedTile & BURNBIT))
         {
-            if ((t >= ROADBASE) && (t <= LASTROAD))
+            if ((tile >= ROADBASE) && (tile <= LASTROAD))
             {
-                Map[x][y] = RIVER;
+                Map[mapCoords.x][mapCoords.y] = RIVER;
                 return;
             }
         }
-        if (z & ZONEBIT)
+        if (unmaskedTile & ZONEBIT)
         {
-            OFireZone(x, y, z);
-            if (t > RZB)
+            OFireZone(mapCoords.x, mapCoords.y, unmaskedTile);
+            if (tile > RZB)
             {
-                MakeExplosionAt(ox, oy);
+                MakeExplosionAt(location.x, location.y);
             }
         }
-        if (checkWet(t))
+        if (checkWet(tile))
         {
-            Map[x][y] = RIVER;
+            Map[mapCoords.x][mapCoords.y] = RIVER;
         }
         else
         {
-            Map[x][y] = (animationEnabled() ? TINYEXP : (LASTTINYEXP - 3)) | BULLBIT | ANIMBIT;
+            Map[mapCoords.x][mapCoords.y] = (animationEnabled() ? TINYEXP : (LASTTINYEXP - 3)) | BULLBIT | ANIMBIT;
         }
     }
 }
@@ -935,7 +933,7 @@ void DoShipSprite(SimSprite& sprite)
     }
 
     ExplodeSprite(&sprite);
-    Destroy(sprite.position.x + 48, sprite.position.y);
+    Destroy(sprite.position + Vector<int>{48, 0});
 }
 
 
@@ -1166,7 +1164,7 @@ void DoMonsterSprite(SimSprite* sprite)
     }
     */
 
-    Destroy(sprite->position.x + 48, sprite->position.y + 16);
+    Destroy(sprite->position + Vector<int>{48, 16});
 }
 
 
@@ -1216,7 +1214,7 @@ void DoTornadoSprite(SimSprite& sprite)
         sprite.active = false;
     }
 
-    Destroy(sprite.position.x + 48, sprite.position.y + 40);
+    Destroy(sprite.position + Vector<int>{48, 40});
 }
 
 
@@ -1239,11 +1237,11 @@ void DoExplosionSprite(SimSprite& sprite)
         sprite.frame = 0;
         sprite.active = false;
 
-        StartFire(sprite.position.x + 48 - 8, sprite.position.y + 16);
-        StartFire(sprite.position.x + 48 - 24, sprite.position.y);
-        StartFire(sprite.position.x + 48 + 8, sprite.position.y);
-        StartFire(sprite.position.x + 48 - 24, sprite.position.y + 32);
-        StartFire(sprite.position.x + 48 + 8, sprite.position.y + 32);
+        StartFire(sprite.position + Vector<int>{48 - 8, 16});
+        StartFire(sprite.position + Vector<int>{48 - 24, 0});
+        StartFire(sprite.position + Vector<int>{48 + 8, 0});
+        StartFire(sprite.position + Vector<int>{48 - 24, 32});
+        StartFire(sprite.position + Vector<int>{48 + 8, 32});
         return;
     }
 }
@@ -1297,21 +1295,21 @@ void MoveObjects()
 }
 
 
-void GenerateTrain(int x, int y)
+void GenerateTrain(const Point<int>& position)
 {
     constexpr auto TRA_GROOVE_X = -39;
     constexpr auto TRA_GROOVE_Y = 6;
 
     if (TotalPop > 20 && GetSprite(SimSprite::Type::Train) == nullptr && RandomRange(0, 25) == 0)
     {
-        MakeSprite(SimSprite::Type::Train, x * 16 + TRA_GROOVE_X, y * 16 + TRA_GROOVE_Y);
+        MakeSprite(SimSprite::Type::Train, position.x * 16 + TRA_GROOVE_X, position.y * 16 + TRA_GROOVE_Y);
     }
 }
 
 
-void MakeShipHere(int x, int y, int z)
+void MakeShipHere(const Point<int>& position)
 {
-    MakeSprite(SimSprite::Type::Ship, (x * 16) - (48 - 1), (y * 16));
+    MakeSprite(SimSprite::Type::Ship, (position.x * 16) - (48 - 1), (position.y * 16));
 }
 
 
@@ -1323,7 +1321,7 @@ void GenerateShip()
         {
             if (Map[x][0] == CHANNEL)
             {
-                MakeShipHere(x, 0, 0);
+                MakeShipHere({ x, 0 });
                 return;
             }
         }
@@ -1335,7 +1333,7 @@ void GenerateShip()
         {
             if (Map[0][y] == CHANNEL)
             {
-                MakeShipHere(0, y, 0);
+                MakeShipHere({ 0, y });
                 return;
             }
         }
@@ -1347,7 +1345,7 @@ void GenerateShip()
         {
             if (Map[x][SimHeight - 1] == CHANNEL)
             {
-                MakeShipHere(x, SimHeight - 1, 0);
+                MakeShipHere({ x, SimHeight - 1 });
                 return;
             }
         }
@@ -1359,7 +1357,7 @@ void GenerateShip()
         {
             if (Map[SimWidth - 1][y] == CHANNEL)
             {
-                MakeShipHere(SimWidth - 1, y, 0);
+                MakeShipHere({ SimWidth - 1, y });
                 return;
             }
         }
@@ -1367,11 +1365,11 @@ void GenerateShip()
 }
 
 
-void MonsterHere(int x, int y)
+void MonsterHere(const Point<int>& position)
 {
-  MakeSprite(SimSprite::Type::Monster, (x <<4) + 48, (y <<4));
-  ClearMes();
-  SendMesAt(NotificationId::MonsterReported, x + 5, y);
+    MakeSprite(SimSprite::Type::Monster, (position.x * 16) + 48, (position.y * 16));
+    ClearMes();
+    SendMesAt(NotificationId::MonsterReported, position.x + 5, position.y);
 }
 
 
