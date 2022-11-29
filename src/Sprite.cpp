@@ -696,78 +696,89 @@ void DoTrainSprite(SimSprite& sprite)
 
 void DoCopterSprite(SimSprite* sprite)
 {
-    /*
-    static int CDx[9] = { 0,  0,  3,  5,  3,  0, -3, -5, -3 };
-    static int CDy[9] = { 0, -5, -3,  0,  3,  5,  3,  0, -3 };
-    int z, d, x, y;
+    static const std::array<Vector<int>, 9> CD =
+    {{
+        { 0, 0 }, { 0, -5 }, { 3, -3 }, { 5, 0 }, { 3, 3 }, { 0, 5 }, { -3, 3 }, { -5, 0 }, { -3, -3 }
+    }};
 
-    if (sprite->sound_count > 0) sprite->sound_count--;
+    if (sprite->sound_count > 0)
+    {
+        sprite->sound_count--;
+    }
 
-    if (sprite->control < 0) {
+    if (sprite->control < 0)
+    {
 
-        if (sprite->count > 0) sprite->count--;
+        if (sprite->count > 0)
+        {
+            sprite->count--;
+        }
 
-        if (!sprite->count) {
+        if (!sprite->count)
+        {
             // Attract copter to monster and tornado so it blows up more often
-            SimSprite* s = GetSprite(GOD);
-            if (s != NULL) {
-                sprite->dest_x = s->x;
-                sprite->dest_y = s->y;
+            const auto monster = GetSprite(SimSprite::Type::Monster);
+            if (monster != nullptr)
+            {
+                sprite->destination = monster->position;
             }
-            else {
-                s = GetSprite(TOR);
-                if (s != NULL) {
-                    sprite->dest_x = s->x;
-                    sprite->dest_y = s->y;
+            else
+            {
+                const auto tornado = GetSprite(SimSprite::Type::Tornado);
+                if (tornado != nullptr)
+                {
+                    sprite->destination = tornado->destination;
                 }
-                else {
-                    sprite->dest_x = sprite->orig_x;
-                    sprite->dest_y = sprite->orig_y;
+                else
+                {
+                    sprite->destination = sprite->origin;
                 }
             }
         }
-        if (!sprite->count) { // land
-            GetDir(sprite->x, sprite->y, sprite->orig_x, sprite->orig_y);
-            if (absDist < 30) {
+
+        if (sprite->count == 0) // land
+        {
+            GetDir(sprite->position.x, sprite->position.y, sprite->origin.x, sprite->origin.y);
+
+            if (absDist < 30)
+            {
                 sprite->frame = 0;
                 return;
             }
         }
     }
-    else {
-        GetDir(sprite->x, sprite->y, sprite->dest_x, sprite->dest_y);
-        if (absDist < 16) {
-            sprite->dest_x = sprite->orig_x;
-            sprite->dest_y = sprite->orig_y;
+    else
+    {
+        GetDir(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
+        if (absDist < 16)
+        {
+            sprite->destination = sprite->origin;
             sprite->control = -1;
         }
     }
 
-    if (!sprite->sound_count) { // send report
-        x = (sprite->x + 48) >> 5;
-        y = sprite->y >> 5;
-        if ((x >= 0) &&
-            (x < (SimWidth >> 1)) &&
-            (y >= 0) &&
-            (y < (SimHeight >> 1))) {
+    if (!sprite->sound_count) // send report
+    {
+        const Point<int> location{ (sprite->position.x + 48) >> 5, sprite->position.y >> 5 };
+        if ((location.x >= 0) && (location.x < (SimWidth >> 1)) && (location.y >= 0) && (location.y < (SimHeight >> 1)))
+        {
             // Don changed from 160 to 170 to shut the #$%#$% thing up!
-            if ((TrfDensity[x][y] > 170) && ((Rand16() & 7) == 0)) {
-                SendMesAt(NotificationId::HeavyTrafficReported, (x << 1) + 1, (y << 1) + 1);
+            if ((TrfDensity[location.x][location.y] > 170) && (RandomRange(0, 7) == 0))
+            {
+                SendMesAt(NotificationId::HeavyTrafficReported, (location.x << 1) + 1, (location.y << 1) + 1);
                 MakeSound("city", "HeavyTraffic"); // chopper
                 sprite->sound_count = 200;
             }
         }
     }
-    z = sprite->frame;
-    if (!(Cycle & 3)) {
-        d = GetDir(sprite->x, sprite->y, sprite->dest_x, sprite->dest_y);
-        z = TurnTo(z, d);
-        sprite->frame = z;
+
+    if (!(Cycle & 3))
+    {
+        int direction{ GetDir(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y) };
+        sprite->frame = TurnTo(sprite->frame, direction);
     }
 
-    sprite->x += CDx[z];
-    sprite->y += CDy[z];
-    */
+    sprite->position += CD[sprite->frame];
 }
 
 
