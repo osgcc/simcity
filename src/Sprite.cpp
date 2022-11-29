@@ -187,7 +187,10 @@ void InitSprite(SimSprite& sprite, const Point<int>& position)
             sprite.destination.x = sprite.position.x + 200;
             sprite.frame = 11;
         }
+
         sprite.destination.y = sprite.position.y;
+        
+        GetObjectXpms(SimSprite::Type::Airplane, 12, sprite.frames);
         break;
 
     case SimSprite::Type::Tornado:
@@ -254,11 +257,6 @@ void MakeSprite(SimSprite::Type type, const Point<int>& position)
 
 void DrawSprite(SimSprite& sprite)
 {
-    if(!sprite.active)
-    {
-        return;
-    }
-
     const auto& spriteFrame = sprite.frames[sprite.frame];
 
     const SDL_Rect dstRect
@@ -277,6 +275,11 @@ void DrawObjects()
 {
     for (auto& sprite : Sprites)
     {
+        if (!sprite.active)
+        {
+            continue;
+        }
+
         DrawSprite(sprite);
     }
 }
@@ -360,17 +363,18 @@ bool TryOther(int Tpoo, int Told, int Tnew)
 }
 
 
-int SpriteNotInBounds(SimSprite *sprite)
+bool pointInRect(const Point<int>& point, const SDL_Rect& rect)
 {
-  int x = sprite->position.x + sprite->hot.x;
-  int y = sprite->position.y + sprite->hot.y;
+    return point.x >= rect.x && point.x <= rect.x + rect.w && point.y >= rect.y && point.y <= rect.y + rect.h;
+}
 
-  if ((x < 0) || (y < 0) ||
-      (x >= (SimWidth <<4)) ||
-      (y >= (SimHeight <<4))) {
-    return (1);
-  }
-  return (0);
+
+int SpriteInBounds(SimSprite& sprite)
+{
+    const Point<int> adjustedPoint{ sprite.position + Vector<int>{sprite.hot.x, sprite.hot.y} };
+    constexpr SDL_Rect worldArea{ 0, 0, SimWidth * 16, SimHeight * 16 };
+
+    return pointInRect(adjustedPoint, worldArea);
 }
 
 
@@ -766,63 +770,61 @@ void DoCopterSprite(SimSprite* sprite)
 }
 
 
-void DoAirplaneSprite(SimSprite* sprite)
+void DoAirplaneSprite(SimSprite& sprite)
 {
-    static int CDx[12] = { 0,  0,  6,  8,  6,  0, -6, -8, -6,  8,  8,  8 };
-    static int CDy[12] = { 0, -8, -6,  0,  6,  8,  6,  0, -6,  0,  0,  0 };
+    static const std::array<Vector<int>, 12> CD =
+    {{
+        {0, 0}, {0, -8}, {6, -6}, {8, 0}, {6, 6}, {0, 8},
+        {-6, 6}, {-8, 0}, {-6, -6}, {8, 0}, {8, 0}, {8, 0}
+    }};
 
     int z, d;
 
-    z = sprite->frame;
+    z = sprite.frame;
 
-    if (!(Cycle % 5))
+    if ((Cycle % 5) == 0)
     {
         if (z > 8)  /* TakeOff  */
         {
             z--;
             if (z < 9) z = 3;
-            sprite->frame = z;
+            sprite.frame = z;
         }
         else /* goto destination */
         {
-            d = GetDir(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
+            d = GetDir(sprite.position.x, sprite.position.y, sprite.destination.x, sprite.destination.y);
             z = TurnTo(z, d);
-            sprite->frame = z;
+            sprite.frame = z;
         }
     }
 
     if (absDist < 50) /* at destination  */
     {
-        sprite->destination = { RandomRange(0, SimWidth) - 50, RandomRange(0, SimHeight) - 50 };
+        sprite.destination =
+        {
+            RandomRange(0, (SimWidth * 16) + 100) - 50,
+            RandomRange(0, (SimHeight * 16) + 100) - 50
+        };
     }
 
     /* deh added test for !Disasters */
     if (!NoDisasters)
     {
-        bool explode = false;
-
-        /*
-        for (SimSprite* s = sim->sprite; s != NULL; s = s->next)
+        for (auto& other : Sprites)
         {
-            if ((s->frame != 0) && ((s->type == COP) || ((sprite != s) && (s->type == AIR))) && CheckSpriteCollision(sprite, s))
+            if (other.active && other.type == SimSprite::Type::Helicopter && CheckSpriteCollision(&sprite, &other))
             {
-                ExplodeSprite(s);
-                explode = 1;
+                ExplodeSprite(&sprite);
+                ExplodeSprite(&other);
             }
-        }
-        */
-
-        if (explode)
-        {
-            ExplodeSprite(sprite);
         }
     }
 
-    sprite->position += Vector<int>{ CDx[z], CDy[z] };
+    sprite.position += CD[z];
 
-    if (SpriteNotInBounds(sprite))
+    if (!SpriteInBounds(sprite))
     {
-        sprite->frame = 0;
+        sprite.active = false;
     }
 }
 
@@ -921,12 +923,11 @@ void DoShipSprite(SimSprite& sprite)
         }
     }
 
-    if (SpriteNotInBounds(&sprite))
+    if (!SpriteInBounds(sprite))
     {
         sprite.active = false;
         return;
     }
-
 
     for (const auto tileValue : BtClrTab)
     {
@@ -1208,10 +1209,7 @@ void DoTornadoSprite(SimSprite& sprite)
     const int newDirection = RandomRange(0, 5);
     sprite.position += Vector<int>{ CDx[newDirection], CDy[newDirection] };
 
-    if (SpriteNotInBounds(&sprite))
-    {
-        sprite.active = false;
-    }
+    sprite.active = SpriteInBounds(sprite);
 
     if ((sprite.count != 0) && RandomRange(0, 500) == 0)
     {
@@ -1275,7 +1273,7 @@ void MoveObjects()
                 break;
 
             case SimSprite::Type::Airplane:
-                DoAirplaneSprite(&sprite);
+                DoAirplaneSprite(sprite);
                 break;
 
             case SimSprite::Type::Ship:
@@ -1428,14 +1426,13 @@ void GenerateCopter(const Point<int>& position)
 
 void GeneratePlane(const Point<int>& position)
 {
-    /*
-    if (GetSprite(AIR) != nullptr)
+    SimSprite* sprite{ GetSprite(SimSprite::Type::Airplane) };
+    if (sprite != nullptr && sprite->active)
     {
         return;
     }
 
-    MakeSprite(AIR, (x << 4) + 48, (y << 4) + 12);
-    */
+    MakeSprite(SimSprite::Type::Airplane, position.skewBy({ 16, 16 }) + Vector<int>{ 48, 12 });
 }
 
 
