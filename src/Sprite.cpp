@@ -628,7 +628,7 @@ void DoTrainSprite(SimSprite& sprite)
         sprite.frame = TrainPic2[sprite.dir];
     }
 
-    sprite.position = { Dx[sprite.dir], Dy[sprite.dir] };
+    sprite.position += { Dx[sprite.dir], Dy[sprite.dir] };
 
     int dir = RandomRange(0, 4);
     for (int z = dir; z < (dir + 4); z++)
@@ -1315,7 +1315,7 @@ void MakeShipHere(const Point<int>& position)
 
 void GenerateShip()
 {
-    if (!(Rand16() & 3))
+    if (RandomRange(0, 3) == 0)
     {
         for (int x = 4; x < SimWidth - 2; x++)
         {
@@ -1327,7 +1327,7 @@ void GenerateShip()
         }
     }
 
-    if (!(Rand16() & 3))
+    if (RandomRange(0, 3) == 0)
     {
         for (int y = 1; y < SimHeight - 2; y++)
         {
@@ -1339,7 +1339,7 @@ void GenerateShip()
         }
     }
 
-    if (!(Rand16() & 3))
+    if (RandomRange(0, 3) == 0)
     {
         for (int x = 4; x < SimWidth - 2; x++)
         {
@@ -1351,7 +1351,7 @@ void GenerateShip()
         }
     }
 
-    if (!(Rand16() & 3))
+    if (RandomRange(0, 3) == 0)
     {
         for (int y = 1; y < SimHeight - 2; y++)
         {
