@@ -62,9 +62,9 @@ void GetObjectXpms(SimSprite::Type type, int frames, std::vector<Texture>& frame
 }
 
 
-void InitSprite(SimSprite& sprite, int x, int y)
+void InitSprite(SimSprite& sprite, const Point<int>& position)
 {
-    sprite.position = { x, y };
+    sprite.position = position;
     sprite.origin = {};
     sprite.destination = {};
     sprite.size = {};
@@ -98,19 +98,19 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.offset = { 32, -16 };
         sprite.hot = { 48, 0 };
 
-        if (x < 64)
+        if (position.x < 64)
         {
             sprite.frame = 2;
         }
-        else if (x >= ((SimWidth - 4) * 16))
+        else if (position.x >= ((SimWidth - 4) * 16))
         {
             sprite.frame = 6;
         }
-        else if (y < 64)
+        else if (position.y < 64)
         {
             sprite.frame = 4;
         }
-        else if (y >= ((SimHeight - 4) * 16))
+        else if (position.y >= ((SimHeight - 4) * 16))
         {
             sprite.frame = 0;
         }
@@ -130,14 +130,14 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.offset = { 24, 0 };
         sprite.hot = { 40, 16 };
         sprite.destination = { pollutionMax().x * 16, pollutionMax().y * 16 };
-        sprite.origin = { x, y };
+        sprite.origin = position;
 
-        if (x > ((SimWidth << 4) / 2))
+        if (position.x > ((SimWidth << 4) / 2))
         {
-            if (y > ((SimHeight << 4) / 2)) sprite.frame = 10;
+            if (position.y > ((SimHeight << 4) / 2)) sprite.frame = 10;
             else sprite.frame = 7;
         }
-        else if (y > ((SimHeight << 4) / 2))
+        else if (position.y > ((SimHeight << 4) / 2))
         {
             sprite.frame = 1;
         }
@@ -153,7 +153,7 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.offset = { 32, -16 };
         sprite.hot = { 40, -8 };
         sprite.destination = { RandomRange(0, SimWidth - 1), RandomRange(0, SimHeight - 1) };
-        sprite.origin = { x - 30, y };
+        sprite.origin = position + Vector<int>{ -30, 0 };
         sprite.frame = 5;
         sprite.count = 1500;
         break;
@@ -163,9 +163,9 @@ void InitSprite(SimSprite& sprite, int x, int y)
         sprite.offset = { 24, 0 };
         sprite.hot = { 48, 16 };
 
-        if (x > ((SimWidth - 20) << 4))
+        if (position.x > ((SimWidth - 20) << 4))
         {
-            sprite.position.x -= 100 + 48;
+            sprite.position -= Vector<int>{100 + 48, 0};
             sprite.destination.x = sprite.position.x - 200;
             sprite.frame = 7;
         }
@@ -221,21 +221,21 @@ SimSprite* GetSprite(SimSprite::Type type)
 }
 
 
-void MakeSprite(SimSprite::Type type, int x, int y)
+void MakeSprite(SimSprite::Type type, const Point<int>& position)
 {
     for (auto& sprite : Sprites)
     {
         if (sprite.type == type)
         {
             sprite.active = true;
-            sprite.position = { x, y };
+            sprite.position = position;
             return;
         }
     }
 
     Sprites.push_back(SimSprite());
     Sprites.back().type = type;
-    InitSprite(Sprites.back(), x, y);
+    InitSprite(Sprites.back(), position);
 }
 
 
@@ -554,7 +554,7 @@ void Destroy(const Point<int>& location)
             OFireZone(mapCoords.x, mapCoords.y, unmaskedTile);
             if (tile > RZB)
             {
-                MakeExplosionAt(location.x, location.y);
+                MakeExplosionAt(location);
             }
         }
         if (checkWet(tile))
@@ -577,7 +577,7 @@ void ExplodeSprite(SimSprite* sprite)
 
     x = sprite->position.x + sprite->hot.x;
     y = sprite->position.y + sprite->hot.y;
-    MakeExplosionAt(x, y);
+    MakeExplosionAt({ x, y });
 
     x = (x >> 4);
     y = (y >> 4);
@@ -1302,14 +1302,14 @@ void GenerateTrain(const Point<int>& position)
 
     if (TotalPop > 20 && GetSprite(SimSprite::Type::Train) == nullptr && RandomRange(0, 25) == 0)
     {
-        MakeSprite(SimSprite::Type::Train, position.x * 16 + TRA_GROOVE_X, position.y * 16 + TRA_GROOVE_Y);
+        MakeSprite(SimSprite::Type::Train, position.skewBy({ 16, 16 }) + Vector<int>{ TRA_GROOVE_X, TRA_GROOVE_Y });
     }
 }
 
 
 void MakeShipHere(const Point<int>& position)
 {
-    MakeSprite(SimSprite::Type::Ship, (position.x * 16) - (48 - 1), (position.y * 16));
+    MakeSprite(SimSprite::Type::Ship, position.skewBy({ 16, 16 }) - Vector<int>{ 48 - 1, 0 });
 }
 
 
@@ -1367,7 +1367,7 @@ void GenerateShip()
 
 void MonsterHere(const Point<int>& position)
 {
-    MakeSprite(SimSprite::Type::Monster, (position.x * 16) + 48, (position.y * 16));
+    MakeSprite(SimSprite::Type::Monster, position.skewBy({ 16,16 }) + Vector<int>{ 48, 0 });
     ClearMes();
     SendMesAt(NotificationId::MonsterReported, position.x + 5, position.y);
 }
@@ -1408,7 +1408,8 @@ void MakeMonster()
     */
 }
 
-void GenerateCopter(int x, int y)
+
+void GenerateCopter(const Point<int>& position)
 {
     /*
     if (GetSprite(COP) != nullptr)
@@ -1421,7 +1422,7 @@ void GenerateCopter(int x, int y)
 }
 
 
-void GeneratePlane(int x, int y)
+void GeneratePlane(const Point<int>& position)
 {
     /*
     if (GetSprite(AIR) != nullptr)
@@ -1445,27 +1446,25 @@ void MakeTornado()
         //return;
     }
 
-    int x = RandomRange(1, SimWidth - 2);
-    int y = RandomRange(1, SimHeight - 2);
+    const Point<int> location{ RandomRange(1, SimWidth - 2),RandomRange(1, SimHeight - 2) };
 
-    MakeSprite(SimSprite::Type::Tornado, x * 16, y * 16);
+    MakeSprite(SimSprite::Type::Tornado, location.skewBy({ 16, 16 }));
     ClearMes();
-    SendMesAt(NotificationId::TornadoReported, x, y);
+    SendMesAt(NotificationId::TornadoReported, location.x, location.y);
     
 }
 
 
-void MakeExplosionAt(int x, int y)
+void MakeExplosionAt(const Point<int>& position)
 {
-    //MakeNewSprite(EXP, x - 40, y - 16);
-    MakeSprite(SimSprite::Type::Explosion, x - 40, y - 16);
+    MakeSprite(SimSprite::Type::Explosion, position - Vector<int>{ 40, 16 });
 }
 
 
-void MakeExplosion(int x, int y)
+void MakeExplosion(const Point<int>& position)
 {
-    if ((x >= 0) && (x < SimWidth) && (y >= 0) && (y < SimHeight))
+    if ((position.x >= 0) && (position.x < SimWidth) && (position.y >= 0) && (position.y < SimHeight))
     {
-        MakeExplosionAt((x << 4) + 8, (y << 4) + 8);
+        MakeExplosionAt(position.skewBy({ 16, 16 }) + Vector<int>{ 8, 8 });
     }
 }

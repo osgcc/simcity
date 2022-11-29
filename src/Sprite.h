@@ -67,13 +67,13 @@ void MoveObjects();
 void DoTrainSprite(SimSprite& sprite);
 void DestroyAllSprites();
 
-void GenerateCopter(int x, int y);
-void GeneratePlane(int x, int y);
+void GenerateCopter(const Point<int>& position);
+void GeneratePlane(const Point<int>& position);
 void GenerateShip();
 void GenerateTrain(const Point<int>& position);
 
-void MakeExplosionAt(int x, int y);
-void MakeExplosion(int x, int y);
+void MakeExplosionAt(const Point<int>& position);
+void MakeExplosion(const Point<int>& position);
 void MakeTornado();
 void MakeMonster();
 void DrawObjects();

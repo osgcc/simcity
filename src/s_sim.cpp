@@ -82,7 +82,7 @@ void DoFire()
                         FireZone(Xtem, Ytem, c);
                         if ((c & LOMASK) > IZB) //  Explode
                         {
-                            MakeExplosionAt((Xtem * 16) + 8, (Ytem * 16) + 8);
+                            MakeExplosionAt({ (Xtem * 16) + 8, (Ytem * 16) + 8 });
                         }
                     }
                     Map[Xtem][Ytem] = FIRE + RandomRange(0, 3) + ANIMBIT;
@@ -117,19 +117,19 @@ void DoAirport()
 {
     if (!(RandomRange(0, 5)))
     {
-        GeneratePlane(SimulationTarget.x, SimulationTarget.y);
+        GeneratePlane(SimulationTarget);
         return;
     }
     if (!(RandomRange(0, 12)))
     {
-        GenerateCopter(SimulationTarget.x, SimulationTarget.y);
+        GenerateCopter(SimulationTarget);
     }
 }
 
 
 void DoMeltdown(const int x, const int y)
 {
-    MakeExplosion(x, y);
+    MakeExplosion({ x, y });
 
     for (int row = (x - 1); row < (x + 3); ++row)
     {

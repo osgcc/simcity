@@ -19,6 +19,8 @@
 
 #include "s_msg.h"
 
+#include "Sprite.h"
+
 #include "w_util.h"
 
 #include <algorithm>
@@ -72,11 +74,6 @@ int FloodX, FloodY;
 // forward declare from s_sim
 void DoMeltdown(int, int);
 
-/// Forward declares from w_sprite
-void MakeMonster();
-void MakeTornado();
-void MakeExplosion(int, int);
-
 // forward declare from w_tk
 void DoEarthQuake();
 
@@ -101,7 +98,7 @@ void FireBomb()
 {
     CrashX = RandomRange(0, SimWidth - 1);
     CrashY = RandomRange(0, SimHeight - 1);
-    MakeExplosion(CrashX, CrashY);
+    MakeExplosion({ CrashX, CrashY });
     ClearMes();
     SendMesAt(NotificationId::FirebombingReported, CrashX, CrashY);
 }
