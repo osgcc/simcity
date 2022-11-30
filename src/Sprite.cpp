@@ -381,28 +381,61 @@ int SpriteInBounds(SimSprite& sprite)
 
 int GetDir(int orgX, int orgY, int desX, int desY)
 {
-  static int Gdtab[13] = { 0, 3, 2, 1, 3, 4, 5, 7, 6, 5, 7, 8, 1 };
-  int dispX, dispY, z;
+    static int Gdtab[13] = { 0, 3, 2, 1, 3, 4, 5, 7, 6, 5, 7, 8, 1 };
+    int dispX, dispY, z;
 
-  dispX = desX - orgX;
-  dispY = desY - orgY;
-  if (dispX < 0)
-    if (dispY < 0) z = 11;
-    else z = 8;
-  else
-    if (dispY < 0) z = 2;
-    else z = 5;
-  if (dispX < 0) dispX = -dispX;
-  if (dispY < 0) dispY = -dispY;
+    dispX = desX - orgX;
+    dispY = desY - orgY;
+    if (dispX < 0)
+    {
+        if (dispY < 0)
+        {
+            z = 11;
+        }
+        else
+        {
+            z = 8;
+        }
+    }
+    else
+    {
+        if (dispY < 0)
+        {
+            z = 2;
+        }
+        else
+        {
+            z = 5;
+        }
+    }
 
-  absDist = dispX + dispY;
+    if (dispX < 0)
+    {
+        dispX = -dispX;
+    }
 
-  if ((dispX <<1) < dispY) z++;
-  else if ((dispY <<1) < dispY) z--;
+    if (dispY < 0)
+    {
+        dispY = -dispY;
+    }
 
-  if ((z < 0) || (z > 12)) z = 0;
+    absDist = dispX + dispY;
 
-  return (Gdtab[z]);
+    if ((dispX << 1) < dispY)
+    {
+        z++;
+    }
+    else if ((dispY << 1) < dispY)
+    {
+        z--;
+    }
+
+    if ((z < 0) || (z > 12))
+    {
+        z = 0;
+    }
+
+    return Gdtab[z];
 }
 
 
@@ -742,7 +775,7 @@ void DoCopterSprite(SimSprite* sprite)
 
             if (absDist < 30)
             {
-                sprite->frame = 0;
+                sprite->active = false;
                 return;
             }
         }
