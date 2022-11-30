@@ -177,19 +177,11 @@ void InitSprite(SimSprite& sprite, const Point<int>& position)
         sprite.offset = { 24, 0 };
         sprite.hot = { 48, 16 };
 
-        if (position.x > ((SimWidth - 20) << 4))
+        sprite.destination =
         {
-            sprite.position -= Vector<int>{100 + 48, 0};
-            sprite.destination.x = sprite.position.x - 200;
-            sprite.frame = 7;
-        }
-        else
-        {
-            sprite.destination.x = sprite.position.x + 200;
-            sprite.frame = 11;
-        }
-
-        sprite.destination.y = sprite.position.y;
+            RandomRange(0, (SimWidth * 16) + 100) - 50,
+            RandomRange(0, (SimHeight * 16) + 100) - 50
+        };
         
         GetObjectXpms(SimSprite::Type::Airplane, 12, sprite.frames);
         break;
@@ -857,10 +849,18 @@ void DoAirplaneSprite(SimSprite& sprite)
     {
         for (auto& other : Sprites)
         {
-            if (other.active && other.type == SimSprite::Type::Helicopter && CheckSpriteCollision(&sprite, &other))
+            if (&sprite == &other || !other.active)
             {
-                ExplodeSprite(&sprite);
-                ExplodeSprite(&other);
+                continue;
+            }
+
+            if (other.type == SimSprite::Type::Airplane || other.type == SimSprite::Type::Helicopter)
+            {
+                if(CheckSpriteCollision(&sprite, &other))
+                {
+                    ExplodeSprite(&sprite);
+                    ExplodeSprite(&other);
+                }
             }
         }
     }
@@ -1465,6 +1465,17 @@ void GenerateCopter(const Point<int>& position)
     }
 
     MakeSprite(SimSprite::Type::Helicopter, position.skewBy({ 16, 16 }) + Vector<int>{ 0, 30 });
+
+    // set a new destination if we're generating a new airplane
+    if (sprite != nullptr)
+    {
+        sprite->destination =
+        {
+            RandomRange(0, SimWidth - 1),
+            RandomRange(0, SimHeight - 1)
+        };
+        sprite->count = 1500;
+    }
 }
 
 
@@ -1476,6 +1487,8 @@ void GeneratePlane(const Point<int>& position)
         return;
     }
 
+    MakeSprite(SimSprite::Type::Airplane, position.skewBy({ 16, 16 }) + Vector<int>{ 48, 12 });
+
     // set a new destination if we're generating a new airplane
     if (sprite != nullptr)
     {
@@ -1485,8 +1498,6 @@ void GeneratePlane(const Point<int>& position)
             RandomRange(0, (SimHeight * 16) + 100) - 50
         };
     }
-
-    MakeSprite(SimSprite::Type::Airplane, position.skewBy({ 16, 16 }) + Vector<int>{ 48, 12 });
 }
 
 
