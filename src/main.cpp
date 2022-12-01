@@ -360,6 +360,8 @@ void primeGame(const int startFlag, CityProperties& properties, Budget& budget)
         {
             break;
         }
+        // If load fails, simply create a new city
+        [[fallthrough]];
 
     case -1:
         properties.GameLevel(0);
