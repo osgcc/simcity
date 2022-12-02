@@ -95,7 +95,7 @@ void MakeMeltdown()
 void FireBomb()
 {
     crashPosition({ RandomRange(0, SimWidth - 1), RandomRange(0, SimHeight - 1) });
-    MakeExplosion(crashPosition());
+    generateExplosion(crashPosition());
     ClearMes();
     SendMesAt(NotificationId::FirebombingReported, crashPosition().x, crashPosition().y);
 }
@@ -274,7 +274,7 @@ void ScenarioDisaster()
     case 5: // Tokyo
         if (DisasterWait == 1)
         {
-            MakeMonster();
+            generateMonster();
         }
         break;
 
@@ -347,7 +347,7 @@ void DoDisasters(CityProperties& properties)
             break;
 
         case 5:
-            MakeTornado();
+            generateTornado();
             break;
 
         case 6:
@@ -358,7 +358,7 @@ void DoDisasters(CityProperties& properties)
         case 8:
             if (PolluteAverage > /* 80 */ 60)
             {
-                MakeMonster();
+                generateMonster();
             }
             break;
         }

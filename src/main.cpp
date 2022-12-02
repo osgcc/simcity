@@ -586,7 +586,7 @@ void handleKeyEvent(SDL_Event& event)
         break;
 
     case SDLK_F5:
-        //MakeTornado();
+        //generateTornado();
         //MakeFlood();
         //MakeMeltdown();
         //MakeFire();
@@ -1099,7 +1099,7 @@ void GameLoop()
 
         SDL_RenderClear(MainWindowRenderer);
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
-        DrawSprites();
+        drawSprites();
 
         if (budget.NeedsAttention() || budgetWindow->visible())
         {

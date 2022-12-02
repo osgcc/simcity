@@ -69,7 +69,7 @@ void SetTrafMem()
                     TrafMaxX = SimulationTarget.x * 16;
                     TrafMaxY = SimulationTarget.y * 16;
 
-                    SimSprite* sprite = GetSprite(SimSprite::Type::Helicopter);
+                    SimSprite* sprite = getSprite(SimSprite::Type::Helicopter);
                     if (sprite)
                     {
                         sprite->destination = { TrafMaxX, TrafMaxY };

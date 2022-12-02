@@ -37,7 +37,7 @@ void InitWillStuff()
 
     MessageId(NotificationId::None);
 
-    DestroyAllSprites();
+    destroyAllSprites();
 
     DisasterEvent = 0;
 

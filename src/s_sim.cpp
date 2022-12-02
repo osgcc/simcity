@@ -82,7 +82,7 @@ void DoFire()
                         FireZone(Xtem, Ytem, c);
                         if ((c & LOMASK) > IZB) //  Explode
                         {
-                            MakeExplosionAt({ (Xtem * 16) + 8, (Ytem * 16) + 8 });
+                            makeExplosionAt({ (Xtem * 16) + 8, (Ytem * 16) + 8 });
                         }
                     }
                     Map[Xtem][Ytem] = FIRE + RandomRange(0, 3) + ANIMBIT;
@@ -117,19 +117,19 @@ void DoAirport()
 {
     if (!(RandomRange(0, 5)))
     {
-        GeneratePlane(SimulationTarget);
+        generateAirplane(SimulationTarget);
         return;
     }
     if (!(RandomRange(0, 12)))
     {
-        GenerateCopter(SimulationTarget);
+        generateHelicopter(SimulationTarget);
     }
 }
 
 
 void DoMeltdown(const int x, const int y)
 {
-    MakeExplosion({ x, y });
+    generateExplosion({ x, y });
 
     for (int row = (x - 1); row < (x + 3); ++row)
     {
@@ -170,7 +170,7 @@ void DoMeltdown(const int x, const int y)
 void DoRail(const Point<int>& position)
 {
     RailTotal++;
-    GenerateTrain(position);
+    generateTrain(position);
    
     if (RoadEffect < 30) // Deteriorating  Rail
     {
@@ -598,10 +598,10 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             RepairZone(PORT, 4);
         }
 
-        SimSprite* shipSprite = GetSprite(SimSprite::Type::Ship);
+        SimSprite* shipSprite = getSprite(SimSprite::Type::Ship);
         if (PwrOn && shipSprite == nullptr || shipSprite != nullptr && !shipSprite->active)
         {
-            GenerateShip();
+            generateShip();
         }
         return;
     }

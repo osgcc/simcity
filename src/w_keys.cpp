@@ -73,9 +73,9 @@ void doKeyDown(SimView* view, int charCode)
         MakeSound("city", "Explosion-Low");
         MakeFire();
         MakeFlood();
-        MakeTornado();
+        generateTornado();
         MakeEarthquake();
-        MakeMonster();
+        generateMonster();
         LastKeys[0] = '\0';
     }
     else if (strcmp(LastKeys, "nuke") == 0) {

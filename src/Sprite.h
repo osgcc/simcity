@@ -63,17 +63,17 @@ struct SimSprite
 Point<int>& crashPosition();
 void crashPosition(const Point<int>& position);
 
-SimSprite* GetSprite(SimSprite::Type type);
-void DrawSprites();
-void DestroyAllSprites();
+SimSprite* getSprite(SimSprite::Type type);
+void drawSprites();
+void destroyAllSprites();
 void updateSprites();
 
-void GenerateCopter(const Point<int>& position);
-void GeneratePlane(const Point<int>& position);
-void GenerateShip();
-void GenerateTrain(const Point<int>& position);
+void generateHelicopter(const Point<int>& position);
+void generateAirplane(const Point<int>& position);
+void generateShip();
+void generateTrain(const Point<int>& position);
 
-void MakeExplosionAt(const Point<int>& position);
-void MakeExplosion(const Point<int>& position);
-void MakeTornado();
-void MakeMonster();
+void makeExplosionAt(const Point<int>& position);
+void generateExplosion(const Point<int>& position);
+void generateTornado();
+void generateMonster();
