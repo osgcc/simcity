@@ -432,7 +432,7 @@ int GetDir(int orgX, int orgY, int desX, int desY)
 }
 
 
-int CanDriveOn(int x, int y)
+int tileIsDrivable(int x, int y)
 {
     int tile;
 
