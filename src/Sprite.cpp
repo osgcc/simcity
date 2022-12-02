@@ -612,16 +612,16 @@ void Destroy(const Point<int>& location)
 }
 
 
-void ExplodeSprite(SimSprite* sprite)
+void ExplodeSprite(SimSprite& sprite)
 {
-    sprite->active = false;
-    Point<int> location{ sprite->position.x + sprite->hot.x, sprite->position.y + sprite->hot.y };
+    sprite.active = false;
+    Point<int> location{ sprite.position.x + sprite.hot.x, sprite.position.y + sprite.hot.y };
     
     MakeExplosionAt(location);
 
     location = location.skewInverseBy({ 16, 16 });
 
-    switch (sprite->type)
+    switch (sprite.type)
     {
     case SimSprite::Type::Airplane:
         CrashPosition = location;
@@ -858,8 +858,8 @@ void DoAirplaneSprite(SimSprite& sprite)
             {
                 if(CheckSpriteCollision(&sprite, &other))
                 {
-                    ExplodeSprite(&sprite);
-                    ExplodeSprite(&other);
+                    ExplodeSprite(sprite);
+                    ExplodeSprite(other);
                 }
             }
         }
@@ -982,7 +982,7 @@ void DoShipSprite(SimSprite& sprite)
         }
     }
 
-    ExplodeSprite(&sprite);
+    ExplodeSprite(sprite);
     Destroy(sprite.position + Vector<int>{48, 0});
 }
 
@@ -1244,7 +1244,7 @@ void DoTornadoSprite(SimSprite& sprite)
             other.type == SimSprite::Type::Train) &&
             CheckSpriteCollision(&sprite, &other))
         {
-            ExplodeSprite(&other);
+            ExplodeSprite(other);
         }
     }
 
