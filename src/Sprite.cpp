@@ -468,7 +468,7 @@ bool pointInRange(const Point<int>& point1, const Point<int>& point2, const int 
 }
 
 
-bool CheckSpriteCollision(SimSprite& s1, SimSprite& s2)
+bool spritesCollided(SimSprite& s1, SimSprite& s2)
 {
     return ((s1.active) && (s2.active) && pointInRange(s1.position, s2.position, 30));
 }
@@ -836,7 +836,7 @@ void DoAirplaneSprite(SimSprite& sprite)
 
             if (other.type == SimSprite::Type::Airplane || other.type == SimSprite::Type::Helicopter)
             {
-                if(CheckSpriteCollision(sprite, other))
+                if(spritesCollided(sprite, other))
                 {
                     ExplodeSprite(sprite);
                     ExplodeSprite(other);
@@ -1187,7 +1187,7 @@ void DoMonsterSprite(SimSprite* sprite)
                 (s->type == COP) ||
                 (s->type == SHI) ||
                 (s->type == TRA)) &&
-            CheckSpriteCollision(sprite, s))
+            spritesCollided(sprite, s))
         {
             ExplodeSprite(s);
         }
@@ -1222,7 +1222,7 @@ void DoTornadoSprite(SimSprite& sprite)
             other.type == SimSprite::Type::Helicopter ||
             other.type == SimSprite::Type::Ship ||
             other.type == SimSprite::Type::Train) &&
-            CheckSpriteCollision(sprite, other))
+            spritesCollided(sprite, other))
         {
             ExplodeSprite(other);
         }
