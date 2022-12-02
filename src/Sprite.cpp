@@ -1236,20 +1236,17 @@ void DoTornadoSprite(SimSprite& sprite)
         sprite.active = false;
     }
 
-    /*
-    for (SimSprite* s = sim->sprite; s != NULL; s = s->next)
+    for (auto& other : Sprites)
     {
-        if ((s->frame != 0) &&
-            ((s->type == AIR) ||
-                (s->type == COP) ||
-                (s->type == SHI) ||
-                (s->type == TRA)) &&
-            CheckSpriteCollision(sprite, s))
+        if ((other.type == SimSprite::Type::Airplane ||
+            other.type == SimSprite::Type::Helicopter ||
+            other.type == SimSprite::Type::Ship ||
+            other.type == SimSprite::Type::Train) &&
+            CheckSpriteCollision(&sprite, &other))
         {
-            ExplodeSprite(s);
+            ExplodeSprite(&other);
         }
     }
-    */
 
     const int newDirection = RandomRange(0, 5);
     sprite.position += Vector<int>{ CDx[newDirection], CDy[newDirection] };
