@@ -599,7 +599,7 @@ void ExplodeSprite(SimSprite& sprite)
 }
 
 
-void DoTrainSprite(SimSprite& sprite)
+void updateTrain(SimSprite& sprite)
 {
     static const std::array<Vector<int>, 4> CheckVector{{ {0, -16}, {16, 0}, {0, 16}, {-16, 0} }};
     static const std::array<Vector<int>, 5> DirectionVector{{ {0, -4}, {4, 0}, {0, 4}, {-4, 0}, {0, 0} }};
@@ -669,7 +669,7 @@ void DoTrainSprite(SimSprite& sprite)
 }
 
 
-void DoCopterSprite(SimSprite& sprite)
+void updateHelicopter(SimSprite& sprite)
 {
     static const std::array<Vector<int>, 9> CD =
     {{
@@ -757,7 +757,7 @@ void DoCopterSprite(SimSprite& sprite)
 }
 
 
-void DoAirplaneSprite(SimSprite& sprite)
+void updateAirplane(SimSprite& sprite)
 {
     static const std::array<Vector<int>, 12> CD =
     {{
@@ -824,7 +824,7 @@ void DoAirplaneSprite(SimSprite& sprite)
 }
 
 
-void DoShipSprite(SimSprite& sprite)
+void updateShip(SimSprite& sprite)
 {
     static const std::array<Vector<int>, 9> CheckDirection{ {{0,0}, {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}} };
     static const std::array<Vector<int>, 9> MoveVector{ {{0,0}, {0,-2}, {2,-2}, {2,0}, {2,2}, {0,2}, {-2,2}, {-2,0}, {-2,-2}} };
@@ -937,7 +937,7 @@ void DoShipSprite(SimSprite& sprite)
 }
 
 
-void DoMonsterSprite(SimSprite* sprite)
+void updateMonster(SimSprite* sprite)
 {
     static int Gx[5] = { 2,  2, -2, -2,  0 };
     static int Gy[5] = { -2,  2,  2, -2,  0 };
@@ -1168,7 +1168,7 @@ void DoMonsterSprite(SimSprite* sprite)
 }
 
 
-void DoTornadoSprite(SimSprite& sprite)
+void updateTornado(SimSprite& sprite)
 {
     static int CDx[9] = { 2,  3,  2,  0, -2, -3 };
     static int CDy[9] = { -2,  0,  2,  3,  2,  0 };
@@ -1212,7 +1212,7 @@ void DoTornadoSprite(SimSprite& sprite)
 }
 
 
-void DoExplosionSprite(SimSprite& sprite)
+void updateExplosion(SimSprite& sprite)
 {
     if (sprite.frame == 0)
     {
@@ -1241,7 +1241,7 @@ void DoExplosionSprite(SimSprite& sprite)
 }
 
 
-void MoveSprites()
+void updateSprites()
 {
     if (Paused())
     {
@@ -1257,31 +1257,31 @@ void MoveSprites()
             switch (sprite.type)
             {
             case SimSprite::Type::Train:
-                DoTrainSprite(sprite);
+                updateTrain(sprite);
                 break;
 
             case SimSprite::Type::Helicopter:
-                DoCopterSprite(sprite);
+                updateHelicopter(sprite);
                 break;
 
             case SimSprite::Type::Airplane:
-                DoAirplaneSprite(sprite);
+                updateAirplane(sprite);
                 break;
 
             case SimSprite::Type::Ship:
-                DoShipSprite(sprite);
+                updateShip(sprite);
                 break;
 
             case SimSprite::Type::Monster:
-                DoMonsterSprite(&sprite);
+                updateMonster(&sprite);
                 break;
 
             case SimSprite::Type::Tornado:
-                DoTornadoSprite(sprite);
+                updateTornado(sprite);
                 break;
 
             case SimSprite::Type::Explosion:
-                DoExplosionSprite(sprite);
+                updateExplosion(sprite);
                 break;
             }
         }

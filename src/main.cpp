@@ -284,7 +284,7 @@ void simLoop(bool doSim)
         if (!Paused())
         {
             animateTiles();
-            MoveSprites();
+            updateSprites();
         }
 
         const Point<int> begin{ MapViewOffset.x / TileSize, MapViewOffset.y / TileSize };
