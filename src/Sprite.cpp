@@ -474,7 +474,7 @@ bool spritesCollided(SimSprite& s1, SimSprite& s2)
 }
 
 
-bool checkWet(int x)
+bool tileIsWet(int x)
 {
     return ((x == POWERBASE) ||
         (x == POWERBASE + 1) ||
@@ -580,7 +580,7 @@ void Destroy(const Point<int>& location)
                 MakeExplosionAt(location);
             }
         }
-        if (checkWet(tile))
+        if (tileIsWet(tile))
         {
             Map[mapCoords.x][mapCoords.y] = RIVER;
         }
