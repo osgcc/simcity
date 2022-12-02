@@ -432,32 +432,6 @@ int GetDir(int orgX, int orgY, int desX, int desY)
 }
 
 
-int GetDis(int x1, int y1, int x2, int y2)
-{
-    int dispX, dispY;
-
-    if (x1 > x2)
-    {
-        dispX = x1 - x2;
-    }
-    else
-    {
-        dispX = x2 - x1;
-    }
- 
-    if (y1 > y2)
-    {
-        dispY = y1 - y2;
-    }
-    else
-    {
-        dispY = y2 - y1;
-    }
-
-    return (dispX + dispY);
-}
-
-
 int CanDriveOn(int x, int y)
 {
     int tile;
@@ -488,10 +462,15 @@ int CanDriveOn(int x, int y)
 }
 
 
+bool pointInRange(const Point<int>& point1, const Point<int>& point2, const int distance)
+{
+    return (point2 - point1).lengthSquared() <= distance * distance;
+}
+
+
 bool CheckSpriteCollision(SimSprite& s1, SimSprite& s2)
 {
-    return ((s1.active) && (s2.active) &&
-        GetDis(s1.position.x + s1.hot.x, s1.position.y + s1.hot.y, s2.position.x + s2.hot.x, s2.position.y + s2.hot.y) < 30);
+    return ((s1.active) && (s2.active) && pointInRange(s1.position, s2.position, 30));
 }
 
 
