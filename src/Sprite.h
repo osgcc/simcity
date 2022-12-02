@@ -65,7 +65,7 @@ SimSprite* GetSprite(SimSprite::Type type);
 Point<int>& crashPosition();
 void crashPosition(const Point<int>& position);
 
-void MoveObjects();
+void MoveSprites();
 void DestroyAllSprites();
 
 void GenerateCopter(const Point<int>& position);

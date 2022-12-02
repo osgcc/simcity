@@ -1291,7 +1291,7 @@ void DoExplosionSprite(SimSprite& sprite)
 }
 
 
-void MoveObjects()
+void MoveSprites()
 {
     if (Paused())
     {
