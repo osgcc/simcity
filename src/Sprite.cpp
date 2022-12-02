@@ -719,72 +719,72 @@ void DoTrainSprite(SimSprite& sprite)
 }
 
 
-void DoCopterSprite(SimSprite* sprite)
+void DoCopterSprite(SimSprite& sprite)
 {
     static const std::array<Vector<int>, 9> CD =
     {{
         { 0, 0 }, { 0, -5 }, { 3, -3 }, { 5, 0 }, { 3, 3 }, { 0, 5 }, { -3, 3 }, { -5, 0 }, { -3, -3 }
     }};
 
-    if (sprite->sound_count > 0)
+    if (sprite.sound_count > 0)
     {
-        sprite->sound_count--;
+        sprite.sound_count--;
     }
 
-    if (sprite->control < 0)
+    if (sprite.control < 0)
     {
 
-        if (sprite->count > 0)
+        if (sprite.count > 0)
         {
-            sprite->count--;
+            sprite.count--;
         }
 
-        if (!sprite->count)
+        if (!sprite.count)
         {
             // Attract copter to monster and tornado so it blows up more often
             const auto monster = GetSprite(SimSprite::Type::Monster);
             if (monster != nullptr)
             {
-                sprite->destination = monster->position;
+                sprite.destination = monster->position;
             }
             else
             {
                 const auto tornado = GetSprite(SimSprite::Type::Tornado);
                 if (tornado != nullptr)
                 {
-                    sprite->destination = tornado->destination;
+                    sprite.destination = tornado->destination;
                 }
                 else
                 {
-                    sprite->destination = sprite->origin;
+                    sprite.destination = sprite.origin;
                 }
             }
         }
 
-        if (sprite->count == 0) // land
+        if (sprite.count == 0) // land
         {
-            GetDir(sprite->position.x, sprite->position.y, sprite->origin.x, sprite->origin.y);
+            GetDir(sprite.position.x, sprite.position.y, sprite.origin.x, sprite.origin.y);
 
             if (absDist < 30)
             {
-                sprite->active = false;
+                sprite.active = false;
                 return;
             }
         }
     }
     else
     {
-        GetDir(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
+        GetDir(sprite.position.x, sprite.position.y, sprite.destination.x, sprite.destination.y);
         if (absDist < 16)
         {
-            sprite->destination = sprite->origin;
-            sprite->control = -1;
+            sprite.destination = sprite.origin;
+            sprite.control = -1;
         }
     }
 
-    if (!sprite->sound_count) // send report
+    if (!sprite.sound_count) // send report
     {
-        const Point<int> location{ (sprite->position.x + 48) >> 5, sprite->position.y >> 5 };
+        const Point<int> location{ (sprite.position.x + 48) >> 5, sprite.position.y >> 5 };
         if ((location.x >= 0) && (location.x < (SimWidth >> 1)) && (location.y >= 0) && (location.y < (SimHeight >> 1)))
         {
             // Don changed from 160 to 170 to shut the #$%#$% thing up!
@@ -792,18 +792,18 @@ void DoCopterSprite(SimSprite* sprite)
             {
                 SendMesAt(NotificationId::HeavyTrafficReported, (location.x << 1) + 1, (location.y << 1) + 1);
                 MakeSound("city", "HeavyTraffic"); // chopper
-                sprite->sound_count = 200;
+                sprite.sound_count = 200;
             }
         }
     }
 
     if (!(Cycle & 3))
     {
-        int direction{ GetDir(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y) };
-        sprite->frame = TurnTo(sprite->frame, direction);
+        int direction{ GetDir(sprite.position.x, sprite.position.y, sprite.destination.x, sprite.destination.y) };
+        sprite.frame = TurnTo(sprite.frame, direction);
     }
 
-    sprite->position += CD[sprite->frame];
+    sprite.position += CD[sprite.frame];
 }
 
 
@@ -1311,7 +1311,7 @@ void MoveObjects()
                 break;
 
             case SimSprite::Type::Helicopter:
-                DoCopterSprite(&sprite);
+                DoCopterSprite(sprite);
                 break;
 
             case SimSprite::Type::Airplane:
