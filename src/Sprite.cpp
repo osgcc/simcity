@@ -52,11 +52,14 @@ namespace
 
     void loadSpriteImages(SimSprite::Type type, int frames, std::vector<Texture>& frameList)
     {
-        std::string name;
+        if(!frameList.empty())
+        {
+            return;
+        }
 
         for (int i = 0; i < frames; i++)
         {
-            name = std::string("images/obj") + SpriteTypeToId.at(type) + "-" + std::to_string(i) + ".xpm";
+            std::string name = std::string("images/obj") + SpriteTypeToId.at(type) + "-" + std::to_string(i) + ".xpm";
             frameList.push_back(loadTexture(MainWindowRenderer, name));
         }
     }
@@ -205,6 +208,7 @@ namespace
             {
                 sprite.active = true;
                 sprite.position = position;
+                initSprite(sprite, position);
                 return;
             }
         }
@@ -1412,17 +1416,6 @@ void generateHelicopter(const Point<int>& position)
     }
 
     makeSprite(SimSprite::Type::Helicopter, position.skewBy({ 16, 16 }) + Vector<int>{ 0, 30 });
-
-    // set a new destination if we're generating a new airplane
-    if (sprite != nullptr)
-    {
-        sprite->destination =
-        {
-            RandomRange(0, SimWidth - 1),
-            RandomRange(0, SimHeight - 1)
-        };
-        sprite->count = 1500;
-    }
 }
 
 
@@ -1435,16 +1428,6 @@ void generateAirplane(const Point<int>& position)
     }
 
     makeSprite(SimSprite::Type::Airplane, position.skewBy({ 16, 16 }) + Vector<int>{ 48, 12 });
-
-    // set a new destination if we're generating a new airplane
-    if (sprite != nullptr)
-    {
-        sprite->destination =
-        {
-            RandomRange(0, (SimWidth * 16) + 100) - 50,
-            RandomRange(0, (SimHeight * 16) + 100) - 50
-        };
-    }
 }
 
 
@@ -1459,7 +1442,7 @@ void generateTornado()
         //return;
     }
 
-    const Point<int> location{ RandomRange(1, SimWidth - 2),RandomRange(1, SimHeight - 2) };
+    const Point<int> location{ RandomRange(1, SimWidth - 2), RandomRange(1, SimHeight - 2) };
 
     makeSprite(SimSprite::Type::Tornado, location.skewBy({ 16, 16 }));
     ClearMes();
