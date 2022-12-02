@@ -487,10 +487,10 @@ int CanDriveOn(int x, int y)
 }
 
 
-bool CheckSpriteCollision(SimSprite* s1, SimSprite* s2)
+bool CheckSpriteCollision(SimSprite& s1, SimSprite& s2)
 {
-    return ((s1->active) && (s2->active) &&
-        GetDis(s1->position.x + s1->hot.x, s1->position.y + s1->hot.y, s2->position.x + s2->hot.x, s2->position.y + s2->hot.y) < 30);
+    return ((s1.active) && (s2.active) &&
+        GetDis(s1.position.x + s1.hot.x, s1.position.y + s1.hot.y, s2.position.x + s2.hot.x, s2.position.y + s2.hot.y) < 30);
 }
 
 
@@ -856,7 +856,7 @@ void DoAirplaneSprite(SimSprite& sprite)
 
             if (other.type == SimSprite::Type::Airplane || other.type == SimSprite::Type::Helicopter)
             {
-                if(CheckSpriteCollision(&sprite, &other))
+                if(CheckSpriteCollision(sprite, other))
                 {
                     ExplodeSprite(sprite);
                     ExplodeSprite(other);
@@ -1242,7 +1242,7 @@ void DoTornadoSprite(SimSprite& sprite)
             other.type == SimSprite::Type::Helicopter ||
             other.type == SimSprite::Type::Ship ||
             other.type == SimSprite::Type::Train) &&
-            CheckSpriteCollision(&sprite, &other))
+            CheckSpriteCollision(sprite, other))
         {
             ExplodeSprite(other);
         }
