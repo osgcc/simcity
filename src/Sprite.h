@@ -59,7 +59,6 @@ struct SimSprite
 	std::vector<Texture> frames;
 };
 
-extern std::vector<SimSprite> Sprites;
 
 SimSprite* GetSprite(SimSprite::Type type);
 
@@ -67,7 +66,6 @@ Point<int>& crashPosition();
 void crashPosition(const Point<int>& position);
 
 void MoveObjects();
-void DoTrainSprite(SimSprite& sprite);
 void DestroyAllSprites();
 
 void GenerateCopter(const Point<int>& position);
