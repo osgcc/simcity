@@ -60,13 +60,13 @@ struct SimSprite
 };
 
 
-SimSprite* GetSprite(SimSprite::Type type);
-
 Point<int>& crashPosition();
 void crashPosition(const Point<int>& position);
 
-void MoveSprites();
+SimSprite* GetSprite(SimSprite::Type type);
+void DrawSprites();
 void DestroyAllSprites();
+void MoveSprites();
 
 void GenerateCopter(const Point<int>& position);
 void GeneratePlane(const Point<int>& position);
@@ -77,4 +77,3 @@ void MakeExplosionAt(const Point<int>& position);
 void MakeExplosion(const Point<int>& position);
 void MakeTornado();
 void MakeMonster();
-void DrawSprites();

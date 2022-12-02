@@ -48,6 +48,188 @@ namespace
     };
 
     Point<int> CrashPosition{};
+
+
+    void GetObjectXpms(SimSprite::Type type, int frames, std::vector<Texture>& frameList)
+    {
+        std::string name;
+
+        for (int i = 0; i < frames; i++)
+        {
+            name = std::string("images/obj") + SpriteTypeToId.at(type) + "-" + std::to_string(i) + ".xpm";
+            frameList.push_back(loadTexture(MainWindowRenderer, name));
+        }
+    }
+
+
+    void InitSprite(SimSprite& sprite, const Point<int>& position)
+    {
+        sprite.position = position;
+        sprite.origin = {};
+        sprite.destination = {};
+        sprite.size = {};
+        sprite.frame = 0;
+        sprite.count = 0;
+        sprite.sound_count = 0;
+        sprite.dir = 0;
+        sprite.new_dir = 0;
+        sprite.step = 0;
+        sprite.flag = 0;
+        sprite.control = -1;
+        sprite.turn = 0;
+        sprite.accel = 0;
+        sprite.speed = 100;
+        sprite.active = true;
+
+        switch (sprite.type)
+        {
+
+        case SimSprite::Type::Train:
+            sprite.size = { 32, 32 };
+            sprite.offset = { 32, -16 };
+            sprite.hot = { 40, -8 };
+            sprite.frame = 1;
+            sprite.dir = 4;
+            GetObjectXpms(SimSprite::Type::Train, 5, sprite.frames);
+            break;
+
+        case SimSprite::Type::Ship:
+            sprite.size = { 48, 48 };
+            sprite.offset = { 32, -16 };
+            sprite.hot = { 48, 0 };
+
+            if (position.x < 64)
+            {
+                sprite.frame = 2;
+            }
+            else if (position.x >= ((SimWidth - 4) * 16))
+            {
+                sprite.frame = 6;
+            }
+            else if (position.y < 64)
+            {
+                sprite.frame = 4;
+            }
+            else if (position.y >= ((SimHeight - 4) * 16))
+            {
+                sprite.frame = 0;
+            }
+            else
+            {
+                sprite.frame = 2;
+            }
+
+            sprite.new_dir = sprite.frame;
+            sprite.dir = 0;
+            sprite.count = 1;
+            GetObjectXpms(SimSprite::Type::Ship, 9, sprite.frames);
+            break;
+
+        case SimSprite::Type::Monster:
+            sprite.size = { 48, 48 };
+            sprite.offset = { 24, 0 };
+            sprite.hot = { 40, 16 };
+            sprite.destination = { pollutionMax().x * 16, pollutionMax().y * 16 };
+            sprite.origin = position;
+
+            if (position.x > ((SimWidth << 4) / 2))
+            {
+                if (position.y > ((SimHeight << 4) / 2)) sprite.frame = 10;
+                else sprite.frame = 7;
+            }
+            else if (position.y > ((SimHeight << 4) / 2))
+            {
+                sprite.frame = 1;
+            }
+            else
+            {
+                sprite.frame = 4;
+            }
+            sprite.count = 1000;
+            break;
+
+        case SimSprite::Type::Helicopter:
+            sprite.size = { 32, 32 };
+            sprite.offset = { 32, -16 };
+            sprite.hot = { 40, -8 };
+            sprite.destination = { RandomRange(0, SimWidth - 1), RandomRange(0, SimHeight - 1) };
+            sprite.origin = position + Vector<int>{ -30, 0 };
+            sprite.frame = 5;
+            sprite.count = 1500;
+            GetObjectXpms(SimSprite::Type::Helicopter, 9, sprite.frames);
+            break;
+
+        case SimSprite::Type::Airplane:
+            sprite.size = { 48, 48 };
+            sprite.offset = { 24, 0 };
+            sprite.hot = { 48, 16 };
+
+            sprite.destination =
+            {
+                RandomRange(0, (SimWidth * 16) + 100) - 50,
+                RandomRange(0, (SimHeight * 16) + 100) - 50
+            };
+
+            GetObjectXpms(SimSprite::Type::Airplane, 12, sprite.frames);
+            break;
+
+        case SimSprite::Type::Tornado:
+            sprite.size = { 48, 48 };
+            sprite.offset = { 24, 0 };
+            sprite.hot = { 40, 36 };
+            sprite.frame = 0;
+            sprite.count = 200;
+            GetObjectXpms(SimSprite::Type::Tornado, 3, sprite.frames);
+            break;
+
+        case SimSprite::Type::Explosion:
+            sprite.size = { 48, 48 };
+            sprite.offset = { 24, 0 };
+            sprite.hot = { 40, 16 };
+            sprite.frame = 0;
+            GetObjectXpms(SimSprite::Type::Explosion, 6, sprite.frames);
+            break;
+
+        default:
+            throw std::runtime_error("Undefined sprite type");
+            break;
+        }
+    }
+
+
+    void MakeSprite(SimSprite::Type type, const Point<int>& position)
+    {
+        for (auto& sprite : Sprites)
+        {
+            if (sprite.type == type)
+            {
+                sprite.active = true;
+                sprite.position = position;
+                return;
+            }
+        }
+
+        Sprites.push_back(SimSprite());
+        Sprites.back().type = type;
+        InitSprite(Sprites.back(), position);
+    }
+
+
+    void DrawSprite(SimSprite& sprite)
+    {
+        const auto& spriteFrame = sprite.frames[sprite.frame];
+
+        const SDL_Rect dstRect
+        {
+            sprite.position.x - viewOffset().x + sprite.offset.x,
+            sprite.position.y - viewOffset().y + sprite.offset.y,
+            spriteFrame.dimensions.x,
+            spriteFrame.dimensions.y
+        };
+
+        SDL_RenderCopy(MainWindowRenderer, spriteFrame.texture, &spriteFrame.area, &dstRect);
+    }
+
 };
 
 
@@ -60,159 +242,6 @@ Point<int>& crashPosition()
 void crashPosition(const Point<int>& position)
 {
     CrashPosition = position;
-}
-
-
-void GetObjectXpms(SimSprite::Type type, int frames, std::vector<Texture>& frameList)
-{
-    std::string name;
-
-    for (int i = 0; i < frames; i++)
-    {
-        name = std::string("images/obj") + SpriteTypeToId.at(type) + "-" + std::to_string(i) + ".xpm";
-        frameList.push_back(loadTexture(MainWindowRenderer, name));
-    }
-}
-
-
-void InitSprite(SimSprite& sprite, const Point<int>& position)
-{
-    sprite.position = position;
-    sprite.origin = {};
-    sprite.destination = {};
-    sprite.size = {};
-    sprite.frame = 0;
-    sprite.count = 0;
-    sprite.sound_count = 0;
-    sprite.dir = 0;
-    sprite.new_dir = 0;
-    sprite.step = 0;
-    sprite.flag = 0;
-    sprite.control = -1;
-    sprite.turn = 0;
-    sprite.accel = 0;
-    sprite.speed = 100;
-    sprite.active = true;
-
-    switch (sprite.type)
-    {
-
-    case SimSprite::Type::Train:
-        sprite.size = { 32, 32 };
-        sprite.offset = { 32, -16 };
-        sprite.hot = { 40, -8 };
-        sprite.frame = 1;
-        sprite.dir = 4;
-        GetObjectXpms(SimSprite::Type::Train, 5, sprite.frames);
-        break;
-
-    case SimSprite::Type::Ship:
-        sprite.size = { 48, 48 };
-        sprite.offset = { 32, -16 };
-        sprite.hot = { 48, 0 };
-
-        if (position.x < 64)
-        {
-            sprite.frame = 2;
-        }
-        else if (position.x >= ((SimWidth - 4) * 16))
-        {
-            sprite.frame = 6;
-        }
-        else if (position.y < 64)
-        {
-            sprite.frame = 4;
-        }
-        else if (position.y >= ((SimHeight - 4) * 16))
-        {
-            sprite.frame = 0;
-        }
-        else
-        {
-            sprite.frame = 2;
-        }
-
-        sprite.new_dir = sprite.frame;
-        sprite.dir = 0;
-        sprite.count = 1;
-        GetObjectXpms(SimSprite::Type::Ship, 9, sprite.frames);
-        break;
-
-    case SimSprite::Type::Monster:
-        sprite.size = { 48, 48 };
-        sprite.offset = { 24, 0 };
-        sprite.hot = { 40, 16 };
-        sprite.destination = { pollutionMax().x * 16, pollutionMax().y * 16 };
-        sprite.origin = position;
-
-        if (position.x > ((SimWidth << 4) / 2))
-        {
-            if (position.y > ((SimHeight << 4) / 2)) sprite.frame = 10;
-            else sprite.frame = 7;
-        }
-        else if (position.y > ((SimHeight << 4) / 2))
-        {
-            sprite.frame = 1;
-        }
-        else
-        {
-            sprite.frame = 4;
-        }
-        sprite.count = 1000;
-        break;
-
-    case SimSprite::Type::Helicopter:
-        sprite.size = { 32, 32 };
-        sprite.offset = { 32, -16 };
-        sprite.hot = { 40, -8 };
-        sprite.destination = { RandomRange(0, SimWidth - 1), RandomRange(0, SimHeight - 1) };
-        sprite.origin = position + Vector<int>{ -30, 0 };
-        sprite.frame = 5;
-        sprite.count = 1500;
-        GetObjectXpms(SimSprite::Type::Helicopter, 9, sprite.frames);
-        break;
-
-    case SimSprite::Type::Airplane:
-        sprite.size = { 48, 48 };
-        sprite.offset = { 24, 0 };
-        sprite.hot = { 48, 16 };
-
-        sprite.destination =
-        {
-            RandomRange(0, (SimWidth * 16) + 100) - 50,
-            RandomRange(0, (SimHeight * 16) + 100) - 50
-        };
-        
-        GetObjectXpms(SimSprite::Type::Airplane, 12, sprite.frames);
-        break;
-
-    case SimSprite::Type::Tornado:
-        sprite.size = { 48, 48 };
-        sprite.offset = { 24, 0 };
-        sprite.hot = { 40, 36 };
-        sprite.frame = 0;
-        sprite.count = 200;
-        GetObjectXpms(SimSprite::Type::Tornado, 3, sprite.frames);
-        break;
-
-    case SimSprite::Type::Explosion:
-        sprite.size = { 48, 48 };
-        sprite.offset = { 24, 0 };
-        sprite.hot = { 40, 16 };
-        sprite.frame = 0;
-        GetObjectXpms(SimSprite::Type::Explosion, 6, sprite.frames);
-        break;
-
-    default:
-        throw std::runtime_error("Undefined sprite type");
-        break;
-    }
-}
-
-
-void DestroyAllSprites()
-{
-    Sprites.clear();
 }
 
 
@@ -230,40 +259,6 @@ SimSprite* GetSprite(SimSprite::Type type)
 }
 
 
-void MakeSprite(SimSprite::Type type, const Point<int>& position)
-{
-    for (auto& sprite : Sprites)
-    {
-        if (sprite.type == type)
-        {
-            sprite.active = true;
-            sprite.position = position;
-            return;
-        }
-    }
-
-    Sprites.push_back(SimSprite());
-    Sprites.back().type = type;
-    InitSprite(Sprites.back(), position);
-}
-
-
-void DrawSprite(SimSprite& sprite)
-{
-    const auto& spriteFrame = sprite.frames[sprite.frame];
-
-    const SDL_Rect dstRect
-    {
-        sprite.position.x - viewOffset().x + sprite.offset.x,
-        sprite.position.y - viewOffset().y + sprite.offset.y,
-        spriteFrame.dimensions.x,
-        spriteFrame.dimensions.y
-    };
-
-    SDL_RenderCopy(MainWindowRenderer, spriteFrame.texture, &spriteFrame.area, &dstRect);
-}
-
-
 void DrawSprites()
 {
     for (auto& sprite : Sprites)
@@ -275,6 +270,12 @@ void DrawSprites()
 
         DrawSprite(sprite);
     }
+}
+
+
+void DestroyAllSprites()
+{
+    Sprites.clear();
 }
 
 
