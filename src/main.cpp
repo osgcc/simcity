@@ -1099,7 +1099,7 @@ void GameLoop()
 
         SDL_RenderClear(MainWindowRenderer);
         SDL_RenderCopy(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
-        DrawObjects();
+        DrawSprites();
 
         if (budget.NeedsAttention() || budgetWindow->visible())
         {

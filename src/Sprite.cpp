@@ -264,7 +264,7 @@ void DrawSprite(SimSprite& sprite)
 }
 
 
-void DrawObjects()
+void DrawSprites()
 {
     for (auto& sprite : Sprites)
     {

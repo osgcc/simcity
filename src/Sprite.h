@@ -77,4 +77,4 @@ void MakeExplosionAt(const Point<int>& position);
 void MakeExplosion(const Point<int>& position);
 void MakeTornado();
 void MakeMonster();
-void DrawObjects();
+void DrawSprites();
