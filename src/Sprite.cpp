@@ -432,36 +432,6 @@ int GetDir(int orgX, int orgY, int desX, int desY)
 }
 
 
-int tileIsDrivable(int x, int y)
-{
-    int tile;
-
-    if (!CoordinatesValid(x, y, SimWidth, SimHeight))
-    {
-        return 0;
-    }
-
-    tile = Map[x][y] & LOMASK;
-
-    if (((tile >= ROADBASE) &&
-        (tile <= LASTROAD) &&
-        (tile != BRWH) &&
-        (tile != BRWV)) ||
-        (tile == HRAILROAD) ||
-        (tile == VRAILROAD))
-    {
-        return 1;
-    }
-
-    if ((tile == DIRT) || tally(tile))
-    {
-        return -1;
-    }
-
-    return 0;
-}
-
-
 bool pointInRange(const Point<int>& point1, const Point<int>& point2, const int distance)
 {
     return (point2 - point1).lengthSquared() <= distance * distance;
