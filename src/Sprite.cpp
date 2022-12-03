@@ -1260,7 +1260,7 @@ void makeMonsterAt(const Point<int>& position)
 }
 
 
-bool findSpawnPosition(SimSprite& sprite)
+bool findSpawnPosition()
 {
     for (int z = 0; z < 300; z++)
     {
@@ -1289,7 +1289,7 @@ void generateMonster()
         sprite->destination = { pollutionMax().x * 16, pollutionMax().y * 16 };
     }
 
-    if (!findSpawnPosition(*sprite))
+    if (!findSpawnPosition())
     {
         makeMonsterAt({ 60, 50 });
     }
