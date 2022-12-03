@@ -1203,8 +1203,9 @@ void makeShipAt(const Point<int>& position)
 
 void generateShip()
 {
-    if (RandomRange(0, 3) == 0)
+    switch (RandomRange(0, 3))
     {
+    case 0:
         for (int x = 4; x < SimWidth - 2; x++)
         {
             if (Map[x][0] == CHANNEL)
@@ -1213,10 +1214,9 @@ void generateShip()
                 return;
             }
         }
-    }
+        break;
 
-    if (RandomRange(0, 3) == 0)
-    {
+    case 1:
         for (int y = 1; y < SimHeight - 2; y++)
         {
             if (Map[0][y] == CHANNEL)
@@ -1225,10 +1225,9 @@ void generateShip()
                 return;
             }
         }
-    }
+        break;
 
-    if (RandomRange(0, 3) == 0)
-    {
+    case 2:
         for (int x = 4; x < SimWidth - 2; x++)
         {
             if (Map[x][SimHeight - 1] == CHANNEL)
@@ -1237,10 +1236,9 @@ void generateShip()
                 return;
             }
         }
-    }
+        break;
 
-    if (RandomRange(0, 3) == 0)
-    {
+    case 3:
         for (int y = 1; y < SimHeight - 2; y++)
         {
             if (Map[SimWidth - 1][y] == CHANNEL)
@@ -1249,6 +1247,7 @@ void generateShip()
                 return;
             }
         }
+        break;
     }
 }
 
