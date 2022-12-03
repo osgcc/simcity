@@ -930,7 +930,7 @@ void updateShip(SimSprite& sprite)
 }
 
 
-void updateMonster(SimSprite* sprite)
+void updateMonster(SimSprite& sprite)
 {
     static int Gx[5] = { 2,  2, -2, -2,  0 };
     static int Gy[5] = { -2,  2,  2, -2,  0 };
@@ -940,28 +940,26 @@ void updateMonster(SimSprite* sprite)
     static int nn2[4] = { 11,  2,  5,  8 };
     int d, z, c;
 
-    if (sprite->sound_count > 0)
+    if (sprite.sound_count > 0)
     {
-        sprite->sound_count--;
+        sprite.sound_count--;
     }
 
-
-
-    d = (sprite->frame - 1) / 3;
+    d = (sprite.frame - 1) / 3;
 
     if (d < 4) /* turn n s e w */
     {
-        z = (sprite->frame - 1) % 3;
+        z = (sprite.frame - 1) % 3;
 
         if (z == 2)
         {
-            sprite->step = 0;
+            sprite.step = 0;
         }
         if (z == 0)
         {
-            sprite->step = 1;
+            sprite.step = 1;
         }
-        if (sprite->step)
+        if (sprite.step)
         {
             z++;
         }
@@ -970,22 +968,22 @@ void updateMonster(SimSprite* sprite)
             z--;
         }
 
-        getDirection(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
+        getDirection(sprite.position.x, sprite.position.y, sprite.destination.x, sprite.destination.y);
         if (absDist < 60)
         {
-            if (sprite->flag == 0)
+            if (sprite.flag == 0)
             {
-                sprite->flag = 1;
-                sprite->destination = sprite->origin;
+                sprite.flag = 1;
+                sprite.destination = sprite.origin;
             }
             else
             {
-                sprite->active = false;
+                sprite.active = false;
                 return;
             }
         }
 
-        c = getDirection(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
+        c = getDirection(sprite.position.x, sprite.position.y, sprite.destination.x, sprite.destination.y);
         c = (c - 1) / 2;
 
         if ((c != d) && (!RandomRange(0, 10)))
@@ -1000,17 +998,17 @@ void updateMonster(SimSprite* sprite)
             }
 
             d = 4;
-            if (!sprite->sound_count)
+            if (!sprite.sound_count)
             {
                 MakeSound("city", "Monster -speed [MonsterSpeed]");
-                sprite->sound_count = 50 + RandomRange(0, 100);
+                sprite.sound_count = 50 + RandomRange(0, 100);
             }
         }
     }
     else
     {
         d = 4;
-        c = sprite->frame;
+        c = sprite.frame;
         z = (c - 13) & 3;
         if (!(Rand16() & 3))
         {
@@ -1027,19 +1025,19 @@ void updateMonster(SimSprite* sprite)
         }
     }
 
-    sprite->frame = std::clamp(((d * 3) + z) + 1, 0, 16);
-    sprite->position += Vector<int>{ Gx[d], Gy[d] };
+    sprite.frame = std::clamp(((d * 3) + z) + 1, 0, 16);
+    sprite.position += Vector<int>{ Gx[d], Gy[d] };
 
-    if (sprite->count > 0)
+    if (sprite.count > 0)
     {
-        sprite->count--;
+        sprite.count--;
     }
 
-    c = getChar(sprite->position.x + sprite->hot.x, sprite->position.y + sprite->hot.y);
+    c = getChar(sprite.position.x + sprite.hot.x, sprite.position.y + sprite.hot.y);
     
-    if ((c == -1) || ((c == RIVER) && (sprite->count != 0)))
+    if ((c == -1) || ((c == RIVER) && (sprite.count != 0)))
     {
-        sprite->active = false;
+        sprite.active = false;
     }
 
 
@@ -1058,7 +1056,7 @@ void updateMonster(SimSprite* sprite)
     }
     */
 
-    destroyTile(sprite->position + Vector<int>{48, 16});
+    destroyTile(sprite.position + Vector<int>{48, 16});
 }
 
 
@@ -1167,7 +1165,7 @@ void updateSprites()
                 break;
 
             case SimSprite::Type::Monster:
-                updateMonster(&sprite);
+                updateMonster(sprite);
                 break;
 
             case SimSprite::Type::Tornado:
