@@ -1336,7 +1336,6 @@ void generateTornado()
     makeSprite(SimSprite::Type::Tornado, location.skewBy({ 16, 16 }));
     ClearMes();
     SendMesAt(NotificationId::TornadoReported, location.x, location.y);
-    
 }
 
 
