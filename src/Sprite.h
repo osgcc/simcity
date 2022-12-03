@@ -49,7 +49,6 @@ struct SimSprite
 	int new_dir{ 0 };
 	int step{ 0 };
 	int flag{ 0 };
-	int control{ 0 };
 	int turn{ 0 };
 	int accel{ 0 };
 	int speed{ 0 };

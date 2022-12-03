@@ -78,7 +78,6 @@ namespace
         sprite.new_dir = 0;
         sprite.step = 0;
         sprite.flag = 0;
-        sprite.control = -1;
         sprite.turn = 0;
         sprite.accel = 0;
         sprite.speed = 100;
@@ -676,65 +675,53 @@ void updateTrain(SimSprite& sprite)
 void updateHelicopter(SimSprite& sprite)
 {
     static const std::array<Vector<int>, 9> CD =
-    {{
+    { {
         { 0, 0 }, { 0, -5 }, { 3, -3 }, { 5, 0 }, { 3, 3 }, { 0, 5 }, { -3, 3 }, { -5, 0 }, { -3, -3 }
-    }};
+    } };
 
     if (sprite.sound_count > 0)
     {
         sprite.sound_count--;
     }
 
-    if (sprite.control < 0)
+    if (sprite.count > 0)
     {
+        sprite.count--;
+    }
 
-        if (sprite.count > 0)
+    if (!sprite.count)
+    {
+        // Attract copter to monster and tornado so it blows up more often
+        const auto monster = getSprite(SimSprite::Type::Monster);
+        if (monster != nullptr)
         {
-            sprite.count--;
+            sprite.destination = monster->position;
         }
-
-        if (!sprite.count)
+        else
         {
-            // Attract copter to monster and tornado so it blows up more often
-            const auto monster = getSprite(SimSprite::Type::Monster);
-            if (monster != nullptr)
+            const auto tornado = getSprite(SimSprite::Type::Tornado);
+            if (tornado != nullptr)
             {
-                sprite.destination = monster->position;
+                sprite.destination = tornado->destination;
             }
             else
             {
-                const auto tornado = getSprite(SimSprite::Type::Tornado);
-                if (tornado != nullptr)
-                {
-                    sprite.destination = tornado->destination;
-                }
-                else
-                {
-                    sprite.destination = sprite.origin;
-                }
-            }
-        }
-
-        if (sprite.count == 0) // land
-        {
-            getDirection(sprite.position.x, sprite.position.y, sprite.origin.x, sprite.origin.y);
-
-            if (absDist < 30)
-            {
-                sprite.active = false;
-                return;
+                sprite.destination = sprite.origin;
             }
         }
     }
-    else
+
+    if (sprite.count == 0) // land
     {
-        getDirection(sprite.position.x, sprite.position.y, sprite.destination.x, sprite.destination.y);
-        if (absDist < 16)
+        getDirection(sprite.position.x, sprite.position.y, sprite.origin.x, sprite.origin.y);
+
+        if (absDist < 30)
         {
-            sprite.destination = sprite.origin;
-            sprite.control = -1;
+            sprite.active = false;
+            return;
         }
     }
+
 
     if (!sprite.sound_count) // send report
     {
@@ -956,179 +943,150 @@ void updateMonster(SimSprite* sprite)
         sprite->sound_count--;
     }
 
-    if (sprite->control < 0)
+
+    /* business as usual */
+    /*
+    if (sprite->control == -2)
     {
-        /* business as usual */
-
-        if (sprite->control == -2)
+        d = (sprite->frame - 1) / 3;
+        z = (sprite->frame - 1) % 3;
+        if (z == 2) sprite->step = 0;
+        if (z == 0) sprite->step = 1;
+        if (sprite->step)
         {
-            d = (sprite->frame - 1) / 3;
-            z = (sprite->frame - 1) % 3;
-            if (z == 2) sprite->step = 0;
-            if (z == 0) sprite->step = 1;
-            if (sprite->step)
-            {
-                z++;
-            }
-            else
-            {
-                z--;
-            }
-
-            c = getDirection(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
-
-            if (absDist < 18)
-            {
-                sprite->control = -1;
-                sprite->count = 1000;
-                sprite->flag = 1;
-                sprite->destination = sprite->origin;
-            }
-            else
-            {
-                c = (c - 1) / 2;
-                if (((c != d) && (!RandomRange(0, 5))) || (!RandomRange(0, 20)))
-                {
-                    int diff = (c - d) & 3;
-
-                    if ((diff == 1) || (diff == 3))
-                    {
-                        d = c;
-                    }
-                    else
-                    {
-                        if (Rand16() & 1) d++; else d--;
-                        d &= 3;
-                    }
-                }
-                else
-                {
-                    if (!RandomRange(0, 20))
-                    {
-                        if (Rand16() & 1)
-                        {
-                            d++;
-                        }
-                        else
-                        {
-                            d--;
-                        }
-                        d &= 3;
-                    }
-                }
-            }
+            z++;
         }
         else
         {
+            z--;
+        }
 
-            d = (sprite->frame - 1) / 3;
+        c = getDirection(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
 
-            if (d < 4) /* turn n s e w */
+        if (absDist < 18)
+        {
+            sprite->control = -1;
+            sprite->count = 1000;
+            sprite->flag = 1;
+            sprite->destination = sprite->origin;
+        }
+        else
+        {
+            c = (c - 1) / 2;
+            if (((c != d) && (!RandomRange(0, 5))) || (!RandomRange(0, 20)))
             {
-                z = (sprite->frame - 1) % 3;
+                int diff = (c - d) & 3;
 
-                if (z == 2)
+                if ((diff == 1) || (diff == 3))
                 {
-                    sprite->step = 0;
-                }
-                if (z == 0)
-                {
-                    sprite->step = 1;
-                }
-                if (sprite->step)
-                {
-                    z++;
+                    d = c;
                 }
                 else
                 {
-                    z--;
-                }
-
-                getDirection(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
-                if (absDist < 60)
-                {
-                    if (sprite->flag == 0)
-                    {
-                        sprite->flag = 1;
-                        sprite->destination = sprite->origin;
-                    }
-                    else
-                    {
-                        sprite->frame = 0;
-                        return;
-                    }
-                }
-
-                c = getDirection(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
-                c = (c - 1) / 2;
-
-                if ((c != d) && (!RandomRange(0, 10)))
-                {
-                    if (Rand16() & 1)
-                    {
-                        z = ND1[d];
-                    }
-                    else
-                    {
-                        z = ND2[d];
-                    }
-
-                    d = 4;
-                    if (!sprite->sound_count)
-                    {
-                        MakeSound("city", "Monster -speed [MonsterSpeed]"); /* monster */
-                        sprite->sound_count = 50 + RandomRange(0, 100);
-                    }
+                    if (Rand16() & 1) d++; else d--;
+                    d &= 3;
                 }
             }
             else
             {
-                d = 4;
-                c = sprite->frame;
-                z = (c - 13) & 3;
-                if (!(Rand16() & 3))
+                if (!RandomRange(0, 20))
                 {
                     if (Rand16() & 1)
                     {
-                        z = nn1[z];
+                        d++;
                     }
                     else
                     {
-                        z = nn2[z];
+                        d--;
                     }
-                    d = (z - 1) / 3;
-                    z = (z - 1) % 3;
+                    d &= 3;
                 }
             }
         }
     }
     else
     {
-        // somebody's taken control of the monster
+    */
+    d = (sprite->frame - 1) / 3;
 
-        d = sprite->control;
+    if (d < 4) /* turn n s e w */
+    {
         z = (sprite->frame - 1) % 3;
 
         if (z == 2)
         {
             sprite->step = 0;
         }
-
         if (z == 0)
         {
             sprite->step = 1;
         }
-
         if (sprite->step)
         {
             z++;
         }
-
         else
         {
             z--;
         }
+
+        getDirection(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
+        if (absDist < 60)
+        {
+            if (sprite->flag == 0)
+            {
+                sprite->flag = 1;
+                sprite->destination = sprite->origin;
+            }
+            else
+            {
+                sprite->frame = 0;
+                return;
+            }
+        }
+
+        c = getDirection(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
+        c = (c - 1) / 2;
+
+        if ((c != d) && (!RandomRange(0, 10)))
+        {
+            if (Rand16() & 1)
+            {
+                z = ND1[d];
+            }
+            else
+            {
+                z = ND2[d];
+            }
+
+            d = 4;
+            if (!sprite->sound_count)
+            {
+                MakeSound("city", "Monster -speed [MonsterSpeed]");
+                sprite->sound_count = 50 + RandomRange(0, 100);
+            }
+        }
     }
+    else
+    {
+        d = 4;
+        c = sprite->frame;
+        z = (c - 13) & 3;
+        if (!(Rand16() & 3))
+        {
+            if (Rand16() & 1)
+            {
+                z = nn1[z];
+            }
+            else
+            {
+                z = nn2[z];
+            }
+            d = (z - 1) / 3;
+            z = (z - 1) % 3;
+        }
+    }
+    //}
 
     z = (((d * 3) + z) + 1);
     if (z > 16)
@@ -1143,13 +1101,12 @@ void updateMonster(SimSprite* sprite)
     {
         sprite->count--;
     }
+
     c = getChar(sprite->position.x + sprite->hot.x, sprite->position.y + sprite->hot.y);
-    if ((c == -1) ||
-        ((c == RIVER) &&
-            (sprite->count != 0) &&
-            (sprite->control == -1)))
+    
+    if ((c == -1) || ((c == RIVER) && (sprite->count != 0)))
     {
-        sprite->frame = 0; /* kill zilla */
+        sprite->frame = 0; // kill zilla
     }
 
 
