@@ -21,6 +21,7 @@
 #include "w_sound.h"
 #include "w_util.h"
 
+#include <algorithm>
 #include <map>
 #include <string>
 
@@ -148,6 +149,7 @@ namespace
                 sprite.frame = 4;
             }
             sprite.count = 1000;
+            loadSpriteImages(SimSprite::Type::Monster, 17, sprite.frames);
             break;
 
         case SimSprite::Type::Helicopter:
@@ -944,69 +946,7 @@ void updateMonster(SimSprite* sprite)
     }
 
 
-    /* business as usual */
-    /*
-    if (sprite->control == -2)
-    {
-        d = (sprite->frame - 1) / 3;
-        z = (sprite->frame - 1) % 3;
-        if (z == 2) sprite->step = 0;
-        if (z == 0) sprite->step = 1;
-        if (sprite->step)
-        {
-            z++;
-        }
-        else
-        {
-            z--;
-        }
 
-        c = getDirection(sprite->position.x, sprite->position.y, sprite->destination.x, sprite->destination.y);
-
-        if (absDist < 18)
-        {
-            sprite->control = -1;
-            sprite->count = 1000;
-            sprite->flag = 1;
-            sprite->destination = sprite->origin;
-        }
-        else
-        {
-            c = (c - 1) / 2;
-            if (((c != d) && (!RandomRange(0, 5))) || (!RandomRange(0, 20)))
-            {
-                int diff = (c - d) & 3;
-
-                if ((diff == 1) || (diff == 3))
-                {
-                    d = c;
-                }
-                else
-                {
-                    if (Rand16() & 1) d++; else d--;
-                    d &= 3;
-                }
-            }
-            else
-            {
-                if (!RandomRange(0, 20))
-                {
-                    if (Rand16() & 1)
-                    {
-                        d++;
-                    }
-                    else
-                    {
-                        d--;
-                    }
-                    d &= 3;
-                }
-            }
-        }
-    }
-    else
-    {
-    */
     d = (sprite->frame - 1) / 3;
 
     if (d < 4) /* turn n s e w */
@@ -1040,7 +980,7 @@ void updateMonster(SimSprite* sprite)
             }
             else
             {
-                sprite->frame = 0;
+                sprite->active = false;
                 return;
             }
         }
@@ -1086,15 +1026,8 @@ void updateMonster(SimSprite* sprite)
             z = (z - 1) % 3;
         }
     }
-    //}
 
-    z = (((d * 3) + z) + 1);
-    if (z > 16)
-    {
-        z = 16;
-    }
-
-    sprite->frame = z;
+    sprite->frame = std::clamp(((d * 3) + z) + 1, 0, 16);
     sprite->position += Vector<int>{ Gx[d], Gy[d] };
 
     if (sprite->count > 0)
@@ -1106,7 +1039,7 @@ void updateMonster(SimSprite* sprite)
     
     if ((c == -1) || ((c == RIVER) && (sprite->count != 0)))
     {
-        sprite->frame = 0; // kill zilla
+        sprite->active = false;
     }
 
 
@@ -1328,39 +1261,39 @@ void makeMonsterAt(const Point<int>& position)
 }
 
 
-void generateMonster()
+bool findSpawnPosition(SimSprite& sprite)
 {
-    /*
-    bool done = false;
-
-    SimSprite* sprite;
-
-    if ((sprite = getSprite(GOD)) != NULL)
-    {
-        sprite->sound_count = 1;
-        sprite->count = 1000;
-        sprite->dest_x = PolMaxX << 4;
-        sprite->dest_y = PolMaxY << 4;
-        return;
-    }
-
     for (int z = 0; z < 300; z++)
     {
         const int x = RandomRange(0, SimWidth - 20) + 10;
         const int y = RandomRange(0, SimHeight - 10) + 5;
         if ((Map[x][y] == RIVER) || (Map[x][y] == RIVER + BULLBIT))
         {
-            makeMonsterAt(x, y);
-            done = true;
-            break;
+            makeMonsterAt({ x, y });
+            return true;
         }
     }
 
-    if (!done)
+    return false;
+}
+
+
+void generateMonster()
+{
+    bool done{ false };
+
+    SimSprite* sprite = getSprite(SimSprite::Type::Monster);
+    if (sprite)
     {
-        makeMonsterAt(60, 50);
+        sprite->sound_count = 1;
+        sprite->count = 1000;
+        sprite->destination = { pollutionMax().x * 16, pollutionMax().y * 16 };
     }
-    */
+
+    if (!findSpawnPosition(*sprite))
+    {
+        makeMonsterAt({ 60, 50 });
+    }
 }
 
 
