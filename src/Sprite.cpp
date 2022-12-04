@@ -284,7 +284,7 @@ void destroyAllSprites()
 }
 
 
-int getChar(int x, int y)
+int getTile(int x, int y)
 {
   x >>= 4;
   y >>= 4;
@@ -632,7 +632,7 @@ void updateTrain(SimSprite& sprite)
             }
         }
 
-        int c = getChar(sprite.position.x + CheckVector[checkDirection].x + 48, sprite.position.y + CheckVector[checkDirection].y);
+        int c = getTile(sprite.position.x + CheckVector[checkDirection].x + 48, sprite.position.y + CheckVector[checkDirection].y);
 
         if (((c >= RAILBASE) && (c <= LASTRAIL)) || /* track? */
             (c == RAILVPOWERH) ||
@@ -1039,7 +1039,7 @@ void updateMonster(SimSprite& sprite)
         sprite.count--;
     }
 
-    c = getChar(sprite.position.x + sprite.hot.x, sprite.position.y + sprite.hot.y);
+    c = getTile(sprite.position.x + sprite.hot.x, sprite.position.y + sprite.hot.y);
     
     if ((c == -1) || ((c == RIVER) && (sprite.count != 0)))
     {
