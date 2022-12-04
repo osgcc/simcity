@@ -53,6 +53,7 @@ void ToolPalette::draw()
 
     for (size_t i = 0; i < 20; ++i)
     {
+        if (mToolButtons[i].tool == Tool::None) { continue; }
         SDL_RenderCopy(mRenderer, texture.texture, &mToolButtonUV[i + (mToolButtons[i].state * 20)], &mToolButtons[i].rect);
     }
 }
@@ -195,7 +196,7 @@ void ToolPalette::setToolValues()
     mToolButtons[15].tool = Tool::Coal;
     mToolButtons[16].tool = Tool::Nuclear;
     mToolButtons[17].tool = Tool::Airport;
-    mToolButtons[18].tool = Tool::Network;
+    mToolButtons[18].tool = Tool::None;
     mToolButtons[19].tool = Tool::None; // Unused
 }
 
