@@ -577,6 +577,7 @@ void handleKeyEvent(SDL_Event& event)
         {
             resetGame();
             LoadCity(fileIo->fullPath(), cityProperties, budget);
+            DrawBigMap();
         }
         break;
 
