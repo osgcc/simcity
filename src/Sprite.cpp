@@ -932,20 +932,26 @@ void updateShip(SimSprite& sprite)
 
 void updateMonster(SimSprite& sprite)
 {
-    static int Gx[5] = { 2,  2, -2, -2,  0 };
-    static int Gy[5] = { -2,  2,  2, -2,  0 };
-    static int ND1[4] = { 0,  1,  2,  3 };
-    static int ND2[4] = { 1,  2,  3,  0 };
-    static int nn1[4] = { 2,  5,  8, 11 };
-    static int nn2[4] = { 11,  2,  5,  8 };
-    int d, z, c;
+    static const std::array<Vector<int>, 5> G =
+    {{
+        { 2, -2 }, { 2, 2 }, { -2, 2 }, { -2, -2 }, { 0, 0 }
+    }};
+
+    static const int ND1[4] = { 0,  1,  2,  3 };
+    static const int ND2[4] = { 1,  2,  3,  0 };
+
+    static const int nn1[4] = { 2,  5,  8, 11 };
+    static const int nn2[4] = { 11,  2,  5,  8 };
+
+
+    int z, c;
 
     if (sprite.sound_count > 0)
     {
         sprite.sound_count--;
     }
 
-    d = (sprite.frame - 1) / 3;
+    int d{ (sprite.frame - 1) / 3 };
 
     if (d < 4) /* turn n s e w */
     {
@@ -1026,7 +1032,7 @@ void updateMonster(SimSprite& sprite)
     }
 
     sprite.frame = std::clamp(((d * 3) + z) + 1, 0, 16);
-    sprite.position += Vector<int>{ Gx[d], Gy[d] };
+    sprite.position += G[d];
 
     if (sprite.count > 0)
     {
