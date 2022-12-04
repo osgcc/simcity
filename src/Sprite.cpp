@@ -630,7 +630,7 @@ void updateTrain(SimSprite& sprite)
             }
         }
 
-        int c = getTile(sprite.position + CheckVector[checkDirection]);
+        int c = getTile(sprite.position + CheckVector[checkDirection] + Vector<int>{ 48, 0});
 
         if (((c >= RAILBASE) && (c <= LASTRAIL)) || /* track? */
             (c == RAILVPOWERH) ||
