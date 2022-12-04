@@ -220,6 +220,7 @@ void ToolPalette::cancelTool()
 {
     for (auto& item : mToolButtons)
     {
+        if (item.state == DisabledState) { continue; }
         item.state = NormalState;
     }
 
