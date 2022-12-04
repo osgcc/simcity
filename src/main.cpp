@@ -531,7 +531,7 @@ void handleKeyEvent(SDL_Event& event)
     switch (event.key.keysym.sym)
     {
     case SDLK_ESCAPE:
-        simExit();
+        budgetWindow->hide();
         break;
 
     case SDLK_0:
