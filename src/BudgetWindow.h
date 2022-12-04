@@ -23,8 +23,6 @@
 class BudgetWindow : public WindowBase
 {
 public:
-	const std::string Title{ "Annual Fiscal Budget" };
-
 	enum class ButtonId
 	{
 		None,
