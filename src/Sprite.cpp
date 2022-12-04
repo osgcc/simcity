@@ -605,7 +605,7 @@ void explodeSprite(SimSprite& sprite)
 void updateTrain(SimSprite& sprite)
 {
     static const std::array<Vector<int>, 4> CheckVector{{ {0, -16}, {16, 0}, {0, 16}, {-16, 0} }};
-    static const std::array<Vector<int>, 5> DirectionVector{{ {0, -4}, {4, 0}, {0, 4}, {-4, 0}, {0, 0} }};
+    static const std::array<Vector<int>, 5> MovementVector{{ {0, -4}, {4, 0}, {0, 4}, {-4, 0}, {0, 0} }};
 
 
     static int TrainPic2[5] = { 0, 1, 0, 1, 4 };
@@ -615,7 +615,7 @@ void updateTrain(SimSprite& sprite)
         sprite.frame = TrainPic2[sprite.dir];
     }
 
-    sprite.position += DirectionVector[sprite.dir];
+    sprite.position += MovementVector[sprite.dir];
 
     int dir = RandomRange(0, 4);
     for (int z = dir; z < (dir + 4); z++)
