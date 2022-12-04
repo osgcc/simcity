@@ -21,7 +21,6 @@
 #include <stdexcept>
 
 
-
 /**
  * Constructs a minimap window
  * 
