@@ -23,6 +23,12 @@
 #include <stdexcept>
 
 
+namespace
+{
+    constexpr SDL_Color BackgroundColor{ 137, 174, 228, 255 };
+};
+
+
 /**
  * Constructs a minimap window
  * 
@@ -63,7 +69,6 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
 
     mTiles = loadTexture(mRenderer, "images/tilessm.xpm");
     mTexture.texture = SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, size.x * MiniTileSize, size.y * MiniTileSize);
-    SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 150);
 }
 
 
@@ -128,6 +133,10 @@ void MiniMapWindow::show()
 
 void MiniMapWindow::draw()
 {
+    SDL_SetRenderDrawColor(mRenderer, BackgroundColor.r, BackgroundColor.g, BackgroundColor.b, 255);
+    SDL_RenderClear(mRenderer);
+    SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 150);
+
     SDL_Rect miniMapDrawRect{ 0, 0, MiniTileSize, MiniTileSize };
 
     SDL_SetRenderTarget(mRenderer, mTexture.texture);
@@ -233,11 +242,14 @@ void MiniMapWindow::handleWindowEvent(const SDL_Event& event)
     {
     case SDL_WINDOWEVENT_MINIMIZED:
         hide();
+        mButtonDownInMinimapArea = false;
+        break;
 
     case SDL_WINDOWEVENT_FOCUS_LOST:
     case SDL_WINDOWEVENT_HIDDEN:
     case SDL_WINDOWEVENT_CLOSE:
         mButtonDownInMinimapArea = false;
+        break;
 
     default:
         break;
