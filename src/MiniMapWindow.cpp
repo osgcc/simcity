@@ -13,6 +13,8 @@
 #include "BindFunction.h"
 #include "Map.h"
 
+#include "w_util.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -31,7 +33,9 @@
 MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size, const Vector<int>& tileSize):
     MiniTileSize{ tileSize.y },
     TileSize{ tileSize.x },
-    mMapSize{ size }
+    mMapSize{ size },
+    mMinimapArea{ 0, 0, size.x * MiniTileSize, size.y * MiniTileSize },
+    mButtonArea{ 0, mMinimapArea.h, mMinimapArea.w, ButtonAreaHeight }
 {
     if (!SDL_WasInit(SDL_INIT_VIDEO))
     {
@@ -41,7 +45,7 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
 
     mWindow = SDL_CreateWindow("Mini Map",
         position.x, position.y,
-        size.x * MiniTileSize, size.y * MiniTileSize,
+        size.x * MiniTileSize, size.y * MiniTileSize + ButtonAreaHeight,
         SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_HIDDEN);
 
     if (!mWindow)
@@ -144,7 +148,7 @@ void MiniMapWindow::draw()
 
 void MiniMapWindow::drawUI()
 {
-    SDL_RenderCopy(mRenderer, mTexture.texture, nullptr, nullptr);
+    SDL_RenderCopy(mRenderer, mTexture.texture, nullptr, &mMinimapArea);
 
     //SDL_RenderCopy(MainWindowRenderer, powerMapTexture().texture, nullptr, &MiniMapDestination);
 
@@ -200,12 +204,21 @@ void MiniMapWindow::handleMouseEvent(const SDL_Event& event)
     case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT)
         {
-            focusViewpoint({ event.button.x, event.button.y });
+            const Point<int> point{ event.button.x, event.button.y };
+            if (pointInRect(point, mMinimapArea))
+            {
+                mButtonDownInMinimapArea = true;
+                focusViewpoint(point);
+            }
         }
         break;
 
     case SDL_MOUSEMOTION:
         handleMouseMotion(event);
+        break;
+
+    case SDL_MOUSEBUTTONUP:
+        mButtonDownInMinimapArea = false;
         break;
 
     default:
@@ -216,15 +229,29 @@ void MiniMapWindow::handleMouseEvent(const SDL_Event& event)
 
 void MiniMapWindow::handleWindowEvent(const SDL_Event& event)
 {
-    if(event.window.event == SDL_WINDOWEVENT_MINIMIZED)
+    switch (event.window.event)
     {
+    case SDL_WINDOWEVENT_MINIMIZED:
         hide();
+
+    case SDL_WINDOWEVENT_FOCUS_LOST:
+    case SDL_WINDOWEVENT_HIDDEN:
+    case SDL_WINDOWEVENT_CLOSE:
+        mButtonDownInMinimapArea = false;
+
+    default:
+        break;
     }
 }
 
 
 void MiniMapWindow::handleMouseMotion(const SDL_Event& event)
 {
+    if (!mButtonDownInMinimapArea)
+    {
+        return;
+    }
+
     if (event.motion.state & SDL_BUTTON_LMASK)
     {
         focusViewpoint({ event.motion.x, event.motion.y });

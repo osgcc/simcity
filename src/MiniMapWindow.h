@@ -25,6 +25,7 @@ class MiniMapWindow
 public:
 	const int MiniTileSize{ 3 };
 	const int TileSize{ 16 };
+	const int ButtonAreaHeight{ 28 };
 
 	using fnPointIntParam = void(*)(const Point<int>&);
 
@@ -68,10 +69,14 @@ private:
 	SDL_Rect mSelector{};
 	SDL_Rect mTileHighlight{ 0, 0, MiniTileSize, MiniTileSize };
 	SDL_Rect mTileRect{ 0, 0, MiniTileSize, MiniTileSize };
+	SDL_Rect mMinimapArea{};
+	SDL_Rect mButtonArea{};
 
 	uint32_t mWindowID{};
 
 	Vector<int> mMapSize{};
 
 	std::vector<fnPointIntParam> mFocusOnTileCallbacks;
+
+	bool mButtonDownInMinimapArea{ false };
 };
