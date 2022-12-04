@@ -244,6 +244,7 @@ void BudgetWindow::handleMouseDown(const ButtonId id)
 
 	case ButtonId::Accept:
 		mAccepted = true;
+		mButtonDownId = ButtonId::None;
 		break;
 
 	default:
@@ -260,8 +261,8 @@ void BudgetWindow::injectMouseClickPosition(const SDL_Point& pos)
 	{
 		if (id != ButtonId::None && SDL_PointInRect(&pos, &ButtonRects[id]))
 		{
-			handleMouseDown(id);
 			mButtonDownId = id;
+			handleMouseDown(id);
 			return;
 		}
 	}
