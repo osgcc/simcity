@@ -43,7 +43,7 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
     mWindow = SDL_CreateWindow("Mini Map",
         position.x, position.y,
         size.x * MiniTileSize, size.y * MiniTileSize,
-        SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SKIP_TASKBAR);
+        SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_HIDDEN);
 
     if (!mWindow)
     {

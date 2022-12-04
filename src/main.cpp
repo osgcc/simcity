@@ -586,6 +586,7 @@ void handleKeyEvent(SDL_Event& event)
         break;
 
     case SDLK_F5:
+        //generateMonster();
         //generateTornado();
         //MakeFlood();
         //MakeMeltdown();
