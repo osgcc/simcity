@@ -596,6 +596,7 @@ void handleKeyEvent(SDL_Event& event)
 
     case SDLK_F7:
         resetGame();
+        DrawBigMap();
         break;
 
     case SDLK_F9:
