@@ -72,7 +72,7 @@ void DoFire()
         {
             int Xtem = SimulationTarget.x + DX[z];
             int Ytem = SimulationTarget.y + DY[z];
-            if (CoordinatesValid(Xtem, Ytem, SimWidth, SimHeight))
+            if (CoordinatesValid({ Xtem, Ytem }))
             {
                 int c = Map[Xtem][Ytem];
                 if (c & BURNBIT)
@@ -144,7 +144,7 @@ void DoMeltdown(const int x, const int y)
         const int radiationX = x - 20 + RandomRange(0, 40);
         const int radiationY = y - 15 + RandomRange(0, 30);
 
-        if(!CoordinatesValid(radiationX, radiationY, SimWidth, SimHeight))
+        if (!CoordinatesValid({ radiationX, radiationY }))
         {
             continue;
         }
@@ -266,7 +266,7 @@ bool DoBridge()
       for (z = 0; z < 7; z++) { /* Close  */
 	x = SimulationTarget.x + VDx[z];
 	y = SimulationTarget.y + VDy[z];
-	if (CoordinatesValid(x, y, SimWidth, SimHeight))
+	if (CoordinatesValid({ x, y }))
 	  if ((Map[x][y] & LOMASK) == (VBRTAB[z] & LOMASK))
 	    Map[x][y] = VBRTAB2[z];
       }
@@ -278,7 +278,7 @@ bool DoBridge()
       for (z = 0; z < 7; z++) { /* Close  */
 	x = SimulationTarget.x + HDx[z];
 	y = SimulationTarget.y + HDy[z];
-	if (CoordinatesValid(x, y, SimWidth, SimHeight))
+	if (CoordinatesValid({ x, y }))
 	  if ((Map[x][y] & LOMASK) == (HBRTAB[z] & LOMASK))
 	    Map[x][y] = HBRTAB2[z];
       }
@@ -292,7 +292,7 @@ bool DoBridge()
 	  for (z = 0; z < 7; z++) {
 	    x = SimulationTarget.x + VDx[z];
 	    y = SimulationTarget.y + VDy[z];
-	    if (CoordinatesValid(x, y, SimWidth, SimHeight))  {
+	    if (CoordinatesValid({ x, y }))  {
 	      MPtem = Map[x][y];
 	      if ((MPtem == CHANNEL) ||
 		  ((MPtem & 15) == (VBRTAB2[z] & 15)))
@@ -308,7 +308,7 @@ bool DoBridge()
 	  for (z = 0; z < 7; z++) {
 	    x = SimulationTarget.x + HDx[z];
 	    y = SimulationTarget.y + HDy[z];
-	    if (CoordinatesValid(x, y, SimWidth, SimHeight)) {
+	    if (CoordinatesValid({ x, y })) {
 	      MPtem = Map[x][y];
 	      if (((MPtem & 15) == (HBRTAB2[z] & 15)) ||
 		  (MPtem == CHANNEL))
@@ -418,7 +418,7 @@ void RepairZone(int ZCent, int zsize)
       int xx = SimulationTarget.x + x;
       int yy = SimulationTarget.y + y;
       cnt++;
-      if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
+      if (CoordinatesValid({ xx, yy })) {
 	ThCh = Map[xx][yy];
 	if (ThCh & ZONEBIT) continue;
 	if (ThCh & ANIMBIT) continue;

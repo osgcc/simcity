@@ -348,7 +348,7 @@ int checkSize(int temp)
 
 void doConnectTile(const int x, const int y, const int w, const int h, Budget& budget)
 {
-    if (CoordinatesValid(x, y, w, h))
+    if (CoordinatesValid({ x, y }))
     {
         ConnectTile(x, y, Tool::None, budget);
     }
@@ -395,7 +395,7 @@ void checkBorder(const int mapX, const int mapY, const int count, Budget& budget
 
 ToolResult checkArea(const int mapH, const int mapV, const int base, const int size, const bool animate, const Tool tool, Budget& budget)
 {
-    if (!CoordinatesValid(mapH - 1, mapV - 1, SimWidth - size, SimHeight - size))
+    if (!pointInRect({ mapH - 1, mapV - 1 }, { 0, 0, SimWidth - size, SimHeight - size }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -671,7 +671,7 @@ void putRubble(const int mapX, const int mapY, const int size)
     {
         for (int y = mapY - 1; y < mapY + size - 1; y++)
         {
-            if (CoordinatesValid(x, y, SimWidth, SimHeight))
+            if (CoordinatesValid({ x, y }))
             {
                 int cellValue = maskedTileValue(x, y);
                 if ((cellValue != RADTILE) && (cellValue != 0))
@@ -690,7 +690,7 @@ void putRubble(const int mapX, const int mapY, const int size)
 
 ToolResult query_tool(int x, int y, Budget&)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -705,7 +705,7 @@ ToolResult bulldozer_tool(int x, int y, Budget& budget)
     unsigned int currTile, temp;
     int zoneSize, deltaH, deltaV;
 
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -796,7 +796,7 @@ ToolResult bulldozer_tool(int x, int y, Budget& budget)
 
 ToolResult road_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -809,7 +809,7 @@ ToolResult road_tool(int x, int y, Budget& budget)
 
 ToolResult rail_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -822,7 +822,7 @@ ToolResult rail_tool(int x, int y, Budget& budget)
 
 ToolResult wire_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -835,7 +835,7 @@ ToolResult wire_tool(int x, int y, Budget& budget)
 
 ToolResult park_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -846,7 +846,7 @@ ToolResult park_tool(int x, int y, Budget& budget)
 
 ToolResult residential_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -857,7 +857,7 @@ ToolResult residential_tool(int x, int y, Budget& budget)
 
 ToolResult commercial_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -868,7 +868,7 @@ ToolResult commercial_tool(int x, int y, Budget& budget)
 
 ToolResult industrial_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -879,7 +879,7 @@ ToolResult industrial_tool(int x, int y, Budget& budget)
 
 ToolResult police_dept_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -890,7 +890,7 @@ ToolResult police_dept_tool(int x, int y, Budget& budget)
 
 ToolResult fire_dept_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -901,7 +901,7 @@ ToolResult fire_dept_tool(int x, int y, Budget& budget)
 
 ToolResult stadium_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -912,7 +912,7 @@ ToolResult stadium_tool(int x, int y, Budget& budget)
 
 ToolResult coal_power_plant_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -923,7 +923,7 @@ ToolResult coal_power_plant_tool(int x, int y, Budget& budget)
 
 ToolResult nuclear_power_plant_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -934,7 +934,7 @@ ToolResult nuclear_power_plant_tool(int x, int y, Budget& budget)
 
 ToolResult seaport_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -945,7 +945,7 @@ ToolResult seaport_tool(int x, int y, Budget& budget)
 
 ToolResult airport_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }
@@ -956,7 +956,7 @@ ToolResult airport_tool(int x, int y, Budget& budget)
 
 ToolResult network_tool(int x, int y, Budget& budget)
 {
-    if (!CoordinatesValid(x, y, SimWidth - 1, SimHeight - 1))
+    if (!CoordinatesValid({ x, y }))
     {
         return ToolResult::OutOfBounds;
     }

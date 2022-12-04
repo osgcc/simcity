@@ -12,6 +12,7 @@
 
 #include "Point.h"
 
+#include <SDL2/SDL.h>
 #include <string>
 
 class Budget;
@@ -42,6 +43,7 @@ bool Paused();
 int CurrentYear();
 void SetYear(int year);
 void SetGameLevelFunds(int level, CityProperties& properties, Budget&);
-bool CoordinatesValid(int x, int y, int width, int height);
+bool CoordinatesValid(const Point<int>& position);
 Point<int> PositionToCell(const Point<int>& position, const Point<int>& offset);
 const Vector<int> vectorFromPoints(const Point<int>& start, const Point<int>& end);
+bool pointInRect(const Point<int>& point, const SDL_Rect& rect);

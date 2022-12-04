@@ -172,7 +172,7 @@ void MakeFlood()
             {
                 const int floodX = cellX + Dx[t];
                 const int floodY = cellY + Dy[t];
-                if (CoordinatesValid(floodX, floodY, SimWidth, SimHeight))
+                if (CoordinatesValid({ floodX, floodY }))
                 {
                     if(tileIsFloodable(cell))
                     {
@@ -203,7 +203,7 @@ void DoFlood()
             {
                 int x = SimulationTarget.x + Dx[i];
                 int y = SimulationTarget.y + Dy[i];
-                if (CoordinatesValid(x, y, SimWidth, SimHeight))
+                if (CoordinatesValid({ x, y }))
                 {
                     int cell = Map[x][y];
 

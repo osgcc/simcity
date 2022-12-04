@@ -38,7 +38,7 @@ struct SimSprite
 	Point<int> position{};
 	Point<int> origin{};
 	Point<int> offset{};
-	Point<int> hot{};
+	Vector<int> hot{};
 	Point<int> destination{};
 
 	Vector<int> size{};

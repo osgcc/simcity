@@ -21,6 +21,7 @@
 
 constexpr auto SimWidth = 120;
 constexpr auto SimHeight = 100;
+constexpr SDL_Rect ValidMapCoordinates{ 0, 0, SimWidth - 1, SimHeight - 1 };
 
 constexpr auto HalfWorldWidth = SimWidth / 2;
 constexpr auto HalfWorldHeight = SimHeight / 2;

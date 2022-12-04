@@ -284,14 +284,18 @@ void destroyAllSprites()
 }
 
 
-int getTile(int x, int y)
+int getTile(const Point<int>& location)
 {
-  x >>= 4;
-  y >>= 4;
-  if (!CoordinatesValid(x, y, SimWidth, SimHeight))
-    return(-1);
-  else
-    return(Map[x][y] & LOMASK);
+    const Point<int> coordinate{ location.skewInverseBy({ 16, 16 }) };
+ 
+    if (!CoordinatesValid(coordinate))
+    {
+        return(-1);
+    }
+    else
+    {
+        return maskedTileValue(coordinate.x, coordinate.y);
+    }
 }
 
 
@@ -362,16 +366,10 @@ bool tryOther(int Tpoo, int Told, int Tnew)
 }
 
 
-bool pointInRect(const Point<int>& point, const SDL_Rect& rect)
-{
-    return point.x >= rect.x && point.x <= rect.x + rect.w && point.y >= rect.y && point.y <= rect.y + rect.h;
-}
-
-
 int spritePositionValid(SimSprite& sprite)
 {
     const Point<int> adjustedPoint{ sprite.position + Vector<int>{sprite.hot.x, sprite.hot.y} };
-    constexpr SDL_Rect worldArea{ 0, 0, SimWidth * 16, SimHeight * 16 };
+    constexpr SDL_Rect worldArea{ 0, 0, ValidMapCoordinates.w * 16, ValidMapCoordinates.h * 16 };
 
     return pointInRect(adjustedPoint, worldArea);
 }
@@ -502,7 +500,7 @@ void startFire(const Point<int>& location)
 {
     const Point<int> mapCoords = { location.skewInverseBy({16, 16}) };
 
-    if (!CoordinatesValid(mapCoords.x, mapCoords.y, SimWidth, SimHeight))
+    if (!CoordinatesValid(mapCoords))
     {
         return;
     }
@@ -528,7 +526,7 @@ void destroyTile(const Point<int>& location)
 {
     const Point<int> mapCoords = { location.skewInverseBy({16, 16}) };
 
-    if (!CoordinatesValid(mapCoords.x, mapCoords.y, SimWidth, SimHeight))
+    if (!CoordinatesValid(mapCoords))
     {
         return;
     }
@@ -632,7 +630,7 @@ void updateTrain(SimSprite& sprite)
             }
         }
 
-        int c = getTile(sprite.position.x + CheckVector[checkDirection].x + 48, sprite.position.y + CheckVector[checkDirection].y);
+        int c = getTile(sprite.position + CheckVector[checkDirection]);
 
         if (((c >= RAILBASE) && (c <= LASTRAIL)) || /* track? */
             (c == RAILVPOWERH) ||
@@ -878,7 +876,7 @@ void updateShip(SimSprite& sprite)
                 ((sprite.position.y + sprite.hot.y) / 16) + CheckDirection[z].y
             };
             
-            if (CoordinatesValid(position.x, position.y, SimWidth, SimHeight))
+            if (CoordinatesValid(position))
             {
                 t = maskedTileValue(position.x, position.y);
                 if ((t == CHANNEL) || (t == BRWH) || (t == BRWV) || tryOther(t, sprite.dir, z))
@@ -1039,7 +1037,7 @@ void updateMonster(SimSprite& sprite)
         sprite.count--;
     }
 
-    c = getTile(sprite.position.x + sprite.hot.x, sprite.position.y + sprite.hot.y);
+    c = getTile(sprite.position + sprite.hot);
     
     if ((c == -1) || ((c == RIVER) && (sprite.count != 0)))
     {
@@ -1230,9 +1228,9 @@ void generateShip()
     case 2:
         for (int x = 4; x < SimWidth - 2; x++)
         {
-            if (Map[x][SimHeight - 1] == CHANNEL)
+            if (Map[x][SimHeight - 2] == CHANNEL)
             {
-                makeShipAt({ x, SimHeight - 1 });
+                makeShipAt({ x, SimHeight - 2 });
                 return;
             }
         }
@@ -1241,9 +1239,9 @@ void generateShip()
     case 3:
         for (int y = 1; y < SimHeight - 2; y++)
         {
-            if (Map[SimWidth - 1][y] == CHANNEL)
+            if (Map[SimWidth - 2][y] == CHANNEL)
             {
-                makeShipAt({ SimWidth - 1, y });
+                makeShipAt({ SimWidth - 2, y });
                 return;
             }
         }

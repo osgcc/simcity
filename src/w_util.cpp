@@ -40,6 +40,11 @@ const Vector<int> vectorFromPoints(const Point<int>& start, const Point<int>& en
     return { end.x - start.x, end.y - start.y };
 }
 
+bool pointInRect(const Point<int>& point, const SDL_Rect& rect)
+{
+    return point.x >= rect.x && point.x <= rect.x + rect.w && point.y >= rect.y && point.y <= rect.y + rect.h;
+}
+
 
 Point<int> PositionToCell(const Point<int>& position, const Point<int>& offset)
 {
@@ -51,9 +56,9 @@ Point<int> PositionToCell(const Point<int>& position, const Point<int>& offset)
 }
 
 
-bool CoordinatesValid(int x, int y, int width, int height)
+bool CoordinatesValid(const Point<int>& position)
 {
-    return (((x) >= 0) && ((x) < width) && ((y) >= 0) && ((y) < height));
+    return pointInRect(position, ValidMapCoordinates);
 }
 
 

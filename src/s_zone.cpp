@@ -46,7 +46,7 @@ void ZonePlop (int base)
   for (z = 0; z < 9; z++) {		/* check for fire  */
     int xx = SimulationTarget.x + Zx[z];
     int yy = SimulationTarget.y + Zy[z];
-    if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
+    if (CoordinatesValid({ xx, yy })) {
       x = Map[xx][yy] & LOMASK;
       if ((x >= FLOOD) && (x < ROADBASE)) return;
     }
@@ -54,7 +54,7 @@ void ZonePlop (int base)
   for (z = 0; z < 9; z++) {
     int xx = SimulationTarget.x + Zx[z];
     int yy = SimulationTarget.y + Zy[z];
-    if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
+    if (CoordinatesValid({ xx, yy })) {
       Map[xx][yy] = base + BNCNBIT;
     }
   base++;
@@ -164,7 +164,7 @@ void SetSmoke(int ZonePower)
   if (AniThis[z]) {
     int xx = SimulationTarget.x + DX1[z];
     int yy = SimulationTarget.y + DY1[z];
-    if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
+    if (CoordinatesValid({ xx, yy })) {
       if (ZonePower) {
 	if ((Map[xx][yy] & LOMASK) == AniTabC[z]) {
 	  Map[xx][yy] =
@@ -227,7 +227,7 @@ int EvalLot (int x, int y)
   for (z = 0; z < 4; z++) {
     int xx = x + DX[z];
     int yy = y + DY[z];
-    if (CoordinatesValid(xx, yy, SimWidth, SimHeight) &&
+    if (CoordinatesValid({ xx, yy }) &&
 	Map[xx][yy] &&
 	((Map[xx][yy] & LOMASK) <= LASTROAD)) {
       score++;		/* look for road */
@@ -284,7 +284,7 @@ void BuildHouse(int value)
   for (z = 1; z < 9; z++) {
     int xx = SimulationTarget.x + ZeX[z];
     int yy = SimulationTarget.y + ZeY[z];
-    if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
+    if (CoordinatesValid({ xx, yy })) {
       score = EvalLot(xx, yy);
       if (score != 0) {
 	if (score > hscore) {
@@ -299,7 +299,7 @@ void BuildHouse(int value)
   if (BestLoc) {
     int xx = SimulationTarget.x + ZeX[BestLoc];
     int yy = SimulationTarget.y + ZeY[BestLoc];
-    if (CoordinatesValid(xx, yy, SimWidth, SimHeight)) {
+    if (CoordinatesValid({ xx, yy })) {
       Map[xx][yy] = HOUSE + BLBNCNBIT + RandomRange(0, 2) + (value * 3);
     }
   }
