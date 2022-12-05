@@ -45,7 +45,7 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
         std::cout << "MiniMapWindow::c'tor: SDL Video subsystem was not initialized. Initializing now." << std::endl;
         if (SDL_Init(SDL_INIT_VIDEO) != 0)
         {
-            throw std::runtime_error(std::string("MiniMapWindow():: Unable to initialize video subsystem: ") + SDL_GetError());
+            throw std::runtime_error(std::string("MiniMapWindow(): Unable to initialize video subsystem: ") + SDL_GetError());
         }
     }
 
@@ -56,13 +56,13 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
 
     if (!mWindow)
     {
-        throw std::runtime_error("MiniMapWindow::MiniMapWindow(): Unable to create primary window: " + std::string(SDL_GetError()));
+        throw std::runtime_error("MiniMapWindow(): Unable to create primary window: " + std::string(SDL_GetError()));
     }
 
     mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
     if (!mRenderer)
     {
-        throw std::runtime_error("MiniMapWindow::MiniMapWindow(): Unable to create renderer: " + std::string(SDL_GetError()));
+        throw std::runtime_error("MiniMapWindow(): Unable to create renderer: " + std::string(SDL_GetError()));
     }
 
     mWindowID = SDL_GetWindowID(mWindow);
