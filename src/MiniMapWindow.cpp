@@ -25,7 +25,7 @@
 
 namespace
 {
-    constexpr SDL_Color BackgroundColor{ 137, 174, 228, 255 };
+    constexpr SDL_Color BackgroundColor{ 126, 163, 217, 255 };
 };
 
 
@@ -34,11 +34,8 @@ namespace
  * 
  * \param position  Position to open the window at
  * \param size      Width/Height of the map in tiles
- * \param tileSize  Size of large and mini tiles in pixels. X == Full Size, Y == Mini.
  */
-MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size, const Vector<int>& tileSize):
-    MiniTileSize{ tileSize.y },
-    TileSize{ tileSize.x },
+MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size):
     mMapSize{ size },
     mMinimapArea{ 0, 0, size.x * MiniTileSize, size.y * MiniTileSize },
     mButtonArea{ 0, mMinimapArea.h, mMinimapArea.w, ButtonAreaHeight }
@@ -46,7 +43,10 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
     if (!SDL_WasInit(SDL_INIT_VIDEO))
     {
         std::cout << "MiniMapWindow::c'tor: SDL Video subsystem was not initialized. Initializing now." << std::endl;
-        SDL_Init(SDL_INIT_VIDEO);
+        if (SDL_Init(SDL_INIT_VIDEO) != 0)
+        {
+            throw std::runtime_error(std::string("MiniMapWindow():: Unable to initialize video subsystem: ") + SDL_GetError());
+        }
     }
 
     mWindow = SDL_CreateWindow("Mini Map",
@@ -69,6 +69,11 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
 
     mTiles = loadTexture(mRenderer, "images/tilessm.xpm");
     mTexture.texture = SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, size.x * MiniTileSize, size.y * MiniTileSize);
+    mButtonTextures = loadTexture(mRenderer, "icons/minimap.png");
+
+    setButtonValues();
+    setButtonTextureUv();
+    setButtonPositions();
 }
 
 
@@ -177,6 +182,11 @@ void MiniMapWindow::drawUI()
     SDL_RenderDrawRect(mRenderer, &mSelector);
     SDL_RenderDrawRect(mRenderer, &mTileHighlight);
 
+    for (int i{ 0 }; i < mButtons.size(); ++i)
+    {
+        SDL_RenderCopy(mRenderer, mButtonTextures.texture, &mButtonUV[i + (mButtons[i].state * 10)], &mButtons[i].rect);
+    }
+
     SDL_RenderPresent(mRenderer);
 }
 
@@ -280,5 +290,43 @@ void MiniMapWindow::focusViewpoint(const Point<int>& point)
     for (auto callback : mFocusOnTileCallbacks)
     {
         callback({ mSelector.x, mSelector.y });
+    }
+}
+
+
+void MiniMapWindow::setButtonValues()
+{
+    mButtons[0].id = ButtonId::Normal;
+    mButtons[1].id = ButtonId::LandValue;
+    mButtons[2].id = ButtonId::Crime;
+    mButtons[3].id = ButtonId::FireProtection;
+    mButtons[4].id = ButtonId::PoliceProtection;
+    mButtons[5].id = ButtonId::PopulationDensity;
+    mButtons[6].id = ButtonId::PopulationGrowth;
+    mButtons[7].id = ButtonId::PoliceProtection;
+    mButtons[8].id = ButtonId::TransportationNetwork;
+    mButtons[9].id = ButtonId::PowerGrid;
+}
+
+
+void MiniMapWindow::setButtonTextureUv()
+{
+    for (int i = 0; i < 20; ++i)
+    {
+        mButtonUV[i] = { (i / 10) * 24, (i % 10) * 24, 24, 24 };
+    }
+}
+
+
+void MiniMapWindow::setButtonPositions()
+{
+    constexpr Vector<int> buttonSize{ 24, 24 };
+    constexpr Vector<int> buttonTransform{buttonSize.x + 3, 0};
+    
+    const int startPosition = (mButtonArea.w - (buttonTransform.x * 10)) / 2;
+
+    for (int i{ 0 }; i < 10; ++i)
+    {
+        mButtons[i].rect = { startPosition + buttonTransform.x * i, mButtonArea.y + 3, buttonSize.x, buttonSize.y };
     }
 }

@@ -1043,7 +1043,7 @@ void initUI()
         std::clamp(mainWindowPosition.y, 10, mode.h)
     };
 
-    miniMapWindow = new MiniMapWindow(miniMapWindowPosition, { SimWidth, SimHeight }, { TileSize, MiniTileSize });
+    miniMapWindow = new MiniMapWindow(miniMapWindowPosition, { SimWidth, SimHeight });
     miniMapWindow->updateViewportSize(WindowSize);
     miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
 

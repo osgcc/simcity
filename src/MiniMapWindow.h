@@ -14,6 +14,7 @@
 #include "Texture.h"
 #include "Vector.h"
 
+#include <array>
 #include <cstdint>
 #include <vector>
 
@@ -23,15 +24,33 @@
 class MiniMapWindow
 {
 public:
-	const int MiniTileSize{ 3 };
-	const int TileSize{ 16 };
-	const int ButtonAreaHeight{ 28 };
+
+	enum class ButtonId
+	{
+		Normal,
+		LandValue,
+		Crime,
+		FireProtection,
+		PoliceProtection,
+		PopulationDensity,
+		PopulationGrowth,
+		Pollution,
+		TransportationNetwork,
+		PowerGrid
+	};
+
+	static constexpr auto ButtonStateNormal{ 0 };
+	static constexpr auto ButtonStatePressed{ 1 };
+
+	static constexpr auto MiniTileSize{ 3 };
+	static constexpr auto TileSize{ 16 };
+	static constexpr auto ButtonAreaHeight{ 28 };
 
 	using fnPointIntParam = void(*)(const Point<int>&);
 
 public:
 	MiniMapWindow() = delete;
-	MiniMapWindow(const Point<int>& position, const Vector<int>& size, const Vector<int>& tileSize);
+	MiniMapWindow(const Point<int>& position, const Vector<int>& size);
 
 	~MiniMapWindow();
 
@@ -59,12 +78,25 @@ private:
 
 	void focusViewpoint(const Point<int>& point);
 
+	void setButtonValues();
+	void setButtonTextureUv();
+	void setButtonPositions();
+
+private:
+	struct ButtonMeta
+	{
+		SDL_Rect rect{};
+		int state{};
+		ButtonId id{ ButtonId::Normal };
+	};
+
 private:
 	SDL_Window* mWindow{ nullptr };
 	SDL_Renderer* mRenderer{ nullptr };
 
 	Texture mTiles{};
 	Texture mTexture{};
+	Texture mButtonTextures{};
 
 	SDL_Rect mSelector{};
 	SDL_Rect mTileHighlight{ 0, 0, MiniTileSize, MiniTileSize };
@@ -76,7 +108,12 @@ private:
 
 	Vector<int> mMapSize{};
 
+	std::array<SDL_Rect, 20> mButtonUV{};
+	std::array<ButtonMeta, 10> mButtons{};
+
 	std::vector<fnPointIntParam> mFocusOnTileCallbacks;
+
+	ButtonId mButtonDownId{ ButtonId::Normal };
 
 	bool mButtonDownInMinimapArea{ false };
 };
