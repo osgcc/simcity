@@ -74,6 +74,7 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
     setButtonValues();
     setButtonTextureUv();
     setButtonPositions();
+    resetOverlayButtons();
 }
 
 
@@ -120,6 +121,16 @@ void MiniMapWindow::updateTilePointedAt(const Point<int>& tilePointedAt)
 {
     mTileHighlight.x = tilePointedAt.x * MiniTileSize;
     mTileHighlight.y = tilePointedAt.y * MiniTileSize;
+}
+
+void MiniMapWindow::resetOverlayButtons()
+{
+    for (auto& button : mButtons)
+    {
+        button.state = ButtonStateNormal;
+    }
+
+    mButtons[0].state = ButtonStatePressed;
 }
 
 
@@ -229,6 +240,18 @@ void MiniMapWindow::handleMouseEvent(const SDL_Event& event)
                 mButtonDownInMinimapArea = true;
                 focusViewpoint(point);
             }
+            else if (pointInRect(point, mButtonArea))
+            {
+                for (auto& button : mButtons)
+                {
+                    pointInRect(point, button.rect) ? button.state = ButtonStatePressed : button.state = ButtonStateNormal;
+                }
+
+                if (noButtonsSelected())
+                {
+                    mButtons[0].state = ButtonStatePressed;
+                }
+            }
         }
         break;
 
@@ -321,7 +344,7 @@ void MiniMapWindow::setButtonTextureUv()
 void MiniMapWindow::setButtonPositions()
 {
     constexpr Vector<int> buttonSize{ 24, 24 };
-    constexpr Vector<int> buttonTransform{buttonSize.x + 3, 0};
+    constexpr Vector<int> buttonTransform{buttonSize.x + 6, 0};
     
     const int startPosition = (mButtonArea.w - (buttonTransform.x * 10)) / 2;
 
@@ -329,4 +352,17 @@ void MiniMapWindow::setButtonPositions()
     {
         mButtons[i].rect = { startPosition + buttonTransform.x * i, mButtonArea.y + 3, buttonSize.x, buttonSize.y };
     }
+}
+
+bool MiniMapWindow::noButtonsSelected()
+{
+    for (auto& button : mButtons)
+    {
+        if (button.state == ButtonStatePressed)
+        {
+            return false;
+        }
+    }
+    
+    return true;
 }

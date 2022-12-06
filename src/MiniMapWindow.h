@@ -63,6 +63,8 @@ public:
 	void updateViewportSize(const Vector<int>& viewportSize);
 	void updateTilePointedAt(const Point<int>& tilePointedAt);
 
+	void resetOverlayButtons();
+
 	void hide();
 	void show();
 
@@ -81,6 +83,8 @@ private:
 	void setButtonValues();
 	void setButtonTextureUv();
 	void setButtonPositions();
+
+	bool noButtonsSelected();
 
 private:
 	struct ButtonMeta
