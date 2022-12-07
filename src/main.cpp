@@ -300,8 +300,18 @@ void simLoop(bool doSim)
     if (RedrawMinimap)
     {
         miniMapWindow->draw();
+
+        drawPopDensity();
+        drawCrimeMap();
+        drawTrafficMap();
+        drawPollutionMap();
+        drawLandMap();
+        drawPoliceRadius();
+        drawFireRadius();
+        drawRateOfGrowth();
+
         RedrawMinimap = false;
-    }  
+    }
 
     simUpdate();
 }
@@ -1046,6 +1056,15 @@ void initUI()
     miniMapWindow = new MiniMapWindow(miniMapWindowPosition, { SimWidth, SimHeight });
     miniMapWindow->updateViewportSize(WindowSize);
     miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
+    
+    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::Crime, crimeOverlayTexture());
+    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::FireProtection, fireRadiusTexture());
+    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::LandValue, landValueTexture());
+    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::PoliceProtection, policeRadiusTexture());
+    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::Pollution, pollutionTexture());
+    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::PopulationDensity, populationDensityTexture());
+    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::PopulationGrowth, rateOfGrowthTexture());
+    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::TransportationNetwork, trafficDensityTexture()); // temp
 
     fileIo = new FileIo(*MainWindow);
 

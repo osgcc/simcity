@@ -16,6 +16,7 @@
 
 #include <array>
 #include <cstdint>
+#include <map>
 #include <vector>
 
 #include <SDL2/SDL.h>
@@ -63,6 +64,8 @@ public:
 	void updateViewportSize(const Vector<int>& viewportSize);
 	void updateTilePointedAt(const Point<int>& tilePointedAt);
 
+	void linkOverlayTexture(MiniMapWindow::ButtonId, const Texture&);
+
 	void resetOverlayButtons();
 
 	void hide();
@@ -101,6 +104,7 @@ private:
 	Texture mTiles{};
 	Texture mTexture{};
 	Texture mButtonTextures{};
+	std::map<ButtonId, const Texture*> mOverlayTextures;
 
 	SDL_Rect mSelector{};
 	SDL_Rect mTileHighlight{ 0, 0, MiniTileSize, MiniTileSize };

@@ -123,6 +123,13 @@ void MiniMapWindow::updateTilePointedAt(const Point<int>& tilePointedAt)
     mTileHighlight.y = tilePointedAt.y * MiniTileSize;
 }
 
+
+void MiniMapWindow::linkOverlayTexture(MiniMapWindow::ButtonId buttonId, const Texture& texture)
+{
+    mOverlayTextures[buttonId] = &texture;
+}
+
+
 void MiniMapWindow::resetOverlayButtons()
 {
     for (auto& button : mButtons)
@@ -175,20 +182,14 @@ void MiniMapWindow::drawUI()
 {
     SDL_RenderCopy(mRenderer, mTexture.texture, nullptr, &mMinimapArea);
 
-    //SDL_RenderCopy(MainWindowRenderer, powerMapTexture().texture, nullptr, &MiniMapDestination);
-
-    // \todo Make this only draw when an overlay flag is set
-    //SDL_RenderCopy(MainWindowRenderer, crimeOverlayTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, populationDensityTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, pollutionTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, landValueTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, policeRadiusTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, fireRadiusTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, rateOfGrowthTexture().texture, nullptr, &MiniMapDestination);
-
-    // traffic map
-    //SDL_RenderCopy(MainWindowRenderer, transitMapTexture().texture, nullptr, &MiniMapDestination);
-    //SDL_RenderCopy(MainWindowRenderer, trafficDensityTexture().texture, nullptr, &MiniMapDestination);
+    const Texture* overlayTexture = mOverlayTextures[mButtonDownId];
+    if (overlayTexture != nullptr)
+    {
+        if (SDL_RenderCopy(mRenderer, overlayTexture->texture, nullptr, &mMinimapArea))
+        {
+            throw std::runtime_error(std::string("MiniMapWindow::drawUI(): Error drawing texture: ") + SDL_GetError());
+        }
+    }
 
     SDL_RenderDrawRect(mRenderer, &mSelector);
     SDL_RenderDrawRect(mRenderer, &mTileHighlight);
@@ -244,12 +245,21 @@ void MiniMapWindow::handleMouseEvent(const SDL_Event& event)
             {
                 for (auto& button : mButtons)
                 {
-                    pointInRect(point, button.rect) ? button.state = ButtonStatePressed : button.state = ButtonStateNormal;
+                    if (pointInRect(point, button.rect))
+                    {
+                        button.state = ButtonStatePressed;
+                        mButtonDownId = button.id;
+                    }
+                    else
+                    {
+                        button.state = ButtonStateNormal;
+                    }
                 }
 
                 if (noButtonsSelected())
                 {
                     mButtons[0].state = ButtonStatePressed;
+                    mButtonDownId = ButtonId::Normal;
                 }
             }
         }
