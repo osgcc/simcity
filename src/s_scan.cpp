@@ -432,7 +432,7 @@ void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
     {
         for (y = 0; y < HalfWorldHeight; y++)
         {
-            PopulationDensityMap[x][y] = tem2[x][y] << 1;
+            PopulationDensityMap.value({ x, y }, tem2[x][y] << 1);
         }
     }
 
@@ -597,9 +597,9 @@ void PTLScan()
                 dis = 34 - distanceToCityCenter(x, y);
                 dis = dis * 4;
                 dis += (TerrainMem[x / 2][y / 2]);
-                dis -= (PollutionMap[x][y]);
+                dis -= (PollutionMap.value({ x, y }));
 
-                if (CrimeMap[x][y] > 190)
+                if (CrimeMap.value({ x, y }) > 190)
                 {
                     dis -= 20;
                 }
@@ -614,13 +614,13 @@ void PTLScan()
                     dis = 1;
                 }
 
-                LandValueMap[x][y] = dis;
+                LandValueMap.value({ x, y }, dis);
                 LVtot += dis;
                 LVnum++;
             }
             else
             {
-                LandValueMap[x][y] = 0;
+                LandValueMap.value({ x, y }, 0);
             }
         }
     }
@@ -645,7 +645,7 @@ void PTLScan()
         for (y = 0; y < HalfWorldHeight; y++)
         {
             z = tem[x][y];
-            PollutionMap[x][y] = z;
+            PollutionMap.value({ x, y }, z);
 
             if (z) /*  get pollute average  */
             {
@@ -696,12 +696,12 @@ void CrimeScan()
     {
         for (y = 0; y < HalfWorldHeight; y++)
         {
-            if (z = LandValueMap[x][y])
+            if (z = LandValueMap.value({ x, y }))
             {
                 ++numz;
 
                 z = 128 - z;
-                z += PopulationDensityMap[x][y];
+                z += PopulationDensityMap.value({ x, y });
 
                 if (z > 300)
                 {
@@ -720,7 +720,7 @@ void CrimeScan()
                     z = 0;
                 }
 
-                CrimeMap[x][y] = z;
+                CrimeMap.value({ x, y }, z);
                 totz += z;
 
                 if ((z > cmax) || ((z == cmax) && (!(Rand16() & 3))))
@@ -731,7 +731,7 @@ void CrimeScan()
             }
             else
             {
-                CrimeMap[x][y] = 0;
+                CrimeMap.value({ x, y }, 0);
             }
         }
     }

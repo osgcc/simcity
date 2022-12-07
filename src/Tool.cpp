@@ -547,26 +547,26 @@ int getDensityStr(int catNo, int mapH, int mapV)
     switch (catNo)
     {
     case 0:
-        z = PopulationDensityMap[mapH >> 1][mapV >> 1];
+        z = PopulationDensityMap.value({ mapH >> 1, mapV >> 1 });
         z = z >> 6;
         z = z & 3;
         return (z);
 
     case 1:
-        z = LandValueMap[mapH >> 1][mapV >> 1];
+        z = LandValueMap.value({ mapH >> 1, mapV >> 1 });
         if (z < 30) return (4);
         if (z < 80) return (5);
         if (z < 150) return (6);
         return (7);
 
     case 2:
-        z = CrimeMap[mapH >> 1][mapV >> 1];
+        z = CrimeMap.value({ mapH >> 1, mapV >> 1 });
         z = z >> 6;
         z = z & 3;
         return (z + 8);
 
     case 3:
-        z = PollutionMap[mapH >> 1][mapV >> 1];
+        z = PollutionMap.value({ mapH >> 1, mapV >> 1 });
         if ((z < 64) && (z > 0)) return (13);
         z = z >> 6;
         z = z & 3;

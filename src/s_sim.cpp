@@ -382,7 +382,7 @@ void DoRoad()
         trafficDensity = 2;
     }
 
-    int Density = TrafficDensityMap[SimulationTarget.x / 2][SimulationTarget.y / 2] / 64;  // Set Traf Density
+    int Density = TrafficDensityMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) / 64;  // Set Traf Density
    
     if (Density > 2)
     {
@@ -1106,21 +1106,21 @@ void DecTrafficMem()
     {
         for (int y = 0; y < HalfWorldHeight; y++)
         {
-            int z = TrafficDensityMap[x][y];
+            int z = TrafficDensityMap.value({ x, y });
             if (z != 0)
             {
                 if (z > 24)
                 {
                     if (z > 200)
                     {
-                        TrafficDensityMap[x][y] = z - 34;
+                        TrafficDensityMap.value({ x, y }, z - 34);
                     }
                     else
                     {
-                        TrafficDensityMap[x][y] = z - 24;
+                        TrafficDensityMap.value({ x, y }, z - 24);
                     }
                 }
-                else TrafficDensityMap[x][y] = 0;
+                else TrafficDensityMap.value({ x, y }, 0);
             }
         }
     }

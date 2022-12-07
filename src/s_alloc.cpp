@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #include "s_alloc.h"
 
+#include "EffectMap.h"
 #include "main.h"
 #include "Power.h"
 
@@ -44,11 +45,13 @@ int IndHisMax;
 
 int RoadEffect, PoliceEffect, FireEffect;
 
-std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PopulationDensityMap{};
-std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> TrafficDensityMap{};
-std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PollutionMap{};
-std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> LandValueMap{};
-std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> CrimeMap{};
+
+EffectMap PopulationDensityMap({HalfWorldWidth, HalfWorldHeight });
+EffectMap TrafficDensityMap({ HalfWorldWidth, HalfWorldHeight });
+EffectMap PollutionMap({ HalfWorldWidth, HalfWorldHeight });
+EffectMap LandValueMap({ HalfWorldWidth, HalfWorldHeight });
+EffectMap CrimeMap({ HalfWorldWidth, HalfWorldHeight });
+
 
 std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem{};
 std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
@@ -89,17 +92,11 @@ namespace
 {
     void resetHalfArrays()
     {
-        for (int x = 0; x < HalfWorldWidth; x++)
-        {
-            for (int y = 0; y < HalfWorldHeight; y++)
-            {
-                PopulationDensityMap[x][y] = 0;
-                TrafficDensityMap[x][y] = 0;
-                PollutionMap[x][y] = 0;
-                LandValueMap[x][y] = 0;
-                CrimeMap[x][y] = 0;
-            }
-        }
+        PopulationDensityMap.reset();
+        TrafficDensityMap.reset();
+        PollutionMap.reset();
+        LandValueMap.reset();
+        CrimeMap.reset();
     }
 
     void resetQuarterArrays()

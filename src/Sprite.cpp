@@ -729,7 +729,7 @@ void updateHelicopter(SimSprite& sprite)
         if ((location.x >= 0) && (location.x < (SimWidth >> 1)) && (location.y >= 0) && (location.y < (SimHeight >> 1)))
         {
             // Don changed from 160 to 170 to shut the #$%#$% thing up!
-            if ((TrafficDensityMap[location.x][location.y] > 170) && (RandomRange(0, 7) == 0))
+            if ((TrafficDensityMap.value(location) > 170) && (RandomRange(0, 7) == 0))
             {
                 SendMesAt(NotificationId::HeavyTrafficReported, (location.x << 1) + 1, (location.y << 1) + 1);
                 MakeSound("city", "HeavyTraffic"); // chopper

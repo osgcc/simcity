@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #include "g_map.h"
 
+#include "EffectMap.h"
+
 #include "SmallMaps.h"
 #include "s_alloc.h"
 
@@ -179,36 +181,17 @@ int GetColorIndex(int x)
 }
 
 
-void drawOverlayPoints(Texture& overlay, const std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth>& arr)
+void drawOverlayPoints(Texture& overlay, const EffectMap& effectMap)
 {
 	SDL_SetRenderTarget(MainWindowRenderer, overlay.texture);
 	turnOffBlending(overlay);
 	clearOverlay();
 
-	for (int x = 0; x < HalfWorldWidth; x++)
+	for (int x = 0; x < effectMap.dimensions().x; x++)
 	{
-		for (int y = 0; y < HalfWorldHeight; y++)
+		for (int y = 0; y < effectMap.dimensions().y; y++)
 		{
-			drawPointToCurrentOverlay(x, y, GetColorIndex(arr[x][y]));
-		}
-	}
-
-	turnOnBlending(overlay);
-	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
-}
-
-
-void drawOverlayPointsSm(Texture& overlay, const std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth>& arr)
-{
-	SDL_SetRenderTarget(MainWindowRenderer, overlay.texture);
-	turnOffBlending(overlay);
-	clearOverlay();
-
-	for (int x = 0; x < EighthWorldWidth; x++)
-	{
-		for (int y = 0; y < EighthWorldHeight; y++)
-		{
-			drawPointToCurrentOverlay(x, y, GetColorIndex(arr[x][y]));
+			drawPointToCurrentOverlay(x, y, GetColorIndex(effectMap.value({ x, y })));
 		}
 	}
 
@@ -271,37 +254,37 @@ void drawRateOfGrowth()
 
 void drawTrafficMap()
 {
-	drawOverlayPoints(TrafficDensity, TrafficDensityMap);
+	//drawOverlayPoints(TrafficDensity, TrafficDensityMap);
 }
 
 
 void drawPollutionMap()
 {
-	drawOverlayPoints(Pollution, PollutionMap);
+	//drawOverlayPoints(Pollution, PollutionMap);
 }
 
 
 void drawCrimeMap()
 {
-	drawOverlayPoints(CrimeOverlay, CrimeMap);
+	//drawOverlayPoints(CrimeOverlay, CrimeMap);
 }
 
 
 void drawLandMap()
 {
-	drawOverlayPoints(LandValue, LandValueMap);
+	//drawOverlayPoints(LandValue, LandValueMap);
 }
 
 
 void drawFireRadius()
 {
-	drawOverlayPointsSm(FireRadius, FireRate);
+	//drawOverlayPointsSm(FireRadius, FireRate);
 }
 
 
 void drawPoliceRadius()
 {
-	drawOverlayPointsSm(PoliceRadius, PoliceMapEffect);
+	//drawOverlayPointsSm(PoliceRadius, PoliceMapEffect);
 }
 
 

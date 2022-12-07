@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #pragma once
 
+#include "EffectMap.h"
 #include "main.h"
 #include "Point.h"
 
@@ -22,12 +23,13 @@ enum class SearchDirection
 
 extern Point<int> SimulationTarget;
 
+
 // 2X2 Maps  60 x 50
-extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PopulationDensityMap;
-extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> TrafficDensityMap;
-extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PollutionMap;
-extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> LandValueMap;
-extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> CrimeMap;
+extern EffectMap PopulationDensityMap;
+extern EffectMap TrafficDensityMap;
+extern EffectMap PollutionMap;
+extern EffectMap LandValueMap;
+extern EffectMap CrimeMap;
 
 // 4X4 Maps  30 x 25
 extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem;

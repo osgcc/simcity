@@ -204,8 +204,8 @@ int GetCRVal()
 {
   int LVal;
 
-  LVal = LandValueMap[SimulationTarget.x >>1][SimulationTarget.y >>1];
-  LVal -= PollutionMap[SimulationTarget.x >>1][SimulationTarget.y >>1];
+  LVal = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
+  LVal -= PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
   if (LVal < 30) return (0);
   if (LVal < 80) return (1);
   if (LVal < 150) return (2);
@@ -243,8 +243,8 @@ int EvalRes (int traf)
 
   if (traf < 0) return (-3000);
 
-  Value = LandValueMap[SimulationTarget.x >>1][SimulationTarget.y >>1];
-  Value -= PollutionMap[SimulationTarget.x >>1][SimulationTarget.y >>1];
+  Value = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
+  Value -= PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
 
   if (Value < 0) Value = 0;		/* Cap at 0 */
   else Value = Value <<5;
@@ -316,7 +316,7 @@ void DoResIn(int pop, int value)
 {
   int z;
 
-  z = PollutionMap[SimulationTarget.x >>1][SimulationTarget.y >>1];
+  z = PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
   if (z > 128) return;
 
   if (CurrentTileMasked == FREEZ) {
@@ -325,7 +325,7 @@ void DoResIn(int pop, int value)
       IncROG(1);
       return;
     }
-    if (PopulationDensityMap[SimulationTarget.x >>1][SimulationTarget.y >>1] > 64) {
+    if (PopulationDensityMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) > 64) {
       ResPlop(0, value);
       IncROG(8);
       return;
@@ -343,7 +343,7 @@ void DoComIn(int pop, int value)
 {
   int z;
 
-  z = LandValueMap[SimulationTarget.x >>1][SimulationTarget.y >>1];
+  z = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
   z = z >>5;
   if (pop > z) return;
 
