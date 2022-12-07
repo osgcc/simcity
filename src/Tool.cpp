@@ -547,33 +547,33 @@ int getDensityStr(int catNo, int mapH, int mapV)
     switch (catNo)
     {
     case 0:
-        z = PopDensity[mapH >> 1][mapV >> 1];
+        z = PopulationDensityMap[mapH >> 1][mapV >> 1];
         z = z >> 6;
         z = z & 3;
         return (z);
 
     case 1:
-        z = LandValueMem[mapH >> 1][mapV >> 1];
+        z = LandValueMap[mapH >> 1][mapV >> 1];
         if (z < 30) return (4);
         if (z < 80) return (5);
         if (z < 150) return (6);
         return (7);
 
     case 2:
-        z = CrimeMem[mapH >> 1][mapV >> 1];
+        z = CrimeMap[mapH >> 1][mapV >> 1];
         z = z >> 6;
         z = z & 3;
         return (z + 8);
 
     case 3:
-        z = PollutionMem[mapH >> 1][mapV >> 1];
+        z = PollutionMap[mapH >> 1][mapV >> 1];
         if ((z < 64) && (z > 0)) return (13);
         z = z >> 6;
         z = z & 3;
         return (z + 12);
 
     case 4:
-        z = RateOGMem[mapH >> 3][mapV >> 3];
+        z = RateOfGrowthMap[mapH >> 3][mapV >> 3];
         if (z < 0) return (16);
         if (z == 0) return (17);
         if (z > 100) return (19);

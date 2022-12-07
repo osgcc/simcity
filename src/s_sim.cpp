@@ -382,7 +382,7 @@ void DoRoad()
         trafficDensity = 2;
     }
 
-    int Density = TrfDensity[SimulationTarget.x / 2][SimulationTarget.y / 2] / 64;  // Set Traf Density
+    int Density = TrafficDensityMap[SimulationTarget.x / 2][SimulationTarget.y / 2] / 64;  // Set Traf Density
    
     if (Density > 2)
     {
@@ -513,7 +513,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             z = z / 2;
         }
 
-        FireStMap[SimulationTarget.x >> 3][SimulationTarget.y >> 3] += z;
+        FireStationMap[SimulationTarget.x >> 3][SimulationTarget.y >> 3] += z;
         return;
 
     case POLICESTATION:
@@ -537,7 +537,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             z = z / 2; /* post PD's need roads */
         }
 
-        PoliceMap[SimulationTarget.x >> 3][SimulationTarget.y >> 3] += z;
+        PoliceStationMap[SimulationTarget.x >> 3][SimulationTarget.y >> 3] += z;
         return;
 
     case STADIUM:
@@ -892,8 +892,8 @@ void ClearCensus()
     {
         for (int y = 0; y < EighthWorldHeight; y++)
         {
-            FireStMap[x][y] = 0;
-            PoliceMap[x][y] = 0;
+            FireStationMap[x][y] = 0;
+            PoliceStationMap[x][y] = 0;
         }
     }
 }
@@ -1003,7 +1003,7 @@ void CollectTax(const CityProperties& properties, Budget& budget)
 }
 
 
-// tends to empty RateOGMem
+// tends to empty RateOfGrowthMap
 // ROG == Rate Of Growth
 void DecROGMem()
 {
@@ -1011,26 +1011,26 @@ void DecROGMem()
     {
         for (int y = 0; y < EighthWorldHeight; y++)
         {
-            int z = RateOGMem[x][y];
+            int z = RateOfGrowthMap[x][y];
             if (z == 0)
             {
                 continue;
             }
             if (z > 0)
             {
-                --RateOGMem[x][y];
+                --RateOfGrowthMap[x][y];
                 if (z > 200) // prevent overflow
                 {
-                    RateOGMem[x][y] = std::min(z, 200);
+                    RateOfGrowthMap[x][y] = std::min(z, 200);
                 }
                 continue;
             }
             if (z < 0)
             {
-                ++RateOGMem[x][y];
+                ++RateOfGrowthMap[x][y];
                 if (z < -200)
                 {
-                    RateOGMem[x][y] = -200;
+                    RateOfGrowthMap[x][y] = -200;
                 }
             }
         }
@@ -1099,28 +1099,28 @@ void DoNilPower()
 }
 
 
-/* tends to empty TrfDensity   */
+/* tends to empty TrafficDensityMap   */
 void DecTrafficMem()
 {   
     for (int x = 0; x < HalfWorldWidth; x++)
     {
         for (int y = 0; y < HalfWorldHeight; y++)
         {
-            int z = TrfDensity[x][y];
+            int z = TrafficDensityMap[x][y];
             if (z != 0)
             {
                 if (z > 24)
                 {
                     if (z > 200)
                     {
-                        TrfDensity[x][y] = z - 34;
+                        TrafficDensityMap[x][y] = z - 34;
                     }
                     else
                     {
-                        TrfDensity[x][y] = z - 24;
+                        TrafficDensityMap[x][y] = z - 24;
                     }
                 }
-                else TrfDensity[x][y] = 0;
+                else TrafficDensityMap[x][y] = 0;
             }
         }
     }
@@ -1425,7 +1425,7 @@ void FireZone(int Xloc, int Yloc, int ch)
     int Xtem, Ytem;
     int XYmax;
 
-    RateOGMem[Xloc / 8][Yloc / 8] -= 20;
+    RateOfGrowthMap[Xloc / 8][Yloc / 8] -= 20;
 
     ch = ch & LOMASK;
     if (ch < PORTBASE)

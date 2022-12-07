@@ -61,7 +61,7 @@ void SetTrafMem()
             if ((z >= ROADBASE) && (z < POWERBASE))
             {
                 /* check for rail */
-                z = TrfDensity[SimulationTarget.x / 2][SimulationTarget.y / 2];
+                z = TrafficDensityMap[SimulationTarget.x / 2][SimulationTarget.y / 2];
                 z += 50;
                 if ((z > 240) && (RandomRange(0, 5) == 0))
                 {
@@ -75,7 +75,7 @@ void SetTrafMem()
                         sprite->destination = { TrafMaxX, TrafMaxY };
                     }
                 }
-                TrfDensity[SimulationTarget.x >> 1][SimulationTarget.y >> 1] = z;
+                TrafficDensityMap[SimulationTarget.x >> 1][SimulationTarget.y >> 1] = z;
             }
         }
     }

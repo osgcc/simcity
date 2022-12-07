@@ -354,6 +354,7 @@ void MiniMapWindow::setButtonPositions()
     }
 }
 
+
 bool MiniMapWindow::noButtonsSelected()
 {
     for (auto& button : mButtons)

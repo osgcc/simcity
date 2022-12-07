@@ -23,11 +23,11 @@ enum class SearchDirection
 extern Point<int> SimulationTarget;
 
 // 2X2 Maps  60 x 50
-extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PopDensity;
-extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> TrfDensity;
-extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PollutionMem;
-extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> LandValueMem;
-extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> CrimeMem;
+extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PopulationDensityMap;
+extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> TrafficDensityMap;
+extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PollutionMap;
+extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> LandValueMap;
+extern std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> CrimeMap;
 
 // 4X4 Maps  30 x 25
 extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem;
@@ -35,9 +35,9 @@ extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem;
 
 
 /* 8X8 Maps  15 x 13 */
-extern int RateOGMem[EighthWorldWidth][EighthWorldHeight];
-extern int FireStMap[EighthWorldWidth][EighthWorldHeight];
-extern int PoliceMap[EighthWorldWidth][EighthWorldHeight];
+extern int RateOfGrowthMap[EighthWorldWidth][EighthWorldHeight];
+extern int FireStationMap[EighthWorldWidth][EighthWorldHeight];
+extern int PoliceStationMap[EighthWorldWidth][EighthWorldHeight];
 
 extern std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> PoliceMapEffect;
 extern std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> FireRate;

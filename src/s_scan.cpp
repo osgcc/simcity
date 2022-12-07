@@ -98,25 +98,25 @@ void SmoothFSMap()
 
             if (x)
             {
-                edge += FireStMap[x - 1][y];
+                edge += FireStationMap[x - 1][y];
             }
 
             if (x < (EighthWorldWidth - 1))
             {
-                edge += FireStMap[x + 1][y];
+                edge += FireStationMap[x + 1][y];
             }
 
             if (y)
             {
-                edge += FireStMap[x][y - 1];
+                edge += FireStationMap[x][y - 1];
             }
 
             if (y < (EighthWorldHeight - 1))
             {
-                edge += FireStMap[x][y + 1];
+                edge += FireStationMap[x][y + 1];
             }
 
-            edge = (edge / 4) + FireStMap[x][y];
+            edge = (edge / 4) + FireStationMap[x][y];
             STem[x][y] = edge / 2;
         }
     }
@@ -125,7 +125,7 @@ void SmoothFSMap()
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            FireStMap[x][y] = STem[x][y];
+            FireStationMap[x][y] = STem[x][y];
         }
     }
 }
@@ -144,7 +144,7 @@ void FireAnalysis()		/* Make firerate map from firestation map  */
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            FireRate[x][y] = FireStMap[x][y];
+            FireRate[x][y] = FireStationMap[x][y];
         }
     }
 
@@ -390,7 +390,7 @@ void DistIntMarket()
 
 
 /* comefrom: Simulate SpecialInit */
-void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
+void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
 {
     int Xtot, Ytot, Ztot;
     int x, y, z;
@@ -432,7 +432,7 @@ void PopDenScan()		/*  sets: PopDensity, , , ComRate  */
     {
         for (y = 0; y < HalfWorldHeight; y++)
         {
-            PopDensity[x][y] = tem2[x][y] << 1;
+            PopulationDensityMap[x][y] = tem2[x][y] << 1;
         }
     }
 
@@ -500,25 +500,25 @@ void SmoothPSMap()
 
             if (x)
             {
-                edge += PoliceMap[x - 1][y];
+                edge += PoliceStationMap[x - 1][y];
             }
 
             if (x < (EighthWorldWidth - 1))
             {
-                edge += PoliceMap[x + 1][y];
+                edge += PoliceStationMap[x + 1][y];
             }
 
             if (y)
             {
-                edge += PoliceMap[x][y - 1];
+                edge += PoliceStationMap[x][y - 1];
             }
 
             if (y < (EighthWorldHeight - 1))
             {
-                edge += PoliceMap[x][y + 1];
+                edge += PoliceStationMap[x][y + 1];
             }
 
-            edge = (edge / 4) + PoliceMap[x][y];
+            edge = (edge / 4) + PoliceStationMap[x][y];
             STem[x][y] = edge / 2;
         }
     }
@@ -527,7 +527,7 @@ void SmoothPSMap()
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            PoliceMap[x][y] = STem[x][y];
+            PoliceStationMap[x][y] = STem[x][y];
         }
     }
 }
@@ -597,9 +597,9 @@ void PTLScan()
                 dis = 34 - distanceToCityCenter(x, y);
                 dis = dis * 4;
                 dis += (TerrainMem[x / 2][y / 2]);
-                dis -= (PollutionMem[x][y]);
+                dis -= (PollutionMap[x][y]);
 
-                if (CrimeMem[x][y] > 190)
+                if (CrimeMap[x][y] > 190)
                 {
                     dis -= 20;
                 }
@@ -614,13 +614,13 @@ void PTLScan()
                     dis = 1;
                 }
 
-                LandValueMem[x][y] = dis;
+                LandValueMap[x][y] = dis;
                 LVtot += dis;
                 LVnum++;
             }
             else
             {
-                LandValueMem[x][y] = 0;
+                LandValueMap[x][y] = 0;
             }
         }
     }
@@ -645,7 +645,7 @@ void PTLScan()
         for (y = 0; y < HalfWorldHeight; y++)
         {
             z = tem[x][y];
-            PollutionMem[x][y] = z;
+            PollutionMap[x][y] = z;
 
             if (z) /*  get pollute average  */
             {
@@ -696,19 +696,19 @@ void CrimeScan()
     {
         for (y = 0; y < HalfWorldHeight; y++)
         {
-            if (z = LandValueMem[x][y])
+            if (z = LandValueMap[x][y])
             {
                 ++numz;
 
                 z = 128 - z;
-                z += PopDensity[x][y];
+                z += PopulationDensityMap[x][y];
 
                 if (z > 300)
                 {
                     z = 300;
                 }
 
-                z -= PoliceMap[x / 4][y / 4];
+                z -= PoliceStationMap[x / 4][y / 4];
 
                 if (z > 250)
                 {
@@ -720,7 +720,7 @@ void CrimeScan()
                     z = 0;
                 }
 
-                CrimeMem[x][y] = z;
+                CrimeMap[x][y] = z;
                 totz += z;
 
                 if ((z > cmax) || ((z == cmax) && (!(Rand16() & 3))))
@@ -731,7 +731,7 @@ void CrimeScan()
             }
             else
             {
-                CrimeMem[x][y] = 0;
+                CrimeMap[x][y] = 0;
             }
         }
     }
@@ -749,7 +749,7 @@ void CrimeScan()
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            PoliceMapEffect[x][y] = PoliceMap[x][y];
+            PoliceMapEffect[x][y] = PoliceStationMap[x][y];
         }
     }
 

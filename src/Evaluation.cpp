@@ -217,9 +217,9 @@ int AverageTraffic()
     {
         for (int y{}; y < HalfWorldHeight; ++y)
         {
-            if (LandValueMem[x][y])
+            if (LandValueMap[x][y])
             {
-                trafficTotal += TrfDensity[x][y];
+                trafficTotal += TrafficDensityMap[x][y];
                 ++count;
             }
         }

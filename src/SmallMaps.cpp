@@ -222,22 +222,22 @@ int dynamicFilter(int col, int row)
     int c = col >> 1;
 
     if (((DynamicData[0] > DynamicData[1]) ||
-        ((x = PopDensity[c][r]) >= DynamicData[0]) &&
+        ((x = PopulationDensityMap[c][r]) >= DynamicData[0]) &&
         (x <= DynamicData[1])) &&
         ((DynamicData[2] > DynamicData[3]) ||
-            ((x = RateOGMem[c >> 2][r >> 2]) >= ((2 * DynamicData[2]) - 256)) &&
+            ((x = RateOfGrowthMap[c >> 2][r >> 2]) >= ((2 * DynamicData[2]) - 256)) &&
             (x <= ((2 * DynamicData[3]) - 256))) &&
         ((DynamicData[4] > DynamicData[5]) ||
-            ((x = TrfDensity[c][r]) >= DynamicData[4]) &&
+            ((x = TrafficDensityMap[c][r]) >= DynamicData[4]) &&
             (x <= DynamicData[5])) &&
         ((DynamicData[6] > DynamicData[7]) ||
-            ((x = PollutionMem[c][r]) >= DynamicData[6]) &&
+            ((x = PollutionMap[c][r]) >= DynamicData[6]) &&
             (x <= DynamicData[7])) &&
         ((DynamicData[8] > DynamicData[9]) ||
-            ((x = CrimeMem[c][r]) >= DynamicData[8]) &&
+            ((x = CrimeMap[c][r]) >= DynamicData[8]) &&
             (x <= DynamicData[9])) &&
         ((DynamicData[10] > DynamicData[11]) ||
-            ((x = LandValueMem[c][r]) >= DynamicData[10]) &&
+            ((x = LandValueMap[c][r]) >= DynamicData[10]) &&
             (x <= DynamicData[11])) &&
         ((DynamicData[12] > DynamicData[13]) ||
             ((x = PoliceMapEffect[c >> 2][r >> 2]) >= DynamicData[12]) &&

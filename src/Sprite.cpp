@@ -462,7 +462,7 @@ void oFireZone(int Xloc, int Yloc, int ch)
 {
     int XYmax;
 
-    RateOGMem[Xloc >> 3][Yloc >> 3] -= 20;
+    RateOfGrowthMap[Xloc >> 3][Yloc >> 3] -= 20;
 
     ch &= LOMASK;
     if (ch < PORTBASE)
@@ -729,7 +729,7 @@ void updateHelicopter(SimSprite& sprite)
         if ((location.x >= 0) && (location.x < (SimWidth >> 1)) && (location.y >= 0) && (location.y < (SimHeight >> 1)))
         {
             // Don changed from 160 to 170 to shut the #$%#$% thing up!
-            if ((TrfDensity[location.x][location.y] > 170) && (RandomRange(0, 7) == 0))
+            if ((TrafficDensityMap[location.x][location.y] > 170) && (RandomRange(0, 7) == 0))
             {
                 SendMesAt(NotificationId::HeavyTrafficReported, (location.x << 1) + 1, (location.y << 1) + 1);
                 MakeSound("city", "HeavyTraffic"); // chopper

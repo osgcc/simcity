@@ -44,19 +44,19 @@ int IndHisMax;
 
 int RoadEffect, PoliceEffect, FireEffect;
 
-std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PopDensity{};
-std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> TrfDensity{};
-std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PollutionMem{};
-std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> LandValueMem{};
-std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> CrimeMem{};
+std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PopulationDensityMap{};
+std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> TrafficDensityMap{};
+std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> PollutionMap{};
+std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> LandValueMap{};
+std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> CrimeMap{};
 
 std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem{};
 std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
 
 
-int RateOGMem[EighthWorldWidth][EighthWorldHeight];
-int FireStMap[EighthWorldWidth][EighthWorldHeight];
-int PoliceMap[EighthWorldWidth][EighthWorldHeight];
+int RateOfGrowthMap[EighthWorldWidth][EighthWorldHeight];
+int FireStationMap[EighthWorldWidth][EighthWorldHeight];
+int PoliceStationMap[EighthWorldWidth][EighthWorldHeight];
 
 
 //int PoliceMapEffect[EighthWorldWidth][EighthWorldHeight];
@@ -93,11 +93,11 @@ namespace
         {
             for (int y = 0; y < HalfWorldHeight; y++)
             {
-                PopDensity[x][y] = 0;
-                TrfDensity[x][y] = 0;
-                PollutionMem[x][y] = 0;
-                LandValueMem[x][y] = 0;
-                CrimeMem[x][y] = 0;
+                PopulationDensityMap[x][y] = 0;
+                TrafficDensityMap[x][y] = 0;
+                PollutionMap[x][y] = 0;
+                LandValueMap[x][y] = 0;
+                CrimeMap[x][y] = 0;
             }
         }
     }

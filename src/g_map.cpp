@@ -219,7 +219,7 @@ void drawOverlayPointsSm(Texture& overlay, const std::array<std::array<int, Eigh
 
 void drawPopDensity()
 {
-	drawOverlayPoints(PopulationDensity, PopDensity);
+	drawOverlayPoints(PopulationDensity, PopulationDensityMap);
 }
 
 
@@ -259,7 +259,7 @@ void drawRateOfGrowth()
 	{
 		for (int y = 0; y < EighthWorldHeight; y++)
 		{
-			const int index = rateOfGrowthColorIndex(RateOGMem[x][y]);
+			const int index = rateOfGrowthColorIndex(RateOfGrowthMap[x][y]);
 			drawPointToCurrentOverlay(x, y, index);
 		}
 	}
@@ -271,25 +271,25 @@ void drawRateOfGrowth()
 
 void drawTrafficMap()
 {
-	drawOverlayPoints(TrafficDensity, TrfDensity);
+	drawOverlayPoints(TrafficDensity, TrafficDensityMap);
 }
 
 
 void drawPollutionMap()
 {
-	drawOverlayPoints(Pollution, PollutionMem);
+	drawOverlayPoints(Pollution, PollutionMap);
 }
 
 
 void drawCrimeMap()
 {
-	drawOverlayPoints(CrimeOverlay, CrimeMem);
+	drawOverlayPoints(CrimeOverlay, CrimeMap);
 }
 
 
 void drawLandMap()
 {
-	drawOverlayPoints(LandValue, LandValueMem);
+	drawOverlayPoints(LandValue, LandValueMap);
 }
 
 
