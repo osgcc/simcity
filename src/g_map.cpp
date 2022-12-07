@@ -254,25 +254,25 @@ void drawRateOfGrowth()
 
 void drawTrafficMap()
 {
-	//drawOverlayPoints(TrafficDensity, TrafficDensityMap);
+	drawOverlayPoints(TrafficDensity, TrafficDensityMap);
 }
 
 
 void drawPollutionMap()
 {
-	//drawOverlayPoints(Pollution, PollutionMap);
+	drawOverlayPoints(Pollution, PollutionMap);
 }
 
 
 void drawCrimeMap()
 {
-	//drawOverlayPoints(CrimeOverlay, CrimeMap);
+	drawOverlayPoints(CrimeOverlay, CrimeMap);
 }
 
 
 void drawLandMap()
 {
-	//drawOverlayPoints(LandValue, LandValueMap);
+	drawOverlayPoints(LandValue, LandValueMap);
 }
 
 
