@@ -1047,10 +1047,14 @@ void initUI()
     miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
 
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::Crime, CrimeMap);
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::TrafficDensity, TrafficDensityMap);
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PopulationDensity, PopulationDensityMap);
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::Pollution, PollutionMap);
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::FireProtection, FireStationMap);
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::LandValue, LandValueMap);
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PoliceProtection, PoliceStationMap);
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::Pollution, PollutionMap);
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PopulationDensity, PopulationDensityMap);
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PopulationGrowth, RateOfGrowthMap);
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::TrafficDensity, TrafficDensityMap);
+
 
     fileIo = new FileIo(*MainWindow);
 

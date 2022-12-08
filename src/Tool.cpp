@@ -573,7 +573,7 @@ int getDensityStr(int catNo, int mapH, int mapV)
         return (z + 12);
 
     case 4:
-        z = RateOfGrowthMap[mapH >> 3][mapV >> 3];
+        z = RateOfGrowthMap.value({ mapH >> 3, mapV >> 3 });
         if (z < 0) return (16);
         if (z == 0) return (17);
         if (z > 100) return (19);

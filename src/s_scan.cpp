@@ -98,25 +98,25 @@ void SmoothFSMap()
 
             if (x)
             {
-                edge += FireStationMap[x - 1][y];
+                edge += FireStationMap.value({ x - 1, y });
             }
 
             if (x < (EighthWorldWidth - 1))
             {
-                edge += FireStationMap[x + 1][y];
+                edge += FireStationMap.value({ x + 1, y });
             }
 
             if (y)
             {
-                edge += FireStationMap[x][y - 1];
+                edge += FireStationMap.value({ x, y - 1 });
             }
 
             if (y < (EighthWorldHeight - 1))
             {
-                edge += FireStationMap[x][y + 1];
+                edge += FireStationMap.value({ x, y + 1 });
             }
 
-            edge = (edge / 4) + FireStationMap[x][y];
+            edge = (edge / 4) + FireStationMap.value({ x, y });
             STem[x][y] = edge / 2;
         }
     }
@@ -125,7 +125,7 @@ void SmoothFSMap()
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            FireStationMap[x][y] = STem[x][y];
+            FireStationMap.value({ x, y }, STem[x][y]);
         }
     }
 }
@@ -144,7 +144,7 @@ void FireAnalysis()		/* Make firerate map from firestation map  */
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            FireRate[x][y] = FireStationMap[x][y];
+            FireRate[x][y] = FireStationMap.value({ x, y });
         }
     }
 
@@ -500,25 +500,25 @@ void SmoothPSMap()
 
             if (x)
             {
-                edge += PoliceStationMap[x - 1][y];
+                edge += PoliceStationMap.value({ x -  1, y });
             }
 
             if (x < (EighthWorldWidth - 1))
             {
-                edge += PoliceStationMap[x + 1][y];
+                edge += PoliceStationMap.value({ x + 1, y });
             }
 
             if (y)
             {
-                edge += PoliceStationMap[x][y - 1];
+                edge += PoliceStationMap.value({ x, y - 1 });
             }
 
             if (y < (EighthWorldHeight - 1))
             {
-                edge += PoliceStationMap[x][y + 1];
+                edge += PoliceStationMap.value({ x, y + 1});
             }
 
-            edge = (edge / 4) + PoliceStationMap[x][y];
+            edge = (edge / 4) + PoliceStationMap.value({ x, y });
             STem[x][y] = edge / 2;
         }
     }
@@ -527,7 +527,7 @@ void SmoothPSMap()
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            PoliceStationMap[x][y] = STem[x][y];
+            PoliceStationMap.value({ x, y }, STem[x][y]);
         }
     }
 }
@@ -708,7 +708,7 @@ void CrimeScan()
                     z = 300;
                 }
 
-                z -= PoliceStationMap[x / 4][y / 4];
+                z -= PoliceStationMap.value({ x / 4, y / 4 });
 
                 if (z > 250)
                 {
@@ -749,7 +749,7 @@ void CrimeScan()
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            PoliceMapEffect[x][y] = PoliceStationMap[x][y];
+            PoliceMapEffect[x][y] = PoliceStationMap.value({ x, y });
         }
     }
 

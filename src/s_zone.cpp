@@ -308,7 +308,8 @@ void BuildHouse(int value)
 
 void IncROG(int amount)
 {
-  RateOfGrowthMap[SimulationTarget.x>>3][SimulationTarget.y>>3] += amount<<2;
+    const int rogVal = RateOfGrowthMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 });
+    RateOfGrowthMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 }, rogVal + (amount << 2));
 }
 
 

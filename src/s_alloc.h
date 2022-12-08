@@ -32,9 +32,9 @@ extern EffectMap LandValueMap;
 extern EffectMap CrimeMap;
 
 /* 8X8 Maps  15 x 13 */
-extern int RateOfGrowthMap[EighthWorldWidth][EighthWorldHeight];
-extern int FireStationMap[EighthWorldWidth][EighthWorldHeight];
-extern int PoliceStationMap[EighthWorldWidth][EighthWorldHeight];
+extern EffectMap RateOfGrowthMap;
+extern EffectMap FireStationMap;
+extern EffectMap PoliceStationMap;
 
 // 4X4 Maps  30 x 25
 extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem;

@@ -462,7 +462,8 @@ void oFireZone(int Xloc, int Yloc, int ch)
 {
     int XYmax;
 
-    RateOfGrowthMap[Xloc >> 3][Yloc >> 3] -= 20;
+    const auto rogVal = RateOfGrowthMap.value({ Xloc >> 3, Yloc >> 3 });
+    RateOfGrowthMap.value({ Xloc >> 3, Yloc >> 3 }, rogVal - 20);
 
     ch &= LOMASK;
     if (ch < PORTBASE)

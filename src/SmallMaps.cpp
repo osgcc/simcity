@@ -216,6 +216,7 @@ void drawPower()
 
 int dynamicFilter(int col, int row)
 {
+    /*
     int x;
 
     int r = row >> 1;
@@ -251,6 +252,8 @@ int dynamicFilter(int col, int row)
     {
         return 0;
     }
+    */
+    return 0;
 }
 
 

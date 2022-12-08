@@ -513,7 +513,10 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             z = z / 2;
         }
 
-        FireStationMap[SimulationTarget.x >> 3][SimulationTarget.y >> 3] += z;
+        {
+            const auto fstVal = FireStationMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 });
+            FireStationMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 }, fstVal + z);
+        }
         return;
 
     case POLICESTATION:
@@ -537,7 +540,10 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             z = z / 2; /* post PD's need roads */
         }
 
-        PoliceStationMap[SimulationTarget.x >> 3][SimulationTarget.y >> 3] += z;
+        {
+            const auto pstVal = PoliceStationMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 });
+            PoliceStationMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 }, pstVal + z);
+        }
         return;
 
     case STADIUM:
@@ -888,14 +894,8 @@ void ClearCensus()
     APortPop = 0;
     resetPowerStackCount(); // Reset before Mapscan
 
-    for (int x = 0; x < EighthWorldWidth; x++)
-    {
-        for (int y = 0; y < EighthWorldHeight; y++)
-        {
-            FireStationMap[x][y] = 0;
-            PoliceStationMap[x][y] = 0;
-        }
-    }
+    FireStationMap.reset();
+    PoliceStationMap.reset();
 }
 
 
@@ -1011,26 +1011,28 @@ void DecROGMem()
     {
         for (int y = 0; y < EighthWorldHeight; y++)
         {
-            int z = RateOfGrowthMap[x][y];
+            int z = RateOfGrowthMap.value({ x, y });
             if (z == 0)
             {
                 continue;
             }
             if (z > 0)
             {
-                --RateOfGrowthMap[x][y];
+                const auto rogVal = RateOfGrowthMap.value({ x, y });
+                RateOfGrowthMap.value({ x, y }, rogVal - 1);
                 if (z > 200) // prevent overflow
                 {
-                    RateOfGrowthMap[x][y] = std::min(z, 200);
+                    RateOfGrowthMap.value({ x, y }, std::min(z, 200));
                 }
                 continue;
             }
             if (z < 0)
             {
-                ++RateOfGrowthMap[x][y];
+                const auto rogVal = RateOfGrowthMap.value({ x, y });
+                RateOfGrowthMap.value({ x, y }, rogVal + 1);
                 if (z < -200)
                 {
-                    RateOfGrowthMap[x][y] = -200;
+                    RateOfGrowthMap.value({ x, y }, -200);
                 }
             }
         }
@@ -1425,7 +1427,8 @@ void FireZone(int Xloc, int Yloc, int ch)
     int Xtem, Ytem;
     int XYmax;
 
-    RateOfGrowthMap[Xloc / 8][Yloc / 8] -= 20;
+    const auto rogVal = RateOfGrowthMap.value({ Xloc / 8, Yloc / 8 });
+    RateOfGrowthMap.value({ Xloc / 8, Yloc / 8 }, rogVal - 20);
 
     ch = ch & LOMASK;
     if (ch < PORTBASE)

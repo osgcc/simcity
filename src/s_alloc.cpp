@@ -56,11 +56,9 @@ EffectMap CrimeMap({ HalfWorldWidth, HalfWorldHeight });
 std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem{};
 std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
 
-
-int RateOfGrowthMap[EighthWorldWidth][EighthWorldHeight];
-int FireStationMap[EighthWorldWidth][EighthWorldHeight];
-int PoliceStationMap[EighthWorldWidth][EighthWorldHeight];
-
+EffectMap RateOfGrowthMap({ EighthWorldWidth, EighthWorldHeight });
+EffectMap FireStationMap({ EighthWorldWidth, EighthWorldHeight });
+EffectMap PoliceStationMap({ EighthWorldWidth, EighthWorldHeight });
 
 //int PoliceMapEffect[EighthWorldWidth][EighthWorldHeight];
 std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> PoliceMapEffect{};
