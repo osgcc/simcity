@@ -73,54 +73,6 @@ std::array<SDL_Color, 9> OverlayColorTable =
 } };
 
 
-const Texture& crimeOverlayTexture()
-{
-	return CrimeOverlay;
-}
-
-
-const Texture& populationDensityTexture()
-{
-	return PopulationDensity;
-}
-
-
-const Texture& trafficDensityTexture()
-{
-	return TrafficDensity;
-}
-
-
-const Texture& pollutionTexture()
-{
-	return Pollution;
-}
-
-
-const Texture& landValueTexture()
-{
-	return LandValue;
-}
-
-
-const Texture& policeRadiusTexture()
-{
-	return PoliceRadius;
-}
-
-
-const Texture& fireRadiusTexture()
-{
-	return FireRadius;
-}
-
-
-const Texture& rateOfGrowthTexture()
-{
-	return RateOfGrowth;
-}
-
-
 void turnOffBlending(const Texture& texture)
 {
 	SDL_SetRenderDrawBlendMode(MainWindowRenderer, SDL_BLENDMODE_NONE);
