@@ -1045,7 +1045,13 @@ void initUI()
     miniMapWindow = new MiniMapWindow(miniMapWindowPosition, { SimWidth, SimHeight });
     miniMapWindow->updateViewportSize(WindowSize);
     miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
-    
+
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::Crime, CrimeMap);
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::TrafficDensity, TrafficDensityMap);
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PopulationDensity, PopulationDensityMap);
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::Pollution, PollutionMap);
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::LandValue, LandValueMap);
+
     fileIo = new FileIo(*MainWindow);
 
     stringRenderer = new StringRender(MainWindowRenderer);
