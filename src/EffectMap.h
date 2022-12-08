@@ -18,22 +18,23 @@ public:
         mDimensions{ size },
         mSize{ size.x * size.y }
     {
-        fill();
+        fill(0);
     }
 
     int value(const Point<int>& point) const
     {
-        return mEffectMap[point.x * point.y];
+        return mEffectMap[(mDimensions.x * point.y) + point.x];
     }
 
     void value(const Point<int>& point, int value)
     {
-        mEffectMap[point.x * point.y] = value;
+        mEffectMap[(mDimensions.x * point.y) + point.x] = value;
     }
 
     void reset()
     {
-        fill();
+        mEffectMap.clear();
+        fill(0);
     }
 
     const Vector<int> dimensions() const
@@ -42,11 +43,11 @@ public:
     }
 
 private:
-    void fill()
+    void fill(const int value)
     {
         for (int i{ 0 }; i < mSize; ++i)
         {
-            mEffectMap.push_back(0);
+            mEffectMap.push_back(value);
         }
     }
 
