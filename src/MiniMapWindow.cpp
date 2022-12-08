@@ -11,6 +11,9 @@
 #include "MiniMapWindow.h"
 
 #include "BindFunction.h"
+#include "Colors.h"
+#include "EffectMap.h"
+#include "Graphics.h"
 #include "Map.h"
 
 #include "w_util.h"
@@ -25,7 +28,139 @@
 
 namespace
 {
+    constexpr auto VAL_NONE = 0;
+    constexpr auto VAL_LOW = 1;
+    constexpr auto VAL_MEDIUM = 2;
+    constexpr auto VAL_HIGH = 3;
+    constexpr auto VAL_VERYHIGH = 4;
+    constexpr auto VAL_PLUS = 5;
+    constexpr auto VAL_VERYPLUS = 6;
+    constexpr auto VAL_MINUS = 7;
+    constexpr auto VAL_VERYMINUS = 8;
+
+    constexpr auto UNPOWERED = 0;
+    constexpr auto POWERED = 1;
+    constexpr auto CONDUCTIVE = 2;
+
     constexpr SDL_Color BackgroundColor{ 126, 163, 217, 255 };
+
+    std::array<SDL_Color, 3> PowerColorTable =
+    { {
+        Colors::LightGrey,
+        Colors::Red,
+        Colors::LightGrey
+    } };
+
+
+    std::array<SDL_Color, 9> OverlayColorTable =
+    { {
+        Colors::Clear,
+        Colors::LightGrey,
+        Colors::Yellow,
+        Colors::Orange,
+        Colors::Red,
+        Colors::DarkGreen,
+        Colors::LightGreen,
+        Colors::Orange,
+        Colors::Yellow
+    } };
+
+
+    int rateOfGrowthColorIndex(int value)
+    {
+        if (value > 100)
+        {
+            return VAL_VERYPLUS;
+        }
+
+        if (value > 20)
+        {
+            return VAL_PLUS;
+        }
+
+        if (value < -100)
+        {
+            return VAL_VERYMINUS;
+        }
+
+        if (value < -20)
+        {
+            return VAL_MINUS;
+        }
+
+        return VAL_NONE;
+    }
+
+
+    /*
+    void drawRateOfGrowth()
+    {
+        SDL_SetRenderTarget(MainWindowRenderer, RateOfGrowth.texture);
+        turnOffBlending(RateOfGrowth);
+        clearOverlayTexture();
+
+        for (int x = 0; x < EighthWorldWidth; x++)
+        {
+            for (int y = 0; y < EighthWorldHeight; y++)
+            {
+                const int index = rateOfGrowthColorIndex(RateOfGrowthMap[x][y]);
+                drawPointToCurrentOverlay(x, y, index);
+            }
+        }
+
+        turnOnBlending(RateOfGrowth);
+        SDL_SetRenderTarget(MainWindowRenderer, nullptr);
+    }
+    */
+
+
+    int GetColorIndex(int x)
+    {
+        if (x < 50)
+        {
+            return VAL_NONE;
+        }
+        if (x < 100)
+        {
+            return VAL_LOW;
+        }
+        if (x < 150)
+        {
+            return VAL_MEDIUM;
+        }
+        if (x < 200)
+        {
+            return VAL_HIGH;
+        }
+
+        return VAL_VERYHIGH;
+    }
+
+    void clearOverlayTexture(SDL_Renderer& renderer)
+    {
+        SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 0);
+        SDL_RenderClear(&renderer);
+    }
+
+    void drawOverlayPoints(SDL_Renderer& renderer, Texture& overlay, const EffectMap& map)
+    {
+        SDL_SetRenderTarget(&renderer, overlay.texture);
+        turnOffBlending(renderer, overlay);
+        clearOverlayTexture(renderer);
+
+        for (int x = 0; x < map.dimensions().x; x++)
+        {
+            for (int y = 0; y < map.dimensions().y; y++)
+            {
+                const auto& color = OverlayColorTable[GetColorIndex(map.value({ x, y }))];
+                drawPoint(renderer, { x, y }, color);
+            }
+        }
+
+        turnOnBlending(renderer, overlay);
+        SDL_SetRenderTarget(&renderer, nullptr);
+    }
+
 };
 
 
@@ -75,6 +210,8 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
     setButtonTextureUv();
     setButtonPositions();
     resetOverlayButtons();
+
+    initOverlayTextures();
 }
 
 
@@ -124,9 +261,35 @@ void MiniMapWindow::updateTilePointedAt(const Point<int>& tilePointedAt)
 }
 
 
-void MiniMapWindow::linkOverlayTexture(MiniMapWindow::ButtonId buttonId, const Texture& texture)
+void MiniMapWindow::linkEffectMap(ButtonId id, const EffectMap& map)
 {
-    mOverlayTextures[buttonId] = &texture;
+    mEffectMaps[id] = &map;
+}
+
+
+void MiniMapWindow::initTexture(Texture& texture, const Vector<int>& dimensions)
+{
+    texture.texture = SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, dimensions.x, dimensions.y);
+    SDL_QueryTexture(texture.texture, nullptr, nullptr, &texture.dimensions.x, &texture.dimensions.y);
+    texture.area = { 0, 0, texture.dimensions.x, texture.dimensions.y };
+}
+
+
+void MiniMapWindow::initOverlayTextures()
+{
+    const auto overlayHalfSize = mMapSize.skewInverseBy({ 2, 2 });
+    initTexture(mOverlayTextures[ButtonId::Crime], overlayHalfSize);
+    initTexture(mOverlayTextures[ButtonId::LandValue], overlayHalfSize);
+    initTexture(mOverlayTextures[ButtonId::PopulationDensity], overlayHalfSize);
+    initTexture(mOverlayTextures[ButtonId::Pollution], overlayHalfSize);
+    initTexture(mOverlayTextures[ButtonId::TrafficDensity], overlayHalfSize);
+
+    // Necessary because of integer math dropping fractional component.
+    const Vector<int> overlayEigthSize{ mMapSize.x / 8, static_cast<int>(std::ceil(mMapSize.y / 8)) };
+
+    initTexture(mOverlayTextures[ButtonId::PoliceProtection], overlayEigthSize);
+    initTexture(mOverlayTextures[ButtonId::FireProtection], overlayEigthSize);
+    initTexture(mOverlayTextures[ButtonId::PopulationGrowth], overlayEigthSize);
 }
 
 
@@ -175,6 +338,15 @@ void MiniMapWindow::draw()
 
     SDL_RenderPresent(mRenderer);
     SDL_SetRenderTarget(mRenderer, nullptr);
+
+    if(mButtonDownId != ButtonId::Normal)
+    {
+        auto map = mEffectMaps[mButtonDownId];
+        if(map)
+        {
+            drawOverlayPoints(*mRenderer, mOverlayTextures[mButtonDownId], *mEffectMaps[mButtonDownId]);
+        }
+    }
 }
 
 
@@ -182,21 +354,23 @@ void MiniMapWindow::drawUI()
 {
     SDL_RenderCopy(mRenderer, mTexture.texture, nullptr, &mMinimapArea);
 
-    const Texture* overlayTexture = mOverlayTextures[mButtonDownId];
-    if (overlayTexture != nullptr)
+    //const Texture& overlayTexture = mOverlayTextures[mButtonDownId];
+
+    if (mButtonDownId != ButtonId::Normal)
     {
-        if (SDL_RenderCopy(mRenderer, overlayTexture->texture, nullptr, &mMinimapArea))
+        if (SDL_RenderCopy(mRenderer, mOverlayTextures[mButtonDownId].texture, nullptr, &mMinimapArea))
         {
-            throw std::runtime_error(std::string("MiniMapWindow::drawUI(): Error drawing texture: ") + SDL_GetError());
+            throw std::runtime_error(std::string("MiniMapWindow::drawUI()\n\nUnable to draw texture: ") + SDL_GetError());
         }
     }
 
     SDL_RenderDrawRect(mRenderer, &mSelector);
     SDL_RenderDrawRect(mRenderer, &mTileHighlight);
 
-    for (int i{ 0 }; i < mButtons.size(); ++i)
+    const int arraySize = static_cast<int>(mButtons.size());
+    for (int i{ 0 }; i < arraySize; ++i)
     {
-        SDL_RenderCopy(mRenderer, mButtonTextures.texture, &mButtonUV[i + (mButtons[i].state * 10)], &mButtons[i].rect);
+        SDL_RenderCopy(mRenderer, mButtonTextures.texture, &mButtonUV[i + (mButtons[i].state * arraySize)], &mButtons[i].rect);
     }
 
     SDL_RenderPresent(mRenderer);
@@ -336,17 +510,21 @@ void MiniMapWindow::setButtonValues()
     mButtons[4].id = ButtonId::PoliceProtection;
     mButtons[5].id = ButtonId::PopulationDensity;
     mButtons[6].id = ButtonId::PopulationGrowth;
-    mButtons[7].id = ButtonId::PoliceProtection;
-    mButtons[8].id = ButtonId::TransportationNetwork;
-    mButtons[9].id = ButtonId::PowerGrid;
+    mButtons[7].id = ButtonId::Pollution;
+    mButtons[8].id = ButtonId::TrafficDensity;
+    //mButtons[9].id = ButtonId::TransportationNetwork;
+    //mButtons[10].id = ButtonId::PowerGrid;
+    mButtons[9].id = ButtonId::Normal;
+    mButtons[10].id = ButtonId::Normal;
 }
 
 
 void MiniMapWindow::setButtonTextureUv()
 {
-    for (int i = 0; i < 20; ++i)
+    const int arraySize = static_cast<int>(mButtons.size());
+    for (int i = 0; i < arraySize * 2; ++i)
     {
-        mButtonUV[i] = { (i / 10) * 24, (i % 10) * 24, 24, 24 };
+        mButtonUV[i] = { (i / arraySize) * 24, (i % arraySize) * 24, 24, 24 };
     }
 }
 
@@ -356,9 +534,10 @@ void MiniMapWindow::setButtonPositions()
     constexpr Vector<int> buttonSize{ 24, 24 };
     constexpr Vector<int> buttonTransform{buttonSize.x + 6, 0};
     
-    const int startPosition = (mButtonArea.w - (buttonTransform.x * 10)) / 2;
+    const int arraySize = static_cast<int>(mButtons.size());
+    const int startPosition = (mButtonArea.w - (buttonTransform.x * arraySize)) / 2;
 
-    for (int i{ 0 }; i < 10; ++i)
+    for (int i{ 0 }; i < arraySize; ++i)
     {
         mButtons[i].rect = { startPosition + buttonTransform.x * i, mButtonArea.y + 3, buttonSize.x, buttonSize.y };
     }

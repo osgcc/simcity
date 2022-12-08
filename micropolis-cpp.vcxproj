@@ -17,9 +17,9 @@
     <ClCompile Include="src\Evaluation.cpp" />
     <ClCompile Include="src\FileIo.cpp" />
     <ClCompile Include="src\Font.cpp" />
+    <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\GraphWindow.cpp" />
     <ClCompile Include="src\g_ani.cpp" />
-    <ClCompile Include="src\g_map.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\MiniMapWindow.cpp" />
@@ -61,6 +61,7 @@
     <ClInclude Include="src\FileIo.h" />
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Graph.h" />
+    <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\GraphWindow.h" />
     <ClInclude Include="src\g_ani.h" />
     <ClInclude Include="src\Map.h" />
@@ -86,7 +87,6 @@
     <ClInclude Include="src\Vector.h" />
     <ClInclude Include="src\VectorSizeRange.h" />
     <ClInclude Include="src\animtab.h" />
-    <ClInclude Include="src\g_map.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\s_alloc.h" />
     <ClInclude Include="src\WindowBase.h" />

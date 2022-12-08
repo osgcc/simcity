@@ -10,7 +10,7 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
-#include "g_map.h"
+#include "Graphics.h"
 
 #include "Map.h"
 
@@ -41,8 +41,8 @@ const Texture& powerMapTexture()
 
 void initMapTextures()
 {
-    initTexture(TransitMapTexture, SimWidth * 3, SimHeight * 3);
-    initTexture(PowerMapTexture, SimWidth * 3, SimHeight * 3);
+    initTexture(*MainWindowRenderer, TransitMapTexture, { SimWidth * 3, SimHeight * 3 });
+    initTexture(*MainWindowRenderer, PowerMapTexture, { SimWidth * 3, SimHeight * 3 });
 }
 
 

@@ -26,7 +26,6 @@
 #include "Tool.h"
 
 #include "g_ani.h"
-#include "g_map.h"
 
 #include "s_alloc.h"
 #include "s_disast.h"
@@ -301,16 +300,6 @@ void simLoop(bool doSim)
     if (RedrawMinimap)
     {
         miniMapWindow->draw();
-
-        drawPopDensity();
-        drawCrimeMap();
-        drawTrafficMap();
-        drawPollutionMap();
-        drawLandMap();
-        drawPoliceRadius();
-        drawFireRadius();
-        drawRateOfGrowth();
-
         RedrawMinimap = false;
     }
 
@@ -1035,7 +1024,6 @@ void gameInit()
     updateMapDrawParameters();
     initTimers();
 
-    initOverlayTexture();
     initMapTextures();
 }
 

@@ -11,7 +11,7 @@
 #include "GraphWindow.h"
 
 #include "Colors.h"
-#include "g_map.h"
+#include "Graphics.h"
 
 #include <array>
 #include <map>
@@ -112,7 +112,7 @@ GraphWindow::GraphWindow(SDL_Renderer* renderer) :
 	mRenderer(*renderer),
 	mTexture(loadTexture(renderer, "images/graph.png"))
 {
-	initTexture(mGraphTexture, GraphLayout.w, GraphLayout.h);
+	initTexture(*MainWindowRenderer, mGraphTexture, { GraphLayout.w, GraphLayout.h });
 }
 
 
@@ -203,7 +203,7 @@ void GraphWindow::update()
 
 	SDL_SetRenderTarget(MainWindowRenderer, mGraphTexture.texture);
 	
-	turnOffBlending(mGraphTexture);
+	turnOffBlending(*MainWindowRenderer, mGraphTexture);
 
 	SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 0);
 	SDL_RenderClear(MainWindowRenderer);
@@ -215,7 +215,7 @@ void GraphWindow::update()
 		SDL_RenderDrawLines(MainWindowRenderer, graph.points.data(), static_cast<int>(graph.points.size()));
 	}
 
-	turnOnBlending(mGraphTexture);
+	turnOnBlending(*MainWindowRenderer, mGraphTexture);
 	SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
 

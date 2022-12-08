@@ -22,6 +22,9 @@
 #include <SDL2/SDL.h>
 
 
+class EffectMap;
+
+
 class MiniMapWindow
 {
 public:
@@ -36,6 +39,7 @@ public:
 		PopulationDensity,
 		PopulationGrowth,
 		Pollution,
+		TrafficDensity,
 		TransportationNetwork,
 		PowerGrid
 	};
@@ -64,7 +68,7 @@ public:
 	void updateViewportSize(const Vector<int>& viewportSize);
 	void updateTilePointedAt(const Point<int>& tilePointedAt);
 
-	void linkOverlayTexture(MiniMapWindow::ButtonId, const Texture&);
+	void linkEffectMap(ButtonId id, const EffectMap& map);
 
 	void resetOverlayButtons();
 
@@ -89,6 +93,9 @@ private:
 
 	bool noButtonsSelected();
 
+	void initTexture(Texture& texture, const Vector<int>& dimensions);
+	void initOverlayTextures();
+
 private:
 	struct ButtonMeta
 	{
@@ -104,7 +111,6 @@ private:
 	Texture mTiles{};
 	Texture mTexture{};
 	Texture mButtonTextures{};
-	std::map<ButtonId, const Texture*> mOverlayTextures;
 
 	SDL_Rect mSelector{};
 	SDL_Rect mTileHighlight{ 0, 0, MiniTileSize, MiniTileSize };
@@ -116,8 +122,11 @@ private:
 
 	Vector<int> mMapSize{};
 
-	std::array<SDL_Rect, 20> mButtonUV{};
-	std::array<ButtonMeta, 10> mButtons{};
+	std::array<SDL_Rect, 22> mButtonUV{};
+	std::array<ButtonMeta, 11> mButtons{};
+
+	std::map<ButtonId, Texture> mOverlayTextures;
+	std::map<ButtonId, const EffectMap*> mEffectMaps;
 
 	std::vector<fnPointIntParam> mFocusOnTileCallbacks;
 
