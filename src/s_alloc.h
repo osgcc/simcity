@@ -31,15 +31,14 @@ extern EffectMap PollutionMap;
 extern EffectMap LandValueMap;
 extern EffectMap CrimeMap;
 
-// 4X4 Maps  30 x 25
-extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem;
-extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem;
-
-
 /* 8X8 Maps  15 x 13 */
 extern int RateOfGrowthMap[EighthWorldWidth][EighthWorldHeight];
 extern int FireStationMap[EighthWorldWidth][EighthWorldHeight];
 extern int PoliceStationMap[EighthWorldWidth][EighthWorldHeight];
+
+// 4X4 Maps  30 x 25
+extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem;
+extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem;
 
 extern std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> PoliceMapEffect;
 extern std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> FireRate;
