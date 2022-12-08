@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #include "GraphWindow.h"
 
+#include "Colors.h"
 #include "g_map.h"
 
 #include <array>

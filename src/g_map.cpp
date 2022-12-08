@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #include "g_map.h"
 
+#include "Colors.h"
 #include "EffectMap.h"
 
 #include "SmallMaps.h"

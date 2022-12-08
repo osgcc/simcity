@@ -17,6 +17,7 @@
 #include "MiniMapWindow.h"
 
 #include "CityProperties.h"
+#include "Colors.h"
 #include "Connection.h"
 #include "FileIo.h"
 #include "Font.h"
@@ -1057,15 +1058,6 @@ void initUI()
     miniMapWindow->updateViewportSize(WindowSize);
     miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
     
-    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::Crime, crimeOverlayTexture());
-    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::FireProtection, fireRadiusTexture());
-    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::LandValue, landValueTexture());
-    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::PoliceProtection, policeRadiusTexture());
-    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::Pollution, pollutionTexture());
-    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::PopulationDensity, populationDensityTexture());
-    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::PopulationGrowth, rateOfGrowthTexture());
-    miniMapWindow->linkOverlayTexture(MiniMapWindow::ButtonId::TransportationNetwork, trafficDensityTexture()); // temp
-
     fileIo = new FileIo(*MainWindow);
 
     stringRenderer = new StringRender(MainWindowRenderer);
