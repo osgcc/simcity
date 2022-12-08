@@ -138,7 +138,7 @@ namespace
 
     void clearOverlayTexture(SDL_Renderer& renderer)
     {
-        SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 0);
+        SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 255);
         SDL_RenderClear(&renderer);
     }
 
@@ -293,6 +293,19 @@ void MiniMapWindow::initOverlayTextures()
 }
 
 
+void MiniMapWindow::drawCurrentOverlay()
+{
+    if (mButtonDownId != ButtonId::Normal)
+    {
+        auto map = mEffectMaps[mButtonDownId];
+        if (map)
+        {
+            drawOverlayPoints(*mRenderer, mOverlayTextures[mButtonDownId], *mEffectMaps[mButtonDownId]);
+        }
+    }
+}
+
+
 void MiniMapWindow::resetOverlayButtons()
 {
     for (auto& button : mButtons)
@@ -319,9 +332,7 @@ void MiniMapWindow::show()
 
 void MiniMapWindow::draw()
 {
-    SDL_SetRenderDrawColor(mRenderer, BackgroundColor.r, BackgroundColor.g, BackgroundColor.b, 255);
-    SDL_RenderClear(mRenderer);
-    SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 150);
+    //SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 150);
 
     SDL_Rect miniMapDrawRect{ 0, 0, MiniTileSize, MiniTileSize };
 
@@ -339,31 +350,23 @@ void MiniMapWindow::draw()
     SDL_RenderPresent(mRenderer);
     SDL_SetRenderTarget(mRenderer, nullptr);
 
-    if(mButtonDownId != ButtonId::Normal)
-    {
-        auto map = mEffectMaps[mButtonDownId];
-        if(map)
-        {
-            drawOverlayPoints(*mRenderer, mOverlayTextures[mButtonDownId], *mEffectMaps[mButtonDownId]);
-        }
-    }
+    drawCurrentOverlay();
 }
 
 
 void MiniMapWindow::drawUI()
 {
-    SDL_RenderCopy(mRenderer, mTexture.texture, nullptr, &mMinimapArea);
+    SDL_SetRenderDrawColor(mRenderer, BackgroundColor.r, BackgroundColor.g, BackgroundColor.b, 255);
+    SDL_RenderClear(mRenderer);
 
-    //const Texture& overlayTexture = mOverlayTextures[mButtonDownId];
+    SDL_RenderCopy(mRenderer, mTexture.texture, nullptr, &mMinimapArea);
 
     if (mButtonDownId != ButtonId::Normal)
     {
-        if (SDL_RenderCopy(mRenderer, mOverlayTextures[mButtonDownId].texture, nullptr, &mMinimapArea))
-        {
-            throw std::runtime_error(std::string("MiniMapWindow::drawUI()\n\nUnable to draw texture: ") + SDL_GetError());
-        }
+        SDL_RenderCopy(mRenderer, mOverlayTextures[mButtonDownId].texture, nullptr, &mMinimapArea);
     }
 
+    SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 150);
     SDL_RenderDrawRect(mRenderer, &mSelector);
     SDL_RenderDrawRect(mRenderer, &mTileHighlight);
 
@@ -423,6 +426,7 @@ void MiniMapWindow::handleMouseEvent(const SDL_Event& event)
                     {
                         button.state = ButtonStatePressed;
                         mButtonDownId = button.id;
+                        drawCurrentOverlay();
                     }
                     else
                     {

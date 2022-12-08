@@ -96,6 +96,8 @@ private:
 	void initTexture(Texture& texture, const Vector<int>& dimensions);
 	void initOverlayTextures();
 
+	void drawCurrentOverlay();
+
 private:
 	struct ButtonMeta
 	{
