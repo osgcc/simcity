@@ -285,8 +285,7 @@ void MiniMapWindow::initOverlayTextures()
     initTexture(mOverlayTextures[ButtonId::TrafficDensity], overlayHalfSize);
 
     // Necessary because of integer math dropping fractional component.
-    const Vector<int> overlayEigthSize{ mMapSize.x / 8, static_cast<int>(std::ceil(mMapSize.y / 8)) };
-
+    const Vector<int> overlayEigthSize{ mMapSize.x / 8, (mMapSize.y / 8) + 1 };
     initTexture(mOverlayTextures[ButtonId::PoliceProtection], overlayEigthSize);
     initTexture(mOverlayTextures[ButtonId::FireProtection], overlayEigthSize);
     initTexture(mOverlayTextures[ButtonId::PopulationGrowth], overlayEigthSize);
