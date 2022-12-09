@@ -135,32 +135,26 @@ void FireAnalysis()		/* Make firerate map from firestation map  */
 
 
 /* comefrom: PopDenScan */
-int GetPDen(int Ch9)
+int GetPDen(int tile)
 {
-    int pop;
-
-    if (Ch9 == FREEZ)
+    if (tile == FREEZ)
     {
-        pop = DoFreePop(/*Ch9*/);
-        return (pop);
+        return DoFreePop(/*tile*/);
     }
 
-    if (Ch9 < COMBASE)
+    if (tile < COMBASE)
     {
-        pop = RZPop(Ch9);
-        return (pop);
+        return RZPop(tile);
     }
 
-    if (Ch9 < INDBASE)
+    if (tile < INDBASE)
     {
-        pop = (CZPop(Ch9) * 8);
-        return (pop);
+        return CZPop(tile) * 8;
     }
 
-    if (Ch9 < PORTBASE)
+    if (tile < PORTBASE)
     {
-        pop = (IZPop(Ch9) * 8);
-        return (pop);
+        return IZPop(tile) * 8;
     }
 
     return 0;
