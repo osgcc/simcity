@@ -36,6 +36,8 @@ namespace
 
     EffectMap tem({ HalfWorldWidth, HalfWorldHeight });
     EffectMap tem2({ HalfWorldWidth, HalfWorldHeight });
+
+    std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
 };
 
 
@@ -447,43 +449,35 @@ void SmoothPSMap()
  */
 void PTLScan()
 {
-    int ptot, LVtot;
-    int x, y, z, dis;
-    int Plevel, LVflag, loc, Mx, My, pnum, LVnum, pmax;
-
-    for (x = 0; x < QuarterWorldWidth; x++)
+    for (auto& arr : Qtem)
     {
-        for (y = 0; y < QuarterWorldHeight; y++)
-        {
-            Qtem[x][y] = 0;
-        }
+        arr.fill(0);
     }
 
-    LVtot = 0;
-    LVnum = 0;
-    for (x = 0; x < HalfWorldWidth; x++)
+    int LVtot = 0;
+    int LVnum = 0;
+    for (int x = 0; x < HalfWorldWidth; ++x)
     {
-        for (y = 0; y < HalfWorldHeight; y++)
+        for (int y = 0; y < HalfWorldHeight; ++y)
         {
-            Plevel = 0;
-            LVflag = 0;
-            int zx = x * 2;
-            int zy = y * 2;
-            for (Mx = zx; Mx <= zx + 1; Mx++)
+            int Plevel = 0;
+            int LVflag = 0;
+            for (int xx = (x * 2); xx <= (x * 2) + 1; ++xx)
             {
-                for (My = zy; My <= zy + 1; My++)
+                for (int yy = (y * 2); yy <= (y * 2) + 1; ++yy)
                 {
-                    if (loc = (Map[Mx][My] & LOMASK))
+                    const int tile = (Map[xx][yy] & LOMASK);
+                    if (tile)
                     {
-                        if (loc < RUBBLE)
+                        if (tile < RUBBLE)
                         {
                             /* inc terrainMem */
-                            Qtem[x >> 1][y >> 1] += 15;
+                            Qtem[x / 2][y / 2] += 15;
                             continue;
                         }
 
-                        Plevel += GetPValue(loc);
-                        if (loc >= ROADBASE)
+                        Plevel += GetPValue(tile);
+                        if (tile >= ROADBASE)
                         {
                             LVflag++;
                         }
@@ -491,16 +485,11 @@ void PTLScan()
                 }
             }
 
-            if (Plevel > 255)
-            {
-                Plevel = 255;
-            }
-
-            tem.value({ x, y }) = Plevel;
+            tem.value({ x, y }) = std::clamp(Plevel, 0, 255);
 
             if (LVflag) /* LandValue Equation */
             {
-                dis = 34 - distanceToCityCenter(x, y);
+                int dis = 34 - distanceToCityCenter(x, y);
                 dis = dis * 4;
                 dis += (TerrainMem[x / 2][y / 2]);
                 dis -= (PollutionMap.value({ x, y }));
@@ -543,14 +532,14 @@ void PTLScan()
     SmoothArray(tem, tem2);
     SmoothArray(tem2, tem);
 
-    pmax = 0;
-    pnum = 0;
-    ptot = 0;
-    for (x = 0; x < HalfWorldWidth; x++)
+    int pmax = 0;
+    int pnum = 0;
+    int ptot = 0;
+    for (int x = 0; x < HalfWorldWidth; ++x)
     {
-        for (y = 0; y < HalfWorldHeight; y++)
+        for (int y = 0; y < HalfWorldHeight; ++y)
         {
-            z = tem.value({ x, y });
+            const int z = tem.value({ x, y });
             PollutionMap.value({ x, y }) = z;
 
             if (z) /*  get pollute average  */

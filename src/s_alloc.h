@@ -38,7 +38,6 @@ extern EffectMap PoliceStationMap;
 
 // 4X4 Maps  30 x 25
 extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem;
-extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem;
 
 extern EffectMap PoliceProtectionMap;
 extern EffectMap FireProtectionMap;

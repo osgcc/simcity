@@ -54,7 +54,6 @@ EffectMap CrimeMap({ HalfWorldWidth, HalfWorldHeight });
 
 
 std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem{};
-std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
 
 EffectMap RateOfGrowthMap({ EighthWorldWidth, EighthWorldHeight });
 EffectMap FireStationMap({ EighthWorldWidth, EighthWorldHeight });
@@ -103,7 +102,6 @@ namespace
             for (int col = 0; col < QuarterWorldHeight; ++col)
             {
                 TerrainMem[row][col] = 0;
-                Qtem[row][col] = 0;
             }
         }
     }
