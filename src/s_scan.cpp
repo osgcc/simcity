@@ -362,13 +362,11 @@ void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
 /* comefrom: PTLScan */
 void SmoothTerrain()
 {
-    int x, y, z;
-
-    for (x = 0; x < QuarterWorldWidth; x++)
+    for (int x{}; x < QuarterWorldWidth; ++x)
     {
-        for (y = 0; y < QuarterWorldHeight; y++)
+        for (int y{}; y < QuarterWorldHeight; ++y)
         {
-            z = 0;
+            int z = 0;
             if (x > 0)
             {
                 z += Qtem[x - 1][y];
