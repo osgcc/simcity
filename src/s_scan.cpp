@@ -18,6 +18,7 @@
 
 #include "Vector.h"
 
+#include <algorithm>
 
 /* Map Updates */
 
@@ -208,7 +209,7 @@ void DoSmooth()
             {
                 z += tem[x - 1][y];
             }
-            
+
             if (x < (HalfWorldWidth - 1))
             {
                 z += tem[x + 1][y];
@@ -218,20 +219,13 @@ void DoSmooth()
             {
                 z += tem[x][y - 1];
             }
-            
+
             if (y < (HalfWorldHeight - 1))
             {
                 z += tem[x][y + 1];
             }
-            
-            z = (z + tem[x][y]) >> 2;
-            
-            if (z > 255)
-            {
-                z = 255;
-            }
-            
-            tem2[x][y] = (unsigned char)z;
+
+            tem2[x][y] = std::clamp((z + tem[x][y]) / 4, 0, 255);
         }
     }
 }
@@ -251,7 +245,7 @@ void DoSmooth2()        /* smooths data in tem2[x][y] into tem[x][y]  */
             {
                 z += tem2[x - 1][y];
             }
-            
+
             if (x < (HalfWorldWidth - 1))
             {
                 z += tem2[x + 1][y];
@@ -267,13 +261,7 @@ void DoSmooth2()        /* smooths data in tem2[x][y] into tem[x][y]  */
                 z += tem2[x][y + 1];
             }
 
-            z = (z + tem2[x][y]) >> 2;
-            if (z > 255)
-            {
-                z = 255;
-            }
-
-            tem[x][y] = (unsigned char)z;
+            tem[x][y] = std::clamp((z + tem2[x][y]) / 4, 0, 255);
         }
     }
 }
