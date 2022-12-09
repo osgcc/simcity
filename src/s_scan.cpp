@@ -229,22 +229,6 @@ void SmoothArray(const HalfWorldSizeArray& src, HalfWorldSizeArray& dst)
 }
 
 
-
-/* comefrom: PopDenScan */
-/* smooths data in tem[x][y] into tem2[x][y]  */
-void DoSmooth()
-{
-    SmoothArray(tem, tem2);
-}
-
-
-/* comefrom: PopDenScan */
-void DoSmooth2()        /* smooths data in tem2[x][y] into tem[x][y]  */
-{
-    SmoothArray(tem2, tem);
-}
-
-
 /* comefrom: PTLScan */
 int GetPValue(int loc)
 {
@@ -382,9 +366,9 @@ void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
         }
     }
 
-    DoSmooth(); /* T1 -> T2 */
-    DoSmooth2(); /* T2 -> T1 */
-    DoSmooth(); /* T1 -> T2 */
+    SmoothArray(tem, tem2);
+    SmoothArray(tem2, tem);
+    SmoothArray(tem, tem2);
 
     for (x = 0; x < HalfWorldWidth; x++)
     {
@@ -592,8 +576,8 @@ void PTLScan()
         LVAverage = 0;
     }
 
-    DoSmooth();
-    DoSmooth2();
+    SmoothArray(tem, tem2);
+    SmoothArray(tem2, tem);
 
     pmax = 0;
     pnum = 0;
