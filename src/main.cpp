@@ -1055,7 +1055,6 @@ void initUI()
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PopulationGrowth, RateOfGrowthMap);
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::TrafficDensity, TrafficDensityMap);
 
-
     fileIo = new FileIo(*MainWindow);
 
     stringRenderer = new StringRender(MainWindowRenderer);
