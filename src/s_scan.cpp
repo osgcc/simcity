@@ -153,13 +153,13 @@ int GetPDen(int Ch9)
 
     if (Ch9 < INDBASE)
     {
-        pop = (CZPop(Ch9) << 3);
+        pop = (CZPop(Ch9) * 8);
         return (pop);
     }
 
     if (Ch9 < PORTBASE)
     {
-        pop = (IZPop(Ch9) << 3);
+        pop = (IZPop(Ch9) * 8);
         return (pop);
     }
 
@@ -311,29 +311,26 @@ void DistIntMarket()
 void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
 {
     int Xtot, Ytot, Ztot;
-    int x, y, z;
 
     tem.reset();
 
     Xtot = 0;
     Ytot = 0;
     Ztot = 0;
-    for (x = 0; x < SimWidth; x++)
+
+    for (int x{}; x < SimWidth; ++x)
     {
-        for (y = 0; y < SimHeight; y++)
+        for (int y{}; y < SimHeight; ++y)
         {
-            z = Map[x][y];
+            int z = Map[x][y];
             if (z & ZONEBIT)
             {
                 z = z & LOMASK;
                 SimulationTarget = { x, y };
-                z = GetPDen(z) << 3;
-                if (z > 254)
-                {
-                    z = 254;
-                }
+                
+                z = std::clamp(GetPDen(z) * 8, 0, 254);
 
-                tem.value({ x >> 1, y >> 1 }) = z;
+                tem.value({ x / 2, y / 2 }) = z;
                 
                 Xtot += x;
                 Ytot += y;
@@ -346,11 +343,11 @@ void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
     SmoothArray(tem2, tem);
     SmoothArray(tem, tem2);
 
-    for (x = 0; x < HalfWorldWidth; x++)
+    for (int x{}; x < HalfWorldWidth; ++x)
     {
-        for (y = 0; y < HalfWorldHeight; y++)
+        for (int y{}; y < HalfWorldHeight; ++y)
         {
-            PopulationDensityMap.value({ x, y }) = tem2.value({ x, y }) << 1;
+            PopulationDensityMap.value({ x, y }) = tem2.value({ x, y }) * 2;
         }
     }
 
