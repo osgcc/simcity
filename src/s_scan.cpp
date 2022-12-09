@@ -461,7 +461,7 @@ void SmoothTerrain()
                 z += Qtem[x][y + 1];
             }
 
-            TerrainMem[x][y] = (unsigned char)((z >> 2) + Qtem[x][y]) >> 1;
+            TerrainMem[x][y] = (((z / 4) + Qtem[x][y]) / 2) % 256;
         }
     }
 }
