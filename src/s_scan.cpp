@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #include "s_scan.h"
 
+#include "EffectMap.h"
 #include "Map.h"
 
 #include "s_alloc.h"
@@ -33,10 +34,8 @@ namespace
 
     std::array<int, NMAPS> NewMapFlags;
 
-    using HalfWorldSizeArray = std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth>;
-
-    HalfWorldSizeArray tem;
-    HalfWorldSizeArray tem2;
+    EffectMap tem({ HalfWorldWidth, HalfWorldHeight });
+    EffectMap tem2({ HalfWorldWidth, HalfWorldHeight });
 };
 
 
@@ -136,22 +135,6 @@ void FireAnalysis()		/* Make firerate map from firestation map  */
 
 
 /* comefrom: PopDenScan */
-void ClrTemArray()
-{
-    int x, y, z;
-
-    z = 0;
-    for (x = 0; x < HalfWorldWidth; x++)
-    {
-        for (y = 0; y < HalfWorldHeight; y++)
-        {
-            tem[x][y] = z;
-        }
-    }
-}
-
-
-/* comefrom: PopDenScan */
 int GetPDen(int Ch9)
 {
     int pop;
@@ -184,34 +167,39 @@ int GetPDen(int Ch9)
 }
 
 
-void SmoothArray(const HalfWorldSizeArray& src, HalfWorldSizeArray& dst)
+void SmoothArray(const EffectMap& src, EffectMap& dst)
 {
-    for (size_t x{}; x < HalfWorldWidth; ++x)
+    if (src.dimensions() != dst.dimensions())
     {
-        for (size_t y{}; y < HalfWorldHeight; ++y)
+        throw std::runtime_error("SmoothArray: Source and Destination array dimensions do not match.");
+    }
+
+    for (int x{}; x < src.dimensions().x; ++x)
+    {
+        for (int y{}; y < src.dimensions().y; ++y)
         {
             int val{ 0 };
             if (x > 0)
             {
-                val += src[x - 1][y];
+                val += src.value({ x - 1, y });
             }
 
             if (x < (HalfWorldWidth - 1))
             {
-                val += src[x + 1][y];
+                val += src.value({ x + 1, y });
             }
 
             if (y > 0)
             {
-                val += src[x][y - 1];
+                val += src.value({ x, y - 1 });
             }
 
             if (y < (HalfWorldHeight - 1))
             {
-                val += src[x][y + 1];
+                val += src.value({ x, y + 1 });
             }
 
-            dst[x][y] = std::clamp((val + src[x][y]) / 4, 0, 255);
+            dst.value({ x, y }) = std::clamp((val + src.value({ x, y })) / 4, 0, 255);
         }
     }
 }
@@ -325,7 +313,7 @@ void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
     int Xtot, Ytot, Ztot;
     int x, y, z;
 
-    ClrTemArray();
+    tem.reset();
 
     Xtot = 0;
     Ytot = 0;
@@ -345,7 +333,7 @@ void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
                     z = 254;
                 }
 
-                tem[x >> 1][y >> 1] = z;
+                tem.value({ x >> 1, y >> 1 }) = z;
                 
                 Xtot += x;
                 Ytot += y;
@@ -362,7 +350,7 @@ void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
     {
         for (y = 0; y < HalfWorldHeight; y++)
         {
-            PopulationDensityMap.value({ x, y }) = tem2[x][y] << 1;
+            PopulationDensityMap.value({ x, y }) = tem2.value({ x, y }) << 1;
         }
     }
 
@@ -520,7 +508,7 @@ void PTLScan()
                 Plevel = 255;
             }
 
-            tem[x][y] = Plevel;
+            tem.value({ x, y }) = Plevel;
 
             if (LVflag) /* LandValue Equation */
             {
@@ -574,7 +562,7 @@ void PTLScan()
     {
         for (y = 0; y < HalfWorldHeight; y++)
         {
-            z = tem[x][y];
+            z = tem.value({ x, y });
             PollutionMap.value({ x, y }) = z;
 
             if (z) /*  get pollute average  */
