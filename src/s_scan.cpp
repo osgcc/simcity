@@ -135,7 +135,7 @@ void FireAnalysis()		/* Make firerate map from firestation map  */
 
 
 /* comefrom: PopDenScan */
-int GetPDen(int tile)
+int getPopulationDensity(int tile)
 {
     if (tile == FREEZ)
     {
@@ -322,7 +322,7 @@ void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
                 z = z & LOMASK;
                 SimulationTarget = { x, y };
                 
-                z = std::clamp(GetPDen(z) * 8, 0, 254);
+                z = std::clamp(getPopulationDensity(z) * 8, 0, 254);
 
                 tem.value({ x / 2, y / 2 }) = z;
                 
