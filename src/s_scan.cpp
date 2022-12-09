@@ -134,12 +134,11 @@ void FireAnalysis()		/* Make firerate map from firestation map  */
 }
 
 
-/* comefrom: PopDenScan */
 int getPopulationDensity(int tile)
 {
     if (tile == FREEZ)
     {
-        return DoFreePop(/*tile*/);
+        return DoFreePop();
     }
 
     if (tile < COMBASE)
