@@ -26,9 +26,9 @@ public:
         return mEffectMap[(mDimensions.x * point.y) + point.x];
     }
 
-    void value(const Point<int>& point, int value)
+    int& value(const Point<int>& point)
     {
-        mEffectMap[(mDimensions.x * point.y) + point.x] = value;
+        return mEffectMap[(mDimensions.x * point.y) + point.x];
     }
 
     void reset()

@@ -75,7 +75,7 @@ void SetTrafMem()
                         sprite->destination = { TrafMaxX, TrafMaxY };
                     }
                 }
-                TrafficDensityMap.value(SimulationTarget.skewInverseBy({ 2, 2 }), z);
+                TrafficDensityMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) = z;
             }
         }
     }

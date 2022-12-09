@@ -40,8 +40,8 @@ extern EffectMap PoliceStationMap;
 extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem;
 extern std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem;
 
-extern std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> PoliceMapEffect;
-extern std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> FireRate;
+extern EffectMap PoliceMapEffect;
+extern EffectMap FireRate;
 
 extern int ComRate[EighthWorldWidth][EighthWorldHeight];
 extern int STem[EighthWorldWidth][EighthWorldHeight];

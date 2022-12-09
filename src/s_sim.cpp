@@ -91,7 +91,7 @@ void DoFire()
         }
     }
    
-    int z = FireRate[SimulationTarget.x / 8][SimulationTarget.y / 8];
+    int z = FireRate.value(SimulationTarget.skewInverseBy({ 8, 8 }));
     
     int Rate = 10;
     if (z)
@@ -515,7 +515,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
 
         {
             const auto fstVal = FireStationMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 });
-            FireStationMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 }, fstVal + z);
+            FireStationMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 }) = fstVal + z;
         }
         return;
 
@@ -542,7 +542,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
 
         {
             const auto pstVal = PoliceStationMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 });
-            PoliceStationMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 }, pstVal + z);
+            PoliceStationMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 }) = pstVal + z;
         }
         return;
 
@@ -1019,20 +1019,20 @@ void DecROGMem()
             if (z > 0)
             {
                 const auto rogVal = RateOfGrowthMap.value({ x, y });
-                RateOfGrowthMap.value({ x, y }, rogVal - 1);
+                RateOfGrowthMap.value({ x, y }) = rogVal - 1;
                 if (z > 200) // prevent overflow
                 {
-                    RateOfGrowthMap.value({ x, y }, std::min(z, 200));
+                    RateOfGrowthMap.value({ x, y }) = std::min(z, 200);
                 }
                 continue;
             }
             if (z < 0)
             {
                 const auto rogVal = RateOfGrowthMap.value({ x, y });
-                RateOfGrowthMap.value({ x, y }, rogVal + 1);
+                RateOfGrowthMap.value({ x, y }) = rogVal + 1;
                 if (z < -200)
                 {
-                    RateOfGrowthMap.value({ x, y }, -200);
+                    RateOfGrowthMap.value({ x, y }) = -200;
                 }
             }
         }
@@ -1115,14 +1115,14 @@ void DecTrafficMem()
                 {
                     if (z > 200)
                     {
-                        TrafficDensityMap.value({ x, y }, z - 34);
+                        TrafficDensityMap.value({ x, y }) = z - 34;
                     }
                     else
                     {
-                        TrafficDensityMap.value({ x, y }, z - 24);
+                        TrafficDensityMap.value({ x, y }) = z - 24;
                     }
                 }
-                else TrafficDensityMap.value({ x, y }, 0);
+                else TrafficDensityMap.value({ x, y }) = 0;
             }
         }
     }
@@ -1428,7 +1428,7 @@ void FireZone(int Xloc, int Yloc, int ch)
     int XYmax;
 
     const auto rogVal = RateOfGrowthMap.value({ Xloc / 8, Yloc / 8 });
-    RateOfGrowthMap.value({ Xloc / 8, Yloc / 8 }, rogVal - 20);
+    RateOfGrowthMap.value({ Xloc / 8, Yloc / 8 }) = rogVal - 20;
 
     ch = ch & LOMASK;
     if (ch < PORTBASE)

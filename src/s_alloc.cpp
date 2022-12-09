@@ -61,8 +61,8 @@ EffectMap FireStationMap({ EighthWorldWidth, EighthWorldHeight });
 EffectMap PoliceStationMap({ EighthWorldWidth, EighthWorldHeight });
 
 //int PoliceMapEffect[EighthWorldWidth][EighthWorldHeight];
-std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> PoliceMapEffect{};
-std::array<std::array<int, EighthWorldHeight>, EighthWorldWidth> FireRate{};
+EffectMap PoliceMapEffect({ EighthWorldWidth, EighthWorldHeight });
+EffectMap FireRate({ EighthWorldWidth, EighthWorldHeight });
 
 int ComRate[EighthWorldWidth][EighthWorldHeight];
 int STem[EighthWorldWidth][EighthWorldHeight];

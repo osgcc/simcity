@@ -125,7 +125,7 @@ void SmoothFSMap()
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            FireStationMap.value({ x, y }, STem[x][y]);
+            FireStationMap.value({ x, y }) = STem[x][y];
         }
     }
 }
@@ -144,7 +144,7 @@ void FireAnalysis()		/* Make firerate map from firestation map  */
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            FireRate[x][y] = FireStationMap.value({ x, y });
+            FireRate.value({ x, y }) = FireStationMap.value({ x, y });
         }
     }
 
@@ -432,7 +432,7 @@ void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
     {
         for (y = 0; y < HalfWorldHeight; y++)
         {
-            PopulationDensityMap.value({ x, y }, tem2[x][y] << 1);
+            PopulationDensityMap.value({ x, y }) = tem2[x][y] << 1;
         }
     }
 
@@ -527,7 +527,7 @@ void SmoothPSMap()
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            PoliceStationMap.value({ x, y }, STem[x][y]);
+            PoliceStationMap.value({ x, y }) = STem[x][y];
         }
     }
 }
@@ -614,13 +614,13 @@ void PTLScan()
                     dis = 1;
                 }
 
-                LandValueMap.value({ x, y }, dis);
+                LandValueMap.value({ x, y }) = dis;
                 LVtot += dis;
                 LVnum++;
             }
             else
             {
-                LandValueMap.value({ x, y }, 0);
+                LandValueMap.value({ x, y }) = 0;
             }
         }
     }
@@ -645,7 +645,7 @@ void PTLScan()
         for (y = 0; y < HalfWorldHeight; y++)
         {
             z = tem[x][y];
-            PollutionMap.value({ x, y }, z);
+            PollutionMap.value({ x, y }) = z;
 
             if (z) /*  get pollute average  */
             {
@@ -720,7 +720,7 @@ void CrimeScan()
                     z = 0;
                 }
 
-                CrimeMap.value({ x, y }, z);
+                CrimeMap.value({ x, y }) = z;
                 totz += z;
 
                 if ((z > cmax) || ((z == cmax) && (!(Rand16() & 3))))
@@ -731,7 +731,7 @@ void CrimeScan()
             }
             else
             {
-                CrimeMap.value({ x, y }, 0);
+                CrimeMap.value({ x, y }) = 0;
             }
         }
     }
@@ -749,7 +749,7 @@ void CrimeScan()
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            PoliceMapEffect[x][y] = PoliceStationMap.value({ x, y });
+            PoliceMapEffect.value({ x, y }) = PoliceStationMap.value({ x, y });
         }
     }
 
