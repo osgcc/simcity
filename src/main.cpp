@@ -1049,7 +1049,7 @@ void initUI()
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::Crime, CrimeMap);
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::FireProtection, FireStationMap);
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::LandValue, LandValueMap);
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PoliceProtection, PoliceStationMap);
+    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PoliceProtection, PoliceMapEffect);
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::Pollution, PollutionMap);
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PopulationDensity, PopulationDensityMap);
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PopulationGrowth, RateOfGrowthMap);
