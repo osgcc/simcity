@@ -139,8 +139,6 @@ void initMapArrays()
     resetHalfArrays();
     resetQuarterArrays();
     resetHistoryArrays();
-
-    resetHistoryArrays();
 }
 
 
