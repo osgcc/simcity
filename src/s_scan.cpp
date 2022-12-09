@@ -184,7 +184,7 @@ void SmoothArray(const EffectMap& src, EffectMap& dst)
                 val += src.value({ x - 1, y });
             }
 
-            if (x < (HalfWorldWidth - 1))
+            if (x < (src.dimensions().x - 1))
             {
                 val += src.value({ x + 1, y });
             }
@@ -194,7 +194,7 @@ void SmoothArray(const EffectMap& src, EffectMap& dst)
                 val += src.value({ x, y - 1 });
             }
 
-            if (y < (HalfWorldHeight - 1))
+            if (y < (src.dimensions().y - 1))
             {
                 val += src.value({ x, y + 1 });
             }
