@@ -33,8 +33,10 @@ namespace
 
     std::array<int, NMAPS> NewMapFlags;
 
-    std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> tem;
-    std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth> tem2;
+    using HalfWorldSizeArray = std::array<std::array<int, HalfWorldHeight>, HalfWorldWidth>;
+
+    HalfWorldSizeArray tem;
+    HalfWorldSizeArray tem2;
 
     void resetTempArrays()
     {
@@ -194,76 +196,52 @@ int GetPDen(int Ch9)
 }
 
 
-/* comefrom: PopDenScan */
-/* smooths data in tem[x][y] into tem2[x][y]  */
-void DoSmooth()
+void SmoothArray(const HalfWorldSizeArray& src, HalfWorldSizeArray& dst)
 {
-    int x, y, z;
-
-    for (x = 0; x < HalfWorldWidth; x++)
+    for (size_t x{}; x < HalfWorldWidth; ++x)
     {
-        for (y = 0; y < HalfWorldHeight; y++)
+        for (size_t y{}; y < HalfWorldHeight; ++y)
         {
-            z = 0;
+            int val{ 0 };
             if (x > 0)
             {
-                z += tem[x - 1][y];
+                val += src[x - 1][y];
             }
 
             if (x < (HalfWorldWidth - 1))
             {
-                z += tem[x + 1][y];
+                val += src[x + 1][y];
             }
 
             if (y > 0)
             {
-                z += tem[x][y - 1];
+                val += src[x][y - 1];
             }
 
             if (y < (HalfWorldHeight - 1))
             {
-                z += tem[x][y + 1];
+                val += src[x][y + 1];
             }
 
-            tem2[x][y] = std::clamp((z + tem[x][y]) / 4, 0, 255);
+            dst[x][y] = std::clamp((val + src[x][y]) / 4, 0, 255);
         }
     }
+}
+
+
+
+/* comefrom: PopDenScan */
+/* smooths data in tem[x][y] into tem2[x][y]  */
+void DoSmooth()
+{
+    SmoothArray(tem, tem2);
 }
 
 
 /* comefrom: PopDenScan */
 void DoSmooth2()        /* smooths data in tem2[x][y] into tem[x][y]  */
 {
-    int x, y, z;
-
-    for (x = 0; x < HalfWorldWidth; x++)
-    {
-        for (y = 0; y < HalfWorldHeight; y++)
-        {
-            z = 0;
-            if (x > 0)
-            {
-                z += tem2[x - 1][y];
-            }
-
-            if (x < (HalfWorldWidth - 1))
-            {
-                z += tem2[x + 1][y];
-            }
-
-            if (y > 0)
-            {
-                z += tem2[x][y - 1];
-            }
-
-            if (y < (HalfWorldHeight - 1))
-            {
-                z += tem2[x][y + 1];
-            }
-
-            tem[x][y] = std::clamp((z + tem2[x][y]) / 4, 0, 255);
-        }
-    }
+    SmoothArray(tem2, tem);
 }
 
 
