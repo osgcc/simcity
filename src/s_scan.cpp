@@ -745,13 +745,7 @@ void CrimeScan()
         CrimeAverage = 0;
     }
 
-    for (x = 0; x < EighthWorldWidth; x++)
-    {
-        for (y = 0; y < EighthWorldHeight; y++)
-        {
-            PoliceMapEffect.value({ x, y }) = PoliceStationMap.value({ x, y });
-        }
-    }
+    PoliceMapEffect = PoliceStationMap;
 
     NewMapFlags[DYMAP] = NewMapFlags[CRMAP] = NewMapFlags[POMAP] = 1;
 }

@@ -9,11 +9,6 @@ class EffectMap
 {
 public:
     EffectMap() = delete;
-    EffectMap(const EffectMap&) = delete;
-    EffectMap(EffectMap&&) noexcept = delete;
-    EffectMap& operator=(const EffectMap&) = delete;
-    EffectMap& operator=(EffectMap&&) noexcept = delete;
-
     EffectMap(const Vector<int>& size) :
         mDimensions{ size },
         mSize{ size.x * size.y }
@@ -53,6 +48,6 @@ private:
 
     std::vector<int> mEffectMap{};
 
-    const Vector<int> mDimensions;
-    const int mSize{};
+    Vector<int> mDimensions;
+    int mSize{};
 };
