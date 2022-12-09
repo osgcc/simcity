@@ -60,9 +60,8 @@ EffectMap RateOfGrowthMap({ EighthWorldWidth, EighthWorldHeight });
 EffectMap FireStationMap({ EighthWorldWidth, EighthWorldHeight });
 EffectMap PoliceStationMap({ EighthWorldWidth, EighthWorldHeight });
 
-//int PoliceMapEffect[EighthWorldWidth][EighthWorldHeight];
-EffectMap PoliceMapEffect({ EighthWorldWidth, EighthWorldHeight });
-EffectMap FireRate({ EighthWorldWidth, EighthWorldHeight });
+EffectMap PoliceProtectionMap({ EighthWorldWidth, EighthWorldHeight });
+EffectMap FireProtectionMap({ EighthWorldWidth, EighthWorldHeight });
 
 int ComRate[EighthWorldWidth][EighthWorldHeight];
 int STem[EighthWorldWidth][EighthWorldHeight];

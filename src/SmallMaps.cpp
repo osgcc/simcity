@@ -241,10 +241,10 @@ int dynamicFilter(int col, int row)
             ((x = LandValueMap.value({ c, r })) >= DynamicData[10]) &&
             (x <= DynamicData[11])) &&
         ((DynamicData[12] > DynamicData[13]) ||
-            ((x = PoliceMapEffect[c >> 2][r >> 2]) >= DynamicData[12]) &&
+            ((x = PoliceProtectionMap[c >> 2][r >> 2]) >= DynamicData[12]) &&
             (x <= DynamicData[13])) &&
         ((DynamicData[14] > DynamicData[15]) ||
-            ((x = FireRate[c >> 2][r >> 2]) >= DynamicData[14]) &&
+            ((x = FireProtectionMap[c >> 2][r >> 2]) >= DynamicData[14]) &&
             (x <= DynamicData[15]))) {
         return 1;
     }

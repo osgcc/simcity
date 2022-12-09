@@ -144,7 +144,7 @@ void FireAnalysis()		/* Make firerate map from firestation map  */
     {
         for (y = 0; y < EighthWorldHeight; y++)
         {
-            FireRate.value({ x, y }) = FireStationMap.value({ x, y });
+            FireProtectionMap.value({ x, y }) = FireStationMap.value({ x, y });
         }
     }
 
@@ -745,7 +745,7 @@ void CrimeScan()
         CrimeAverage = 0;
     }
 
-    PoliceMapEffect = PoliceStationMap;
+    PoliceProtectionMap = PoliceStationMap;
 
     NewMapFlags[DYMAP] = NewMapFlags[CRMAP] = NewMapFlags[POMAP] = 1;
 }

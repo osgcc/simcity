@@ -91,7 +91,7 @@ void DoFire()
         }
     }
    
-    int z = FireRate.value(SimulationTarget.skewInverseBy({ 8, 8 }));
+    int z = FireProtectionMap.value(SimulationTarget.skewInverseBy({ 8, 8 }));
     
     int Rate = 10;
     if (z)
