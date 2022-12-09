@@ -134,19 +134,11 @@ void SmoothFSMap()
 /* comefrom: Simulate SpecialInit */
 void FireAnalysis()		/* Make firerate map from firestation map  */
 {
-    int x, y;
-
     SmoothFSMap();
     SmoothFSMap();
     SmoothFSMap();
 
-    for (x = 0; x < EighthWorldWidth; x++)
-    {
-        for (y = 0; y < EighthWorldHeight; y++)
-        {
-            FireProtectionMap.value({ x, y }) = FireStationMap.value({ x, y });
-        }
-    }
+    FireProtectionMap = FireStationMap;
 
     NewMapFlags[DYMAP] = NewMapFlags[FIMAP] = 1;
 }
