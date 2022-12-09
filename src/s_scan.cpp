@@ -37,18 +37,6 @@ namespace
 
     HalfWorldSizeArray tem;
     HalfWorldSizeArray tem2;
-
-    void resetTempArrays()
-    {
-        for (int x = 0; x < HalfWorldWidth; x++)
-        {
-            for (int y = 0; y < HalfWorldHeight; y++)
-            {
-                tem[x][y] = 0;
-                tem2[x][y] = 0;
-            }
-        }
-    }
 };
 
 
