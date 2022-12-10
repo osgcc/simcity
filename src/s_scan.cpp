@@ -538,14 +538,7 @@ void landValueScan()
         LVnum++;
     }
 
-    if (LVnum)
-    {
-        LVAverage = LVtot / LVnum;
-    }
-    else
-    {
-        LVAverage = 0;
-    }
+    LVAverage = LVnum ? LVtot / LVnum : 0;
 }
 
 
