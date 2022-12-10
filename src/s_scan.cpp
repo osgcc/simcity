@@ -554,10 +554,6 @@ void landValueScan()
 
 /* comefrom: Simulate SpecialInit */
 /* Does pollution, terrain, land value   */
-/**
- * fixme: Holy shit, this function does __way__ too much. This
- *        needs to be broken down into smaller chunks.  
- */
 void PTLScan()
 {
     for (auto& arr : Qtem)
