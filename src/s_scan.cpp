@@ -498,27 +498,8 @@ void setMostPollutedLocation()
 }
 
 
-/* comefrom: Simulate SpecialInit */
-/* Does pollution, terrain, land value   */
-/**
- * fixme: Holy shit, this function does __way__ too much. This
- *        needs to be broken down into smaller chunks.  
- */
-void PTLScan()
+void landValueScan()
 {
-    for (auto& arr : Qtem)
-    {
-        arr.fill(0);
-    }
-
-    for (int x = 0; x < HalfWorldWidth; ++x)
-    {
-        for (int y = 0; y < HalfWorldHeight; ++y)
-        {
-            tem.value({ x, y }) = pollutionLevel({ x, y });
-        }
-    }
-
     int LVtot = 0;
     int LVnum = 0;
     for (int x{}; x < SimWidth * SimHeight; ++x)
@@ -565,6 +546,31 @@ void PTLScan()
     {
         LVAverage = 0;
     }
+}
+
+
+/* comefrom: Simulate SpecialInit */
+/* Does pollution, terrain, land value   */
+/**
+ * fixme: Holy shit, this function does __way__ too much. This
+ *        needs to be broken down into smaller chunks.  
+ */
+void PTLScan()
+{
+    for (auto& arr : Qtem)
+    {
+        arr.fill(0);
+    }
+
+    for (int x = 0; x < HalfWorldWidth; ++x)
+    {
+        for (int y = 0; y < HalfWorldHeight; ++y)
+        {
+            tem.value({ x, y }) = pollutionLevel({ x, y });
+        }
+    }
+
+    landValueScan();
 
     SmoothArray(tem, tem2);
     SmoothArray(tem2, tem);
