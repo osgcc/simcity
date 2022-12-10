@@ -299,7 +299,7 @@ void MiniMapWindow::drawCurrentOverlay()
         auto map = mEffectMaps[mButtonDownId];
         if (map)
         {
-            drawOverlayPoints(*mRenderer, mOverlayTextures[mButtonDownId], *mEffectMaps[mButtonDownId]);
+            drawOverlayPoints(*mRenderer, mOverlayTextures[mButtonDownId], *map);
         }
     }
 }
