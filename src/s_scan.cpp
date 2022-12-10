@@ -200,7 +200,6 @@ void SmoothArray(const EffectMap& src, EffectMap& dst)
 }
 
 
-/* comefrom: PTLScan */
 int getPollutionValue(int tileValue)
 {
     if (tileValue < POWERBASE)
