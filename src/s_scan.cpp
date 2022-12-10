@@ -249,7 +249,7 @@ int getPollutionValue(int tileValue)
 }
 
 
-/* comefrom: PTLScan DistIntMarket */
+/* comefrom: pollutionAndLandValueScan DistIntMarket */
 int distanceToCityCenter(int x, int y)
 {
     const Vector<int> radius = { CityCenter.x / 2, (CityCenter.y / 2) };
@@ -360,7 +360,7 @@ void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
 }
 
 
-/* comefrom: PTLScan */
+/* comefrom: pollutionAndLandValueScan */
 void SmoothTerrain()
 {
     for (int x{}; x < QuarterWorldWidth; ++x)
@@ -554,7 +554,7 @@ void landValueScan()
 
 /* comefrom: Simulate SpecialInit */
 /* Does pollution, terrain, land value   */
-void PTLScan()
+void pollutionAndLandValueScan()
 {
     for (auto& arr : Qtem)
     {

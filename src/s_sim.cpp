@@ -1316,7 +1316,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
     case 12:
         if (!(Scycle % PollutionScanFrequency[speed]))
         {
-            PTLScan();
+            pollutionAndLandValueScan();
         }
         break;
 
@@ -1381,7 +1381,7 @@ void DoSimInit(CityProperties& properties, Budget& budget)
     MapScan(0, SimWidth, properties); /* XXX are you sure ??? */
     doPowerScan();
     NewPower = 1;		/* post rel */
-    PTLScan();
+    pollutionAndLandValueScan();
     CrimeScan();
     PopDenScan();
     FireAnalysis();

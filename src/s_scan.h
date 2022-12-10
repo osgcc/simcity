@@ -41,7 +41,7 @@ std::array<int, NMAPS>& newMapFlags();
 const Point<int>& pollutionMax();
 void resetNewMapFlags();
 void doPowerScan();
-void PTLScan();
+void pollutionAndLandValueScan();
 void CrimeScan();
 void PopDenScan();
 void FireAnalysis();
