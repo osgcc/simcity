@@ -441,6 +441,36 @@ void SmoothPSMap()
 }
 
 
+int pollutionLevel(const Point<int>& point, int& LVflag)
+{
+    int pollutionLevel{};
+    for (int xx = (point.x * 2); xx <= (point.x * 2) + 1; ++xx)
+    {
+        for (int yy = (point.y * 2); yy <= (point.y * 2) + 1; ++yy)
+        {
+            const int tile = (Map[xx][yy] & LOMASK);
+            if (tile)
+            {
+                if (tile < RUBBLE)
+                {
+                    /* inc terrainMem */
+                    Qtem[point.x / 2][point.y / 2] += 15;
+                    continue;
+                }
+
+                pollutionLevel += GetPValue(tile);
+                if (tile >= ROADBASE)
+                {
+                    LVflag++;
+                }
+            }
+        }
+    }
+
+    return pollutionLevel;
+}
+
+
 /* comefrom: Simulate SpecialInit */
 /* Does pollution, terrain, land value   */
 /**
@@ -460,30 +490,8 @@ void PTLScan()
     {
         for (int y = 0; y < HalfWorldHeight; ++y)
         {
-            int Plevel = 0;
             int LVflag = 0;
-            for (int xx = (x * 2); xx <= (x * 2) + 1; ++xx)
-            {
-                for (int yy = (y * 2); yy <= (y * 2) + 1; ++yy)
-                {
-                    const int tile = (Map[xx][yy] & LOMASK);
-                    if (tile)
-                    {
-                        if (tile < RUBBLE)
-                        {
-                            /* inc terrainMem */
-                            Qtem[x / 2][y / 2] += 15;
-                            continue;
-                        }
-
-                        Plevel += GetPValue(tile);
-                        if (tile >= ROADBASE)
-                        {
-                            LVflag++;
-                        }
-                    }
-                }
-            }
+            int Plevel{ pollutionLevel({ x, y }, LVflag) };
 
             tem.value({ x, y }) = std::clamp(Plevel, 0, 255);
 
