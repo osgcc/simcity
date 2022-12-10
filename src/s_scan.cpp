@@ -201,29 +201,29 @@ void SmoothArray(const EffectMap& src, EffectMap& dst)
 
 
 /* comefrom: PTLScan */
-int getPollutionValue(int loc)
+int getPollutionValue(int tileValue)
 {
-    if (loc < POWERBASE)
+    if (tileValue < POWERBASE)
     {
-        if (loc >= HTRFBASE) /* heavy traf  */
+        if (tileValue >= HTRFBASE) /* heavy traf  */
         {
             return (/* 25 */ 75);
         }
         
-        if (loc >= LTRFBASE) /* light traf  */
+        if (tileValue >= LTRFBASE) /* light traf  */
         {
             return (/* 10 */ 50);
         }
 
-        if (loc < ROADBASE)
+        if (tileValue < ROADBASE)
         {
-            if (loc > FIREBASE)
+            if (tileValue > FIREBASE)
             {
                 return (/* 60 */ 90);
             }
 
             /* XXX: Why negative pollution from radiation? */
-            if (loc >= RADTILE) /* radioactivity  */
+            if (tileValue >= RADTILE) /* radioactivity  */
             {
                 return (/* -40 */ 255);
             }
@@ -231,17 +231,17 @@ int getPollutionValue(int loc)
         return 0;
     }
 
-    if (loc <= LASTIND)
+    if (tileValue <= LASTIND)
     {
         return (0);
     }
 
-    if (loc < PORTBASE) /* Ind  */
+    if (tileValue < PORTBASE) /* Ind  */
     {
         return (50);
     }
 
-    if (loc <= LASTPOWERPLANT) /* prt, aprt, cpp */
+    if (tileValue <= LASTPOWERPLANT) /* prt, aprt, cpp */
     {
         return (/* 60 */ 100);
     }
