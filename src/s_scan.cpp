@@ -498,6 +498,16 @@ void setMostPollutedLocation()
 }
 
 
+void pollutionScan()
+{
+    for (int i{}; i < HalfWorldWidth * HalfWorldHeight; ++i)
+    {
+        const Point<int> coord{ i % HalfWorldWidth, i / HalfWorldWidth };
+        tem.value(coord) = pollutionLevel(coord);
+    }
+}
+
+
 void landValueScan()
 {
     int LVtot = 0;
@@ -555,14 +565,7 @@ void PTLScan()
         arr.fill(0);
     }
 
-    for (int x = 0; x < HalfWorldWidth; ++x)
-    {
-        for (int y = 0; y < HalfWorldHeight; ++y)
-        {
-            tem.value({ x, y }) = pollutionLevel({ x, y });
-        }
-    }
-
+    pollutionScan();
     landValueScan();
 
     SmoothArray(tem, tem2);
