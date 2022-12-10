@@ -467,7 +467,7 @@ int pollutionLevel(const Point<int>& point, int& LVflag)
         }
     }
 
-    return pollutionLevel;
+    return std::clamp(pollutionLevel, 0, 255);
 }
 
 
@@ -491,9 +491,7 @@ void PTLScan()
         for (int y = 0; y < HalfWorldHeight; ++y)
         {
             int LVflag = 0;
-            int Plevel{ pollutionLevel({ x, y }, LVflag) };
-
-            tem.value({ x, y }) = std::clamp(Plevel, 0, 255);
+            tem.value({ x, y }) = pollutionLevel({ x, y }, LVflag);
 
             if (LVflag) /* LandValue Equation */
             {
