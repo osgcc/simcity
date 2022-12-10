@@ -440,7 +440,7 @@ void SmoothPSMap()
 }
 
 
-int pollutionLevel(const Point<int>& point, int& LVflag)
+int pollutionLevel(const Point<int>& point)
 {
     int pollutionLevel{};
     for (int xx = (point.x * 2); xx <= (point.x * 2) + 1; ++xx)
@@ -458,10 +458,6 @@ int pollutionLevel(const Point<int>& point, int& LVflag)
                 }
 
                 pollutionLevel += getPollutionValue(tile);
-                if (tile >= ROADBASE)
-                {
-                    LVflag++;
-                }
             }
         }
     }
@@ -515,46 +511,50 @@ void PTLScan()
         arr.fill(0);
     }
 
-    int LVtot = 0;
-    int LVnum = 0;
     for (int x = 0; x < HalfWorldWidth; ++x)
     {
         for (int y = 0; y < HalfWorldHeight; ++y)
         {
-            int LVflag = 0;
-            tem.value({ x, y }) = pollutionLevel({ x, y }, LVflag);
-
-            if (LVflag) /* LandValue Equation */
-            {
-                int dis = 34 - distanceToCityCenter(x, y);
-                dis = dis * 4;
-                dis += (TerrainMem.value({ x / 2, y / 2 }));
-                dis -= (PollutionMap.value({ x, y }));
-
-                if (CrimeMap.value({ x, y }) > 190)
-                {
-                    dis -= 20;
-                }
-
-                if (dis > 250)
-                {
-                    dis = 250;
-                }
-
-                if (dis < 1)
-                {
-                    dis = 1;
-                }
-
-                LandValueMap.value({ x, y }) = dis;
-                LVtot += dis;
-                LVnum++;
-            }
-            else
-            {
-                LandValueMap.value({ x, y }) = 0;
-            }
+            tem.value({ x, y }) = pollutionLevel({ x, y });
         }
+    }
+
+    int LVtot = 0;
+    int LVnum = 0;
+    for (int x{}; x < SimWidth * SimHeight; ++x)
+    {
+
+        const Point<int> coord{ x % SimWidth, x / SimWidth };
+        const auto tile = maskedTileValue(coord.x, coord.y);
+        if (tile < ROADBASE)
+        {
+            LandValueMap.value(coord.skewInverseBy({ 2, 2 })) = 0;
+            continue;
+        }
+
+        int dis = 34 - distanceToCityCenter(coord.x / 2, coord.y / 2);
+        dis = dis * 4;
+        dis += TerrainMem.value(coord.skewInverseBy({ 4, 4 }));
+        dis -= PollutionMap.value(coord.skewInverseBy({ 2, 2 }));
+
+        if (CrimeMap.value(coord.skewInverseBy({ 2, 2 })) > 190)
+        {
+            dis -= 20;
+        }
+
+        if (dis > 250)
+        {
+            dis = 250;
+        }
+
+        if (dis < 1)
+        {
+            dis = 1;
+        }
+
+        LandValueMap.value(coord.skewInverseBy({ 2, 2 })) = dis;
+        LVtot += dis;
+        LVnum++;
     }
 
     if (LVnum)
