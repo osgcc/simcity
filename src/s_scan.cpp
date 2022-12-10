@@ -216,15 +216,7 @@ namespace
                 dis -= 20;
             }
 
-            if (dis > 250)
-            {
-                dis = 250;
-            }
-
-            if (dis < 1)
-            {
-                dis = 1;
-            }
+            dis = std::clamp(dis, 1, 250);
 
             LandValueMap.value(coord.skewInverseBy({ 2, 2 })) = dis;
             LVtot += dis;
