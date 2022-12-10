@@ -201,7 +201,7 @@ void SmoothArray(const EffectMap& src, EffectMap& dst)
 
 
 /* comefrom: PTLScan */
-int GetPValue(int loc)
+int getPollutionValue(int loc)
 {
     if (loc < POWERBASE)
     {
@@ -458,7 +458,7 @@ int pollutionLevel(const Point<int>& point, int& LVflag)
                     continue;
                 }
 
-                pollutionLevel += GetPValue(tile);
+                pollutionLevel += getPollutionValue(tile);
                 if (tile >= ROADBASE)
                 {
                     LVflag++;
