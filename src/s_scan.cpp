@@ -471,6 +471,44 @@ int pollutionLevel(const Point<int>& point, int& LVflag)
 }
 
 
+void setMostPollutedLocation()
+{
+    int highestPollution{ 0 };
+    int pollutedTileCount{ 0 };
+    int pollutionTotal{ 0 };
+
+    for (int x = 0; x < HalfWorldWidth; ++x)
+    {
+        for (int y = 0; y < HalfWorldHeight; ++y)
+        {
+            const int pollutionValue = tem.value({ x, y });
+            PollutionMap.value({ x, y }) = pollutionValue;
+
+            if (pollutionValue) /*  get pollute average  */
+            {
+                pollutedTileCount++;
+                pollutionTotal += pollutionValue;
+
+                /* find max pol for monster  */
+                if ((pollutionValue > highestPollution) || ((pollutionValue == highestPollution) && (!(Rand16() & 3))))
+                {
+                    highestPollution = pollutionValue;
+                    PollutionMax = { x * 2, y * 2 };
+                }
+            }
+        }
+    }
+
+    if (pollutedTileCount)
+    {
+        PolluteAverage = pollutionTotal / pollutedTileCount;
+    }
+    else
+    {
+        PolluteAverage = 0;
+    }
+}
+
 /* comefrom: Simulate SpecialInit */
 /* Does pollution, terrain, land value   */
 /**
@@ -538,39 +576,7 @@ void PTLScan()
     SmoothArray(tem, tem2);
     SmoothArray(tem2, tem);
 
-    int pmax = 0;
-    int pnum = 0;
-    int ptot = 0;
-    for (int x = 0; x < HalfWorldWidth; ++x)
-    {
-        for (int y = 0; y < HalfWorldHeight; ++y)
-        {
-            const int z = tem.value({ x, y });
-            PollutionMap.value({ x, y }) = z;
-
-            if (z) /*  get pollute average  */
-            {
-                pnum++;
-                ptot += z;
-
-                /* find max pol for monster  */
-                if ((z > pmax) || ((z == pmax) && (!(Rand16() & 3))))
-                {
-                    pmax = z;
-                    PollutionMax = { x * 2, y * 2 };
-                }
-            }
-        }
-    }
-
-    if (pnum)
-    {
-        PolluteAverage = ptot / pnum;
-    }
-    else
-    {
-        PolluteAverage = 0;
-    }
+    setMostPollutedLocation();
 
     SmoothTerrain();
 
