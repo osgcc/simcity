@@ -38,6 +38,201 @@ namespace
     EffectMap tem2({ HalfWorldWidth, HalfWorldHeight });
 
     std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
+
+
+    int getPollutionValue(int tileValue)
+    {
+        if (tileValue < POWERBASE)
+        {
+            if (tileValue >= HTRFBASE) /* heavy traf  */
+            {
+                return (/* 25 */ 75);
+            }
+
+            if (tileValue >= LTRFBASE) /* light traf  */
+            {
+                return (/* 10 */ 50);
+            }
+
+            if (tileValue < ROADBASE)
+            {
+                if (tileValue > FIREBASE)
+                {
+                    return (/* 60 */ 90);
+                }
+
+                /* XXX: Why negative pollution from radiation? */
+                if (tileValue >= RADTILE) /* radioactivity  */
+                {
+                    return (/* -40 */ 255);
+                }
+            }
+            return 0;
+        }
+
+        if (tileValue <= LASTIND)
+        {
+            return (0);
+        }
+
+        if (tileValue < PORTBASE) /* Ind  */
+        {
+            return (50);
+        }
+
+        if (tileValue <= LASTPOWERPLANT) /* prt, aprt, cpp */
+        {
+            return (/* 60 */ 100);
+        }
+
+        return 0;
+    }
+
+
+    /* comefrom: pollutionAndLandValueScan DistIntMarket */
+    int distanceToCityCenter(int x, int y)
+    {
+        const Vector<int> radius = { CityCenter.x / 2, (CityCenter.y / 2) };
+
+        Vector<int> distance{};
+        if (x > radius.x)
+        {
+            distance.x = x - radius.x;
+        }
+        else
+        {
+            distance.x = radius.x - x;
+        }
+
+        if (y > radius.y)
+        {
+            distance.y = y - radius.y;
+        }
+        else
+        {
+            distance.y = radius.y - y;
+        }
+
+        int totalDistance = (distance.x + distance.y);
+        if (totalDistance > 32) // fixme: magic number
+        {
+            return 32;
+        }
+
+        return totalDistance;
+    }
+
+
+    int pollutionLevel(const Point<int>& point)
+    {
+        int pollutionLevel{};
+        for (int xx = (point.x * 2); xx <= (point.x * 2) + 1; ++xx)
+        {
+            for (int yy = (point.y * 2); yy <= (point.y * 2) + 1; ++yy)
+            {
+                const int tile = (Map[xx][yy] & LOMASK);
+                if (tile)
+                {
+                    if (tile < RUBBLE)
+                    {
+                        /* inc terrainMem */
+                        Qtem[point.x / 2][point.y / 2] += 15;
+                        continue;
+                    }
+
+                    pollutionLevel += getPollutionValue(tile);
+                }
+            }
+        }
+
+        return std::clamp(pollutionLevel, 0, 255);
+    }
+
+
+    void setMostPollutedLocation()
+    {
+        int highestPollution{ 0 };
+        int pollutedTileCount{ 0 };
+        int pollutionTotal{ 0 };
+
+        for (int x = 0; x < HalfWorldWidth; ++x)
+        {
+            for (int y = 0; y < HalfWorldHeight; ++y)
+            {
+                const int pollutionValue = tem.value({ x, y });
+                PollutionMap.value({ x, y }) = pollutionValue;
+
+                if (pollutionValue) /*  get pollute average  */
+                {
+                    pollutedTileCount++;
+                    pollutionTotal += pollutionValue;
+
+                    /* find max pol for monster  */
+                    if ((pollutionValue > highestPollution) || ((pollutionValue == highestPollution) && (!(Rand16() & 3))))
+                    {
+                        highestPollution = pollutionValue;
+                        PollutionMax = { x * 2, y * 2 };
+                    }
+                }
+            }
+        }
+
+        PolluteAverage = pollutedTileCount ? pollutionTotal / pollutedTileCount : 0;
+    }
+
+
+    void pollutionScan()
+    {
+        for (int i{}; i < HalfWorldWidth * HalfWorldHeight; ++i)
+        {
+            const Point<int> coord{ i % HalfWorldWidth, i / HalfWorldWidth };
+            tem.value(coord) = pollutionLevel(coord);
+        }
+    }
+
+
+    void landValueScan()
+    {
+        int LVtot = 0;
+        int LVnum = 0;
+        for (int x{}; x < SimWidth * SimHeight; ++x)
+        {
+
+            const Point<int> coord{ x % SimWidth, x / SimWidth };
+            const auto tile = maskedTileValue(coord.x, coord.y);
+            if (tile < ROADBASE)
+            {
+                LandValueMap.value(coord.skewInverseBy({ 2, 2 })) = 0;
+                continue;
+            }
+
+            int dis = 34 - distanceToCityCenter(coord.x / 2, coord.y / 2);
+            dis = dis * 4;
+            dis += TerrainMem.value(coord.skewInverseBy({ 4, 4 }));
+            dis -= PollutionMap.value(coord.skewInverseBy({ 2, 2 }));
+
+            if (CrimeMap.value(coord.skewInverseBy({ 2, 2 })) > 190)
+            {
+                dis -= 20;
+            }
+
+            if (dis > 250)
+            {
+                dis = 250;
+            }
+
+            if (dis < 1)
+            {
+                dis = 1;
+            }
+
+            LandValueMap.value(coord.skewInverseBy({ 2, 2 })) = dis;
+            LVtot += dis;
+            LVnum++;
+        }
+
+        LVAverage = LVnum ? LVtot / LVnum : 0;
+    }
 };
 
 
@@ -200,89 +395,6 @@ void SmoothArray(const EffectMap& src, EffectMap& dst)
 }
 
 
-int getPollutionValue(int tileValue)
-{
-    if (tileValue < POWERBASE)
-    {
-        if (tileValue >= HTRFBASE) /* heavy traf  */
-        {
-            return (/* 25 */ 75);
-        }
-        
-        if (tileValue >= LTRFBASE) /* light traf  */
-        {
-            return (/* 10 */ 50);
-        }
-
-        if (tileValue < ROADBASE)
-        {
-            if (tileValue > FIREBASE)
-            {
-                return (/* 60 */ 90);
-            }
-
-            /* XXX: Why negative pollution from radiation? */
-            if (tileValue >= RADTILE) /* radioactivity  */
-            {
-                return (/* -40 */ 255);
-            }
-        }
-        return 0;
-    }
-
-    if (tileValue <= LASTIND)
-    {
-        return (0);
-    }
-
-    if (tileValue < PORTBASE) /* Ind  */
-    {
-        return (50);
-    }
-
-    if (tileValue <= LASTPOWERPLANT) /* prt, aprt, cpp */
-    {
-        return (/* 60 */ 100);
-    }
-    
-    return 0;
-}
-
-
-/* comefrom: pollutionAndLandValueScan DistIntMarket */
-int distanceToCityCenter(int x, int y)
-{
-    const Vector<int> radius = { CityCenter.x / 2, (CityCenter.y / 2) };
-
-    Vector<int> distance{};
-    if (x > radius.x)
-    {
-        distance.x = x - radius.x;
-    }
-    else
-    {
-        distance.x = radius.x - x;
-    }
-
-    if (y > radius.y)
-    {
-        distance.y = y - radius.y;
-    }
-    else
-    {
-        distance.y = radius.y - y;
-    }
-
-    int totalDistance = (distance.x + distance.y);
-    if (totalDistance > 32) // fixme: magic number
-    {
-        return 32;
-    }
-
-    return totalDistance;
-}
-
-
 /* comefrom: PopDenScan */
 void DistIntMarket()
 {
@@ -437,118 +549,6 @@ void SmoothPSMap()
             PoliceStationMap.value({ x, y }) = STem[x][y];
         }
     }
-}
-
-
-int pollutionLevel(const Point<int>& point)
-{
-    int pollutionLevel{};
-    for (int xx = (point.x * 2); xx <= (point.x * 2) + 1; ++xx)
-    {
-        for (int yy = (point.y * 2); yy <= (point.y * 2) + 1; ++yy)
-        {
-            const int tile = (Map[xx][yy] & LOMASK);
-            if (tile)
-            {
-                if (tile < RUBBLE)
-                {
-                    /* inc terrainMem */
-                    Qtem[point.x / 2][point.y / 2] += 15;
-                    continue;
-                }
-
-                pollutionLevel += getPollutionValue(tile);
-            }
-        }
-    }
-
-    return std::clamp(pollutionLevel, 0, 255);
-}
-
-
-void setMostPollutedLocation()
-{
-    int highestPollution{ 0 };
-    int pollutedTileCount{ 0 };
-    int pollutionTotal{ 0 };
-
-    for (int x = 0; x < HalfWorldWidth; ++x)
-    {
-        for (int y = 0; y < HalfWorldHeight; ++y)
-        {
-            const int pollutionValue = tem.value({ x, y });
-            PollutionMap.value({ x, y }) = pollutionValue;
-
-            if (pollutionValue) /*  get pollute average  */
-            {
-                pollutedTileCount++;
-                pollutionTotal += pollutionValue;
-
-                /* find max pol for monster  */
-                if ((pollutionValue > highestPollution) || ((pollutionValue == highestPollution) && (!(Rand16() & 3))))
-                {
-                    highestPollution = pollutionValue;
-                    PollutionMax = { x * 2, y * 2 };
-                }
-            }
-        }
-    }
-
-    PolluteAverage = pollutedTileCount ? pollutionTotal / pollutedTileCount : 0;
-}
-
-
-void pollutionScan()
-{
-    for (int i{}; i < HalfWorldWidth * HalfWorldHeight; ++i)
-    {
-        const Point<int> coord{ i % HalfWorldWidth, i / HalfWorldWidth };
-        tem.value(coord) = pollutionLevel(coord);
-    }
-}
-
-
-void landValueScan()
-{
-    int LVtot = 0;
-    int LVnum = 0;
-    for (int x{}; x < SimWidth * SimHeight; ++x)
-    {
-
-        const Point<int> coord{ x % SimWidth, x / SimWidth };
-        const auto tile = maskedTileValue(coord.x, coord.y);
-        if (tile < ROADBASE)
-        {
-            LandValueMap.value(coord.skewInverseBy({ 2, 2 })) = 0;
-            continue;
-        }
-
-        int dis = 34 - distanceToCityCenter(coord.x / 2, coord.y / 2);
-        dis = dis * 4;
-        dis += TerrainMem.value(coord.skewInverseBy({ 4, 4 }));
-        dis -= PollutionMap.value(coord.skewInverseBy({ 2, 2 }));
-
-        if (CrimeMap.value(coord.skewInverseBy({ 2, 2 })) > 190)
-        {
-            dis -= 20;
-        }
-
-        if (dis > 250)
-        {
-            dis = 250;
-        }
-
-        if (dis < 1)
-        {
-            dis = 1;
-        }
-
-        LandValueMap.value(coord.skewInverseBy({ 2, 2 })) = dis;
-        LVtot += dis;
-        LVnum++;
-    }
-
-    LVAverage = LVnum ? LVtot / LVnum : 0;
 }
 
 
