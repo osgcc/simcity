@@ -52,8 +52,7 @@ EffectMap PollutionMap({ HalfWorldWidth, HalfWorldHeight });
 EffectMap LandValueMap({ HalfWorldWidth, HalfWorldHeight });
 EffectMap CrimeMap({ HalfWorldWidth, HalfWorldHeight });
 
-
-std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> TerrainMem{};
+EffectMap TerrainMem({ QuarterWorldWidth, QuarterWorldHeight });
 
 EffectMap RateOfGrowthMap({ EighthWorldWidth, EighthWorldHeight });
 EffectMap FireStationMap({ EighthWorldWidth, EighthWorldHeight });
@@ -97,13 +96,7 @@ namespace
 
     void resetQuarterArrays()
     {
-        for (int row = 0; row < QuarterWorldWidth; ++row)
-        {
-            for (int col = 0; col < QuarterWorldHeight; ++col)
-            {
-                TerrainMem[row][col] = 0;
-            }
-        }
+        TerrainMem.reset();
     }
 
     void resetHistoryArrays()

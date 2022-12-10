@@ -388,7 +388,7 @@ void SmoothTerrain()
                 z += Qtem[x][y + 1];
             }
 
-            TerrainMem[x][y] = (((z / 4) + Qtem[x][y]) / 2) % 256;
+            TerrainMem.value({ x, y }) = (((z / 4) + Qtem[x][y]) / 2) % 256;
         }
     }
 }
@@ -534,7 +534,7 @@ void PTLScan()
             {
                 int dis = 34 - distanceToCityCenter(x, y);
                 dis = dis * 4;
-                dis += (TerrainMem[x / 2][y / 2]);
+                dis += (TerrainMem.value({ x / 2, y / 2 }));
                 dis -= (PollutionMap.value({ x, y }));
 
                 if (CrimeMap.value({ x, y }) > 190)
