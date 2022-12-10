@@ -552,8 +552,6 @@ void landValueScan()
 }
 
 
-/* comefrom: Simulate SpecialInit */
-/* Does pollution, terrain, land value   */
 void pollutionAndLandValueScan()
 {
     for (auto& arr : Qtem)
