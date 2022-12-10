@@ -498,15 +498,9 @@ void setMostPollutedLocation()
         }
     }
 
-    if (pollutedTileCount)
-    {
-        PolluteAverage = pollutionTotal / pollutedTileCount;
-    }
-    else
-    {
-        PolluteAverage = 0;
-    }
+    PolluteAverage = pollutedTileCount ? pollutionTotal / pollutedTileCount : 0;
 }
+
 
 /* comefrom: Simulate SpecialInit */
 /* Does pollution, terrain, land value   */
