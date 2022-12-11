@@ -401,13 +401,11 @@ void DistIntMarket()
 /*  sets: PopulationDensityMap, , , ComRate  */
 void scanPopulationDensity()
 {
-    int Xtot, Ytot, Ztot;
-
     tem.reset();
 
-    Xtot = 0;
-    Ytot = 0;
-    Ztot = 0;
+    int Xtot{};
+    int Ytot{};
+    int Ztot{};
 
     for (int x{}; x < SimWidth; ++x)
     {
