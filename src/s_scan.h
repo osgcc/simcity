@@ -43,7 +43,7 @@ void resetNewMapFlags();
 void doPowerScan();
 void pollutionAndLandValueScan();
 void CrimeScan();
-void PopDenScan();
+void scanPopulationDensity();
 void FireAnalysis();
 
 bool newMap();

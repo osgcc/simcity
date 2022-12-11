@@ -1330,7 +1330,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
     case 14:
         if (!(Scycle % PopulationDensityScanFrequency[speed]))
         {
-            PopDenScan();
+            scanPopulationDensity();
         }
         break;
 
@@ -1383,7 +1383,7 @@ void DoSimInit(CityProperties& properties, Budget& budget)
     NewPower = 1;		/* post rel */
     pollutionAndLandValueScan();
     CrimeScan();
-    PopDenScan();
+    scanPopulationDensity();
     FireAnalysis();
     newMap(true);
     TotalPop = 1;

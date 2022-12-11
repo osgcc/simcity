@@ -380,7 +380,7 @@ void SmoothArray(const EffectMap& src, EffectMap& dst)
 }
 
 
-/* comefrom: PopDenScan */
+/* comefrom: scanPopulationDensity */
 void DistIntMarket()
 {
     int x, y, z;
@@ -399,7 +399,7 @@ void DistIntMarket()
 
 
 /* comefrom: Simulate SpecialInit */
-void PopDenScan()		/*  sets: PopulationDensityMap, , , ComRate  */
+void scanPopulationDensity()		/*  sets: PopulationDensityMap, , , ComRate  */
 {
     int Xtot, Ytot, Ztot;
 
