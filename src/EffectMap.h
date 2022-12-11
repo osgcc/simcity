@@ -21,6 +21,16 @@ public:
         fill(0);
     }
 
+    EffectMap& operator*(int scalar)
+    {
+        for (size_t i = 0; i < mEffectMap.size(); ++i)
+        {
+            mEffectMap[i] *= scalar;
+        }
+
+        return *this;
+    }
+
     int value(const Point<int>& point) const
     {
         return mEffectMap[(mDimensions.x * point.y) + point.x];

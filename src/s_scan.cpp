@@ -398,8 +398,8 @@ void DistIntMarket()
 }
 
 
-/* comefrom: Simulate SpecialInit */
-void scanPopulationDensity()		/*  sets: PopulationDensityMap, , , ComRate  */
+/*  sets: PopulationDensityMap, , , ComRate  */
+void scanPopulationDensity()
 {
     int Xtot, Ytot, Ztot;
 
@@ -418,11 +418,11 @@ void scanPopulationDensity()		/*  sets: PopulationDensityMap, , , ComRate  */
             {
                 z = z & LOMASK;
                 SimulationTarget = { x, y };
-                
+
                 z = std::clamp(getPopulationDensity(z) * 8, 0, 254);
 
                 tem.value({ x / 2, y / 2 }) = z;
-                
+
                 Xtot += x;
                 Ytot += y;
                 Ztot++;
@@ -434,16 +434,10 @@ void scanPopulationDensity()		/*  sets: PopulationDensityMap, , , ComRate  */
     SmoothArray(tem2, tem);
     SmoothArray(tem, tem2);
 
-    for (int x{}; x < HalfWorldWidth; ++x)
-    {
-        for (int y{}; y < HalfWorldHeight; ++y)
-        {
-            PopulationDensityMap.value({ x, y }) = tem2.value({ x, y }) * 2;
-        }
-    }
+    PopulationDensityMap = tem2 * 2;
 
     DistIntMarket(); /* set ComRate w/ (/ComMap) */
-    
+
     if (Ztot) /* Find Center of Mass for City */
     {
         CityCenter = { Xtot / Ztot, Ytot / Ztot };
@@ -452,7 +446,7 @@ void scanPopulationDensity()		/*  sets: PopulationDensityMap, , , ComRate  */
     {
         CityCenter = { HalfWorldWidth, HalfWorldHeight };
     }
-    
+
     NewMapFlags[DYMAP] = NewMapFlags[PDMAP] = NewMapFlags[RGMAP] = 1;
 }
 
