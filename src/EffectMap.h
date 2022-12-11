@@ -5,6 +5,11 @@
 
 #include <vector>
 
+
+/**
+ * Naive abstraction of a 2D array using a 1D
+ * array internally.
+ */
 class EffectMap
 {
 public:
