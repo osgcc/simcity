@@ -225,6 +225,34 @@ namespace
 
         LVAverage = LVnum ? LVtot / LVnum : 0;
     }
+
+
+    int sumAdjacent(const Point<int>& location, const EffectMap& map)
+    {
+        int val{};
+
+        if (location.x > 0)
+        {
+            val += map.value(location + Vector<int>{ -1, 0});
+        }
+
+        if (location.x < (map.dimensions().x - 1))
+        {
+            val += map.value(location + Vector<int>{ 1, 0});
+        }
+
+        if (location.y > 0)
+        {
+            val += map.value(location + Vector<int>{ 0, -1});
+        }
+
+        if (location.y < (map.dimensions().y - 1))
+        {
+            val += map.value(location + Vector<int>{ 0, 1});
+        }
+
+        return val;
+    }
 };
 
 
@@ -339,34 +367,6 @@ int getPopulationDensity(int tile)
     }
 
     return 0;
-}
-
-
-int sumAdjacent(const Point<int>& location, const EffectMap& map)
-{
-    int val{};
-
-    if (location.x > 0)
-    {
-        val += map.value(location + Vector<int>{ -1, 0});
-    }
-
-    if (location.x < (map.dimensions().x - 1))
-    {
-        val += map.value(location + Vector<int>{ 1, 0});
-    }
-
-    if (location.y > 0)
-    {
-        val += map.value(location + Vector<int>{ 0, -1});
-    }
-
-    if (location.y < (map.dimensions().y - 1))
-    {
-        val += map.value(location + Vector<int>{ 0, 1});
-    }
-
-    return val;
 }
 
 
