@@ -413,15 +413,12 @@ void scanPopulationDensity()
     {
         for (int y{}; y < SimHeight; ++y)
         {
-            int z = Map[x][y];
-            if (z & ZONEBIT)
+            int tile = tileValue({ x, y });
+            if (tile & ZONEBIT)
             {
-                z = z & LOMASK;
-                SimulationTarget = { x, y };
-
-                z = std::clamp(getPopulationDensity(z) * 8, 0, 254);
-
-                tem.value({ x / 2, y / 2 }) = z;
+                tile = tile & LOMASK;
+                tile = std::clamp(getPopulationDensity(tile) * 8, 0, 254);
+                tem.value({ x / 2, y / 2 }) = tile;
 
                 Xtot += x;
                 Ytot += y;
