@@ -438,14 +438,8 @@ void scanPopulationDensity()
 
     DistIntMarket(); /* set ComRate w/ (/ComMap) */
 
-    if (Ztot) /* Find Center of Mass for City */
-    {
-        CityCenter = { Xtot / Ztot, Ytot / Ztot };
-    }
-    else /* if pop=0 center of Map is CC */
-    {
-        CityCenter = { HalfWorldWidth, HalfWorldHeight };
-    }
+    // Set center of mass for the city
+    Ztot ? CityCenter = { Xtot / Ztot, Ytot / Ztot } : CityCenter = { HalfWorldWidth, HalfWorldHeight };
 
     NewMapFlags[DYMAP] = NewMapFlags[PDMAP] = NewMapFlags[RGMAP] = 1;
 }
