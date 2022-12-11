@@ -62,8 +62,6 @@ EffectMap PoliceProtectionMap({ EighthWorldWidth, EighthWorldHeight });
 EffectMap FireProtectionMap({ EighthWorldWidth, EighthWorldHeight });
 
 int ComRate[EighthWorldWidth][EighthWorldHeight];
-int STem[EighthWorldWidth][EighthWorldHeight];
-
 
 GraphHistory ResHis{};
 GraphHistory ComHis{};

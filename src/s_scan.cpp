@@ -37,6 +37,8 @@ namespace
     EffectMap tem({ HalfWorldWidth, HalfWorldHeight });
     EffectMap tem2({ HalfWorldWidth, HalfWorldHeight });
 
+    EffectMap STem({ EighthWorldWidth, EighthWorldHeight });
+
     std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
 
 
@@ -296,17 +298,11 @@ void SmoothFSMap()
             }
 
             edge = (edge / 4) + FireStationMap.value({ x, y });
-            STem[x][y] = edge / 2;
+            STem.value({ x, y }) = edge / 2;
         }
     }
 
-    for (x = 0; x < EighthWorldWidth; x++)
-    {
-        for (y = 0; y < EighthWorldHeight; y++)
-        {
-            FireStationMap.value({ x, y }) = STem[x][y];
-        }
-    }
+    FireStationMap = STem;
 }
 
 
@@ -530,17 +526,11 @@ void SmoothPSMap()
             }
 
             edge = (edge / 4) + PoliceStationMap.value({ x, y });
-            STem[x][y] = edge / 2;
+            STem.value({ x, y }) = edge / 2;
         }
     }
 
-    for (x = 0; x < EighthWorldWidth; x++)
-    {
-        for (y = 0; y < EighthWorldHeight; y++)
-        {
-            PoliceStationMap.value({ x, y }) = STem[x][y];
-        }
-    }
+    PoliceStationMap = STem;
 }
 
 
