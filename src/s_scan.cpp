@@ -342,6 +342,34 @@ int getPopulationDensity(int tile)
 }
 
 
+int sumAdjacent(const Point<int>& location, const EffectMap& map)
+{
+    int val{};
+
+    if (location.x > 0)
+    {
+        val += map.value(location + Vector<int>{ -1, 0});
+    }
+
+    if (location.x < (map.dimensions().x - 1))
+    {
+        val += map.value(location + Vector<int>{ 1, 0});
+    }
+
+    if (location.y > 0)
+    {
+        val += map.value(location + Vector<int>{ 0, -1});
+    }
+
+    if (location.y < (map.dimensions().y - 1))
+    {
+        val += map.value(location + Vector<int>{ 0, 1});
+    }
+
+    return val;
+}
+
+
 void SmoothArray(const EffectMap& src, EffectMap& dst)
 {
     if (src.dimensions() != dst.dimensions())
@@ -353,27 +381,7 @@ void SmoothArray(const EffectMap& src, EffectMap& dst)
     {
         for (int y{}; y < src.dimensions().y; ++y)
         {
-            int val{ 0 };
-            if (x > 0)
-            {
-                val += src.value({ x - 1, y });
-            }
-
-            if (x < (src.dimensions().x - 1))
-            {
-                val += src.value({ x + 1, y });
-            }
-
-            if (y > 0)
-            {
-                val += src.value({ x, y - 1 });
-            }
-
-            if (y < (src.dimensions().y - 1))
-            {
-                val += src.value({ x, y + 1 });
-            }
-
+            const auto val = sumAdjacent({ x, y }, src);
             dst.value({ x, y }) = std::clamp((val + src.value({ x, y })) / 4, 0, 255);
         }
     }
@@ -403,9 +411,8 @@ void scanPopulationDensity()
 {
     tem.reset();
 
-    int Xtot{};
-    int Ytot{};
-    int Ztot{};
+    Vector<int> axisTotal{};
+    int zoneCount{};
 
     for (int x{}; x < SimWidth; ++x)
     {
@@ -417,10 +424,8 @@ void scanPopulationDensity()
                 tile = tile & LOMASK;
                 tile = std::clamp(getPopulationDensity(tile) * 8, 0, 254);
                 tem.value({ x / 2, y / 2 }) = tile;
-
-                Xtot += x;
-                Ytot += y;
-                Ztot++;
+                axisTotal += { x, y };
+                zoneCount++;
             }
         }
     }
@@ -434,7 +439,7 @@ void scanPopulationDensity()
     DistIntMarket(); /* set ComRate w/ (/ComMap) */
 
     // Set center of mass for the city
-    Ztot ? CityCenter = { Xtot / Ztot, Ytot / Ztot } : CityCenter = { HalfWorldWidth, HalfWorldHeight };
+    zoneCount ? CityCenter = { axisTotal.x / zoneCount, axisTotal.y / zoneCount } : CityCenter = { HalfWorldWidth, HalfWorldHeight };
 
     NewMapFlags[DYMAP] = NewMapFlags[PDMAP] = NewMapFlags[RGMAP] = 1;
 }
