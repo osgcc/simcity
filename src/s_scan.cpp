@@ -300,27 +300,7 @@ void smoothStationMap(EffectMap& map)
     {
         for (int y = 0; y < map.dimensions().y; y++)
         {
-            int edge = 0;
-
-            if (x)
-            {
-                edge += map.value({ x - 1, y });
-            }
-
-            if (x < (EighthWorldWidth - 1))
-            {
-                edge += map.value({ x + 1, y });
-            }
-
-            if (y)
-            {
-                edge += map.value({ x, y - 1 });
-            }
-
-            if (y < (EighthWorldHeight - 1))
-            {
-                edge += map.value({ x, y + 1 });
-            }
+            int edge = sumAdjacent({ x, y }, map);
 
             edge = (edge / 4) + map.value({ x, y });
             temp.value({ x, y }) = edge / 2;
