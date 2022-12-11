@@ -37,8 +37,6 @@ namespace
     EffectMap tem({ HalfWorldWidth, HalfWorldHeight });
     EffectMap tem2({ HalfWorldWidth, HalfWorldHeight });
 
-    EffectMap STem({ EighthWorldWidth, EighthWorldHeight });
-
     std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
 
 
@@ -266,52 +264,51 @@ void resetNewMapFlags()
 }
 
 
-/* comefrom: FireAnalysis */
-void SmoothFSMap()
+void smoothStationMap(EffectMap& map)
 {
-    int x, y, edge;
+    EffectMap temp({ map.dimensions().x , map.dimensions().y});
 
-    for (x = 0; x < EighthWorldWidth; x++)
+    for (int x = 0; x < map.dimensions().x; x++)
     {
-        for (y = 0; y < EighthWorldHeight; y++)
+        for (int y = 0; y < map.dimensions().y; y++)
         {
-            edge = 0;
+            int edge = 0;
 
             if (x)
             {
-                edge += FireStationMap.value({ x - 1, y });
+                edge += map.value({ x - 1, y });
             }
 
             if (x < (EighthWorldWidth - 1))
             {
-                edge += FireStationMap.value({ x + 1, y });
+                edge += map.value({ x + 1, y });
             }
 
             if (y)
             {
-                edge += FireStationMap.value({ x, y - 1 });
+                edge += map.value({ x, y - 1 });
             }
 
             if (y < (EighthWorldHeight - 1))
             {
-                edge += FireStationMap.value({ x, y + 1 });
+                edge += map.value({ x, y + 1 });
             }
 
-            edge = (edge / 4) + FireStationMap.value({ x, y });
-            STem.value({ x, y }) = edge / 2;
+            edge = (edge / 4) + map.value({ x, y });
+            temp.value({ x, y }) = edge / 2;
         }
     }
 
-    FireStationMap = STem;
+    map = temp;
 }
 
 
 /* comefrom: Simulate SpecialInit */
 void FireAnalysis()		/* Make firerate map from firestation map  */
 {
-    SmoothFSMap();
-    SmoothFSMap();
-    SmoothFSMap();
+    smoothStationMap(FireStationMap);
+    smoothStationMap(FireStationMap);
+    smoothStationMap(FireStationMap);
 
     FireProtectionMap = FireStationMap;
 
@@ -494,46 +491,6 @@ void SmoothTerrain()
 }
 
 
-/* comefrom: CrimeScan */
-void SmoothPSMap()
-{
-    int x, y, edge;
-
-    for (x = 0; x < EighthWorldWidth; x++)
-    {
-        for (y = 0; y < EighthWorldHeight; y++)
-        {
-            edge = 0;
-
-            if (x)
-            {
-                edge += PoliceStationMap.value({ x -  1, y });
-            }
-
-            if (x < (EighthWorldWidth - 1))
-            {
-                edge += PoliceStationMap.value({ x + 1, y });
-            }
-
-            if (y)
-            {
-                edge += PoliceStationMap.value({ x, y - 1 });
-            }
-
-            if (y < (EighthWorldHeight - 1))
-            {
-                edge += PoliceStationMap.value({ x, y + 1});
-            }
-
-            edge = (edge / 4) + PoliceStationMap.value({ x, y });
-            STem.value({ x, y }) = edge / 2;
-        }
-    }
-
-    PoliceStationMap = STem;
-}
-
-
 void pollutionAndLandValueScan()
 {
     for (auto& arr : Qtem)
@@ -563,9 +520,9 @@ void CrimeScan()
     int x, y, z;
     int cmax;
 
-    SmoothPSMap();
-    SmoothPSMap();
-    SmoothPSMap();
+    smoothStationMap(PoliceStationMap);
+    smoothStationMap(PoliceStationMap);
+    smoothStationMap(PoliceStationMap);
 
     totz = 0;
     numz = 0;
