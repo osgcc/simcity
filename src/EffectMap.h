@@ -52,7 +52,6 @@ public:
         return mDimensions;
     }
 
-private:
     void fill(const int value)
     {
         for (int i{ 0 }; i < mSize; ++i)
@@ -61,6 +60,7 @@ private:
         }
     }
 
+private:
     std::vector<int> mEffectMap{};
 
     Vector<int> mDimensions;
