@@ -8,7 +8,7 @@
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
 // file, included in this distribution, for details.
-#include "s_scan.h"
+#include "Scan.h"
 
 #include "EffectMap.h"
 #include "Map.h"
@@ -375,7 +375,7 @@ void distIntMarket()
             int z{ distanceToCityCenter(x * 4 , y * 4) };
             z *= 4;
             z = 64 - z;
-            ComRate[x][y] = z;
+            ComRate.value({ x, y }) = z;
         }
     }
 }

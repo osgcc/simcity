@@ -261,7 +261,7 @@ int EvalCom (int traf)
   int Value;
 
   if (traf < 0) return (-3000);
-  Value = ComRate[SimulationTarget.x >>3][SimulationTarget.y >>3];
+  Value = ComRate.value(SimulationTarget.skewInverseBy({ 8, 8 }));
   return (Value);
 }
 

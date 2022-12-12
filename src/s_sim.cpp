@@ -23,12 +23,12 @@
 #include "s_alloc.h"
 #include "s_disast.h"
 #include "s_msg.h"
-#include "s_scan.h"
 #include "s_traf.h"
 #include "s_zone.h"
 
 #include "w_util.h"
 
+#include "Scan.h"
 #include "Sprite.h"
 
 #include <SDL2/SDL.h>

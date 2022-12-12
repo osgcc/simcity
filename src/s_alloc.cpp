@@ -61,7 +61,7 @@ EffectMap PoliceStationMap({ EighthWorldWidth, EighthWorldHeight });
 EffectMap PoliceProtectionMap({ EighthWorldWidth, EighthWorldHeight });
 EffectMap FireProtectionMap({ EighthWorldWidth, EighthWorldHeight });
 
-int ComRate[EighthWorldWidth][EighthWorldHeight];
+EffectMap ComRate({ EighthWorldWidth, EighthWorldHeight });
 
 GraphHistory ResHis{};
 GraphHistory ComHis{};

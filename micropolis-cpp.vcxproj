@@ -23,6 +23,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\MiniMapWindow.cpp" />
+    <ClCompile Include="src\Scan.cpp" />
     <ClCompile Include="src\SmallMaps.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\StringRender.cpp" />
@@ -33,7 +34,6 @@
     <ClCompile Include="src\s_init.cpp" />
     <ClCompile Include="src\s_msg.cpp" />
     <ClCompile Include="src\Power.cpp" />
-    <ClCompile Include="src\s_scan.cpp" />
     <ClCompile Include="src\s_sim.cpp" />
     <ClCompile Include="src\s_traf.cpp" />
     <ClCompile Include="src\s_zone.cpp" />
@@ -68,6 +68,7 @@
     <ClInclude Include="src\MiniMapWindow.h" />
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\PointInRectangleRange.h" />
+    <ClInclude Include="src\Scan.h" />
     <ClInclude Include="src\SmallMaps.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\StringRender.h" />
@@ -77,7 +78,6 @@
     <ClInclude Include="src\s_init.h" />
     <ClInclude Include="src\s_msg.h" />
     <ClInclude Include="src\Power.h" />
-    <ClInclude Include="src\s_scan.h" />
     <ClInclude Include="src\s_sim.h" />
     <ClInclude Include="src\s_traf.h" />
     <ClInclude Include="src\s_zone.h" />

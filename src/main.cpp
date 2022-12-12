@@ -33,9 +33,9 @@
 #include "s_gen.h"
 #include "s_init.h"
 #include "s_msg.h"
-#include "s_scan.h"
 #include "s_sim.h"
 
+#include "Scan.h"
 #include "SmallMaps.h"
 #include "Sprite.h"
 #include "StringRender.h"

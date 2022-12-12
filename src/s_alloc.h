@@ -42,7 +42,7 @@ extern EffectMap PoliceStationMap;
 extern EffectMap PoliceProtectionMap;
 extern EffectMap FireProtectionMap;
 
-extern int ComRate[EighthWorldWidth][EighthWorldHeight];
+extern EffectMap ComRate;
 
 using GraphHistory = std::array<int, HistoryLength>;
 
