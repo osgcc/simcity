@@ -21,7 +21,6 @@
 
 #include <algorithm>
 
-/* Map Updates */
 
 namespace
 {
