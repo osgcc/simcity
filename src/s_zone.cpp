@@ -256,13 +256,14 @@ int EvalRes (int traf)
 }
 
 
-int EvalCom (int traf)
+int EvalCom(int traf)
 {
-  int Value;
+    if (traf < 0)
+    {
+        return (-3000);
+    }
 
-  if (traf < 0) return (-3000);
-  Value = ComRate.value(SimulationTarget.skewInverseBy({ 8, 8 }));
-  return (Value);
+    return ComRate.value(SimulationTarget.skewInverseBy({ 8, 8 }));
 }
 
 
