@@ -35,7 +35,7 @@ namespace
     EffectMap tem({ HalfWorldWidth, HalfWorldHeight });
     EffectMap tem2({ HalfWorldWidth, HalfWorldHeight });
 
-    std::array<std::array<int, QuarterWorldHeight>, QuarterWorldWidth> Qtem{};
+    EffectMap Qtem({ QuarterWorldWidth, QuarterWorldHeight });
 
 
     int getPollutionValue(int tileValue)
@@ -134,7 +134,7 @@ namespace
                     if (tile < RUBBLE)
                     {
                         /* inc terrainMem */
-                        Qtem[point.x / 2][point.y / 2] += 15;
+                        Qtem.value({ point.x / 2, point.y / 2 }) += 15;
                         continue;
                     }
 
@@ -414,28 +414,9 @@ void SmoothTerrain()
     {
         for (int y{}; y < QuarterWorldHeight; ++y)
         {
-            int z = 0;
-            if (x > 0)
-            {
-                z += Qtem[x - 1][y];
-            }
-
-            if (x < (QuarterWorldWidth - 1))
-            {
-                z += Qtem[x + 1][y];
-            }
-
-            if (y > 0)
-            {
-                z += Qtem[x][y - 1];
-            }
-
-            if (y < (QuarterWorldHeight - 1))
-            {
-                z += Qtem[x][y + 1];
-            }
-
-            TerrainMem.value({ x, y }) = (((z / 4) + Qtem[x][y]) / 2) % 256;
+            const int val = Qtem.value({ x, y });
+            int z = sumAdjacent({ x, y }, Qtem);
+            TerrainMem.value({ x, y }) = (((z / 4) + val) / 2) % 256;
         }
     }
 }
@@ -443,10 +424,7 @@ void SmoothTerrain()
 
 void pollutionAndLandValueScan()
 {
-    for (auto& arr : Qtem)
-    {
-        arr.fill(0);
-    }
+    Qtem.fill(0);
 
     pollutionScan();
     landValueScan();
