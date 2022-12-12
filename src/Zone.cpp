@@ -26,117 +26,151 @@
 
 bool SetZPower()		/* set bit in MapWord depending on powermap  */
 {
-  bool z = testPowerBit(SimulationTarget);
+    bool z = testPowerBit(SimulationTarget);
 
-  if (z)
-    Map[SimulationTarget.x][SimulationTarget.y] = CurrentTile | PWRBIT;
-  else
-    Map[SimulationTarget.x][SimulationTarget.y] = CurrentTile & (~PWRBIT);
-
-  return (z);
-}
-
-
-void ZonePlop (int base)
-{
-  int z, x;
-  static int Zx[9] = {-1, 0, 1,-1, 0, 1,-1, 0, 1};
-  static int Zy[9] = {-1,-1,-1, 0, 0, 0, 1, 1, 1};
-
-  for (z = 0; z < 9; z++) {		/* check for fire  */
-    int xx = SimulationTarget.x + Zx[z];
-    int yy = SimulationTarget.y + Zy[z];
-    if (CoordinatesValid({ xx, yy })) {
-      x = Map[xx][yy] & LOMASK;
-      if ((x >= FLOOD) && (x < ROADBASE)) return;
+    if (z)
+    {
+        Map[SimulationTarget.x][SimulationTarget.y] = CurrentTile | PWRBIT;
     }
-  }
-  for (z = 0; z < 9; z++) {
-    int xx = SimulationTarget.x + Zx[z];
-    int yy = SimulationTarget.y + Zy[z];
-    if (CoordinatesValid({ xx, yy })) {
-      Map[xx][yy] = base + BNCNBIT;
+    else
+    {
+        Map[SimulationTarget.x][SimulationTarget.y] = CurrentTile & (~PWRBIT);
     }
-  base++;
-  }
-  CurrentTile = Map[SimulationTarget.x][SimulationTarget.y];
-  SetZPower();
-  Map[SimulationTarget.x][SimulationTarget.y] |= ZONEBIT + BULLBIT;
+
+    return z;
 }
 
 
-void ResPlop (int Den, int Value)
+void ZonePlop(int base)
 {
-  int base;
+    int z, x;
+    static int Zx[9] = { -1, 0, 1,-1, 0, 1,-1, 0, 1 };
+    static int Zy[9] = { -1,-1,-1, 0, 0, 0, 1, 1, 1 };
 
-  base = (((Value * 4) + Den) * 9) + RZB - 4;
-  ZonePlop(base);
+    /* check for fire  */
+    for (z = 0; z < 9; z++)
+    {
+        int xx = SimulationTarget.x + Zx[z];
+        int yy = SimulationTarget.y + Zy[z];
+
+        if (CoordinatesValid({ xx, yy }))
+        {
+            x = Map[xx][yy] & LOMASK;
+            if ((x >= FLOOD) && (x < ROADBASE)) return;
+        }
+    }
+    for (z = 0; z < 9; z++)
+    {
+        int xx = SimulationTarget.x + Zx[z];
+        int yy = SimulationTarget.y + Zy[z];
+
+        if (CoordinatesValid({ xx, yy }))
+        {
+            Map[xx][yy] = base + BNCNBIT;
+        }
+
+        base++;
+    }
+
+    CurrentTile = Map[SimulationTarget.x][SimulationTarget.y];
+    SetZPower();
+    Map[SimulationTarget.x][SimulationTarget.y] |= ZONEBIT + BULLBIT;
 }
 
 
-void ComPlop (int Den, int Value)
+void ResPlop(int Den, int Value)
 {
-  int base;
-	
-  base = (((Value * 5) + Den) * 9) + CZB - 4;
-  ZonePlop(base);
+    int base;
+
+    base = (((Value * 4) + Den) * 9) + RZB - 4;
+    ZonePlop(base);
 }
 
 
-void IndPlop (int Den, int Value)
+void ComPlop(int Den, int Value)
 {
-  int base;
-	
-  base = (((Value * 4) + Den) * 9) + (IZB - 4);
-  ZonePlop (base);
+    int base;
+
+    base = (((Value * 5) + Den) * 9) + CZB - 4;
+    ZonePlop(base);
+}
+
+
+void IndPlop(int Den, int Value)
+{
+    int base;
+
+    base = (((Value * 4) + Den) * 9) + (IZB - 4);
+    ZonePlop(base);
 }
 
 
 int RZPop(int Ch9)
 {
-  int CzDen;
+    int CzDen;
 
-  CzDen = (((Ch9 - RZB) / 9) % 4);
-  return ((CzDen * 8) + 16);
+    CzDen = (((Ch9 - RZB) / 9) % 4);
+    return ((CzDen * 8) + 16);
 }
 
 
 int CZPop(int Ch9)
 {
-  int CzDen;
+    int CzDen;
 
-  if (Ch9 == COMCLR) return (0);
-  CzDen = (((Ch9 - CZB) / 9) % 5) + 1;
-  return (CzDen);
+    if (Ch9 == COMCLR) return (0);
+    CzDen = (((Ch9 - CZB) / 9) % 5) + 1;
+    return (CzDen);
 }
 
 
 int IZPop(int Ch9)
 {
-  int CzDen;
+    int CzDen;
 
-  if (Ch9 == INDCLR) return (0);
-  CzDen = (((Ch9 - IZB) / 9) % 4) + 1;
-  return (CzDen);
+    if (Ch9 == INDCLR) return (0);
+    CzDen = (((Ch9 - IZB) / 9) % 4) + 1;
+    return (CzDen);
 }
 
 
 void DoHospChur()
 {
-  if (CurrentTileMasked == HOSPITAL) {
-    HospPop++;
-    if (!(CityTime & 15)) RepairZone (HOSPITAL, 3); /*post*/
-    if (NeedHosp == -1)
-      if (!RandomRange(0, 20))
-	ZonePlop(RESBASE);
-  }
-  if (CurrentTileMasked == CHURCH) {
-    ChurchPop++;
-    if (!(CityTime & 15)) RepairZone (CHURCH, 3); /*post*/
-    if (NeedChurch == -1)
-      if (!RandomRange(0, 20))
-	ZonePlop(RESBASE);
-  }
+    if (CurrentTileMasked == HOSPITAL)
+    {
+        HospPop++;
+
+        if (!(CityTime & 15))/*post*/
+        {
+            RepairZone(HOSPITAL, 3);
+        }
+
+        if (NeedHosp == -1)
+        {
+            if (!RandomRange(0, 20))
+            {
+                ZonePlop(RESBASE);
+            }
+        }
+    }
+
+    if (CurrentTileMasked == CHURCH)
+    {
+        ChurchPop++;
+
+        if (!(CityTime & 15))/*post*/
+        {
+            RepairZone(CHURCH, 3);
+        }
+
+        if (NeedChurch == -1)
+        {
+            if (!RandomRange(0, 20))
+            {
+                ZonePlop(RESBASE);
+            }
+        }
+    }
 }
 
 
@@ -145,114 +179,159 @@ void DoHospChur()
 #define ASCBIT (ANIMBIT | CONDBIT | BURNBIT)
 #define REGBIT (CONDBIT | BURNBIT)
 
+
 void SetSmoke(int ZonePower)
 {
-  static int AniThis[8] = {    T,    F,    T,    T,    F,    F,    T,    T };
-  static int DX1[8]	  = {   -1,    0,    1,    0,    0,    0,    0,    1 };
-  static int DY1[8]	  = {   -1,    0,   -1,   -1,    0,    0,   -1,   -1 };
-  static int DX2[8]	  = {   -1,    0,    1,    1,    0,    0,    1,    1 };
-  static int DY2[8]	  = {   -1,    0,    0,   -1,    0,    0,   -1,    0 };
-  static int AniTabA[8] = {    0,    0,   32,   40,    0,    0,   48,   56 };
-  static int AniTabB[8] = {    0,    0,   36,   44,    0,    0,   52,   60 };
-  static int AniTabC[8] = { IND1,    0, IND2, IND4,    0,    0, IND6, IND8 };
-  static int AniTabD[8] = { IND1,    0, IND3, IND5,    0,    0, IND7, IND9 };
-  int z;
+    static int AniThis[8] = { T,    F,    T,    T,    F,    F,    T,    T };
+    static int DX1[8] = { -1,    0,    1,    0,    0,    0,    0,    1 };
+    static int DY1[8] = { -1,    0,   -1,   -1,    0,    0,   -1,   -1 };
+    static int DX2[8] = { -1,    0,    1,    1,    0,    0,    1,    1 };
+    static int DY2[8] = { -1,    0,    0,   -1,    0,    0,   -1,    0 };
+    static int AniTabA[8] = { 0,    0,   32,   40,    0,    0,   48,   56 };
+    static int AniTabB[8] = { 0,    0,   36,   44,    0,    0,   52,   60 };
+    static int AniTabC[8] = { IND1,    0, IND2, IND4,    0,    0, IND6, IND8 };
+    static int AniTabD[8] = { IND1,    0, IND3, IND5,    0,    0, IND7, IND9 };
+    
+    int z;
 
-  if (CurrentTileMasked < IZB) return;
-  z = (CurrentTileMasked - IZB) >>3;
-  z = z & 7;
-  if (AniThis[z]) {
-    int xx = SimulationTarget.x + DX1[z];
-    int yy = SimulationTarget.y + DY1[z];
-    if (CoordinatesValid({ xx, yy })) {
-      if (ZonePower) {
-	if ((Map[xx][yy] & LOMASK) == AniTabC[z]) {
-	  Map[xx][yy] =
-	    ASCBIT | (SMOKEBASE + AniTabA[z]);
-	  Map[xx][yy] =
-	    ASCBIT | (SMOKEBASE + AniTabB[z]);
-	}
-      } else {
-	if ((Map[xx][yy] & LOMASK) > AniTabC[z]) {
-	  Map[xx][yy] =
-	    REGBIT | AniTabC[z];
-	  Map[xx][yy] =
-	    REGBIT | AniTabD[z];
-	}
-      }
+    if (CurrentTileMasked < IZB)
+    {
+        return;
     }
-  }
+
+    z = (CurrentTileMasked - IZB) >> 3;
+    z = z & 7;
+
+    if (AniThis[z])
+    {
+        int xx = SimulationTarget.x + DX1[z];
+        int yy = SimulationTarget.y + DY1[z];
+        if (CoordinatesValid({ xx, yy }))
+        {
+            if (ZonePower)
+            {
+                if ((Map[xx][yy] & LOMASK) == AniTabC[z])
+                {
+                    Map[xx][yy] = ASCBIT | (SMOKEBASE + AniTabA[z]);
+                    Map[xx][yy] = ASCBIT | (SMOKEBASE + AniTabB[z]);
+                }
+            }
+            else
+            {
+                if ((Map[xx][yy] & LOMASK) > AniTabC[z])
+                {
+                    Map[xx][yy] = REGBIT | AniTabC[z];
+                    Map[xx][yy] = REGBIT | AniTabD[z];
+                }
+            }
+        }
+    }
 }
 
 
 void MakeHosp()
 {
-  if (NeedHosp > 0) {
-    ZonePlop(HOSPITAL - 4);
-    NeedHosp = false;
-    return;
-  }
-  if (NeedChurch > 0) {
-    ZonePlop(CHURCH - 4);
-    NeedChurch = false;
-    return;
-  }
+    if (NeedHosp > 0)
+    {
+        ZonePlop(HOSPITAL - 4);
+        NeedHosp = false;
+        return;
+    }
+
+    if (NeedChurch > 0)
+    {
+        ZonePlop(CHURCH - 4);
+        NeedChurch = false;
+        return;
+    }
 }
 
 
 int GetCRVal()
 {
-  int LVal;
+    int LVal;
 
-  LVal = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
-  LVal -= PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
-  if (LVal < 30) return (0);
-  if (LVal < 80) return (1);
-  if (LVal < 150) return (2);
-  return (3);
-}
+    LVal = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
+    LVal -= PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
 
-
-int EvalLot (int x, int y)
-{
-  int z, score;
-  static int DX[4] = { 0, 1, 0,-1};
-  static int DY[4] = {-1, 0, 1, 0};
-
-  /* test for clear lot */
-  z = Map[x][y] & LOMASK;
-  if (z && ((z < RESBASE) || (z > RESBASE + 8)))
-    return (-1);
-  score = 1;
-  for (z = 0; z < 4; z++) {
-    int xx = x + DX[z];
-    int yy = y + DY[z];
-    if (CoordinatesValid({ xx, yy }) &&
-	Map[xx][yy] &&
-	((Map[xx][yy] & LOMASK) <= LASTROAD)) {
-      score++;		/* look for road */
+    if (LVal < 30) 
+    {
+        return 0;
     }
-  }
-  return (score);
+
+    if (LVal < 80) 
+    {
+        return 1;
+    }
+
+    if (LVal < 150) 
+    {
+        return 2;
+    }
+
+    return 3;
 }
 
 
-int EvalRes (int traf)
+int EvalLot(int x, int y)
 {
-  int Value;
+    int z, score;
+    static int DX[4] = { 0, 1, 0,-1 };
+    static int DY[4] = { -1, 0, 1, 0 };
 
-  if (traf < 0) return (-3000);
+    /* test for clear lot */
+    z = Map[x][y] & LOMASK;
+    if (z && ((z < RESBASE) || (z > RESBASE + 8)))
+    {
+        return -1;
+    }
 
-  Value = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
-  Value -= PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
+    score = 1;
 
-  if (Value < 0) Value = 0;		/* Cap at 0 */
-  else Value = Value <<5;
+    for (z = 0; z < 4; z++)
+    {
+        int xx = x + DX[z];
+        int yy = y + DY[z];
 
-  if (Value > 6000) Value = 6000;	/* Cap at 6000 */
+        /* look for road */
+        if (CoordinatesValid({ xx, yy }) && Map[xx][yy] && ((Map[xx][yy] & LOMASK) <= LASTROAD))
+        {
+            score++;
+        }
+    }
 
-  Value = Value - 3000;
-  return (Value);
+    return score;
+}
+
+
+int EvalRes(int traf)
+{
+    int Value;
+
+    if (traf < 0)
+    {
+        return -3000;
+    }
+
+    Value = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
+    Value -= PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
+
+    if (Value < 0)/* Cap at 0 */
+    {
+        Value = 0;
+    }
+    else
+    {
+        Value = Value << 5;
+    }
+
+    if (Value > 6000) /* Cap at 6000 */
+    {
+        Value = 6000;
+    }
+
+    Value = Value - 3000;
+    return Value;
 }
 
 
@@ -260,7 +339,7 @@ int EvalCom(int traf)
 {
     if (traf < 0)
     {
-        return (-3000);
+        return -3000;
     }
 
     return ComRate.value(SimulationTarget.skewInverseBy({ 8, 8 }));
@@ -269,41 +348,56 @@ int EvalCom(int traf)
 
 int EvalInd (int traf)
 {
-  if (traf < 0) return (-1000);
-  return (0);
+  if (traf < 0) 
+  {
+      return -1000;
+  }
+
+  return 0;
 }
 
 
 void BuildHouse(int value)
 {
-  int z, score, hscore, BestLoc;
-  static int ZeX[9] = { 0,-1, 0, 1,-1, 1,-1, 0, 1};
-  static int ZeY[9] = { 0,-1,-1,-1, 0, 0, 1, 1, 1};
+    int z, score, hscore, BestLoc;
+    static int ZeX[9] = { 0,-1, 0, 1,-1, 1,-1, 0, 1 };
+    static int ZeY[9] = { 0,-1,-1,-1, 0, 0, 1, 1, 1 };
 
-  BestLoc = 0;
-  hscore = 0;
-  for (z = 1; z < 9; z++) {
-    int xx = SimulationTarget.x + ZeX[z];
-    int yy = SimulationTarget.y + ZeY[z];
-    if (CoordinatesValid({ xx, yy })) {
-      score = EvalLot(xx, yy);
-      if (score != 0) {
-	if (score > hscore) {
-	  hscore = score;
-	  BestLoc = z;
-	}
-	if ((score == hscore) && !(Rand16() & 7))
-	  BestLoc = z;
-      }
+    BestLoc = 0;
+    hscore = 0;
+    for (z = 1; z < 9; z++)
+    {
+        int xx = SimulationTarget.x + ZeX[z];
+        int yy = SimulationTarget.y + ZeY[z];
+        if (CoordinatesValid({ xx, yy }))
+        {
+            score = EvalLot(xx, yy);
+            if (score != 0)
+            {
+                if (score > hscore)
+                {
+                    hscore = score;
+                    BestLoc = z;
+                }
+
+                if ((score == hscore) && !(Rand16() & 7))
+                {
+                    BestLoc = z;
+                }
+            }
+        }
     }
-  }
-  if (BestLoc) {
-    int xx = SimulationTarget.x + ZeX[BestLoc];
-    int yy = SimulationTarget.y + ZeY[BestLoc];
-    if (CoordinatesValid({ xx, yy })) {
-      Map[xx][yy] = HOUSE + BLBNCNBIT + RandomRange(0, 2) + (value * 3);
+
+    if (BestLoc)
+    {
+        int xx = SimulationTarget.x + ZeX[BestLoc];
+        int yy = SimulationTarget.y + ZeY[BestLoc];
+
+        if (CoordinatesValid({ xx, yy }))
+        {
+            Map[xx][yy] = HOUSE + BLBNCNBIT + RandomRange(0, 2) + (value * 3);
+        }
     }
-  }
 }
 
 
@@ -316,142 +410,190 @@ void IncROG(int amount)
 
 void DoResIn(int pop, int value)
 {
-  int z;
+    int z;
 
-  z = PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
-  if (z > 128) return;
+    z = PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
 
-  if (CurrentTileMasked == FREEZ) {
-    if (pop < 8) {
-      BuildHouse(value);
-      IncROG(1);
-      return;
+    if (z > 128)
+    {
+        return;
     }
-    if (PopulationDensityMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) > 64) {
-      ResPlop(0, value);
-      IncROG(8);
-      return;
+
+    if (CurrentTileMasked == FREEZ)
+    {
+        if (pop < 8)
+        {
+            BuildHouse(value);
+            IncROG(1);
+            return;
+        }
+
+        if (PopulationDensityMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) > 64)
+        {
+            ResPlop(0, value);
+            IncROG(8);
+            return;
+        }
+
+        return;
     }
-    return;
-  }
-  if (pop < 40) {
-    ResPlop((pop / 8) - 1, value);
-    IncROG(8);
-  }
+
+    if (pop < 40)
+    {
+        ResPlop((pop / 8) - 1, value);
+        IncROG(8);
+    }
 }
 
 
 void DoComIn(int pop, int value)
 {
-  int z;
+    int z;
 
-  z = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
-  z = z >>5;
-  if (pop > z) return;
+    z = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
+    z = z >> 5;
 
-  if (pop < 5) {
-    ComPlop(pop, value);
-    IncROG(8);
-  }
+    if (pop > z)
+    {
+        return;
+    }
+
+    if (pop < 5)
+    {
+        ComPlop(pop, value);
+        IncROG(8);
+    }
 }
 
 
 void DoIndIn(int pop, int value)
 {
-  if (pop < 4) {
-    IndPlop(pop, value);
-    IncROG(8);
-  }
+    if (pop < 4)
+    {
+        IndPlop(pop, value);
+        IncROG(8);
+    }
 }
 
 
 void DoResOut(int pop, int value)
 {
-  static int Brdr[9] = {0,3,6,1,4,7,2,5,8};
-  int x, y, loc, z;
+    static int Brdr[9] = { 0,3,6,1,4,7,2,5,8 };
+    int x, y, loc, z;
 
-  if (!pop) return;
-  if (pop > 16) {
-    ResPlop(((pop - 24) / 8), value);
-    IncROG(-8);
-    return;
-  }
-  if (pop == 16) {
-    IncROG(-8);
-    Map[SimulationTarget.x][SimulationTarget.y] = (FREEZ | BLBNCNBIT | ZONEBIT);
-    for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
-      for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++)
-	if (x >= 0 && x < SimWidth &&
-	    y >= 0 && y < SimHeight) {
-	  if ((Map[x][y] & LOMASK) != FREEZ)
-	    Map[x][y] = LHTHR + value +
-          RandomRange(0, 2) + BLBNCNBIT;
-	}
-  }
-  if (pop < 16) {
-    IncROG(-1);
-    z = 0;
-    for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
-      for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++) {
-	if (x >= 0 && x < SimWidth &&
-	    y >= 0 && y < SimHeight) {
-	  loc = Map[x][y] & LOMASK;
-	  if ((loc >= LHTHR) && (loc <= HHTHR)) {
-	    Map[x][y] = Brdr[z] +
-	      BLBNCNBIT + FREEZ - 4;
-	    return;
-	  }
-	}
-	z++;
-      }
-  }
+    if (!pop)
+    {
+        return;
+    }
+
+    if (pop > 16)
+    {
+        ResPlop(((pop - 24) / 8), value);
+        IncROG(-8);
+        return;
+    }
+
+    if (pop == 16)
+    {
+        IncROG(-8);
+        Map[SimulationTarget.x][SimulationTarget.y] = (FREEZ | BLBNCNBIT | ZONEBIT);
+
+        for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
+        {
+            for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++)
+            {
+                if (x >= 0 && x < SimWidth && y >= 0 && y < SimHeight)
+                {
+                    if ((Map[x][y] & LOMASK) != FREEZ)
+                    {
+                        Map[x][y] = LHTHR + value + RandomRange(0, 2) + BLBNCNBIT;
+                    }
+                }
+            }
+        }
+    }
+
+    if (pop < 16)
+    {
+        IncROG(-1);
+        z = 0;
+
+        for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
+        {
+            for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++)
+            {
+                if (x >= 0 && x < SimWidth && y >= 0 && y < SimHeight)
+                {
+                    loc = Map[x][y] & LOMASK;
+                    if ((loc >= LHTHR) && (loc <= HHTHR))
+                    {
+                        Map[x][y] = Brdr[z] + BLBNCNBIT + FREEZ - 4;
+                        return;
+                    }
+                }
+                z++;
+            }
+        }
+    }
 }
 
 
 void DoComOut(int pop, int value)
 {
-  if (pop > 1) {
-    ComPlop(pop - 2, value);
-    IncROG(-8);
-    return;
-  }
-  if (pop == 1) {
-    ZonePlop(COMBASE);
-    IncROG(-8);
-  }
+    if (pop > 1)
+    {
+        ComPlop(pop - 2, value);
+        IncROG(-8);
+        return;
+    }
+
+    if (pop == 1)
+    {
+        ZonePlop(COMBASE);
+        IncROG(-8);
+    }
 }
 
 
 void DoIndOut(int pop, int value)
 {
-  if (pop > 1) {
-    IndPlop(pop - 2, value);
-    IncROG(-8);
-    return;
-  }
-  if (pop == 1) {
-    ZonePlop(INDCLR - 4);
-    IncROG(-8);
-  }
+    if (pop > 1)
+    {
+        IndPlop(pop - 2, value);
+        IncROG(-8);
+        return;
+    }
+
+    if (pop == 1)
+    {
+        ZonePlop(INDCLR - 4);
+        IncROG(-8);
+    }
 }
 
 
-int DoFreePop ()
+int DoFreePop()
 {
-  int count;
-  int loc, x, y;
+    int count;
+    int loc, x, y;
 
-  count = 0;
-  for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
-    for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++) {
-      if (x >= 0 && x < SimWidth &&
-	  y >= 0 && y < SimHeight) {
-	loc = Map[x][y] & LOMASK;
-	if ((loc >= LHTHR) && (loc <= HHTHR))
-	  count++;
-      }
+    count = 0;
+    for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
+    {
+        for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++)
+        {
+            if (x >= 0 && x < SimWidth && y >= 0 && y < SimHeight)
+            {
+                loc = Map[x][y] & LOMASK;
+                if ((loc >= LHTHR) && (loc <= HHTHR))
+                {
+                    count++;
+                }
+            }
+        }
     }
-  return (count);
+
+    return count;
 }
 
 
@@ -514,7 +656,7 @@ void DoCommercial(int ZonePwrFlg)
     int tpop = CZPop(CurrentTileMasked);
 
     ComPop += tpop;
-   
+
     if (tpop > RandomRange(0, 5))
     {
         TrfGood = MakeTraf(1);
@@ -535,7 +677,7 @@ void DoCommercial(int ZonePwrFlg)
     {
         locvalve = EvalCom(TrfGood);
         zscore = CValve + locvalve;
-        
+
         if (!ZonePwrFlg)
         {
             zscore = -500;
@@ -547,6 +689,7 @@ void DoCommercial(int ZonePwrFlg)
             DoComIn(tpop, value);
             return;
         }
+
         if (zscore < 350 && zscore + 26380 < Rand16())
         {
             value = GetCRVal();
@@ -603,10 +746,13 @@ void DoResidential(int ZonePwrFlg)
                 MakeHosp();
                 return;
             }
+
             value = GetCRVal();
             DoResIn(tpop, value);
+
             return;
         }
+
         if ((zscore < 350) && zscore + 26380 < Rand16())
         {
             value = GetCRVal();
@@ -618,28 +764,43 @@ void DoResidential(int ZonePwrFlg)
 
 void DoZone(const CityProperties& properties)
 {
-  int ZonePwrFlg;
+    int ZonePwrFlg;
 
-  ZonePwrFlg = SetZPower();	/* Set Power Bit in Map from PowerMap */
-  if (ZonePwrFlg) PwrdZCnt++;
-  else unPwrdZCnt++;
+    ZonePwrFlg = SetZPower();	/* Set Power Bit in Map from PowerMap */
 
-  if (CurrentTileMasked > PORTBASE) {	/* do Special Zones  */
-    DoSPZone(ZonePwrFlg, properties);
+    if (ZonePwrFlg)
+    {
+        PwrdZCnt++;
+    }
+    else
+    {
+        unPwrdZCnt++;
+    }
+
+    if (CurrentTileMasked > PORTBASE) /* do Special Zones  */
+    {
+        DoSPZone(ZonePwrFlg, properties);
+        return;
+    }
+
+    if (CurrentTileMasked < HOSPITAL)
+    {
+        DoResidential(ZonePwrFlg);
+        return;
+    }
+
+    if (CurrentTileMasked < COMBASE)
+    {
+        DoHospChur();
+        return;
+    }
+
+    if (CurrentTileMasked < INDBASE)
+    {
+        DoCommercial(ZonePwrFlg);
+        return;
+    }
+
+    DoIndustrial(ZonePwrFlg);
     return;
-  }
-  if (CurrentTileMasked < HOSPITAL) {	
-    DoResidential(ZonePwrFlg);
-    return;
-  }
-  if (CurrentTileMasked < COMBASE) {
-    DoHospChur();
-    return;
-  }
-  if (CurrentTileMasked < INDBASE)  {
-    DoCommercial(ZonePwrFlg);
-    return;
-  }
-  DoIndustrial(ZonePwrFlg);
-  return;
 }
