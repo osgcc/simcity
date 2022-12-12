@@ -406,7 +406,7 @@ void scanPopulationDensity()
 
 
 /* comefrom: pollutionAndLandValueScan */
-void SmoothTerrain()
+void smoothTerrain()
 {
     for (int x{}; x < QuarterWorldWidth; ++x)
     {
@@ -432,7 +432,7 @@ void pollutionAndLandValueScan()
 
     setMostPollutedLocation();
 
-    SmoothTerrain();
+    smoothTerrain();
 }
 
 
