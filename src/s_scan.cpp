@@ -315,6 +315,21 @@ void smoothEffectMap(const EffectMap& src, EffectMap& dst)
 }
 
 
+/* comefrom: pollutionAndLandValueScan */
+void smoothTerrain()
+{
+    for (int x{}; x < QuarterWorldWidth; ++x)
+    {
+        for (int y{}; y < QuarterWorldHeight; ++y)
+        {
+            const int val = Qtem.value({ x, y });
+            int z = sumAdjacent({ x, y }, Qtem);
+            TerrainMem.value({ x, y }) = (((z / 4) + val) / 2) % 256;
+        }
+    }
+}
+
+
 /* comefrom: Simulate SpecialInit */
 void FireAnalysis()		/* Make firerate map from firestation map  */
 {
@@ -402,21 +417,6 @@ void scanPopulationDensity()
 
     // Set center of mass for the city
     zoneCount ? CityCenter = { axisTotal.x / zoneCount, axisTotal.y / zoneCount } : CityCenter = { HalfWorldWidth, HalfWorldHeight };
-}
-
-
-/* comefrom: pollutionAndLandValueScan */
-void smoothTerrain()
-{
-    for (int x{}; x < QuarterWorldWidth; ++x)
-    {
-        for (int y{}; y < QuarterWorldHeight; ++y)
-        {
-            const int val = Qtem.value({ x, y });
-            int z = sumAdjacent({ x, y }, Qtem);
-            TerrainMem.value({ x, y }) = (((z / 4) + val) / 2) % 256;
-        }
-    }
 }
 
 
