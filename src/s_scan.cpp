@@ -504,24 +504,9 @@ void CrimeScan()
                 ++numz;
 
                 z = 128 - z;
-                z += PopulationDensityMap.value({ x, y });
-
-                if (z > 300)
-                {
-                    z = 300;
-                }
-
-                z -= PoliceStationMap.value({ x / 4, y / 4 });
-
-                if (z > 250)
-                {
-                    z = 250;
-                }
-
-                if (z < 0)
-                {
-                    z = 0;
-                }
+                z = std::clamp(z + PopulationDensityMap.value({ x, y }), 0, 300);
+                
+                z = std::clamp(z - PoliceStationMap.value({ x / 4, y / 4 }), 0, 250);
 
                 CrimeMap.value({ x, y }) = z;
                 totz += z;
