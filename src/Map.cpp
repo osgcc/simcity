@@ -55,15 +55,27 @@ void ResetMap()
 }
 
 
-unsigned int tileValue(const Point<int>& location)
+int& tileValue(const Point<int>& location)
 {
 	return tileValue(location.x, location.y);
 }
 
 
-unsigned int tileValue(const int x, const int y)
+int& tileValue(const int x, const int y)
 {
-	return static_cast<unsigned int>(Map[x][y]);
+	return Map[x][y];
+}
+
+
+void tileValue(const Point<int>& location, unsigned int value)
+{
+	Map[location.x][location.y] = static_cast<int>(value);
+}
+
+
+unsigned int maskedTileValue(const Point<int>& location)
+{
+	return maskedTileValue(location.x, location.y);
 }
 
 
