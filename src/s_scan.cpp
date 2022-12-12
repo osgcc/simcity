@@ -87,7 +87,6 @@ namespace
     }
 
 
-    /* comefrom: pollutionAndLandValueScan DistIntMarket */
     int distanceToCityCenter(int x, int y)
     {
         const Vector<int> radius = { CityCenter.x / 2, (CityCenter.y / 2) };
@@ -332,7 +331,7 @@ void smoothTerrain()
 /*
  * Make firerate map from firestation map
  */
-void FireAnalysis()
+void fireAnalysis()
 {
     smoothStationMap(FireStationMap);
     smoothStationMap(FireStationMap);
@@ -368,7 +367,7 @@ int getPopulationDensity(int tile)
 }
 
 
-void DistIntMarket()
+void distIntMarket()
 {
     for (int x{}; x < EighthWorldWidth; x++)
     {
@@ -415,7 +414,7 @@ void scanPopulationDensity()
 
     PopulationDensityMap = tem2 * 2;
 
-    DistIntMarket(); /* set ComRate w/ (/ComMap) */
+    distIntMarket(); /* set ComRate w/ (/ComMap) */
 
     // Set center of mass for the city
     zoneCount ? CityCenter = { axisTotal.x / zoneCount, axisTotal.y / zoneCount } : CityCenter = { HalfWorldWidth, HalfWorldHeight };
@@ -438,7 +437,7 @@ void pollutionAndLandValueScan()
 }
 
 
-void CrimeScan()
+void crimeScan()
 {
     smoothStationMap(PoliceStationMap);
     smoothStationMap(PoliceStationMap);

@@ -1318,7 +1318,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
     case 13:
         if (!(Scycle % CrimeScanFrequency[speed]))
         {
-            CrimeScan();
+            crimeScan();
         }
         break;
 
@@ -1332,7 +1332,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
     case 15:
         if (!(Scycle % FireAnalysisFrequency[speed]))
         {
-            FireAnalysis();
+            fireAnalysis();
         }
         DoDisasters(properties);
         break;
@@ -1376,9 +1376,9 @@ void DoSimInit(CityProperties& properties, Budget& budget)
     MapScan(0, SimWidth, properties); /* XXX are you sure ??? */
     doPowerScan();
     pollutionAndLandValueScan();
-    CrimeScan();
+    crimeScan();
     scanPopulationDensity();
-    FireAnalysis();
+    fireAnalysis();
     newMap(true);
     TotalPop = 1;
     DoInitialEval = 1;

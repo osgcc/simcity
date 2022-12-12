@@ -40,9 +40,9 @@
 const Point<int>& pollutionMax();
 void doPowerScan();
 void pollutionAndLandValueScan();
-void CrimeScan();
+void crimeScan();
 void scanPopulationDensity();
-void FireAnalysis();
+void fireAnalysis();
 
 bool newMap();
 void newMap(bool value);
