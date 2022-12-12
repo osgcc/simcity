@@ -29,52 +29,60 @@ bool SetZPower()
 {
     if (testPowerBit(SimulationTarget))
     {
-        Map[SimulationTarget.x][SimulationTarget.y] = CurrentTile | PWRBIT;
+        tileValue(SimulationTarget) = CurrentTile | PWRBIT;
         return true;
     }
-    else
-    {
-        Map[SimulationTarget.x][SimulationTarget.y] = CurrentTile & (~PWRBIT);
-    }
 
+    tileValue(SimulationTarget) = CurrentTile & (~PWRBIT);
     return false;
 }
 
 
 void ZonePlop(int base)
 {
-    int z, x;
-    static int Zx[9] = { -1, 0, 1,-1, 0, 1,-1, 0, 1 };
-    static int Zy[9] = { -1,-1,-1, 0, 0, 0, 1, 1, 1 };
+    std::array<Vector<int>, 9> adjacentTile =
+    { {
+        { -1, -1 },
+        {  0, -1 },
+        {  1, -1 },
+        { -1,  0 },
+        {  0,  0 },
+        {  1,  0 },
+        { -1,  1 },
+        {  0,  1 },
+        {  1,  1 }
+    } };
 
     /* check for fire  */
-    for (z = 0; z < 9; z++)
+    for (int i{}; i < 9; ++i)
     {
-        int xx = SimulationTarget.x + Zx[z];
-        int yy = SimulationTarget.y + Zy[z];
+        const Point<int> coordinates = SimulationTarget + adjacentTile[i];
 
-        if (CoordinatesValid({ xx, yy }))
+        if (CoordinatesValid(coordinates))
         {
-            x = Map[xx][yy] & LOMASK;
-            if ((x >= FLOOD) && (x < ROADBASE)) return;
+            int tile = maskedTileValue(coordinates);
+            if ((tile >= FLOOD) && (tile < ROADBASE))
+            {
+                return;
+            }
         }
     }
-    for (z = 0; z < 9; z++)
-    {
-        int xx = SimulationTarget.x + Zx[z];
-        int yy = SimulationTarget.y + Zy[z];
 
-        if (CoordinatesValid({ xx, yy }))
+    for (int i{}; i < 9; ++i)
+    {
+        const Point<int> coordinates = SimulationTarget + adjacentTile[i];
+
+        if (CoordinatesValid(coordinates))
         {
-            Map[xx][yy] = base + BNCNBIT;
+            tileValue(coordinates, base + BNCNBIT);
         }
 
         base++;
     }
 
-    CurrentTile = Map[SimulationTarget.x][SimulationTarget.y];
+    CurrentTile = tileValue(SimulationTarget);
     SetZPower();
-    Map[SimulationTarget.x][SimulationTarget.y] |= ZONEBIT + BULLBIT;
+    tileValue(SimulationTarget) |= ZONEBIT + BULLBIT;
 }
 
 
