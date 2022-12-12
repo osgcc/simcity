@@ -499,8 +499,8 @@ void CrimeScan()
     {
         for (y = 0; y < HalfWorldHeight; y++)
         {
-            int z = LandValueMap.value({ x, y });
-            if (z == 0)
+            int landValue = LandValueMap.value({ x, y });
+            if (landValue == 0)
             {
                 CrimeMap.value({ x, y }) = 0;;
                 continue;
@@ -508,16 +508,16 @@ void CrimeScan()
 
             ++numz;
 
-            z = 128 - z;
-            z = std::clamp(z + PopulationDensityMap.value({ x, y }), 0, 300);
-            z = std::clamp(z - PoliceStationMap.value({ x / 4, y / 4 }), 0, 250);
+            landValue = 128 - landValue;
+            landValue = std::clamp(landValue + PopulationDensityMap.value({ x, y }), 0, 300);
+            landValue = std::clamp(landValue - PoliceStationMap.value({ x / 4, y / 4 }), 0, 250);
 
-            CrimeMap.value({ x, y }) = z;
-            totz += z;
+            CrimeMap.value({ x, y }) = landValue;
+            totz += landValue;
 
-            if ((z > cmax) || ((z == cmax) && (!(Rand16() & 3))))
+            if ((landValue > cmax) || ((landValue == cmax) && (!(Rand16() & 3))))
             {
-                cmax = z;
+                cmax = landValue;
                 CrimeMax = { x * 2, y * 2 };
             }
         }
