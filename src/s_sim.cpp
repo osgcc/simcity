@@ -53,7 +53,6 @@ int ScoreType;
 int ScoreWait;
 int PwrdZCnt;
 int unPwrdZCnt;
-int NewPower; // post  <-- ?
 int AvCityTax;
 int Scycle = 0;
 int Fcycle = 0;
@@ -653,7 +652,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
                         continue;
                     }
 
-                    if (NewPower && (CurrentTile & CONDBIT))
+                    if (CurrentTile & CONDBIT)
                     {
                         SetZPower();
                     }
@@ -1077,7 +1076,6 @@ void InitSimMemory()
 
     resetPowerStackCount();
     doPowerScan();
-    NewPower = 1; // post rel
 
     InitSimLoad = 0;
 }
@@ -1307,7 +1305,6 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         if (!(Scycle % PowerScanFrequency[speed]))
         {
             doPowerScan();
-            NewPower = 1; /* post-release change */
         }
         break;
 
@@ -1378,7 +1375,6 @@ void DoSimInit(CityProperties& properties, Budget& budget)
     ClearCensus();
     MapScan(0, SimWidth, properties); /* XXX are you sure ??? */
     doPowerScan();
-    NewPower = 1;		/* post rel */
     pollutionAndLandValueScan();
     CrimeScan();
     scanPopulationDensity();
