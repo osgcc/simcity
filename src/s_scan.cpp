@@ -483,26 +483,21 @@ void pollutionAndLandValueScan()
 /* comefrom: Simulate SpecialInit */
 void CrimeScan()
 {
-    int numz;
-    int totz;
-    int x, y, z;
-    int cmax;
-
     smoothStationMap(PoliceStationMap);
     smoothStationMap(PoliceStationMap);
     smoothStationMap(PoliceStationMap);
 
-    totz = 0;
-    numz = 0;
-    cmax = 0;
-    for (x = 0; x < HalfWorldWidth; x++)
+    int totz{};
+    int numz{};
+    int cmax{};
+    for (int x{}; x < HalfWorldWidth; ++x)
     {
-        for (y = 0; y < HalfWorldHeight; y++)
+        for (int y{}; y < HalfWorldHeight; ++y)
         {
             int landValue = LandValueMap.value({ x, y });
             if (landValue == 0)
             {
-                CrimeMap.value({ x, y }) = 0;;
+                CrimeMap.value({ x, y }) = 0;
                 continue;
             }
 
@@ -523,14 +518,7 @@ void CrimeScan()
         }
     }
 
-    if (numz)
-    {
-        CrimeAverage = totz / numz;
-    }
-    else
-    {
-        CrimeAverage = 0;
-    }
+    (numz > 0) ? CrimeAverage = (totz / numz) : CrimeAverage = 0;
 
     PoliceProtectionMap = PoliceStationMap;
 
