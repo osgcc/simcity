@@ -15,9 +15,9 @@
 
 #include "s_alloc.h"
 #include "s_sim.h"
-#include "s_zone.h"
 
 #include "Vector.h"
+#include "Zone.h"
 
 #include <algorithm>
 

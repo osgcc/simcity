@@ -36,7 +36,6 @@
     <ClCompile Include="src\Power.cpp" />
     <ClCompile Include="src\s_sim.cpp" />
     <ClCompile Include="src\s_traf.cpp" />
-    <ClCompile Include="src\s_zone.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Tool.cpp" />
     <ClCompile Include="src\ToolPalette.cpp" />
@@ -47,6 +46,7 @@
     <ClCompile Include="src\w_tk.cpp" />
     <ClCompile Include="src\w_update.cpp" />
     <ClCompile Include="src\w_util.cpp" />
+    <ClCompile Include="src\Zone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -80,7 +80,6 @@
     <ClInclude Include="src\Power.h" />
     <ClInclude Include="src\s_sim.h" />
     <ClInclude Include="src\s_traf.h" />
-    <ClInclude Include="src\s_zone.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Tool.h" />
     <ClInclude Include="src\ToolPalette.h" />
@@ -97,6 +96,7 @@
     <ClInclude Include="src\w_tk.h" />
     <ClInclude Include="src\w_update.h" />
     <ClInclude Include="src\w_util.h" />
+    <ClInclude Include="src\Zone.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="micropolis-sdl2.rc" />
