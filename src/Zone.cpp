@@ -22,22 +22,22 @@
 #include "w_util.h"
 
 
-/* Zone Stuff */
-
-bool SetZPower()		/* set bit in MapWord depending on powermap  */
+/*
+ * set bit in MapWord depending on powermap
+ */
+bool SetZPower()
 {
-    bool z = testPowerBit(SimulationTarget);
-
-    if (z)
+    if (testPowerBit(SimulationTarget))
     {
         Map[SimulationTarget.x][SimulationTarget.y] = CurrentTile | PWRBIT;
+        return true;
     }
     else
     {
         Map[SimulationTarget.x][SimulationTarget.y] = CurrentTile & (~PWRBIT);
     }
 
-    return z;
+    return false;
 }
 
 
