@@ -355,13 +355,11 @@ void SmoothArray(const EffectMap& src, EffectMap& dst)
 /* comefrom: scanPopulationDensity */
 void DistIntMarket()
 {
-    int x, y, z;
-
-    for (x = 0; x < EighthWorldWidth; x++)
+    for (int x{}; x < EighthWorldWidth; x++)
     {
-        for (y = 0; y < EighthWorldHeight; y++)
+        for (int y{}; y < EighthWorldHeight; y++)
         {
-            z = distanceToCityCenter(x * 4 , y * 4);
+            int z{ distanceToCityCenter(x * 4 , y * 4) };
             z *= 4;
             z = 64 - z;
             ComRate[x][y] = z;
