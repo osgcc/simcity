@@ -37,9 +37,7 @@
 #define NMAPS 15
 
 
-std::array<int, NMAPS>& newMapFlags();
 const Point<int>& pollutionMax();
-void resetNewMapFlags();
 void doPowerScan();
 void pollutionAndLandValueScan();
 void CrimeScan();

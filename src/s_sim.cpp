@@ -1300,7 +1300,6 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
             DecROGMem();
         }
         DecTrafficMem();
-        resetNewMapFlags();
         SendMessages(budget);
         break;
 
@@ -1308,7 +1307,6 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         if (!(Scycle % PowerScanFrequency[speed]))
         {
             doPowerScan();
-            newMapFlags()[PRMAP] = 1;
             NewPower = 1; /* post-release change */
         }
         break;

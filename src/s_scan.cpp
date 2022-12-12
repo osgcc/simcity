@@ -32,8 +32,6 @@ namespace
 
     Point<int> CityCenter;
 
-    std::array<int, NMAPS> NewMapFlags;
-
     EffectMap tem({ HalfWorldWidth, HalfWorldHeight });
     EffectMap tem2({ HalfWorldWidth, HalfWorldHeight });
 
@@ -280,18 +278,6 @@ const Point<int>& pollutionMax()
 }
 
 
-std::array<int, NMAPS>& newMapFlags()
-{
-    return NewMapFlags;
-}
-
-
-void resetNewMapFlags()
-{
-    NewMapFlags.fill(1);
-}
-
-
 void smoothStationMap(EffectMap& map)
 {
     EffectMap temp({ map.dimensions().x , map.dimensions().y});
@@ -319,8 +305,6 @@ void FireAnalysis()		/* Make firerate map from firestation map  */
     smoothStationMap(FireStationMap);
 
     FireProtectionMap = FireStationMap;
-
-    NewMapFlags[DYMAP] = NewMapFlags[FIMAP] = 1;
 }
 
 
@@ -420,8 +404,6 @@ void scanPopulationDensity()
 
     // Set center of mass for the city
     zoneCount ? CityCenter = { axisTotal.x / zoneCount, axisTotal.y / zoneCount } : CityCenter = { HalfWorldWidth, HalfWorldHeight };
-
-    NewMapFlags[DYMAP] = NewMapFlags[PDMAP] = NewMapFlags[RGMAP] = 1;
 }
 
 
@@ -475,8 +457,6 @@ void pollutionAndLandValueScan()
     setMostPollutedLocation();
 
     SmoothTerrain();
-
-    NewMapFlags[DYMAP] = NewMapFlags[PLMAP] = NewMapFlags[LVMAP] = 1;
 }
 
 
@@ -521,6 +501,4 @@ void CrimeScan()
     (numz > 0) ? CrimeAverage = (totz / numz) : CrimeAverage = 0;
 
     PoliceProtectionMap = PoliceStationMap;
-
-    NewMapFlags[DYMAP] = NewMapFlags[CRMAP] = NewMapFlags[POMAP] = 1;
 }
