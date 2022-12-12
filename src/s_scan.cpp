@@ -315,7 +315,6 @@ void smoothEffectMap(const EffectMap& src, EffectMap& dst)
 }
 
 
-/* comefrom: pollutionAndLandValueScan */
 void smoothTerrain()
 {
     for (int x{}; x < QuarterWorldWidth; ++x)
@@ -330,8 +329,10 @@ void smoothTerrain()
 }
 
 
-/* comefrom: Simulate SpecialInit */
-void FireAnalysis()		/* Make firerate map from firestation map  */
+/*
+ * Make firerate map from firestation map
+ */
+void FireAnalysis()
 {
     smoothStationMap(FireStationMap);
     smoothStationMap(FireStationMap);
@@ -367,7 +368,6 @@ int getPopulationDensity(int tile)
 }
 
 
-/* comefrom: scanPopulationDensity */
 void DistIntMarket()
 {
     for (int x{}; x < EighthWorldWidth; x++)
@@ -383,7 +383,9 @@ void DistIntMarket()
 }
 
 
-/*  sets: PopulationDensityMap, , , ComRate  */
+/*
+ * sets: PopulationDensityMap, , , ComRate 
+ */
 void scanPopulationDensity()
 {
     tem.reset();
@@ -436,7 +438,6 @@ void pollutionAndLandValueScan()
 }
 
 
-/* comefrom: Simulate SpecialInit */
 void CrimeScan()
 {
     smoothStationMap(PoliceStationMap);
