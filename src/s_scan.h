@@ -38,7 +38,7 @@
 
 
 const Point<int>& pollutionMax();
-void doPowerScan();
+void powerScan();
 void pollutionAndLandValueScan();
 void crimeScan();
 void scanPopulationDensity();

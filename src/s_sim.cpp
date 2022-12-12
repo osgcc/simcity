@@ -1075,7 +1075,7 @@ void InitSimMemory()
     ScoreType = 0;
 
     resetPowerStackCount();
-    doPowerScan();
+    powerScan();
 
     InitSimLoad = 0;
 }
@@ -1304,7 +1304,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
     case 11:
         if (!(Scycle % PowerScanFrequency[speed]))
         {
-            doPowerScan();
+            powerScan();
         }
         break;
 
@@ -1374,7 +1374,7 @@ void DoSimInit(CityProperties& properties, Budget& budget)
     SetValves(properties, budget);
     ClearCensus();
     MapScan(0, SimWidth, properties); /* XXX are you sure ??? */
-    doPowerScan();
+    powerScan();
     pollutionAndLandValueScan();
     crimeScan();
     scanPopulationDensity();

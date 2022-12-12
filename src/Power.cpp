@@ -118,7 +118,7 @@ void pullPowerStack()
 }
 
 
-void doPowerScan()
+void powerScan()
 {
     resetPowerMap();
 
