@@ -297,6 +297,24 @@ void smoothStationMap(EffectMap& map)
 }
 
 
+void smoothEffectMap(const EffectMap& src, EffectMap& dst)
+{
+    if (src.dimensions() != dst.dimensions())
+    {
+        throw std::runtime_error("smoothEffectMap(): Source and Destination array dimensions do not match.");
+    }
+
+    for (int x{}; x < src.dimensions().x; ++x)
+    {
+        for (int y{}; y < src.dimensions().y; ++y)
+        {
+            const auto val = sumAdjacent({ x, y }, src);
+            dst.value({ x, y }) = std::clamp((val + src.value({ x, y })) / 4, 0, 255);
+        }
+    }
+}
+
+
 /* comefrom: Simulate SpecialInit */
 void FireAnalysis()		/* Make firerate map from firestation map  */
 {
@@ -331,24 +349,6 @@ int getPopulationDensity(int tile)
     }
 
     return 0;
-}
-
-
-void smoothEffectMap(const EffectMap& src, EffectMap& dst)
-{
-    if (src.dimensions() != dst.dimensions())
-    {
-        throw std::runtime_error("smoothEffectMap(): Source and Destination array dimensions do not match.");
-    }
-
-    for (int x{}; x < src.dimensions().x; ++x)
-    {
-        for (int y{}; y < src.dimensions().y; ++y)
-        {
-            const auto val = sumAdjacent({ x, y }, src);
-            dst.value({ x, y }) = std::clamp((val + src.value({ x, y })) / 4, 0, 255);
-        }
-    }
 }
 
 
