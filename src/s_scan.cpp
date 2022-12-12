@@ -334,11 +334,11 @@ int getPopulationDensity(int tile)
 }
 
 
-void SmoothArray(const EffectMap& src, EffectMap& dst)
+void smoothEffectMap(const EffectMap& src, EffectMap& dst)
 {
     if (src.dimensions() != dst.dimensions())
     {
-        throw std::runtime_error("SmoothArray: Source and Destination array dimensions do not match.");
+        throw std::runtime_error("smoothEffectMap(): Source and Destination array dimensions do not match.");
     }
 
     for (int x{}; x < src.dimensions().x; ++x)
@@ -392,9 +392,9 @@ void scanPopulationDensity()
         }
     }
 
-    SmoothArray(tem, tem2);
-    SmoothArray(tem2, tem);
-    SmoothArray(tem, tem2);
+    smoothEffectMap(tem, tem2);
+    smoothEffectMap(tem2, tem);
+    smoothEffectMap(tem, tem2);
 
     PopulationDensityMap = tem2 * 2;
 
@@ -427,8 +427,8 @@ void pollutionAndLandValueScan()
     pollutionScan();
     landValueScan();
 
-    SmoothArray(tem, tem2);
-    SmoothArray(tem2, tem);
+    smoothEffectMap(tem, tem2);
+    smoothEffectMap(tem2, tem);
 
     setMostPollutedLocation();
 
