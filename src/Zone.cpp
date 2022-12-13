@@ -692,22 +692,22 @@ void updateCommercial(bool zonePowered)
 
 void updateResidential(bool zonePowered)
 {
-    int tpop, value;
+    int residentialPopulation, value;
 
-    ResZPop++;
     if (CurrentTileMasked == FREEZ)
     {
-        tpop = doFreePop();
+        residentialPopulation = doFreePop();
     }
     else
     {
-        tpop = residentialZonePopulation(CurrentTileMasked);
+        residentialPopulation = residentialZonePopulation(CurrentTileMasked);
     }
 
-    ResPop += tpop;
+    ResZPop++;
+    ResPop += residentialPopulation;
 
     TrafficResult trafficResult{ TrafficResult::RouteFound };
-    if (tpop > RandomRange(0, 35))
+    if (residentialPopulation > RandomRange(0, 35))
     {
         trafficResult = MakeTraf(0);
     }
@@ -715,7 +715,7 @@ void updateResidential(bool zonePowered)
     if (trafficResult == TrafficResult::NoTransportNearby)
     {
         value = getLandValue();
-        doResOut(tpop, value);
+        doResOut(residentialPopulation, value);
         return;
     }
 
@@ -730,7 +730,7 @@ void updateResidential(bool zonePowered)
 
         if (zscore > -350 && zscore - 26380 > -Rand16())
         {
-            if ((!tpop) && (!(RandomRange(0, 4))))
+            if ((!residentialPopulation) && (!(RandomRange(0, 4))))
             {
                 makeHospital();
                 makeChurch();
@@ -738,7 +738,7 @@ void updateResidential(bool zonePowered)
             }
 
             value = getLandValue();
-            doResIn(tpop, value);
+            doResIn(residentialPopulation, value);
 
             return;
         }
@@ -746,7 +746,7 @@ void updateResidential(bool zonePowered)
         if ((zscore < 350) && zscore + 26380 < Rand16())
         {
             value = getLandValue();
-            doResOut(tpop, value);
+            doResOut(residentialPopulation, value);
         }
     }
 }
