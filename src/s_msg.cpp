@@ -404,11 +404,11 @@ void SendMessages(const Budget& budget)
 
     case 32: /* dec score for unpowered zones */
     {
-        float TM = static_cast<float>(unPwrdZCnt + PwrdZCnt);
+        float TM = static_cast<float>(UnpoweredZoneCount + PoweredZoneCount);
 
         if (TM)
         {
-            if ((PwrdZCnt / TM) < .7)
+            if ((PoweredZoneCount / TM) < .7)
             {
                 SendMes(NotificationId::BlackoutsReported);
             }

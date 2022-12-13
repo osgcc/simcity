@@ -51,8 +51,8 @@ int DisasterEvent;
 int DisasterWait;
 int ScoreType;
 int ScoreWait;
-int PwrdZCnt;
-int unPwrdZCnt;
+int PoweredZoneCount;
+int UnpoweredZoneCount;
 int AvCityTax;
 int Scycle = 0;
 int Fcycle = 0;
@@ -874,8 +874,8 @@ void SetValves(const CityProperties& properties, const Budget& budget)
 
 void ClearCensus()
 {
-    PwrdZCnt = 0;
-    unPwrdZCnt = 0;
+    PoweredZoneCount = 0;
+    UnpoweredZoneCount = 0;
     FirePop = 0;
     RoadTotal = 0;
     RailTotal = 0;

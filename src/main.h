@@ -77,8 +77,8 @@ extern int DisasterWait;
 
 extern int ResCap, ComCap, IndCap;
 extern int RValve, CValve, IValve;
-extern int PwrdZCnt;
-extern int unPwrdZCnt;
+extern int PoweredZoneCount;
+extern int UnpoweredZoneCount;
 
 extern int ScoreType;
 extern int ScoreWait;

@@ -783,11 +783,11 @@ void doZone(const Point<int>& location, const CityProperties& properties)
 
     if (zonePowered)
     {
-        PwrdZCnt++;
+        PoweredZoneCount++;
     }
     else
     {
-        unPwrdZCnt++;
+        UnpoweredZoneCount++;
     }
     
     /* do Special Zones  */

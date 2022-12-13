@@ -326,8 +326,8 @@ void GetScore(const Budget& budget)
     z = z - GetFire();		/* dec score for fires */
     z = z - (budget.TaxRate());
 
-    TM = static_cast<float>(unPwrdZCnt + PwrdZCnt);	/* dec score for unpowered zones */
-    if (TM) { SM = PwrdZCnt / TM; }
+    TM = static_cast<float>(UnpoweredZoneCount + PoweredZoneCount);	/* dec score for unpowered zones */
+    if (TM) { SM = PoweredZoneCount / TM; }
     else { SM = 1.0; }
     z = static_cast<int>(z * SM);
 
