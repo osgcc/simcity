@@ -13,8 +13,8 @@
 class CityProperties;
 
 int DoFreePop();
-int RZPop(int Ch9);
-int CZPop(int Ch9);
-int IZPop(int Ch9);
+int RZPop(int tile);
+int CZPop(int tile);
+int IZPop(int tile);
 bool SetZPower();
 void DoZone(const CityProperties&);

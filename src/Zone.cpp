@@ -86,59 +86,45 @@ void ZonePlop(int base)
 }
 
 
-void ResPlop(int Den, int Value)
+void ResPlop(int density, int value)
 {
-    int base;
-
-    base = (((Value * 4) + Den) * 9) + RZB - 4;
+    const int base{ (((value * 4) + density) * 9) + RZB - 4 };
     ZonePlop(base);
 }
 
 
-void ComPlop(int Den, int Value)
+void ComPlop(int density, int value)
 {
-    int base;
-
-    base = (((Value * 5) + Den) * 9) + CZB - 4;
+    const int base{ (((value * 5) + density) * 9) + CZB - 4 };
     ZonePlop(base);
 }
 
 
-void IndPlop(int Den, int Value)
+void IndPlop(int density, int value)
 {
-    int base;
-
-    base = (((Value * 4) + Den) * 9) + (IZB - 4);
+    const int base{ (((value * 4) + density) * 9) + (IZB - 4) };
     ZonePlop(base);
 }
 
 
-int RZPop(int Ch9)
+int RZPop(int tile)
 {
-    int CzDen;
-
-    CzDen = (((Ch9 - RZB) / 9) % 4);
-    return ((CzDen * 8) + 16);
+    const int density{ (((tile - RZB) / 9) % 4) };
+    return ((density * 8) + 16);
 }
 
 
-int CZPop(int Ch9)
+int CZPop(int tile)
 {
-    int CzDen;
-
-    if (Ch9 == COMCLR) return (0);
-    CzDen = (((Ch9 - CZB) / 9) % 5) + 1;
-    return (CzDen);
+    const int density{ (((tile - CZB) / 9) % 5) + 1 };
+    return (tile == COMCLR) ? 0 : density;
 }
 
 
-int IZPop(int Ch9)
+int IZPop(int tile)
 {
-    int CzDen;
-
-    if (Ch9 == INDCLR) return (0);
-    CzDen = (((Ch9 - IZB) / 9) % 4) + 1;
-    return (CzDen);
+    const int density{ (((tile - IZB) / 9) % 4) + 1 };
+    return (tile == INDCLR) ? 0 : density;
 }
 
 
