@@ -287,26 +287,28 @@ int getLandValue()
 
 int evalLot(int x, int y)
 {
-    int z, score;
-    static int DX[4] = { 0, 1, 0,-1 };
-    static int DY[4] = { -1, 0, 1, 0 };
+    static const std::array<Vector<int>, 4> searchCoordinates =
+    { {
+        {  0, -1 },
+        {  1,  0 },
+        {  0,  1 },
+        { -1,  0 },
+    } };
 
-    /* test for clear lot */
-    z = Map[x][y] & LOMASK;
-    if (z && ((z < RESBASE) || (z > RESBASE + 8)))
+    // test for clear lot
+    int tile = maskedTileValue({ x, y });
+    if (tile && ((tile < RESBASE) || (tile > RESBASE + 8)))
     {
         return -1;
     }
 
-    score = 1;
-
-    for (z = 0; z < 4; z++)
+    int score{ 1 };
+    for (int i{}; i < 4; ++i)
     {
-        int xx = x + DX[z];
-        int yy = y + DY[z];
+        const Point<int> coordinates{ Point<int>{x, y} + searchCoordinates[i] };
 
-        /* look for road */
-        if (CoordinatesValid({ xx, yy }) && Map[xx][yy] && ((Map[xx][yy] & LOMASK) <= LASTROAD))
+        // look for road
+        if (CoordinatesValid(coordinates) && tile && (tile <= LASTROAD))
         {
             score++;
         }
