@@ -781,15 +781,8 @@ void doZone(const Point<int>& location, const CityProperties& properties)
     /* Set Power Bit in Map from PowerMap */
     bool zonePowered{ setZonePower(location) };	
 
-    if (zonePowered)
-    {
-        PoweredZoneCount++;
-    }
-    else
-    {
-        UnpoweredZoneCount++;
-    }
-    
+    zonePowered ? PoweredZoneCount++ : UnpoweredZoneCount++;
+
     /* do Special Zones  */
     if (CurrentTileMasked > PORTBASE) 
     {
