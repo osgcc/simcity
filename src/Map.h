@@ -168,7 +168,6 @@ void DrawBigMap();
 
 int& tileValue(const Point<int>& location);
 int& tileValue(const int x, const int y);
-void tileValue(const Point<int>& location, unsigned int value);
 
 unsigned int maskedTileValue(const Point<int>& location);
 unsigned int maskedTileValue(const int x, const int y);

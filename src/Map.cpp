@@ -67,12 +67,6 @@ int& tileValue(const int x, const int y)
 }
 
 
-void tileValue(const Point<int>& location, unsigned int value)
-{
-	Map[location.x][location.y] = static_cast<int>(value);
-}
-
-
 unsigned int maskedTileValue(const Point<int>& location)
 {
 	return maskedTileValue(location.x, location.y);
