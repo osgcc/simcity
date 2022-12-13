@@ -409,20 +409,18 @@ void increaseRateOfGrowth(int amount)
 }
 
 
-void doResIn(int pop, int value)
+void doResIn(int population, int value)
 {
-    int z;
+    const int pollution{ PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) };
 
-    z = PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
-
-    if (z > 128)
+    if (pollution > 128)
     {
         return;
     }
 
     if (CurrentTileMasked == FREEZ)
     {
-        if (pop < 8)
+        if (population < 8)
         {
             buildHouse(value);
             increaseRateOfGrowth(1);
@@ -439,62 +437,62 @@ void doResIn(int pop, int value)
         return;
     }
 
-    if (pop < 40)
+    if (population < 40)
     {
-        residentialPlop((pop / 8) - 1, value);
+        residentialPlop((population / 8) - 1, value);
         increaseRateOfGrowth(8);
     }
 }
 
 
-void doComIn(int pop, int value)
+void doComIn(int population, int value)
 {
     int z;
 
     z = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
     z = z >> 5;
 
-    if (pop > z)
+    if (population > z)
     {
         return;
     }
 
-    if (pop < 5)
+    if (population < 5)
     {
-        commercialPlop(pop, value);
+        commercialPlop(population, value);
         increaseRateOfGrowth(8);
     }
 }
 
 
-void doIndIn(int pop, int value)
+void doIndIn(int population, int value)
 {
-    if (pop < 4)
+    if (population < 4)
     {
-        industrialPlop(pop, value);
+        industrialPlop(population, value);
         increaseRateOfGrowth(8);
     }
 }
 
 
-void doResOut(int pop, int value)
+void doResOut(int population, int value)
 {
     static int Brdr[9] = { 0,3,6,1,4,7,2,5,8 };
     int x, y, loc, z;
 
-    if (!pop)
+    if (!population)
     {
         return;
     }
 
-    if (pop > 16)
+    if (population > 16)
     {
-        residentialPlop(((pop - 24) / 8), value);
+        residentialPlop(((population - 24) / 8), value);
         increaseRateOfGrowth(-8);
         return;
     }
 
-    if (pop == 16)
+    if (population == 16)
     {
         increaseRateOfGrowth(-8);
         Map[SimulationTarget.x][SimulationTarget.y] = (FREEZ | BLBNCNBIT | ZONEBIT);
@@ -514,7 +512,7 @@ void doResOut(int pop, int value)
         }
     }
 
-    if (pop < 16)
+    if (population < 16)
     {
         increaseRateOfGrowth(-1);
         z = 0;
@@ -539,16 +537,16 @@ void doResOut(int pop, int value)
 }
 
 
-void doComOut(int pop, int value)
+void doComOut(int population, int value)
 {
-    if (pop > 1)
+    if (population > 1)
     {
-        commercialPlop(pop - 2, value);
+        commercialPlop(population - 2, value);
         increaseRateOfGrowth(-8);
         return;
     }
 
-    if (pop == 1)
+    if (population == 1)
     {
         zonePlop(COMBASE);
         increaseRateOfGrowth(-8);
@@ -556,16 +554,16 @@ void doComOut(int pop, int value)
 }
 
 
-void doIndOut(int pop, int value)
+void doIndOut(int population, int value)
 {
-    if (pop > 1)
+    if (population > 1)
     {
-        industrialPlop(pop - 2, value);
+        industrialPlop(population - 2, value);
         increaseRateOfGrowth(-8);
         return;
     }
 
-    if (pop == 1)
+    if (population == 1)
     {
         zonePlop(INDCLR - 4);
         increaseRateOfGrowth(-8);
