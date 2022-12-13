@@ -22,6 +22,8 @@
 #include "w_util.h"
 #include "Zone.h"
 
+#include <algorithm>
+
 
 #define ASCBIT (ANIMBIT | CONDBIT | BURNBIT)
 #define REGBIT (CONDBIT | BURNBIT)
@@ -293,7 +295,7 @@ int evalLot(int x, int y)
     }
 
     int score{ 1 };
-    for (int i{}; i < 4; ++i)
+    for (int i{}; i < AdjacentVector.size(); ++i)
     {
         const Point<int> coordinates{ Point<int>{x, y} + AdjacentVector[i] };
 
@@ -310,32 +312,17 @@ int evalLot(int x, int y)
 
 int evalRes(int traf)
 {
-    int Value;
-
     if (traf < 0)
     {
         return -3000;
     }
 
-    Value = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
-    Value -= PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
+    int value{ LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) };
+    value -= PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
 
-    if (Value < 0)/* Cap at 0 */
-    {
-        Value = 0;
-    }
-    else
-    {
-        Value = Value << 5;
-    }
+    value = std::clamp(value * 32, 0, 6000);
 
-    if (Value > 6000) /* Cap at 6000 */
-    {
-        Value = 6000;
-    }
-
-    Value = Value - 3000;
-    return Value;
+    return value - 3000;
 }
 
 
