@@ -17,4 +17,4 @@ int residentialZonePopulation(int tile);
 int commercialZonePopulation(int tile);
 int industrialZonePopulation(int tile);
 bool setZonePower(const Point<int>& location);
-void doZone(const Point<int>& location, const CityProperties&);
+void updateZone(const Point<int>& location, const CityProperties&);

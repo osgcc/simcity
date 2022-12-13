@@ -23,6 +23,10 @@
 #include "Zone.h"
 
 
+#define ASCBIT (ANIMBIT | CONDBIT | BURNBIT)
+#define REGBIT (CONDBIT | BURNBIT)
+
+
 /*
  * set bit in MapWord depending on powermap
  */
@@ -173,10 +177,6 @@ void spawnChurch()
 }
 
 
-#define ASCBIT (ANIMBIT | CONDBIT | BURNBIT)
-#define REGBIT (CONDBIT | BURNBIT)
-
-
 /**
  * Handles smoke stack animation updates
  * 
@@ -187,7 +187,6 @@ void spawnChurch()
 void setSmoke(bool ZonePower)
 {
     static const std::array<bool, 8> animateTile = { true, false, true, true, false, false, true, true };
-    
     static const std::array<Vector<int>, 8> offset =
     { {
         { -1, -1 },
@@ -776,7 +775,7 @@ void doResidential(bool zonePowered)
 }
 
 
-void doZone(const Point<int>& location, const CityProperties& properties)
+void updateZone(const Point<int>& location, const CityProperties& properties)
 {
     bool zonePowered{ setZonePower(location) };	
 
