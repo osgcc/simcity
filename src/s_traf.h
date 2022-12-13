@@ -10,5 +10,13 @@
 // file, included in this distribution, for details.
 #pragma once
 
+enum class TrafficResult
+{
+	NoTransportNearby,
+	RouteNotFound,
+	RouteFound
+};
+
+
 bool FindPRoad();
-int MakeTraf(int Zt);
+TrafficResult MakeTraf(int Zt);

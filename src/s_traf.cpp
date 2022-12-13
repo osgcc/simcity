@@ -8,6 +8,8 @@
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
 // file, included in this distribution, for details.
+#include "s_traf.h"
+
 #include "main.h"
 
 #include "Map.h"
@@ -259,7 +261,7 @@ bool TryDrive()
 
 
 /* comefrom: updateIndustrial updateCommercial updateResidential */
-int MakeTraf(int Zt)
+TrafficResult MakeTraf(int Zt)
 {
     const auto simLocation = SimulationTarget;
 
@@ -272,14 +274,14 @@ int MakeTraf(int Zt)
         {
             SetTrafMem(); // if sucessful, inc trafdensity
             SimulationTarget = simLocation;
-            return 1; // traffic passed
+            return TrafficResult::RouteFound; // traffic passed
         }
 
         SimulationTarget = simLocation;
-        return 0; // traffic failed
+        return TrafficResult::RouteNotFound; // traffic failed
     }
     else // no road found
     {
-        return -1;
+        return TrafficResult::NoTransportNearby;
     }
 }

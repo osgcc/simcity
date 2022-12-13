@@ -310,9 +310,9 @@ int evalLot(int x, int y)
 }
 
 
-int evalRes(int traf)
+int evalRes(TrafficResult result)
 {
-    if (traf < 0)
+    if (result == TrafficResult::NoTransportNearby)
     {
         return -3000;
     }
@@ -326,9 +326,9 @@ int evalRes(int traf)
 }
 
 
-int evalCom(int traf)
+int evalCom(TrafficResult result)
 {
-    if (traf < 0)
+    if (result == TrafficResult::NoTransportNearby)
     {
         return -3000;
     }
@@ -337,14 +337,14 @@ int evalCom(int traf)
 }
 
 
-int evalInd (int traf)
+int evalInd(TrafficResult result)
 {
-  if (traf < 0) 
-  {
-      return -1000;
-  }
+    if (result == TrafficResult::NoTransportNearby)
+    {
+        return -1000;
+    }
 
-  return 0;
+    return 0;
 }
 
 
@@ -596,33 +596,30 @@ int doFreePop()
 
 void updateIndustrial(bool zonePowered)
 {
-    int tpop, zscore, TrfGood;
-
-    IndZPop++;
+    int zscore;
 
     setSmoke(zonePowered);
 
-    tpop = industrialZonePopulation(CurrentTileMasked);
-    IndPop += tpop;
+    int zonePopulation{ industrialZonePopulation(CurrentTileMasked) };
+    IndPop += zonePopulation;
+    IndZPop++;
 
-    if (tpop > RandomRange(0, 5))
+    TrafficResult trafficResult{ TrafficResult::RouteFound };
+
+    if (zonePopulation > RandomRange(0, 5))
     {
-        TrfGood = MakeTraf(2);
-    }
-    else
-    {
-        TrfGood = true;
+        trafficResult = MakeTraf(2);
     }
 
-    if (TrfGood == -1)
+    if (trafficResult == TrafficResult::NoTransportNearby)
     {
-        doIndOut(tpop, RandomRange(0, 2));
+        doIndOut(zonePopulation, RandomRange(0, 2));
         return;
     }
 
     if (!(RandomRange(0, 8)))
     {
-        zscore = IValve + evalInd(TrfGood);
+        zscore = IValve + evalInd(trafficResult);
 
         if (!zonePowered)
         {
@@ -631,13 +628,13 @@ void updateIndustrial(bool zonePowered)
 
         if ((zscore > -350) && (zscore - 26380) > Rand16())
         {
-            doIndIn(tpop, Rand16() & 1);
+            doIndIn(zonePopulation, Rand16() & 1);
             return;
         }
 
         if ((zscore < 350) && (zscore + 26380) < Rand16())
         {
-            doIndOut(tpop, Rand16() & 1);
+            doIndOut(zonePopulation, Rand16() & 1);
         }
     }
 }
@@ -645,7 +642,6 @@ void updateIndustrial(bool zonePowered)
 
 void updateCommercial(bool zonePowered)
 {
-    int TrfGood;
     int zscore, locvalve, value;
 
     ComZPop++;
@@ -654,16 +650,14 @@ void updateCommercial(bool zonePowered)
 
     ComPop += tpop;
 
+    TrafficResult trafficResult{TrafficResult::RouteFound};
+
     if (tpop > RandomRange(0, 5))
     {
-        TrfGood = MakeTraf(1);
-    }
-    else
-    {
-        TrfGood = 1;
+        trafficResult = MakeTraf(1);
     }
 
-    if (TrfGood == -1)
+    if (trafficResult == TrafficResult::NoTransportNearby)
     {
         value = getLandValue();
         doComOut(tpop, value);
@@ -672,7 +666,7 @@ void updateCommercial(bool zonePowered)
 
     if (!(Rand16() & 7))
     {
-        locvalve = evalCom(TrfGood);
+        locvalve = evalCom(trafficResult);
         zscore = CValve + locvalve;
 
         if (!zonePowered)
@@ -680,7 +674,7 @@ void updateCommercial(bool zonePowered)
             zscore = -500;
         }
 
-        if (TrfGood && (zscore > -350) && zscore - 26380 > Rand16())
+        if (trafficResult == TrafficResult::RouteFound && (zscore > -350) && zscore - 26380 > Rand16())
         {
             value = getLandValue();
             doComIn(tpop, value);
@@ -698,7 +692,7 @@ void updateCommercial(bool zonePowered)
 
 void updateResidential(bool zonePowered)
 {
-    int tpop, value, TrfGood;
+    int tpop, value;
 
     ResZPop++;
     if (CurrentTileMasked == FREEZ)
@@ -711,16 +705,14 @@ void updateResidential(bool zonePowered)
     }
 
     ResPop += tpop;
+
+    TrafficResult trafficResult{ TrafficResult::RouteFound };
     if (tpop > RandomRange(0, 35))
     {
-        TrfGood = MakeTraf(0);
-    }
-    else
-    {
-        TrfGood = true;
+        trafficResult = MakeTraf(0);
     }
 
-    if (TrfGood == -1)
+    if (trafficResult == TrafficResult::NoTransportNearby)
     {
         value = getLandValue();
         doResOut(tpop, value);
@@ -729,7 +721,7 @@ void updateResidential(bool zonePowered)
 
     if ((CurrentTileMasked == FREEZ) || (!(RandomRange(0, 8))))
     {
-        int locvalve = evalRes(TrfGood);
+        int locvalve = evalRes(trafficResult);
         int zscore = RValve + locvalve;
         if (!zonePowered)
         {
