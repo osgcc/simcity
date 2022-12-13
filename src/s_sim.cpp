@@ -460,7 +460,10 @@ void CoalSmoke(int mx, int my)
 }
 
 
-void DoSPZone(int PwrOn, const CityProperties& properties)
+/*
+ * fixme: Break this into smaller chunks
+ */
+void DoSPZone(bool PwrOn, const CityProperties& properties)
 {
     static int MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
     int z;
