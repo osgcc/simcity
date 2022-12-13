@@ -247,7 +247,11 @@ void makeHospital()
         NeedHosp = false;
         return;
     }
+}
 
+
+void makeChurch()
+{
     if (NeedChurch > 0)
     {
         zonePlop(CHURCH - 4);
@@ -754,6 +758,7 @@ void DoResidential(bool zonePowered)
             if ((!tpop) && (!(Rand16() & 3)))
             {
                 makeHospital();
+                makeChurch();
                 return;
             }
 
