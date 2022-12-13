@@ -460,7 +460,10 @@ void CoalSmoke(int mx, int my)
 }
 
 
-void DoSPZone(int PwrOn, const CityProperties& properties)
+/*
+ * fixme: Break this into smaller chunks
+ */
+void DoSPZone(bool powered, const CityProperties& properties)
 {
     static int MltdwnTab[3] = { 30000, 20000, 10000 };  /* simadj */
     int z;
@@ -498,7 +501,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             RepairZone(FIRESTATION, 3);
         }
 
-        if (PwrOn) /* if powered get effect  */
+        if (powered) /* if powered get effect  */
         {
             z = FireEffect;
         }
@@ -525,7 +528,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             RepairZone(POLICESTATION, 3); /* post */
         }
 
-        if (PwrOn)
+        if (powered)
         {
             z = PoliceEffect;
         }
@@ -551,7 +554,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
         {
             RepairZone(STADIUM, 4);
         }
-        if (PwrOn)
+        if (powered)
         {
             if (!((CityTime + SimulationTarget.x + SimulationTarget.y) & 31)) // post release
             {
@@ -578,7 +581,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             RepairZone(AIRPORT, 6);
         }
 
-        if (PwrOn) // post
+        if (powered) // post
         { 
             if ((Map[SimulationTarget.x + 1][SimulationTarget.y - 1] & LOMASK) == RADAR)
             {
@@ -590,7 +593,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
             Map[SimulationTarget.x + 1][SimulationTarget.y - 1] = RADAR + CONDBIT + BURNBIT;
         }
 
-        if (PwrOn)
+        if (powered)
         {
             DoAirport();
         }
@@ -604,7 +607,7 @@ void DoSPZone(int PwrOn, const CityProperties& properties)
         }
 
         SimSprite* shipSprite = getSprite(SimSprite::Type::Ship);
-        if (PwrOn && shipSprite == nullptr || shipSprite != nullptr && !shipSprite->active)
+        if (powered && shipSprite == nullptr || shipSprite != nullptr && !shipSprite->active)
         {
             generateShip();
         }
