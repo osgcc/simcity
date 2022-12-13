@@ -173,54 +173,65 @@ void spawnChurch()
 }
 
 
-#define T 1
-#define F 0
 #define ASCBIT (ANIMBIT | CONDBIT | BURNBIT)
 #define REGBIT (CONDBIT | BURNBIT)
 
 
+/**
+ * Handles smoke stack animation updates
+ * 
+ * \note    Animation tiles are not set properly. Commenting out
+ *          the lines below help but a proper animation table
+ *          lookup will be needed.
+ */
 void SetSmoke(int ZonePower)
 {
-    static int AniThis[8] = { T,    F,    T,    T,    F,    F,    T,    T };
-    static int DX1[8] = { -1,    0,    1,    0,    0,    0,    0,    1 };
-    static int DY1[8] = { -1,    0,   -1,   -1,    0,    0,   -1,   -1 };
-    static int DX2[8] = { -1,    0,    1,    1,    0,    0,    1,    1 };
-    static int DY2[8] = { -1,    0,    0,   -1,    0,    0,   -1,    0 };
-    static int AniTabA[8] = { 0,    0,   32,   40,    0,    0,   48,   56 };
-    static int AniTabB[8] = { 0,    0,   36,   44,    0,    0,   52,   60 };
-    static int AniTabC[8] = { IND1,    0, IND2, IND4,    0,    0, IND6, IND8 };
-    static int AniTabD[8] = { IND1,    0, IND3, IND5,    0,    0, IND7, IND9 };
+    static const std::array<bool, 8> animateTile = { true, false, true, true, false, false, true, true };
     
-    int z;
-
+    static const std::array<Vector<int>, 8> direction1 =
+    { {
+        { -1, -1 },
+        {  0,  0 },
+        {  1, -1 },
+        {  0, -1 },
+        {  0,  0 },
+        {  0,  0 },
+        {  0, -1 },
+        {  1, -1 },
+    } };
+    
+    static const int AniTabA[8] = { 0,    0,   32,   40,    0,    0,   48,   56 };
+    static const int AniTabB[8] = { 0,    0,   36,   44,    0,    0,   52,   60 };
+    static const int AniTabC[8] = { IND1,    0, IND2, IND4,    0,    0, IND6, IND8 };
+    static const int AniTabD[8] = { IND1,    0, IND3, IND5,    0,    0, IND7, IND9 };
+    
     if (CurrentTileMasked < IZB)
     {
         return;
     }
 
-    z = (CurrentTileMasked - IZB) >> 3;
-    z = z & 7;
+    int z{ (CurrentTileMasked - IZB) / 8 };
+    z = z % 8;
 
-    if (AniThis[z])
+    if (animateTile[z])
     {
-        int xx = SimulationTarget.x + DX1[z];
-        int yy = SimulationTarget.y + DY1[z];
-        if (CoordinatesValid({ xx, yy }))
+        const Point<int> location{ SimulationTarget + direction1[z] };
+        if (CoordinatesValid(location))
         {
             if (ZonePower)
             {
-                if ((Map[xx][yy] & LOMASK) == AniTabC[z])
+                if ((maskedTileValue(location)) == AniTabC[z])
                 {
-                    Map[xx][yy] = ASCBIT | (SMOKEBASE + AniTabA[z]);
-                    Map[xx][yy] = ASCBIT | (SMOKEBASE + AniTabB[z]);
+                    tileValue(location) = ASCBIT | (SMOKEBASE + AniTabA[z]);
+                    //tileValue(location) = ASCBIT | (SMOKEBASE + AniTabB[z]);
                 }
             }
             else
             {
-                if ((Map[xx][yy] & LOMASK) > AniTabC[z])
+                if ((maskedTileValue(location)) > AniTabC[z])
                 {
-                    Map[xx][yy] = REGBIT | AniTabC[z];
-                    Map[xx][yy] = REGBIT | AniTabD[z];
+                    tileValue(location) = REGBIT | AniTabC[z];
+                    //tileValue(location) = REGBIT | AniTabD[z];
                 }
             }
         }
