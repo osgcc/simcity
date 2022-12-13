@@ -26,6 +26,28 @@
 #define ASCBIT (ANIMBIT | CONDBIT | BURNBIT)
 #define REGBIT (CONDBIT | BURNBIT)
 
+const std::array<Vector<int>, 4> AdjacentVector =
+{ {
+    {  0, -1 },
+    {  1,  0 },
+    {  0,  1 },
+    { -1,  0 },
+} };
+
+
+const std::array<Vector<int>, 9> AdjacentVector8 =
+{ {
+    { -1, -1 },
+    {  0, -1 },
+    {  1, -1 },
+    { -1,  0 },
+    {  0,  0 },
+    {  1,  0 },
+    { -1,  1 },
+    {  0,  1 },
+    {  1,  1 }
+} };
+
 
 /*
  * set bit in MapWord depending on powermap
@@ -45,23 +67,10 @@ bool setZonePower(const Point<int>& location)
 
 void zonePlop(const int base)
 {
-    std::array<Vector<int>, 9> adjacentTile =
-    { {
-        { -1, -1 },
-        {  0, -1 },
-        {  1, -1 },
-        { -1,  0 },
-        {  0,  0 },
-        {  1,  0 },
-        { -1,  1 },
-        {  0,  1 },
-        {  1,  1 }
-    } };
-
     // Check for fire and flooding
     for (int i{}; i < 9; ++i)
     {
-        const Point<int> coordinates = SimulationTarget + adjacentTile[i];
+        const Point<int> coordinates = SimulationTarget + AdjacentVector8[i];
 
         if (CoordinatesValid(coordinates))
         {
@@ -76,7 +85,7 @@ void zonePlop(const int base)
     int tileBase{ base };
     for (int i{}; i < 9; ++i)
     {
-        const Point<int> coordinates = SimulationTarget + adjacentTile[i];
+        const Point<int> coordinates = SimulationTarget + AdjacentVector8[i];
 
         if (CoordinatesValid(coordinates))
         {
@@ -187,17 +196,6 @@ void spawnChurch()
 void setSmoke(bool ZonePower)
 {
     static const std::array<bool, 8> animateTile = { true, false, true, true, false, false, true, true };
-    static const std::array<Vector<int>, 8> offset =
-    { {
-        { -1, -1 },
-        {  0,  0 },
-        {  1, -1 },
-        {  0, -1 },
-        {  0,  0 },
-        {  0,  0 },
-        {  0, -1 },
-        {  1, -1 },
-    } };
     
     static const int AniTabA[8] = { 0,    0,   32,   40,    0,    0,   48,   56 };
     static const int AniTabB[8] = { 0,    0,   36,   44,    0,    0,   52,   60 };
@@ -214,7 +212,7 @@ void setSmoke(bool ZonePower)
 
     if (animateTile[z])
     {
-        const Point<int> location{ SimulationTarget + offset[z] };
+        const Point<int> location{ SimulationTarget + AdjacentVector8[z] };
         if (CoordinatesValid(location))
         {
             if (ZonePower)
@@ -287,14 +285,6 @@ int getLandValue()
 
 int evalLot(int x, int y)
 {
-    static const std::array<Vector<int>, 4> searchCoordinates =
-    { {
-        {  0, -1 },
-        {  1,  0 },
-        {  0,  1 },
-        { -1,  0 },
-    } };
-
     // test for clear lot
     int tile = maskedTileValue({ x, y });
     if (tile && ((tile < RESBASE) || (tile > RESBASE + 8)))
@@ -305,7 +295,7 @@ int evalLot(int x, int y)
     int score{ 1 };
     for (int i{}; i < 4; ++i)
     {
-        const Point<int> coordinates{ Point<int>{x, y} + searchCoordinates[i] };
+        const Point<int> coordinates{ Point<int>{x, y} + AdjacentVector[i] };
 
         // look for road
         if (CoordinatesValid(coordinates) && tile && (tile <= LASTROAD))
