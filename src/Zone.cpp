@@ -261,7 +261,7 @@ void makeChurch()
 }
 
 
-int GetCRVal()
+int getLandValue()
 {
     int LVal;
 
@@ -682,7 +682,7 @@ void DoCommercial(bool zonePowered)
 
     if (TrfGood == -1)
     {
-        value = GetCRVal();
+        value = getLandValue();
         DoComOut(tpop, value);
         return;
     }
@@ -699,14 +699,14 @@ void DoCommercial(bool zonePowered)
 
         if (TrfGood && (zscore > -350) && zscore - 26380 > Rand16())
         {
-            value = GetCRVal();
+            value = getLandValue();
             DoComIn(tpop, value);
             return;
         }
 
         if (zscore < 350 && zscore + 26380 < Rand16())
         {
-            value = GetCRVal();
+            value = getLandValue();
             DoComOut(tpop, value);
         }
     }
@@ -739,7 +739,7 @@ void DoResidential(bool zonePowered)
 
     if (TrfGood == -1)
     {
-        value = GetCRVal();
+        value = getLandValue();
         DoResOut(tpop, value);
         return;
     }
@@ -762,7 +762,7 @@ void DoResidential(bool zonePowered)
                 return;
             }
 
-            value = GetCRVal();
+            value = getLandValue();
             DoResIn(tpop, value);
 
             return;
@@ -770,7 +770,7 @@ void DoResidential(bool zonePowered)
 
         if ((zscore < 350) && zscore + 26380 < Rand16())
         {
-            value = GetCRVal();
+            value = getLandValue();
             DoResOut(tpop, value);
         }
     }
