@@ -778,12 +778,10 @@ void doResidential(bool zonePowered)
 
 void doZone(const Point<int>& location, const CityProperties& properties)
 {
-    /* Set Power Bit in Map from PowerMap */
     bool zonePowered{ setZonePower(location) };	
 
     zonePowered ? PoweredZoneCount++ : UnpoweredZoneCount++;
 
-    /* do Special Zones  */
     if (CurrentTileMasked > PORTBASE) 
     {
         DoSPZone(zonePowered, properties);
