@@ -263,22 +263,21 @@ void makeChurch()
 
 int getLandValue()
 {
-    int LVal;
+    const auto coord{ SimulationTarget.skewInverseBy({ 2, 2 }) };
+    
+    int landValue{ LandValueMap.value(coord) - PollutionMap.value(coord) };
 
-    LVal = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
-    LVal -= PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
-
-    if (LVal < 30) 
+    if (landValue < 30) 
     {
         return 0;
     }
 
-    if (LVal < 80) 
+    if (landValue < 80) 
     {
         return 1;
     }
 
-    if (LVal < 150) 
+    if (landValue < 150) 
     {
         return 2;
     }
