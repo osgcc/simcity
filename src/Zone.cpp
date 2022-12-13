@@ -407,8 +407,10 @@ void buildHouse(int value)
 
 void increaseRateOfGrowth(int amount)
 {
-    const int rogVal = RateOfGrowthMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 });
-    RateOfGrowthMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 }) = rogVal + (amount << 2);
+    const auto location = SimulationTarget.skewBy({ 8, 8 });
+    const int rogVal = RateOfGrowthMap.value(location);
+
+    RateOfGrowthMap.value(location) = rogVal + (amount * 4);
 }
 
 
