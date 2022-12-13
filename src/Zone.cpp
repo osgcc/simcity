@@ -20,6 +20,7 @@
 #include "s_traf.h"
 
 #include "w_util.h"
+#include "Zone.h"
 
 
 /*
@@ -128,7 +129,7 @@ int industrialZonePopulation(int tile)
 }
 
 
-void DoHospChur()
+void doHospital()
 {
     if (CurrentTileMasked == HOSPITAL)
     {
@@ -147,7 +148,11 @@ void DoHospChur()
             }
         }
     }
+}
 
+
+void doChurch()
+{
     if (CurrentTileMasked == CHURCH)
     {
         ChurchPop++;
@@ -785,7 +790,8 @@ void DoZone(const CityProperties& properties)
 
     if (CurrentTileMasked < COMBASE)
     {
-        DoHospChur();
+        doHospital();
+        doChurch();
         return;
     }
 
