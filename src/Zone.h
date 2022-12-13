@@ -13,8 +13,8 @@
 class CityProperties;
 
 int DoFreePop();
-int RZPop(int tile);
-int CZPop(int tile);
-int IZPop(int tile);
-bool SetZPower();
+int residentialZonePopulation(int tile);
+int commercialZonePopulation(int tile);
+int industrialZonePopulation(int tile);
+bool setZonePower();
 void DoZone(const CityProperties&);

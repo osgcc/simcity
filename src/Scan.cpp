@@ -349,17 +349,17 @@ int getPopulationDensity(int tile)
 
     if (tile < COMBASE)
     {
-        return RZPop(tile);
+        return residentialZonePopulation(tile);
     }
 
     if (tile < INDBASE)
     {
-        return CZPop(tile) * 8;
+        return commercialZonePopulation(tile) * 8;
     }
 
     if (tile < PORTBASE)
     {
-        return IZPop(tile) * 8;
+        return industrialZonePopulation(tile) * 8;
     }
 
     return 0;

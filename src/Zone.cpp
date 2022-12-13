@@ -25,7 +25,7 @@
 /*
  * set bit in MapWord depending on powermap
  */
-bool SetZPower()
+bool setZonePower()
 {
     if (testPowerBit(SimulationTarget))
     {
@@ -38,7 +38,7 @@ bool SetZPower()
 }
 
 
-void ZonePlop(int base)
+void zonePlop(int base)
 {
     std::array<Vector<int>, 9> adjacentTile =
     { {
@@ -81,47 +81,47 @@ void ZonePlop(int base)
     }
 
     CurrentTile = tileValue(SimulationTarget);
-    SetZPower();
+    setZonePower();
     tileValue(SimulationTarget) |= ZONEBIT + BULLBIT;
 }
 
 
-void ResPlop(int density, int value)
+void residentialPlop(int density, int value)
 {
     const int base{ (((value * 4) + density) * 9) + RZB - 4 };
-    ZonePlop(base);
+    zonePlop(base);
 }
 
 
-void ComPlop(int density, int value)
+void commercialPlop(int density, int value)
 {
     const int base{ (((value * 5) + density) * 9) + CZB - 4 };
-    ZonePlop(base);
+    zonePlop(base);
 }
 
 
-void IndPlop(int density, int value)
+void industrialPlop(int density, int value)
 {
     const int base{ (((value * 4) + density) * 9) + (IZB - 4) };
-    ZonePlop(base);
+    zonePlop(base);
 }
 
 
-int RZPop(int tile)
+int residentialZonePopulation(int tile)
 {
     const int density{ (((tile - RZB) / 9) % 4) };
     return ((density * 8) + 16);
 }
 
 
-int CZPop(int tile)
+int commercialZonePopulation(int tile)
 {
     const int density{ (((tile - CZB) / 9) % 5) + 1 };
     return (tile == COMCLR) ? 0 : density;
 }
 
 
-int IZPop(int tile)
+int industrialZonePopulation(int tile)
 {
     const int density{ (((tile - IZB) / 9) % 4) + 1 };
     return (tile == INDCLR) ? 0 : density;
@@ -143,7 +143,7 @@ void DoHospChur()
         {
             if (!RandomRange(0, 20))
             {
-                ZonePlop(RESBASE);
+                zonePlop(RESBASE);
             }
         }
     }
@@ -161,7 +161,7 @@ void DoHospChur()
         {
             if (!RandomRange(0, 20))
             {
-                ZonePlop(RESBASE);
+                zonePlop(RESBASE);
             }
         }
     }
@@ -227,14 +227,14 @@ void MakeHosp()
 {
     if (NeedHosp > 0)
     {
-        ZonePlop(HOSPITAL - 4);
+        zonePlop(HOSPITAL - 4);
         NeedHosp = false;
         return;
     }
 
     if (NeedChurch > 0)
     {
-        ZonePlop(CHURCH - 4);
+        zonePlop(CHURCH - 4);
         NeedChurch = false;
         return;
     }
@@ -424,7 +424,7 @@ void DoResIn(int pop, int value)
 
         if (PopulationDensityMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) > 64)
         {
-            ResPlop(0, value);
+            residentialPlop(0, value);
             IncROG(8);
             return;
         }
@@ -434,7 +434,7 @@ void DoResIn(int pop, int value)
 
     if (pop < 40)
     {
-        ResPlop((pop / 8) - 1, value);
+        residentialPlop((pop / 8) - 1, value);
         IncROG(8);
     }
 }
@@ -454,7 +454,7 @@ void DoComIn(int pop, int value)
 
     if (pop < 5)
     {
-        ComPlop(pop, value);
+        commercialPlop(pop, value);
         IncROG(8);
     }
 }
@@ -464,7 +464,7 @@ void DoIndIn(int pop, int value)
 {
     if (pop < 4)
     {
-        IndPlop(pop, value);
+        industrialPlop(pop, value);
         IncROG(8);
     }
 }
@@ -482,7 +482,7 @@ void DoResOut(int pop, int value)
 
     if (pop > 16)
     {
-        ResPlop(((pop - 24) / 8), value);
+        residentialPlop(((pop - 24) / 8), value);
         IncROG(-8);
         return;
     }
@@ -536,14 +536,14 @@ void DoComOut(int pop, int value)
 {
     if (pop > 1)
     {
-        ComPlop(pop - 2, value);
+        commercialPlop(pop - 2, value);
         IncROG(-8);
         return;
     }
 
     if (pop == 1)
     {
-        ZonePlop(COMBASE);
+        zonePlop(COMBASE);
         IncROG(-8);
     }
 }
@@ -553,14 +553,14 @@ void DoIndOut(int pop, int value)
 {
     if (pop > 1)
     {
-        IndPlop(pop - 2, value);
+        industrialPlop(pop - 2, value);
         IncROG(-8);
         return;
     }
 
     if (pop == 1)
     {
-        ZonePlop(INDCLR - 4);
+        zonePlop(INDCLR - 4);
         IncROG(-8);
     }
 }
@@ -599,7 +599,7 @@ void DoIndustrial(int ZonePwrFlg)
 
     SetSmoke(ZonePwrFlg);
 
-    tpop = IZPop(CurrentTileMasked);
+    tpop = industrialZonePopulation(CurrentTileMasked);
     IndPop += tpop;
 
     if (tpop > RandomRange(0, 5))
@@ -647,7 +647,7 @@ void DoCommercial(int ZonePwrFlg)
 
     ComZPop++;
 
-    int tpop = CZPop(CurrentTileMasked);
+    int tpop = commercialZonePopulation(CurrentTileMasked);
 
     ComPop += tpop;
 
@@ -704,7 +704,7 @@ void DoResidential(int ZonePwrFlg)
     }
     else
     {
-        tpop = RZPop(CurrentTileMasked);
+        tpop = residentialZonePopulation(CurrentTileMasked);
     }
 
     ResPop += tpop;
@@ -760,7 +760,7 @@ void DoZone(const CityProperties& properties)
 {
     int ZonePwrFlg;
 
-    ZonePwrFlg = SetZPower();	/* Set Power Bit in Map from PowerMap */
+    ZonePwrFlg = setZonePower();	/* Set Power Bit in Map from PowerMap */
 
     if (ZonePwrFlg)
     {
