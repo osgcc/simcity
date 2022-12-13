@@ -16,5 +16,5 @@ int DoFreePop();
 int residentialZonePopulation(int tile);
 int commercialZonePopulation(int tile);
 int industrialZonePopulation(int tile);
-bool setZonePower();
-void DoZone(const CityProperties&);
+bool setZonePower(const Point<int>& location);
+void DoZone(const Point<int>& location, const CityProperties&);

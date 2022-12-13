@@ -26,15 +26,15 @@
 /*
  * set bit in MapWord depending on powermap
  */
-bool setZonePower()
+bool setZonePower(const Point<int>& location)
 {
-    if (testPowerBit(SimulationTarget))
+    if (testPowerBit(location))
     {
-        tileValue(SimulationTarget) |= PWRBIT;
+        tileValue(location) |= PWRBIT;
         return true;
     }
 
-    tileValue(SimulationTarget) &= ~PWRBIT;
+    tileValue(location) &= ~PWRBIT;
     return false;
 }
 
@@ -82,7 +82,7 @@ void zonePlop(const int base)
         ++tileBase;
     }
 
-    setZonePower();
+    setZonePower(SimulationTarget);
     tileValue(SimulationTarget) |= ZONEBIT + BULLBIT;
 }
 
@@ -761,11 +761,11 @@ void DoResidential(int ZonePwrFlg)
 }
 
 
-void DoZone(const CityProperties& properties)
+void DoZone(const Point<int>& location, const CityProperties& properties)
 {
     int ZonePwrFlg;
 
-    ZonePwrFlg = setZonePower();	/* Set Power Bit in Map from PowerMap */
+    ZonePwrFlg = setZonePower(location);	/* Set Power Bit in Map from PowerMap */
 
     if (ZonePwrFlg)
     {

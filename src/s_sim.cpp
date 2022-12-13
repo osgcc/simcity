@@ -654,7 +654,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
 
                     if (CurrentTile & CONDBIT)
                     {
-                        setZonePower();
+                        setZonePower({ x, y });
                     }
 
                     if ((CurrentTileMasked >= ROADBASE) && (CurrentTileMasked < POWERBASE))
@@ -665,7 +665,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
 
                     if (CurrentTile & ZONEBIT) // process Zones
                     {
-                        DoZone(properties);
+                        DoZone({ x, y }, properties);
                         continue;
                     }
 
@@ -1091,7 +1091,7 @@ void DoNilPower()
             if (z & ZONEBIT)
             {
                 SimulationTarget = { x, y };
-                setZonePower();
+                setZonePower({ x, y });
             }
         }
     }
