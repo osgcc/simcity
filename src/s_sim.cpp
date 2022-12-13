@@ -1091,7 +1091,6 @@ void DoNilPower()
             if (z & ZONEBIT)
             {
                 SimulationTarget = { x, y };
-                CurrentTile = z;
                 setZonePower();
             }
         }

@@ -30,11 +30,11 @@ bool setZonePower()
 {
     if (testPowerBit(SimulationTarget))
     {
-        tileValue(SimulationTarget) = CurrentTile | PWRBIT;
+        tileValue(SimulationTarget) |= PWRBIT;
         return true;
     }
 
-    tileValue(SimulationTarget) = CurrentTile & (~PWRBIT);
+    tileValue(SimulationTarget) &= ~PWRBIT;
     return false;
 }
 
@@ -82,7 +82,6 @@ void zonePlop(const int base)
         ++tileBase;
     }
 
-    CurrentTile = tileValue(SimulationTarget);
     setZonePower();
     tileValue(SimulationTarget) |= ZONEBIT + BULLBIT;
 }
