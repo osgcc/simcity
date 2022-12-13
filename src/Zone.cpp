@@ -239,7 +239,7 @@ void setSmoke(bool ZonePower)
 }
 
 
-void MakeHosp()
+void makeHospital()
 {
     if (NeedHosp > 0)
     {
@@ -753,7 +753,7 @@ void DoResidential(bool zonePowered)
         {
             if ((!tpop) && (!(Rand16() & 3)))
             {
-                MakeHosp();
+                makeHospital();
                 return;
             }
 
