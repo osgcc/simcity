@@ -39,7 +39,7 @@ bool setZonePower()
 }
 
 
-void zonePlop(int base)
+void zonePlop(const int base)
 {
     std::array<Vector<int>, 9> adjacentTile =
     { {
@@ -69,16 +69,17 @@ void zonePlop(int base)
         }
     }
 
+    int tileBase{ base };
     for (int i{}; i < 9; ++i)
     {
         const Point<int> coordinates = SimulationTarget + adjacentTile[i];
 
         if (CoordinatesValid(coordinates))
         {
-            tileValue(coordinates, base + BNCNBIT);
+            tileValue(coordinates) = tileBase + BNCNBIT;
         }
 
-        base++;
+        ++tileBase;
     }
 
     CurrentTile = tileValue(SimulationTarget);
