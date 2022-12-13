@@ -184,11 +184,11 @@ void spawnChurch()
  *          the lines below help but a proper animation table
  *          lookup will be needed.
  */
-void SetSmoke(int ZonePower)
+void setSmoke(bool ZonePower)
 {
     static const std::array<bool, 8> animateTile = { true, false, true, true, false, false, true, true };
     
-    static const std::array<Vector<int>, 8> direction1 =
+    static const std::array<Vector<int>, 8> offset =
     { {
         { -1, -1 },
         {  0,  0 },
@@ -215,7 +215,7 @@ void SetSmoke(int ZonePower)
 
     if (animateTile[z])
     {
-        const Point<int> location{ SimulationTarget + direction1[z] };
+        const Point<int> location{ SimulationTarget + offset[z] };
         if (CoordinatesValid(location))
         {
             if (ZonePower)
@@ -607,13 +607,13 @@ int DoFreePop()
 }
 
 
-void DoIndustrial(int ZonePwrFlg)
+void DoIndustrial(bool zonePowered)
 {
     int tpop, zscore, TrfGood;
 
     IndZPop++;
 
-    SetSmoke(ZonePwrFlg);
+    setSmoke(zonePowered);
 
     tpop = industrialZonePopulation(CurrentTileMasked);
     IndPop += tpop;
@@ -637,7 +637,7 @@ void DoIndustrial(int ZonePwrFlg)
     {
         zscore = IValve + EvalInd(TrfGood);
 
-        if (!ZonePwrFlg)
+        if (!zonePowered)
         {
             zscore = -500;
         }
@@ -656,7 +656,7 @@ void DoIndustrial(int ZonePwrFlg)
 }
 
 
-void DoCommercial(int ZonePwrFlg)
+void DoCommercial(bool zonePowered)
 {
     int TrfGood;
     int zscore, locvalve, value;
@@ -688,7 +688,7 @@ void DoCommercial(int ZonePwrFlg)
         locvalve = EvalCom(TrfGood);
         zscore = CValve + locvalve;
 
-        if (!ZonePwrFlg)
+        if (!zonePowered)
         {
             zscore = -500;
         }
@@ -709,7 +709,7 @@ void DoCommercial(int ZonePwrFlg)
 }
 
 
-void DoResidential(int ZonePwrFlg)
+void DoResidential(bool zonePowered)
 {
     int tpop, value, TrfGood;
 
@@ -744,7 +744,7 @@ void DoResidential(int ZonePwrFlg)
     {
         int locvalve = EvalRes(TrfGood);
         int zscore = RValve + locvalve;
-        if (!ZonePwrFlg)
+        if (!zonePowered)
         {
             zscore = -500;
         }
@@ -774,11 +774,10 @@ void DoResidential(int ZonePwrFlg)
 
 void DoZone(const Point<int>& location, const CityProperties& properties)
 {
-    int ZonePwrFlg;
+    /* Set Power Bit in Map from PowerMap */
+    bool zonePowered{ setZonePower(location) };	
 
-    ZonePwrFlg = setZonePower(location);	/* Set Power Bit in Map from PowerMap */
-
-    if (ZonePwrFlg)
+    if (zonePowered)
     {
         PwrdZCnt++;
     }
@@ -786,16 +785,17 @@ void DoZone(const Point<int>& location, const CityProperties& properties)
     {
         unPwrdZCnt++;
     }
-
-    if (CurrentTileMasked > PORTBASE) /* do Special Zones  */
+    
+    /* do Special Zones  */
+    if (CurrentTileMasked > PORTBASE) 
     {
-        DoSPZone(ZonePwrFlg, properties);
+        DoSPZone(zonePowered, properties);
         return;
     }
 
     if (CurrentTileMasked < HOSPITAL)
     {
-        DoResidential(ZonePwrFlg);
+        DoResidential(zonePowered);
         return;
     }
 
@@ -808,10 +808,10 @@ void DoZone(const Point<int>& location, const CityProperties& properties)
 
     if (CurrentTileMasked < INDBASE)
     {
-        DoCommercial(ZonePwrFlg);
+        DoCommercial(zonePowered);
         return;
     }
 
-    DoIndustrial(ZonePwrFlg);
+    DoIndustrial(zonePowered);
     return;
 }
