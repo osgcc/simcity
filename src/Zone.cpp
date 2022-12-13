@@ -447,10 +447,8 @@ void doResIn(int population, int value)
 
 void doComIn(int population, int value)
 {
-    int z;
-
-    z = LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
-    z = z >> 5;
+    int z{ LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) };
+    z /= 32;
 
     if (population > z)
     {
@@ -729,7 +727,7 @@ void doResidential(bool zonePowered)
         return;
     }
 
-    if ((CurrentTileMasked == FREEZ) || (!(Rand16() & 7)))
+    if ((CurrentTileMasked == FREEZ) || (!(RandomRange(0, 8))))
     {
         int locvalve = evalRes(TrfGood);
         int zscore = RValve + locvalve;
@@ -740,7 +738,7 @@ void doResidential(bool zonePowered)
 
         if (zscore > -350 && zscore - 26380 > -Rand16())
         {
-            if ((!tpop) && (!(Rand16() & 3)))
+            if ((!tpop) && (!(RandomRange(0, 4))))
             {
                 makeHospital();
                 makeChurch();
