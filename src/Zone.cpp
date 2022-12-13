@@ -364,18 +364,27 @@ int evalInd (int traf)
 void buildHouse(int value)
 {
     int z, score, hscore, BestLoc;
-    static int ZeX[9] = { 0,-1, 0, 1,-1, 1,-1, 0, 1 };
-    static int ZeY[9] = { 0,-1,-1,-1, 0, 0, 1, 1, 1 };
+    static const std::array<Vector<int>, 9> searchVector =
+    { {
+        {  0,  0 },
+        { -1, -1 },
+        {  0, -1 },
+        {  1, -1 },
+        { -1,  0 },
+        {  1,  0 },
+        { -1,  1 },
+        {  0,  1 },
+        {  1,  1 }
+    } };
 
     BestLoc = 0;
     hscore = 0;
     for (z = 1; z < 9; z++)
     {
-        int xx = SimulationTarget.x + ZeX[z];
-        int yy = SimulationTarget.y + ZeY[z];
-        if (CoordinatesValid({ xx, yy }))
+        const Point<int> location = SimulationTarget + searchVector[z];
+        if (CoordinatesValid(location))
         {
-            score = evalLot(xx, yy);
+            score = evalLot(location.x, location.y);
             if (score != 0)
             {
                 if (score > hscore)
@@ -384,7 +393,7 @@ void buildHouse(int value)
                     BestLoc = z;
                 }
 
-                if ((score == hscore) && !(Rand16() & 7))
+                if ((score == hscore) && !(RandomRange(0, 8)))
                 {
                     BestLoc = z;
                 }
@@ -394,12 +403,11 @@ void buildHouse(int value)
 
     if (BestLoc)
     {
-        int xx = SimulationTarget.x + ZeX[BestLoc];
-        int yy = SimulationTarget.y + ZeY[BestLoc];
+        const Point<int> location = SimulationTarget + searchVector[BestLoc];
 
-        if (CoordinatesValid({ xx, yy }))
+        if (CoordinatesValid(location))
         {
-            Map[xx][yy] = HOUSE + BLBNCNBIT + RandomRange(0, 2) + (value * 3);
+            Map[location.x][location.y] = HOUSE + BLBNCNBIT + RandomRange(0, 2) + (value * 3);
         }
     }
 }
@@ -407,7 +415,7 @@ void buildHouse(int value)
 
 void increaseRateOfGrowth(int amount)
 {
-    const auto location = SimulationTarget.skewBy({ 8, 8 });
+    const auto location = SimulationTarget.skewInverseBy({ 8, 8 });
     const int rogVal = RateOfGrowthMap.value(location);
 
     RateOfGrowthMap.value(location) = rogVal + (amount * 4);
