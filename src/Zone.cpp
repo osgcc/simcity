@@ -129,13 +129,13 @@ int industrialZonePopulation(int tile)
 }
 
 
-void doHospital()
+void spawnHospital()
 {
     if (CurrentTileMasked == HOSPITAL)
     {
         HospPop++;
 
-        if (!(CityTime & 15))/*post*/
+        if (!(CityTime % 16))/*post*/
         {
             RepairZone(HOSPITAL, 3);
         }
@@ -151,13 +151,13 @@ void doHospital()
 }
 
 
-void doChurch()
+void spawnChurch()
 {
     if (CurrentTileMasked == CHURCH)
     {
         ChurchPop++;
 
-        if (!(CityTime & 15))/*post*/
+        if (!(CityTime & 16))/*post*/
         {
             RepairZone(CHURCH, 3);
         }
@@ -790,8 +790,8 @@ void DoZone(const Point<int>& location, const CityProperties& properties)
 
     if (CurrentTileMasked < COMBASE)
     {
-        doHospital();
-        doChurch();
+        spawnHospital();
+        spawnChurch();
         return;
     }
 

@@ -404,7 +404,7 @@ void DoRoad()
 }
 
 
-/* comefrom: DoSPZone doHospital */
+/* comefrom: DoSPZone spawnHospital */
 void RepairZone(int ZCent, int zsize)
 {
   int cnt;
