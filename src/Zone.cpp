@@ -54,7 +54,7 @@ void zonePlop(const int base)
         {  1,  1 }
     } };
 
-    /* check for fire  */
+    // Check for fire and flooding
     for (int i{}; i < 9; ++i)
     {
         const Point<int> coordinates = SimulationTarget + adjacentTile[i];
