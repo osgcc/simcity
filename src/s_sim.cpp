@@ -668,7 +668,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
 
                     if (CurrentTile & ZONEBIT) // process Zones
                     {
-                        DoZone({ x, y }, properties);
+                        doZone({ x, y }, properties);
                         continue;
                     }
 

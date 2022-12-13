@@ -344,7 +344,7 @@ int getPopulationDensity(int tile)
 {
     if (tile == FREEZ)
     {
-        return DoFreePop();
+        return doFreePop();
     }
 
     if (tile < COMBASE)

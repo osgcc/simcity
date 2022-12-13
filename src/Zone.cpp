@@ -286,7 +286,7 @@ int getLandValue()
 }
 
 
-int EvalLot(int x, int y)
+int evalLot(int x, int y)
 {
     int z, score;
     static int DX[4] = { 0, 1, 0,-1 };
@@ -317,7 +317,7 @@ int EvalLot(int x, int y)
 }
 
 
-int EvalRes(int traf)
+int evalRes(int traf)
 {
     int Value;
 
@@ -348,7 +348,7 @@ int EvalRes(int traf)
 }
 
 
-int EvalCom(int traf)
+int evalCom(int traf)
 {
     if (traf < 0)
     {
@@ -359,7 +359,7 @@ int EvalCom(int traf)
 }
 
 
-int EvalInd (int traf)
+int evalInd (int traf)
 {
   if (traf < 0) 
   {
@@ -370,7 +370,7 @@ int EvalInd (int traf)
 }
 
 
-void BuildHouse(int value)
+void buildHouse(int value)
 {
     int z, score, hscore, BestLoc;
     static int ZeX[9] = { 0,-1, 0, 1,-1, 1,-1, 0, 1 };
@@ -384,7 +384,7 @@ void BuildHouse(int value)
         int yy = SimulationTarget.y + ZeY[z];
         if (CoordinatesValid({ xx, yy }))
         {
-            score = EvalLot(xx, yy);
+            score = evalLot(xx, yy);
             if (score != 0)
             {
                 if (score > hscore)
@@ -414,14 +414,14 @@ void BuildHouse(int value)
 }
 
 
-void IncROG(int amount)
+void increaseRateOfGrowth(int amount)
 {
     const int rogVal = RateOfGrowthMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 });
     RateOfGrowthMap.value({ SimulationTarget.x >> 3, SimulationTarget.y >> 3 }) = rogVal + (amount << 2);
 }
 
 
-void DoResIn(int pop, int value)
+void doResIn(int pop, int value)
 {
     int z;
 
@@ -436,15 +436,15 @@ void DoResIn(int pop, int value)
     {
         if (pop < 8)
         {
-            BuildHouse(value);
-            IncROG(1);
+            buildHouse(value);
+            increaseRateOfGrowth(1);
             return;
         }
 
         if (PopulationDensityMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) > 64)
         {
             residentialPlop(0, value);
-            IncROG(8);
+            increaseRateOfGrowth(8);
             return;
         }
 
@@ -454,12 +454,12 @@ void DoResIn(int pop, int value)
     if (pop < 40)
     {
         residentialPlop((pop / 8) - 1, value);
-        IncROG(8);
+        increaseRateOfGrowth(8);
     }
 }
 
 
-void DoComIn(int pop, int value)
+void doComIn(int pop, int value)
 {
     int z;
 
@@ -474,22 +474,22 @@ void DoComIn(int pop, int value)
     if (pop < 5)
     {
         commercialPlop(pop, value);
-        IncROG(8);
+        increaseRateOfGrowth(8);
     }
 }
 
 
-void DoIndIn(int pop, int value)
+void doIndIn(int pop, int value)
 {
     if (pop < 4)
     {
         industrialPlop(pop, value);
-        IncROG(8);
+        increaseRateOfGrowth(8);
     }
 }
 
 
-void DoResOut(int pop, int value)
+void doResOut(int pop, int value)
 {
     static int Brdr[9] = { 0,3,6,1,4,7,2,5,8 };
     int x, y, loc, z;
@@ -502,13 +502,13 @@ void DoResOut(int pop, int value)
     if (pop > 16)
     {
         residentialPlop(((pop - 24) / 8), value);
-        IncROG(-8);
+        increaseRateOfGrowth(-8);
         return;
     }
 
     if (pop == 16)
     {
-        IncROG(-8);
+        increaseRateOfGrowth(-8);
         Map[SimulationTarget.x][SimulationTarget.y] = (FREEZ | BLBNCNBIT | ZONEBIT);
 
         for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
@@ -528,7 +528,7 @@ void DoResOut(int pop, int value)
 
     if (pop < 16)
     {
-        IncROG(-1);
+        increaseRateOfGrowth(-1);
         z = 0;
 
         for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
@@ -551,41 +551,41 @@ void DoResOut(int pop, int value)
 }
 
 
-void DoComOut(int pop, int value)
+void doComOut(int pop, int value)
 {
     if (pop > 1)
     {
         commercialPlop(pop - 2, value);
-        IncROG(-8);
+        increaseRateOfGrowth(-8);
         return;
     }
 
     if (pop == 1)
     {
         zonePlop(COMBASE);
-        IncROG(-8);
+        increaseRateOfGrowth(-8);
     }
 }
 
 
-void DoIndOut(int pop, int value)
+void doIndOut(int pop, int value)
 {
     if (pop > 1)
     {
         industrialPlop(pop - 2, value);
-        IncROG(-8);
+        increaseRateOfGrowth(-8);
         return;
     }
 
     if (pop == 1)
     {
         zonePlop(INDCLR - 4);
-        IncROG(-8);
+        increaseRateOfGrowth(-8);
     }
 }
 
 
-int DoFreePop()
+int doFreePop()
 {
     int count;
     int loc, x, y;
@@ -610,7 +610,7 @@ int DoFreePop()
 }
 
 
-void DoIndustrial(bool zonePowered)
+void doIndustrial(bool zonePowered)
 {
     int tpop, zscore, TrfGood;
 
@@ -632,13 +632,13 @@ void DoIndustrial(bool zonePowered)
 
     if (TrfGood == -1)
     {
-        DoIndOut(tpop, Rand16() & 1);
+        doIndOut(tpop, Rand16() & 1);
         return;
     }
 
     if (!(Rand16() & 7))
     {
-        zscore = IValve + EvalInd(TrfGood);
+        zscore = IValve + evalInd(TrfGood);
 
         if (!zonePowered)
         {
@@ -647,19 +647,19 @@ void DoIndustrial(bool zonePowered)
 
         if ((zscore > -350) && (zscore - 26380) > Rand16())
         {
-            DoIndIn(tpop, Rand16() & 1);
+            doIndIn(tpop, Rand16() & 1);
             return;
         }
 
         if ((zscore < 350) && (zscore + 26380) < Rand16())
         {
-            DoIndOut(tpop, Rand16() & 1);
+            doIndOut(tpop, Rand16() & 1);
         }
     }
 }
 
 
-void DoCommercial(bool zonePowered)
+void doCommercial(bool zonePowered)
 {
     int TrfGood;
     int zscore, locvalve, value;
@@ -682,13 +682,13 @@ void DoCommercial(bool zonePowered)
     if (TrfGood == -1)
     {
         value = getLandValue();
-        DoComOut(tpop, value);
+        doComOut(tpop, value);
         return;
     }
 
     if (!(Rand16() & 7))
     {
-        locvalve = EvalCom(TrfGood);
+        locvalve = evalCom(TrfGood);
         zscore = CValve + locvalve;
 
         if (!zonePowered)
@@ -699,27 +699,27 @@ void DoCommercial(bool zonePowered)
         if (TrfGood && (zscore > -350) && zscore - 26380 > Rand16())
         {
             value = getLandValue();
-            DoComIn(tpop, value);
+            doComIn(tpop, value);
             return;
         }
 
         if (zscore < 350 && zscore + 26380 < Rand16())
         {
             value = getLandValue();
-            DoComOut(tpop, value);
+            doComOut(tpop, value);
         }
     }
 }
 
 
-void DoResidential(bool zonePowered)
+void doResidential(bool zonePowered)
 {
     int tpop, value, TrfGood;
 
     ResZPop++;
     if (CurrentTileMasked == FREEZ)
     {
-        tpop = DoFreePop();
+        tpop = doFreePop();
     }
     else
     {
@@ -739,13 +739,13 @@ void DoResidential(bool zonePowered)
     if (TrfGood == -1)
     {
         value = getLandValue();
-        DoResOut(tpop, value);
+        doResOut(tpop, value);
         return;
     }
 
     if ((CurrentTileMasked == FREEZ) || (!(Rand16() & 7)))
     {
-        int locvalve = EvalRes(TrfGood);
+        int locvalve = evalRes(TrfGood);
         int zscore = RValve + locvalve;
         if (!zonePowered)
         {
@@ -762,7 +762,7 @@ void DoResidential(bool zonePowered)
             }
 
             value = getLandValue();
-            DoResIn(tpop, value);
+            doResIn(tpop, value);
 
             return;
         }
@@ -770,13 +770,13 @@ void DoResidential(bool zonePowered)
         if ((zscore < 350) && zscore + 26380 < Rand16())
         {
             value = getLandValue();
-            DoResOut(tpop, value);
+            doResOut(tpop, value);
         }
     }
 }
 
 
-void DoZone(const Point<int>& location, const CityProperties& properties)
+void doZone(const Point<int>& location, const CityProperties& properties)
 {
     /* Set Power Bit in Map from PowerMap */
     bool zonePowered{ setZonePower(location) };	
@@ -799,7 +799,7 @@ void DoZone(const Point<int>& location, const CityProperties& properties)
 
     if (CurrentTileMasked < HOSPITAL)
     {
-        DoResidential(zonePowered);
+        doResidential(zonePowered);
         return;
     }
 
@@ -812,10 +812,10 @@ void DoZone(const Point<int>& location, const CityProperties& properties)
 
     if (CurrentTileMasked < INDBASE)
     {
-        DoCommercial(zonePowered);
+        doCommercial(zonePowered);
         return;
     }
 
-    DoIndustrial(zonePowered);
+    doIndustrial(zonePowered);
     return;
 }
