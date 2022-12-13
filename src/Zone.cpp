@@ -594,7 +594,7 @@ int doFreePop()
 }
 
 
-void doIndustrial(bool zonePowered)
+void updateIndustrial(bool zonePowered)
 {
     int tpop, zscore, TrfGood;
 
@@ -616,11 +616,11 @@ void doIndustrial(bool zonePowered)
 
     if (TrfGood == -1)
     {
-        doIndOut(tpop, Rand16() & 1);
+        doIndOut(tpop, RandomRange(0, 2));
         return;
     }
 
-    if (!(Rand16() & 7))
+    if (!(RandomRange(0, 8)))
     {
         zscore = IValve + evalInd(TrfGood);
 
@@ -643,7 +643,7 @@ void doIndustrial(bool zonePowered)
 }
 
 
-void doCommercial(bool zonePowered)
+void updateCommercial(bool zonePowered)
 {
     int TrfGood;
     int zscore, locvalve, value;
@@ -696,7 +696,7 @@ void doCommercial(bool zonePowered)
 }
 
 
-void doResidential(bool zonePowered)
+void updateResidential(bool zonePowered)
 {
     int tpop, value, TrfGood;
 
@@ -774,7 +774,7 @@ void updateZone(const Point<int>& location, const CityProperties& properties)
 
     if (CurrentTileMasked < HOSPITAL)
     {
-        doResidential(zonePowered);
+        updateResidential(zonePowered);
         return;
     }
 
@@ -787,10 +787,10 @@ void updateZone(const Point<int>& location, const CityProperties& properties)
 
     if (CurrentTileMasked < INDBASE)
     {
-        doCommercial(zonePowered);
+        updateCommercial(zonePowered);
         return;
     }
 
-    doIndustrial(zonePowered);
+    updateIndustrial(zonePowered);
     return;
 }

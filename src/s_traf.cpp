@@ -258,7 +258,7 @@ bool TryDrive()
 }
 
 
-/* comefrom: doIndustrial doCommercial doResidential */
+/* comefrom: updateIndustrial updateCommercial updateResidential */
 int MakeTraf(int Zt)
 {
     const auto simLocation = SimulationTarget;
