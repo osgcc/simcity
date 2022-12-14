@@ -472,10 +472,56 @@ void increaseIndustry(int population, int value)
 }
 
 
-void decreaseResidential(int population, int value)
+void convertResidentialToHomes(int value)
+{
+    increaseRateOfGrowth(-8);
+    Map[SimulationTarget.x][SimulationTarget.y] = (ResidentialEmpty | BLBNCNBIT | ZONEBIT);
+
+    for (int x{ SimulationTarget.x - 1 }; x <= SimulationTarget.x + 1; ++x)
+    {
+        for (int y{ SimulationTarget.y - 1 }; y <= SimulationTarget.y + 1; ++y)
+        {
+            const Point<int> coordinates{ x, y };
+            if (CoordinatesValid(coordinates))
+            {
+                const auto tile = maskedTileValue(coordinates);
+                if (tile != ResidentialEmpty)
+                {
+                    tileValue(coordinates) = LHTHR + value + RandomRange(0, 2) + BLBNCNBIT;
+                }
+            }
+        }
+    }
+}
+
+
+void clearResidentialZone()
 {
     static const std::array<int, 9> Brdr = { 0, 3, 6, 1, 4, 7, 2, 5, 8 };
 
+    int index{};
+    for (int x{ SimulationTarget.x - 1 }; x <= SimulationTarget.x + 1; ++x)
+    {
+        for (int y{ SimulationTarget.y - 1 }; y <= SimulationTarget.y + 1; ++y)
+        {
+            const Point<int> coordinates{ x, y };
+            if (CoordinatesValid(coordinates))
+            {
+                const auto tile = maskedTileValue(coordinates);
+                if ((tile >= LHTHR) && (tile <= HHTHR))
+                {
+                    tileValue(coordinates) = Brdr[index] + BLBNCNBIT + ResidentialEmpty - 4;
+                    return;
+                }
+            }
+            index++;
+        }
+    }
+}
+
+
+void decreaseResidential(int population, int value)
+{
     if (population == 0)
     {
         return;
@@ -490,47 +536,13 @@ void decreaseResidential(int population, int value)
 
     if (population == 16)
     {
-        increaseRateOfGrowth(-8);
-        Map[SimulationTarget.x][SimulationTarget.y] = (ResidentialEmpty | BLBNCNBIT | ZONEBIT);
-
-        for (int x{ SimulationTarget.x - 1 }; x <= SimulationTarget.x + 1; ++x)
-        {
-            for (int y{ SimulationTarget.y - 1 }; y <= SimulationTarget.y + 1; ++y)
-            {
-                const Point<int> coordinates{ x, y };
-                if (CoordinatesValid(coordinates))
-                {
-                    const auto tile = maskedTileValue(coordinates);
-                    if (tile != ResidentialEmpty)
-                    {
-                        tileValue(coordinates) = LHTHR + value + RandomRange(0, 2) + BLBNCNBIT;
-                    }
-                }
-            }
-        }
+        convertResidentialToHomes(value);
     }
 
     if (population < 16)
     {
         increaseRateOfGrowth(-1);
-        int index{};
-        for (int x{ SimulationTarget.x - 1 }; x <= SimulationTarget.x + 1; ++x)
-        {
-            for (int y{ SimulationTarget.y - 1 }; y <= SimulationTarget.y + 1; ++y)
-            {
-                const Point<int> coordinates{ x, y };
-                if (CoordinatesValid(coordinates))
-                {
-                    const auto tile = maskedTileValue(coordinates);
-                    if ((tile >= LHTHR) && (tile <= HHTHR))
-                    {
-                        tileValue(coordinates) = Brdr[index] + BLBNCNBIT + ResidentialEmpty - 4;
-                        return;
-                    }
-                }
-                index++;
-            }
-        }
+        clearResidentialZone();
     }
 }
 
