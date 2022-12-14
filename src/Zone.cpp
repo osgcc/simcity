@@ -350,10 +350,9 @@ int evalInd(TrafficResult result)
 
 void buildHouse(int value)
 {
-    int z, score, hscore, BestLoc;
     static const std::array<Vector<int>, 9> searchVector =
     { {
-        {  0,  0 },
+        {  0,  0 }, // Skip center tile
         { -1, -1 },
         {  0, -1 },
         {  1, -1 },
@@ -364,37 +363,37 @@ void buildHouse(int value)
         {  1,  1 }
     } };
 
-    BestLoc = 0;
-    hscore = 0;
-    for (z = 1; z < 9; z++)
+    int bestLocationOffset{};
+    int highestScore{};
+    for (int i{ 1 }; i < 9; ++i)
     {
-        const Point<int> location = SimulationTarget + searchVector[z];
+        const Point<int> location = SimulationTarget + searchVector[i];
         if (CoordinatesValid(location))
         {
-            score = evalLot(location.x, location.y);
+            const auto score = evalLot(location.x, location.y);
             if (score != 0)
             {
-                if (score > hscore)
+                if (score > highestScore)
                 {
-                    hscore = score;
-                    BestLoc = z;
+                    highestScore = score;
+                    bestLocationOffset = i;
                 }
 
-                if ((score == hscore) && !(RandomRange(0, 8)))
+                if ((score == highestScore) && !(RandomRange(0, 8)))
                 {
-                    BestLoc = z;
+                    bestLocationOffset = i;
                 }
             }
         }
     }
 
-    if (BestLoc)
+    if (bestLocationOffset != 0)
     {
-        const Point<int> location = SimulationTarget + searchVector[BestLoc];
+        const Point<int> location = SimulationTarget + searchVector[bestLocationOffset];
 
         if (CoordinatesValid(location))
         {
-            Map[location.x][location.y] = HOUSE + BLBNCNBIT + RandomRange(0, 2) + (value * 3);
+            tileValue(location) = HOUSE + BLBNCNBIT + RandomRange(0, 2) + (value * 3);
         }
     }
 }
