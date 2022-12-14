@@ -331,7 +331,7 @@ bool tally(int tileValue)
 int checkSize(int temp)
 {
     /* check for the normal com, resl, ind 3x3 zones & the fireDept & PoliceDept */
-    if (((temp >= (RESBASE - 1)) && (temp <= (PORTBASE - 1))) ||
+    if (((temp >= (ResidentialBase - 1)) && (temp <= (PORTBASE - 1))) ||
         ((temp >= (LASTPOWERPLANT + 1)) && (temp <= (POLICESTATION + 4))))
     {
         return (3);
@@ -501,7 +501,7 @@ static int idArray[28] =
     ROADBASE,
     POWERBASE,
     RAILBASE,
-    RESBASE,
+    ResidentialBase,
     COMBASE,
     INDBASE,
     PORTBASE,
@@ -851,7 +851,7 @@ ToolResult residential_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, RESBASE, 3, false, Tool::Residential, budget);
+    return checkArea(x, y, ResidentialBase, 3, false, Tool::Residential, budget);
 }
 
 

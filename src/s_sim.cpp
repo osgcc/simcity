@@ -672,7 +672,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
                         continue;
                     }
 
-                    if ((tile >= RAILBASE) && (tile < RESBASE))
+                    if ((tile >= RAILBASE) && (tile < ResidentialBase))
                     {
                         DoRail({ x, y });
                         continue;

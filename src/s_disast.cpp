@@ -60,7 +60,7 @@ bool canSpreadFloodTo(const int tile)
 bool tileIsVulnerable(const int tile)
 {
     const unsigned int unmasked = tile & LOMASK;
-    return !(unmasked < RESBASE) || (unmasked > LASTZONE) || (tile & ZONEBIT);
+    return !(unmasked < ResidentialBase) || (unmasked > LASTZONE) || (tile & ZONEBIT);
 }
 
 

@@ -140,7 +140,7 @@ void drawLilTransMap()
 
             unsigned int tile = maskedTileValue(row, col);
 
-            if ((tile >= RESBASE) ||
+            if ((tile >= ResidentialBase) ||
                 ((tile >= BRWXXX7) && tile <= 220) ||
                 (tile == UNUSED_TRASH6))
             {

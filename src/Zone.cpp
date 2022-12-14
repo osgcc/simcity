@@ -159,7 +159,7 @@ void spawnHospital()
         {
             if (!RandomRange(0, 20))
             {
-                zonePlop(RESBASE);
+                zonePlop(ResidentialBase);
             }
         }
     }
@@ -181,7 +181,7 @@ void spawnChurch()
         {
             if (!RandomRange(0, 20))
             {
-                zonePlop(RESBASE);
+                zonePlop(ResidentialBase);
             }
         }
     }
@@ -289,7 +289,7 @@ int evaluateHouseLot(int x, int y)
 {
     // test for clear lot
     int tile = maskedTileValue({ x, y });
-    if (tile && ((tile < RESBASE) || (tile > RESBASE + 8)))
+    if (tile && ((tile < ResidentialBase) || (tile > ResidentialBase + 8)))
     {
         return -1;
     }
@@ -509,7 +509,7 @@ void clearResidentialZone()
                 const auto tile = maskedTileValue(coordinates);
                 if ((tile >= LHTHR) && (tile <= HHTHR))
                 {
-                    tileValue(coordinates) = zoneTileOffset[index] + BLBNCNBIT + ResidentialEmpty - 4;
+                    tileValue(coordinates) = ResidentialBase + zoneTileOffset[index] + BLBNCNBIT;
                     return;
                 }
             }
