@@ -102,21 +102,21 @@ void zonePlop(const int base)
 }
 
 
-void residentialPlop(int density, int value)
+void plopResidential(int density, int value)
 {
     const int base{ (((value * 4) + density) * 9) + RZB - 4 };
     zonePlop(base);
 }
 
 
-void commercialPlop(int density, int value)
+void plopCommercial(int density, int value)
 {
     const int base{ (((value * 5) + density) * 9) + CZB - 4 };
     zonePlop(base);
 }
 
 
-void industrialPlop(int density, int value)
+void plopIndustrial(int density, int value)
 {
     const int base{ (((value * 4) + density) * 9) + (IZB - 4) };
     zonePlop(base);
@@ -428,7 +428,7 @@ void doResIn(int population, int value)
 
         if (PopulationDensityMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) > 64)
         {
-            residentialPlop(0, value);
+            plopResidential(0, value);
             increaseRateOfGrowth(8);
             return;
         }
@@ -438,7 +438,7 @@ void doResIn(int population, int value)
 
     if (population < 40)
     {
-        residentialPlop((population / 8) - 1, value);
+        plopResidential((population / 8) - 1, value);
         increaseRateOfGrowth(8);
     }
 }
@@ -456,7 +456,7 @@ void doComIn(int population, int value)
 
     if (population < 5)
     {
-        commercialPlop(population, value);
+        plopCommercial(population, value);
         increaseRateOfGrowth(8);
     }
 }
@@ -466,7 +466,7 @@ void doIndIn(int population, int value)
 {
     if (population < 4)
     {
-        industrialPlop(population, value);
+        plopIndustrial(population, value);
         increaseRateOfGrowth(8);
     }
 }
@@ -484,7 +484,7 @@ void doResOut(int population, int value)
 
     if (population > 16)
     {
-        residentialPlop(((population - 24) / 8), value);
+        plopResidential(((population - 24) / 8), value);
         increaseRateOfGrowth(-8);
         return;
     }
@@ -538,7 +538,7 @@ void doComOut(int population, int value)
 {
     if (population > 1)
     {
-        commercialPlop(population - 2, value);
+        plopCommercial(population - 2, value);
         increaseRateOfGrowth(-8);
         return;
     }
@@ -555,7 +555,7 @@ void doIndOut(int population, int value)
 {
     if (population > 1)
     {
-        industrialPlop(population - 2, value);
+        plopIndustrial(population - 2, value);
         increaseRateOfGrowth(-8);
         return;
     }
