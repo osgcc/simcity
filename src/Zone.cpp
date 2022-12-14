@@ -133,14 +133,14 @@ int residentialZonePopulation(int tile)
 int commercialZonePopulation(int tile)
 {
     const int density{ (((tile - CZB) / 9) % 5) + 1 };
-    return (tile == COMCLR) ? 0 : density;
+    return (tile == CommercialEmpty) ? 0 : density;
 }
 
 
 int industrialZonePopulation(int tile)
 {
     const int density{ (((tile - IZB) / 9) % 4) + 1 };
-    return (tile == INDCLR) ? 0 : density;
+    return (tile == IndustryEmpty) ? 0 : density;
 }
 
 
@@ -326,7 +326,7 @@ int evaluateResidential(TrafficResult result)
 }
 
 
-int evalCom(TrafficResult result)
+int evaluateCommercial(TrafficResult result)
 {
     if (result == TrafficResult::NoTransportNearby)
     {
@@ -337,7 +337,7 @@ int evalCom(TrafficResult result)
 }
 
 
-int evalInd(TrafficResult result)
+int evaluateIndustrial(TrafficResult result)
 {
     if (result == TrafficResult::NoTransportNearby)
     {
@@ -408,7 +408,7 @@ void increaseRateOfGrowth(int amount)
 }
 
 
-void doResIn(int population, int value)
+void increaseResidential(int population, int value)
 {
     const int pollution{ PollutionMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) };
 
@@ -417,7 +417,7 @@ void doResIn(int population, int value)
         return;
     }
 
-    if (CurrentTileMasked == FREEZ)
+    if (CurrentTileMasked == ResidentialEmpty)
     {
         if (population < 8)
         {
@@ -444,7 +444,7 @@ void doResIn(int population, int value)
 }
 
 
-void doComIn(int population, int value)
+void increaseCommercial(int population, int value)
 {
     int z{ LandValueMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) };
     z /= 32;
@@ -462,7 +462,7 @@ void doComIn(int population, int value)
 }
 
 
-void doIndIn(int population, int value)
+void increaseIndustry(int population, int value)
 {
     if (population < 4)
     {
@@ -472,7 +472,7 @@ void doIndIn(int population, int value)
 }
 
 
-void doResOut(int population, int value)
+void decreaseResidential(int population, int value)
 {
     static int Brdr[9] = { 0,3,6,1,4,7,2,5,8 };
     int x, y, loc, z;
@@ -492,7 +492,7 @@ void doResOut(int population, int value)
     if (population == 16)
     {
         increaseRateOfGrowth(-8);
-        Map[SimulationTarget.x][SimulationTarget.y] = (FREEZ | BLBNCNBIT | ZONEBIT);
+        Map[SimulationTarget.x][SimulationTarget.y] = (ResidentialEmpty | BLBNCNBIT | ZONEBIT);
 
         for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
         {
@@ -500,7 +500,7 @@ void doResOut(int population, int value)
             {
                 if (x >= 0 && x < SimWidth && y >= 0 && y < SimHeight)
                 {
-                    if ((Map[x][y] & LOMASK) != FREEZ)
+                    if ((Map[x][y] & LOMASK) != ResidentialEmpty)
                     {
                         Map[x][y] = LHTHR + value + RandomRange(0, 2) + BLBNCNBIT;
                     }
@@ -523,7 +523,7 @@ void doResOut(int population, int value)
                     loc = Map[x][y] & LOMASK;
                     if ((loc >= LHTHR) && (loc <= HHTHR))
                     {
-                        Map[x][y] = Brdr[z] + BLBNCNBIT + FREEZ - 4;
+                        Map[x][y] = Brdr[z] + BLBNCNBIT + ResidentialEmpty - 4;
                         return;
                     }
                 }
@@ -534,7 +534,7 @@ void doResOut(int population, int value)
 }
 
 
-void doComOut(int population, int value)
+void decreaseCommercial(int population, int value)
 {
     if (population > 1)
     {
@@ -551,7 +551,7 @@ void doComOut(int population, int value)
 }
 
 
-void doIndOut(int population, int value)
+void decreaseIndustry(int population, int value)
 {
     if (population > 1)
     {
@@ -562,7 +562,7 @@ void doIndOut(int population, int value)
 
     if (population == 1)
     {
-        zonePlop(INDCLR - 4);
+        zonePlop(IndustryEmpty - 4);
         increaseRateOfGrowth(-8);
     }
 }
@@ -590,7 +590,7 @@ int doFreePop()
 }
 
 
-void updateIndustrial(bool zonePowered)
+void updateIndustry(bool zonePowered)
 {
     int zscore;
 
@@ -609,13 +609,13 @@ void updateIndustrial(bool zonePowered)
 
     if (trafficResult == TrafficResult::NoTransportNearby)
     {
-        doIndOut(zonePopulation, RandomRange(0, 2));
+        decreaseIndustry(zonePopulation, RandomRange(0, 2));
         return;
     }
 
     if (!(RandomRange(0, 8)))
     {
-        zscore = IValve + evalInd(trafficResult);
+        zscore = IValve + evaluateIndustrial(trafficResult);
 
         if (!zonePowered)
         {
@@ -624,13 +624,13 @@ void updateIndustrial(bool zonePowered)
 
         if ((zscore > -350) && (zscore - 26380) > Rand16())
         {
-            doIndIn(zonePopulation, Rand16() & 1);
+            increaseIndustry(zonePopulation, Rand16() & 1);
             return;
         }
 
         if ((zscore < 350) && (zscore + 26380) < Rand16())
         {
-            doIndOut(zonePopulation, Rand16() & 1);
+            decreaseIndustry(zonePopulation, Rand16() & 1);
         }
     }
 }
@@ -656,13 +656,13 @@ void updateCommercial(bool zonePowered)
     if (trafficResult == TrafficResult::NoTransportNearby)
     {
         value = getLandValue();
-        doComOut(tpop, value);
+        decreaseCommercial(tpop, value);
         return;
     }
 
     if (!(Rand16() & 7))
     {
-        locvalve = evalCom(trafficResult);
+        locvalve = evaluateCommercial(trafficResult);
         zscore = CValve + locvalve;
 
         if (!zonePowered)
@@ -673,14 +673,14 @@ void updateCommercial(bool zonePowered)
         if (trafficResult == TrafficResult::RouteFound && (zscore > -350) && zscore - 26380 > Rand16())
         {
             value = getLandValue();
-            doComIn(tpop, value);
+            increaseCommercial(tpop, value);
             return;
         }
 
         if (zscore < 350 && zscore + 26380 < Rand16())
         {
             value = getLandValue();
-            doComOut(tpop, value);
+            decreaseCommercial(tpop, value);
         }
     }
 }
@@ -690,7 +690,7 @@ void updateResidential(bool zonePowered)
 {
     int residentialPopulation, value;
 
-    if (CurrentTileMasked == FREEZ)
+    if (CurrentTileMasked == ResidentialEmpty)
     {
         residentialPopulation = doFreePop();
     }
@@ -711,11 +711,11 @@ void updateResidential(bool zonePowered)
     if (trafficResult == TrafficResult::NoTransportNearby)
     {
         value = getLandValue();
-        doResOut(residentialPopulation, value);
+        decreaseResidential(residentialPopulation, value);
         return;
     }
 
-    if ((CurrentTileMasked == FREEZ) || (RandomRange(0, 8) == 0))
+    if ((CurrentTileMasked == ResidentialEmpty) || (RandomRange(0, 8) == 0))
     {
         int locationValue = evaluateResidential(trafficResult);
         int zoneScore = RValve + locationValue;
@@ -734,7 +734,7 @@ void updateResidential(bool zonePowered)
             }
 
             value = getLandValue();
-            doResIn(residentialPopulation, value);
+            increaseResidential(residentialPopulation, value);
 
             return;
         }
@@ -742,7 +742,7 @@ void updateResidential(bool zonePowered)
         if ((zoneScore < 350) && zoneScore + 26380 < Rand16())
         {
             value = getLandValue();
-            doResOut(residentialPopulation, value);
+            decreaseResidential(residentialPopulation, value);
         }
     }
 }
@@ -779,6 +779,6 @@ void updateZone(const Point<int>& location, const CityProperties& properties)
         return;
     }
 
-    updateIndustrial(zonePowered);
+    updateIndustry(zonePowered);
     return;
 }

@@ -342,7 +342,7 @@ void fireAnalysis()
 
 int getPopulationDensity(int tile)
 {
-    if (tile == FREEZ)
+    if (tile == ResidentialEmpty)
     {
         return doFreePop();
     }
