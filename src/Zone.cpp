@@ -474,10 +474,9 @@ void increaseIndustry(int population, int value)
 
 void decreaseResidential(int population, int value)
 {
-    static int Brdr[9] = { 0,3,6,1,4,7,2,5,8 };
-    int x, y, loc, z;
+    static const std::array<int, 9> Brdr = { 0, 3, 6, 1, 4, 7, 2, 5, 8 };
 
-    if (!population)
+    if (population == 0)
     {
         return;
     }
@@ -494,15 +493,17 @@ void decreaseResidential(int population, int value)
         increaseRateOfGrowth(-8);
         Map[SimulationTarget.x][SimulationTarget.y] = (ResidentialEmpty | BLBNCNBIT | ZONEBIT);
 
-        for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
+        for (int x{ SimulationTarget.x - 1 }; x <= SimulationTarget.x + 1; ++x)
         {
-            for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++)
+            for (int y{ SimulationTarget.y - 1 }; y <= SimulationTarget.y + 1; ++y)
             {
-                if (x >= 0 && x < SimWidth && y >= 0 && y < SimHeight)
+                const Point<int> coordinates{ x, y };
+                if (CoordinatesValid(coordinates))
                 {
-                    if ((Map[x][y] & LOMASK) != ResidentialEmpty)
+                    const auto tile = maskedTileValue(coordinates);
+                    if (tile != ResidentialEmpty)
                     {
-                        Map[x][y] = LHTHR + value + RandomRange(0, 2) + BLBNCNBIT;
+                        tileValue(coordinates) = LHTHR + value + RandomRange(0, 2) + BLBNCNBIT;
                     }
                 }
             }
@@ -512,22 +513,22 @@ void decreaseResidential(int population, int value)
     if (population < 16)
     {
         increaseRateOfGrowth(-1);
-        z = 0;
-
-        for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
+        int index{};
+        for (int x{ SimulationTarget.x - 1 }; x <= SimulationTarget.x + 1; ++x)
         {
-            for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++)
+            for (int y{ SimulationTarget.y - 1 }; y <= SimulationTarget.y + 1; ++y)
             {
-                if (x >= 0 && x < SimWidth && y >= 0 && y < SimHeight)
+                const Point<int> coordinates{ x, y };
+                if (CoordinatesValid(coordinates))
                 {
-                    loc = Map[x][y] & LOMASK;
-                    if ((loc >= LHTHR) && (loc <= HHTHR))
+                    const auto tile = maskedTileValue(coordinates);
+                    if ((tile >= LHTHR) && (tile <= HHTHR))
                     {
-                        Map[x][y] = Brdr[z] + BLBNCNBIT + ResidentialEmpty - 4;
+                        tileValue(coordinates) = Brdr[index] + BLBNCNBIT + ResidentialEmpty - 4;
                         return;
                     }
                 }
-                z++;
+                index++;
             }
         }
     }
