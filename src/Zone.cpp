@@ -285,7 +285,7 @@ int getLandValue()
 }
 
 
-int evalLot(int x, int y)
+int evaluateHouseLot(int x, int y)
 {
     // test for clear lot
     int tile = maskedTileValue({ x, y });
@@ -310,7 +310,7 @@ int evalLot(int x, int y)
 }
 
 
-int evalRes(TrafficResult result)
+int evaluateResidential(TrafficResult result)
 {
     if (result == TrafficResult::NoTransportNearby)
     {
@@ -370,7 +370,7 @@ void buildHouse(int value)
         const Point<int> location = SimulationTarget + searchVector[i];
         if (CoordinatesValid(location))
         {
-            const auto score = evalLot(location.x, location.y);
+            const auto score = evaluateHouseLot(location.x, location.y);
             if (score != 0)
             {
                 if (score > highestScore)
@@ -570,20 +570,17 @@ void doIndOut(int population, int value)
 
 int doFreePop()
 {
-    int count;
-    int loc, x, y;
-
-    count = 0;
-    for (x = SimulationTarget.x - 1; x <= SimulationTarget.x + 1; x++)
+    int count{};
+    for (int x{ SimulationTarget.x - 1 }; x <= SimulationTarget.x + 1; ++x)
     {
-        for (y = SimulationTarget.y - 1; y <= SimulationTarget.y + 1; y++)
+        for (int y{ SimulationTarget.y - 1 }; y <= SimulationTarget.y + 1; ++y)
         {
-            if (x >= 0 && x < SimWidth && y >= 0 && y < SimHeight)
+            if (CoordinatesValid({x, y}))
             {
-                loc = Map[x][y] & LOMASK;
-                if ((loc >= LHTHR) && (loc <= HHTHR))
+                const auto tile = maskedTileValue({x, y});
+                if ((tile >= LHTHR) && (tile <= HHTHR))
                 {
-                    count++;
+                    ++count;
                 }
             }
         }
@@ -718,16 +715,16 @@ void updateResidential(bool zonePowered)
         return;
     }
 
-    if ((CurrentTileMasked == FREEZ) || (!(RandomRange(0, 8))))
+    if ((CurrentTileMasked == FREEZ) || (RandomRange(0, 8) == 0))
     {
-        int locvalve = evalRes(trafficResult);
-        int zscore = RValve + locvalve;
+        int locationValue = evaluateResidential(trafficResult);
+        int zoneScore = RValve + locationValue;
         if (!zonePowered)
         {
-            zscore = -500;
+            zoneScore = -500;
         }
 
-        if (zscore > -350 && zscore - 26380 > -Rand16())
+        if (zoneScore > -350 && zoneScore - 26380 > -Rand16())
         {
             if ((!residentialPopulation) && (!(RandomRange(0, 4))))
             {
@@ -742,7 +739,7 @@ void updateResidential(bool zonePowered)
             return;
         }
 
-        if ((zscore < 350) && zscore + 26380 < Rand16())
+        if ((zoneScore < 350) && zoneScore + 26380 < Rand16())
         {
             value = getLandValue();
             doResOut(residentialPopulation, value);
