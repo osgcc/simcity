@@ -12,7 +12,7 @@
 
 class CityProperties;
 
-int doFreePop();
+int housePopulation();
 int residentialZonePopulation(int tile);
 int commercialZonePopulation(int tile);
 int industrialZonePopulation(int tile);

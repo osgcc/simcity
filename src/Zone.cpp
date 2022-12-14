@@ -581,7 +581,7 @@ void decreaseIndustry(int population, int value)
 }
 
 
-int doFreePop()
+int housePopulation()
 {
     int count{};
     for (int x{ SimulationTarget.x - 1 }; x <= SimulationTarget.x + 1; ++x)
@@ -705,7 +705,7 @@ void updateResidential(bool zonePowered)
 
     if (CurrentTileMasked == ResidentialEmpty)
     {
-        residentialPopulation = doFreePop();
+        residentialPopulation = housePopulation();
     }
     else
     {

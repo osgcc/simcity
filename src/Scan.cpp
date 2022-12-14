@@ -344,7 +344,7 @@ int getPopulationDensity(int tile)
 {
     if (tile == ResidentialEmpty)
     {
-        return doFreePop();
+        return housePopulation();
     }
 
     if (tile < COMBASE)
