@@ -496,7 +496,7 @@ void convertResidentialToHomes(int value)
 
 void clearResidentialZone()
 {
-    static const std::array<int, 9> Brdr = { 0, 3, 6, 1, 4, 7, 2, 5, 8 };
+    static const std::array<int, 9> zoneTileOffset = { 0, 3, 6, 1, 4, 7, 2, 5, 8 };
 
     int index{};
     for (int x{ SimulationTarget.x - 1 }; x <= SimulationTarget.x + 1; ++x)
@@ -509,7 +509,7 @@ void clearResidentialZone()
                 const auto tile = maskedTileValue(coordinates);
                 if ((tile >= LHTHR) && (tile <= HHTHR))
                 {
-                    tileValue(coordinates) = Brdr[index] + BLBNCNBIT + ResidentialEmpty - 4;
+                    tileValue(coordinates) = zoneTileOffset[index] + BLBNCNBIT + ResidentialEmpty - 4;
                     return;
                 }
             }
