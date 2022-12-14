@@ -474,8 +474,7 @@ void increaseIndustry(int population, int value)
 
 void convertResidentialToHomes(int value)
 {
-    increaseRateOfGrowth(-8);
-    Map[SimulationTarget.x][SimulationTarget.y] = (ResidentialEmpty | BLBNCNBIT | ZONEBIT);
+    tileValue(SimulationTarget) = ResidentialEmpty | BLBNCNBIT | ZONEBIT;
 
     for (int x{ SimulationTarget.x - 1 }; x <= SimulationTarget.x + 1; ++x)
     {
@@ -536,6 +535,7 @@ void decreaseResidential(int population, int value)
 
     if (population == 16)
     {
+        increaseRateOfGrowth(-8);
         convertResidentialToHomes(value);
     }
 
