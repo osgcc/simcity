@@ -142,31 +142,6 @@ bool FindPRoad()
 }
 
 
-/* look for telecommunication on edges of zone */
-bool FindPTele()
-{
-    static int PerimX[12] = { -1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2 };
-    static int PerimY[12] = { -2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1 };
-    int tx, ty, z, tile;
-
-    for (z = 0; z < 12; z++)
-    {
-        tx = SimulationTarget.x + PerimX[z];
-        ty = SimulationTarget.y + PerimY[z];
-        if (CoordinatesValid({ tx, ty }))
-        {
-            tile = Map[tx][ty] & LOMASK;
-            if ((tile >= TELEBASE) && (tile <= TELELAST))
-            {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-
 int GetFromMap(int x)
 {
     switch (x)
