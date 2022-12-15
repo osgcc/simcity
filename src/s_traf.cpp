@@ -44,19 +44,19 @@ void PushPos()
 
 
 /* comefrom: SetTrafMem */
-void PullPos()
+void PopPos()
 {
     SimulationTarget = { SMapXStack[PosStackN], SMapYStack[PosStackN] };
     PosStackN--;
 }
 
 
-/* comefrom: MakeTraf */
+/* comefrom: makeTraffic */
 void SetTrafMem()
 {
     for (int x = PosStackN; x > 0; x--)
     {
-        PullPos();
+        PopPos();
         if (CoordinatesValid(SimulationTarget))
         {
             int z = maskedTileValue(SimulationTarget.x, SimulationTarget.y);
@@ -104,7 +104,7 @@ bool RoadTest(const int x)
 }
 
 
-/* comefrom: DoSPZone MakeTraf */
+/* comefrom: DoSPZone makeTraffic */
 bool FindPRoad()		/* look for road on edges of zone   */
 {
   static int PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
@@ -261,7 +261,7 @@ bool TryDrive()
 
 
 /* comefrom: updateIndustry updateCommercial updateResidential */
-TrafficResult MakeTraf(int Zt)
+TrafficResult makeTraffic(int Zt)
 {
     const auto simLocation = SimulationTarget;
 

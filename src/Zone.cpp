@@ -615,7 +615,7 @@ void updateIndustry(bool zonePowered)
 
     if (zonePopulation > RandomRange(0, 5))
     {
-        trafficResult = MakeTraf(2);
+        trafficResult = makeTraffic(2);
     }
 
     if (trafficResult == TrafficResult::NoTransportNearby)
@@ -661,7 +661,7 @@ void updateCommercial(bool zonePowered)
 
     if (tpop > RandomRange(0, 5))
     {
-        trafficResult = MakeTraf(1);
+        trafficResult = makeTraffic(1);
     }
 
     if (trafficResult == TrafficResult::NoTransportNearby)
@@ -716,7 +716,7 @@ void updateResidential(bool zonePowered)
     TrafficResult trafficResult{ TrafficResult::RouteFound };
     if (residentialPopulation > RandomRange(0, 35))
     {
-        trafficResult = MakeTraf(0);
+        trafficResult = makeTraffic(0);
     }
 
     if (trafficResult == TrafficResult::NoTransportNearby)

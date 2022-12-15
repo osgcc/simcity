@@ -19,4 +19,4 @@ enum class TrafficResult
 
 
 bool FindPRoad();
-TrafficResult MakeTraf(int Zt);
+TrafficResult makeTraffic(int Zt);
