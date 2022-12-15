@@ -23,9 +23,6 @@
 #include "Sprite.h"
 
 
-/* Traffic Generation */
-
-
 constexpr auto MaxDistance = 30;
 
 int PosStackN, SMapXStack[MaxDistance+1], SMapYStack[MaxDistance+1];
@@ -34,7 +31,6 @@ int Zsource;
 int TrafMaxX, TrafMaxY;
 
 
-/* comefrom: TryGo */
 void pushPosition()
 {
     PosStackN++;
@@ -43,7 +39,6 @@ void pushPosition()
 }
 
 
-/* comefrom: SetTrafMem */
 void popPosition()
 {
     SimulationTarget = { SMapXStack[PosStackN], SMapYStack[PosStackN] };
@@ -51,7 +46,6 @@ void popPosition()
 }
 
 
-/* comefrom: makeTraffic */
 void SetTrafMem()
 {
     for (int x = PosStackN; x > 0; x--)
@@ -84,7 +78,6 @@ void SetTrafMem()
 }
 
 
-/* comefrom: TryGo FindPRoad */
 bool RoadTest(const int x)
 {
     int tile = x & LOMASK;
@@ -104,8 +97,8 @@ bool RoadTest(const int x)
 }
 
 
-/* comefrom: DoSPZone makeTraffic */
-bool FindPRoad()		/* look for road on edges of zone   */
+/* look for road on edges of zone   */
+bool FindPRoad()
 {
   static int PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
   static int PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};
@@ -126,7 +119,8 @@ bool FindPRoad()		/* look for road on edges of zone   */
 }
 
 
-bool FindPTele()		/* look for telecommunication on edges of zone */
+/* look for telecommunication on edges of zone */
+bool FindPTele()
 {
   static int PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
   static int PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};
@@ -146,7 +140,6 @@ bool FindPTele()		/* look for telecommunication on edges of zone */
 }
 
 
-/* comefrom: TryGo DriveDone */
 int GetFromMap(int x)
 {
     switch (x)
@@ -184,7 +177,6 @@ int GetFromMap(int x)
 }
 
 
-/* comefrom: TryDrive */
 bool TryGo(int z)
 {
     int rdir = RandomRange(0, 4);
@@ -210,7 +202,6 @@ bool TryGo(int z)
 }
 
 
-/* comefrom: TryDrive */
 bool DriveDone()
 {
     static int TARGL[3] = { COMBASE, LHTHR, LHTHR };
@@ -260,7 +251,6 @@ bool TryDrive()
 }
 
 
-/* comefrom: updateIndustry updateCommercial updateResidential */
 TrafficResult makeTraffic(int Zt)
 {
     const auto simLocation = SimulationTarget;
