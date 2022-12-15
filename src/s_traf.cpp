@@ -22,10 +22,13 @@
 
 #include "Sprite.h"
 
+#include <stack>
+
 
 constexpr auto MaxDistance = 30;
 
-int PosStackN, SMapXStack[MaxDistance+1], SMapYStack[MaxDistance+1];
+std::stack<Point<int>> SMapStack;
+
 int LDir;
 int Zsource;
 int TrafMaxX, TrafMaxY;
@@ -33,22 +36,28 @@ int TrafMaxX, TrafMaxY;
 
 void pushPosition()
 {
-    PosStackN++;
-    SMapXStack[PosStackN] = SimulationTarget.x;
-    SMapYStack[PosStackN] = SimulationTarget.y;
+    SMapStack.push(SimulationTarget);
 }
 
 
 void popPosition()
 {
-    SimulationTarget = { SMapXStack[PosStackN], SMapYStack[PosStackN] };
-    PosStackN--;
+    SMapStack.pop();
+}
+
+
+void resetPositionStack()
+{
+    while (!SMapStack.empty())
+    {
+        SMapStack.pop();
+    }
 }
 
 
 void SetTrafMem()
 {
-    for (int x = PosStackN; x > 0; x--)
+    for (int x = SMapStack.size(); x > 0; --x)
     {
         popPosition();
         if (CoordinatesValid(SimulationTarget))
@@ -109,7 +118,7 @@ bool FindPRoad()
 	  ty = SimulationTarget.y + PerimY[z];
       if (CoordinatesValid({ tx, ty })) {
 		  if (RoadTest(Map[tx][ty])) {
-              SimulationTarget.y = SMapYStack[PosStackN];
+              //SimulationTarget.y = SMapStack.top().y;
               SimulationTarget = { tx, ty };
 			  return true;
 		  }
@@ -235,9 +244,10 @@ bool TryDrive()
         }
         else
         {
-            if (PosStackN) // deadend , backup
+            if (!SMapStack.empty()) // deadend , backup
             {
-                PosStackN--;
+                //PosStackN--;
+                // popStack() ?
                 z += 3;
             }
             else // give up at start
@@ -256,7 +266,7 @@ TrafficResult makeTraffic(int Zt)
     const auto simLocation = SimulationTarget;
 
     Zsource = Zt;
-    PosStackN = 0;
+    resetPositionStack();
 
     if (FindPRoad()) // look for road on zone perimeter
     {
