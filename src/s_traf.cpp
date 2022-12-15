@@ -152,7 +152,7 @@ bool roadOnZonePerimeter()
 }
 
 
-int adjacentTile(int i)
+int adjacentTile(size_t i)
 {
     const Point<int> coordinates{ SimulationTarget + AdjacentVector[i] };
 
@@ -167,12 +167,12 @@ int adjacentTile(int i)
 
 bool TryGo(int distance)
 {
-    int lastDirection = 5;
+    size_t lastDirection = 5;
     const int startDirection = RandomRange(0, 3);
 
-    for (int count = startDirection; count < (startDirection + 4); count++)
+    for (size_t count = startDirection; count < (startDirection + AdjacentVector.size()); count++)
     {
-        const int direction = count % 4;
+        const size_t direction = count % AdjacentVector.size();
 
         // skip last count
         if (direction == lastDirection)
@@ -183,7 +183,7 @@ bool TryGo(int distance)
         if (RoadTest(adjacentTile(direction)))
         {
             MoveSimulationTarget(static_cast<SearchDirection>(direction));
-            lastDirection = (direction + 2) % 4;
+            lastDirection = (direction + 2) % AdjacentVector.size();
 
             // save coordinates every other move
             if (count % 2)
