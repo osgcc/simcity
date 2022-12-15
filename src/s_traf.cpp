@@ -181,29 +181,36 @@ int GetFromMap(int x)
 }
 
 
-bool TryGo(int z)
+bool TryGo(int distance)
 {
-    int LDir = 5;
-    const int rdir = RandomRange(0, 4);
-    
-    for (int x = rdir; x < (rdir + 4); x++) // for the 4 directions
+    int lastDirection = 5;
+    const int startDirection = RandomRange(0, 3);
+
+    for (int direction = startDirection; direction < (startDirection + 4); direction++)
     {
-        int realdir = x % 4;
-        if (realdir == LDir) // skip last direction
+        const int realDirection = direction % 4;
+
+        // skip last direction
+        if (realDirection == lastDirection)
         {
             continue;
         }
-        if (RoadTest(GetFromMap(realdir)))
+
+        if (RoadTest(GetFromMap(realDirection)))
         {
-            MoveSimulationTarget(static_cast<SearchDirection>(realdir));
-            LDir = (realdir + 2) % 4;
-            if (z & 1) // save pos every other move
+            MoveSimulationTarget(static_cast<SearchDirection>(realDirection));
+            lastDirection = (realDirection + 2) % 4;
+
+            // save coordinates every other move
+            if (distance % 2)
             {
                 pushCoordinates(SimulationTarget);
             }
+
             return true;
         }
     }
+
     return false;
 }
 
@@ -229,22 +236,22 @@ bool DriveDone()
 
 bool TryDrive()
 {
-    for (int z = 0; z < MaxDistance; ++z) // Maximum distance to try
+    for (int distance{}; distance < MaxDistance; ++distance)
     {
-        if (TryGo(z)) // if it got a road
+        // if it got a road
+        if (TryGo(distance))
         {
-            if (DriveDone()) // if destination is reached
+            if (DriveDone())
             {
-                return true; // pass
+                return true;
             }
         }
         else
         {
-            if (!CoordinatesStack.empty()) // deadend , backup
+            // deadend, backup
+            if (!CoordinatesStack.empty())
             {
-                //PosStackN--;
-                // popStack() ?
-                z += 3;
+                distance += 3;
             }
             else // give up at start
             {
@@ -253,7 +260,8 @@ bool TryDrive()
         }
     }
 
-    return false; // gone maxdis
+    // MaxDistance reached
+    return false;
 }
 
 
