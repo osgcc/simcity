@@ -26,7 +26,7 @@
 /* Traffic Generation */
 
 
-#define MAXDIS 30
+constexpr auto MAXDIS = 30;
 
 int PosStackN, SMapXStack[MAXDIS+1], SMapYStack[MAXDIS+1];
 int LDir;
