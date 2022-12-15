@@ -109,42 +109,50 @@ bool RoadTest(const int x)
 /* look for road on edges of zone   */
 bool FindPRoad()
 {
-  static int PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
-  static int PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};
-  int tx, ty, z;
+    static int PerimX[12] = { -1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2 };
+    static int PerimY[12] = { -2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1 };
+    int tx, ty, z;
 
-  for (z = 0; z < 12; z++) {
-	  tx = SimulationTarget.x + PerimX[z];
-	  ty = SimulationTarget.y + PerimY[z];
-      if (CoordinatesValid({ tx, ty })) {
-		  if (RoadTest(Map[tx][ty])) {
-              SimulationTarget = { tx, ty };
-			  return true;
-		  }
-	  }
-  }
-  return false;
+    for (z = 0; z < 12; z++)
+    {
+        tx = SimulationTarget.x + PerimX[z];
+        ty = SimulationTarget.y + PerimY[z];
+        if (CoordinatesValid({ tx, ty }))
+        {
+            if (RoadTest(Map[tx][ty]))
+            {
+                SimulationTarget = { tx, ty };
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 
 /* look for telecommunication on edges of zone */
 bool FindPTele()
 {
-  static int PerimX[12] = {-1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2};
-  static int PerimY[12] = {-2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1};
-  int tx, ty, z, tile;
+    static int PerimX[12] = { -1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2 };
+    static int PerimY[12] = { -2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1 };
+    int tx, ty, z, tile;
 
-  for (z = 0; z < 12; z++) {
-	  tx = SimulationTarget.x + PerimX[z];
-	  ty = SimulationTarget.y + PerimY[z];
-      if (CoordinatesValid({ tx, ty })) {
-	  	  tile = Map[tx][ty] & LOMASK;
-		  if ((tile >= TELEBASE) && (tile <= TELELAST)) {
-			  return true;
-		  }
-	  }
-  }
-  return false;
+    for (z = 0; z < 12; z++)
+    {
+        tx = SimulationTarget.x + PerimX[z];
+        ty = SimulationTarget.y + PerimY[z];
+        if (CoordinatesValid({ tx, ty }))
+        {
+            tile = Map[tx][ty] & LOMASK;
+            if ((tile >= TELEBASE) && (tile <= TELELAST))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 
