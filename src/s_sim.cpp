@@ -510,7 +510,7 @@ void DoSPZone(bool powered, const CityProperties& properties)
             z = FireEffect / 2;
         }
 
-        if (!FindPRoad()) /* post FD's need roads  */
+        if (!roadOnZonePerimeter()) /* post FD's need roads  */
         {
             z = z / 2;
         }
@@ -537,7 +537,7 @@ void DoSPZone(bool powered, const CityProperties& properties)
             z = PoliceEffect / 2;
         }
 
-        if (!FindPRoad())
+        if (!roadOnZonePerimeter())
         {
             z = z / 2; /* post PD's need roads */
         }

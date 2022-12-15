@@ -18,5 +18,5 @@ enum class TrafficResult
 };
 
 
-bool FindPRoad();
+bool roadOnZonePerimeter();
 TrafficResult makeTraffic(int Zt);

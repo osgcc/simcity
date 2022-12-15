@@ -125,7 +125,7 @@ bool RoadTest(const int x)
 
 
 /* look for road on edges of zone   */
-bool FindPRoad()
+bool roadOnZonePerimeter()
 {
     for (int i{}; i < ZonePerimeterOffset.size(); ++i)
     {
@@ -272,7 +272,7 @@ TrafficResult makeTraffic(int Zt)
     Zsource = Zt;
     resetCoordinatesStack();
 
-    if (FindPRoad()) // look for road on zone perimeter
+    if (roadOnZonePerimeter()) // look for road on zone perimeter
     {
         if (TryDrive()) // attempt to drive somewhere
         {
