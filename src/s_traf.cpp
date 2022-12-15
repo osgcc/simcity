@@ -51,6 +51,14 @@ namespace
         { -2, -1 }
     } };
 
+    const std::array<Vector<int>, 4> AdjacentVector
+    { {
+        {  0, -1 },
+        {  1,  0 },
+        {  0,  1 },
+        { -1,  0 }
+    } };
+
 
     void pushCoordinates(const Point<int> coordinates)
     {
@@ -146,38 +154,14 @@ bool roadOnZonePerimeter()
 
 int GetFromMap(int x)
 {
-    switch (x)
+    const Point<int> coordinates{ SimulationTarget + AdjacentVector[x] };
+
+    if (!CoordinatesValid(coordinates))
     {
-    case 0:
-        if (SimulationTarget.y > 0)
-        {
-            return (Map[SimulationTarget.x][SimulationTarget.y - 1] & LOMASK);
-        }
-        return 0;
-    case 1:
-        if (SimulationTarget.x < (SimWidth - 1))
-        {
-            return (Map[SimulationTarget.x + 1][SimulationTarget.y] & LOMASK);
-        }
-        return 0;
-
-    case 2:
-        if (SimulationTarget.y < (SimHeight - 1))
-        {
-            return (Map[SimulationTarget.x][SimulationTarget.y + 1] & LOMASK);
-        }
-        return 0;
-
-    case 3:
-        if (SimulationTarget.x > 0)
-        {
-            return (Map[SimulationTarget.x - 1][SimulationTarget.y] & LOMASK);
-        }
-        return 0;
-
-    default:
         return 0;
     }
+
+    return maskedTileValue(coordinates);
 }
 
 
