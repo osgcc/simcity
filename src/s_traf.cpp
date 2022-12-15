@@ -35,16 +35,16 @@ int TrafMaxX, TrafMaxY;
 
 
 /* comefrom: TryGo */
-void PushPos()
+void pushPosition()
 {
-  PosStackN++;
-  SMapXStack[PosStackN] = SimulationTarget.x;
-  SMapYStack[PosStackN] = SimulationTarget.y;
+    PosStackN++;
+    SMapXStack[PosStackN] = SimulationTarget.x;
+    SMapYStack[PosStackN] = SimulationTarget.y;
 }
 
 
 /* comefrom: SetTrafMem */
-void PopPos()
+void popPosition()
 {
     SimulationTarget = { SMapXStack[PosStackN], SMapYStack[PosStackN] };
     PosStackN--;
@@ -56,7 +56,7 @@ void SetTrafMem()
 {
     for (int x = PosStackN; x > 0; x--)
     {
-        PopPos();
+        popPosition();
         if (CoordinatesValid(SimulationTarget))
         {
             int z = maskedTileValue(SimulationTarget.x, SimulationTarget.y);
@@ -201,7 +201,7 @@ bool TryGo(int z)
             LDir = (realdir + 2) % 4;
             if (z & 1) // save pos every other move
             {
-                PushPos();
+                pushPosition();
             }
             return true;
         }
