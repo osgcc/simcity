@@ -51,9 +51,10 @@ namespace
         { -2, -1 }
     } };
 
-    void pushCoordinates()
+
+    void pushCoordinates(const Point<int> coordinates)
     {
-        CoordinatesStack.push(SimulationTarget);
+        CoordinatesStack.push(coordinates);
     }
 
     void popCoordinates()
@@ -195,7 +196,7 @@ bool TryGo(int z)
             LDir = (realdir + 2) % 4;
             if (z & 1) // save pos every other move
             {
-                pushCoordinates();
+                pushCoordinates(SimulationTarget);
             }
             return true;
         }
