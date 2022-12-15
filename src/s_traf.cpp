@@ -22,6 +22,8 @@
 
 #include "Sprite.h"
 
+#include <algorithm>
+#include <array>
 #include <stack>
 
 
@@ -33,7 +35,6 @@ namespace
 
     int LDir;
     int Zsource;
-    int TrafMaxX, TrafMaxY;
 
     const std::array<Vector<int>, 12> ZonePerimeterOffset =
     { {
@@ -72,32 +73,33 @@ namespace
 }
 
 
-void SetTrafMem()
+void updateTrafficDensityMap()
 {
-    for (int x = CoordinatesStack.size(); x > 0; --x)
+    while (!CoordinatesStack.empty())
     {
         popCoordinates();
         if (CoordinatesValid(SimulationTarget))
         {
-            int z = maskedTileValue(SimulationTarget.x, SimulationTarget.y);
-            if ((z >= ROADBASE) && (z < POWERBASE))
+            int tile = maskedTileValue(SimulationTarget.x, SimulationTarget.y);
+            if ((tile >= ROADBASE) && (tile < POWERBASE))
             {
                 /* check for rail */
-                z = TrafficDensityMap.value(SimulationTarget.skewInverseBy({ 2, 2 }));
-                z += 50;
-                if ((z > 240) && (RandomRange(0, 5) == 0))
+                const Point<int> trafficDensityMapCoordinates = SimulationTarget.skewInverseBy({ 2, 2 });
+                tile = TrafficDensityMap.value(trafficDensityMapCoordinates);
+                tile += 50;
+
+                if ((tile > ResidentialBase) && (RandomRange(0, 5) == 0))
                 {
-                    z = 240;
-                    TrafMaxX = SimulationTarget.x * 16;
-                    TrafMaxY = SimulationTarget.y * 16;
+                    tile = ResidentialBase;
 
                     SimSprite* sprite = getSprite(SimSprite::Type::Helicopter);
                     if (sprite)
                     {
-                        sprite->destination = { TrafMaxX, TrafMaxY };
+                        sprite->destination = SimulationTarget.skewBy({ 16, 16 });
                     }
                 }
-                TrafficDensityMap.value(SimulationTarget.skewInverseBy({ 2, 2 })) = z;
+
+                TrafficDensityMap.value(trafficDensityMapCoordinates) = tile;
             }
         }
     }
@@ -266,7 +268,7 @@ TrafficResult makeTraffic(int Zt)
     {
         if (TryDrive()) // attempt to drive somewhere
         {
-            SetTrafMem(); // if sucessful, inc trafdensity
+            updateTrafficDensityMap(); // if sucessful, inc trafdensity
             SimulationTarget = simLocation;
             return TrafficResult::RouteFound; // traffic passed
         }
