@@ -106,22 +106,33 @@ bool RoadTest(const int x)
 }
 
 
+const std::array<Vector<int>, 12> ZonePerimeterOffset =
+{ {
+    { -1, -2 },
+    {  0, -2 },
+    {  1, -2 },
+    {  2, -1 },
+    {  2,  0 },
+    {  2,  1 },
+    {  1,  2 },
+    {  0,  2 },
+    { -1,  2 },
+    { -2,  1 },
+    { -2,  0 },
+    { -2, -1 }
+} };
+
 /* look for road on edges of zone   */
 bool FindPRoad()
 {
-    static int PerimX[12] = { -1, 0, 1, 2, 2, 2, 1, 0,-1,-2,-2,-2 };
-    static int PerimY[12] = { -2,-2,-2,-1, 0, 1, 2, 2, 2, 1, 0,-1 };
-    int tx, ty, z;
-
-    for (z = 0; z < 12; z++)
+    for (int i{}; i < ZonePerimeterOffset.size(); ++i)
     {
-        tx = SimulationTarget.x + PerimX[z];
-        ty = SimulationTarget.y + PerimY[z];
-        if (CoordinatesValid({ tx, ty }))
+        const Point<int> coordinates = SimulationTarget + ZonePerimeterOffset[i];
+        if (CoordinatesValid(coordinates))
         {
-            if (RoadTest(Map[tx][ty]))
+            if (RoadTest(tileValue(coordinates)))
             {
-                SimulationTarget = { tx, ty };
+                SimulationTarget = coordinates;
                 return true;
             }
         }
