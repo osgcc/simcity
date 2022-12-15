@@ -26,9 +26,9 @@
 /* Traffic Generation */
 
 
-constexpr auto MAXDIS = 30;
+constexpr auto MaxDistance = 30;
 
-int PosStackN, SMapXStack[MAXDIS+1], SMapYStack[MAXDIS+1];
+int PosStackN, SMapXStack[MaxDistance+1], SMapYStack[MaxDistance+1];
 int LDir;
 int Zsource;
 int TrafMaxX, TrafMaxY;
@@ -233,7 +233,7 @@ bool DriveDone()
 bool TryDrive()
 {
     LDir = 5;
-    for (int z = 0; z < MAXDIS; ++z) // Maximum distance to try
+    for (int z = 0; z < MaxDistance; ++z) // Maximum distance to try
     {
         if (TryGo(z)) // if it got a road
         {
