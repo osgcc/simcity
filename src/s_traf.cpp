@@ -25,32 +25,50 @@
 #include <stack>
 
 
-constexpr auto MaxDistance = 30;
-
-std::stack<Point<int>> SMapStack;
-
-int LDir;
-int Zsource;
-int TrafMaxX, TrafMaxY;
-
-
-void pushPosition()
+namespace
 {
-    SMapStack.push(SimulationTarget);
-}
+    constexpr auto MaxDistance = 30;
+
+    std::stack<Point<int>> SMapStack;
+
+    int LDir;
+    int Zsource;
+    int TrafMaxX, TrafMaxY;
+
+    const std::array<Vector<int>, 12> ZonePerimeterOffset =
+    { {
+        { -1, -2 },
+        {  0, -2 },
+        {  1, -2 },
+        {  2, -1 },
+        {  2,  0 },
+        {  2,  1 },
+        {  1,  2 },
+        {  0,  2 },
+        { -1,  2 },
+        { -2,  1 },
+        { -2,  0 },
+        { -2, -1 }
+    } };
+
+    void pushPosition()
+    {
+        SMapStack.push(SimulationTarget);
+    }
 
 
-void popPosition()
-{
-    SMapStack.pop();
-}
-
-
-void resetPositionStack()
-{
-    while (!SMapStack.empty())
+    void popPosition()
     {
         SMapStack.pop();
+    }
+
+
+    void resetPositionStack()
+    {
+        while (!SMapStack.empty())
+        {
+            SMapStack.pop();
+        }
     }
 }
 
@@ -105,22 +123,6 @@ bool RoadTest(const int x)
     return true;
 }
 
-
-const std::array<Vector<int>, 12> ZonePerimeterOffset =
-{ {
-    { -1, -2 },
-    {  0, -2 },
-    {  1, -2 },
-    {  2, -1 },
-    {  2,  0 },
-    {  2,  1 },
-    {  1,  2 },
-    {  0,  2 },
-    { -1,  2 },
-    { -2,  1 },
-    { -2,  0 },
-    { -2, -1 }
-} };
 
 /* look for road on edges of zone   */
 bool FindPRoad()
