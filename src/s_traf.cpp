@@ -152,9 +152,9 @@ bool roadOnZonePerimeter()
 }
 
 
-int GetFromMap(int x)
+int adjacentTile(int i)
 {
-    const Point<int> coordinates{ SimulationTarget + AdjacentVector[x] };
+    const Point<int> coordinates{ SimulationTarget + AdjacentVector[i] };
 
     if (!CoordinatesValid(coordinates))
     {
@@ -180,7 +180,7 @@ bool TryGo(int distance)
             continue;
         }
 
-        if (RoadTest(GetFromMap(realDirection)))
+        if (RoadTest(adjacentTile(realDirection)))
         {
             MoveSimulationTarget(static_cast<SearchDirection>(realDirection));
             lastDirection = (realDirection + 2) % 4;
@@ -205,10 +205,11 @@ bool DriveDone()
     static int TARGH[3] = { NUCLEAR, PORT, COMBASE };	/* for destinations */
     //int l, h;
 
-    for (int x = 0; x < 4; x++) /* R>C C>I I>R  */
+    for (int i{}; i < AdjacentVector.size(); ++i) /* R>C C>I I>R  */
     {
-        int z = GetFromMap(x);
-        if ((z >= TARGL[Zsource]) && (z <= TARGH[Zsource]))
+        const int tile = adjacentTile(i);
+
+        if ((tile >= TARGL[Zsource]) && (tile <= TARGH[Zsource]))
         {
             return true;
         }
