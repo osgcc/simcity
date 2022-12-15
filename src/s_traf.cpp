@@ -170,23 +170,23 @@ bool TryGo(int distance)
     int lastDirection = 5;
     const int startDirection = RandomRange(0, 3);
 
-    for (int direction = startDirection; direction < (startDirection + 4); direction++)
+    for (int count = startDirection; count < (startDirection + 4); count++)
     {
-        const int realDirection = direction % 4;
+        const int direction = count % 4;
 
-        // skip last direction
-        if (realDirection == lastDirection)
+        // skip last count
+        if (direction == lastDirection)
         {
             continue;
         }
 
-        if (RoadTest(adjacentTile(realDirection)))
+        if (RoadTest(adjacentTile(direction)))
         {
-            MoveSimulationTarget(static_cast<SearchDirection>(realDirection));
-            lastDirection = (realDirection + 2) % 4;
+            MoveSimulationTarget(static_cast<SearchDirection>(direction));
+            lastDirection = (direction + 2) % 4;
 
             // save coordinates every other move
-            if (distance % 2)
+            if (count % 2)
             {
                 pushCoordinates(SimulationTarget);
             }
@@ -202,10 +202,10 @@ bool TryGo(int distance)
 bool DriveDone()
 {
     static int TARGL[3] = { COMBASE, LHTHR, LHTHR };
-    static int TARGH[3] = { NUCLEAR, PORT, COMBASE };	/* for destinations */
-    //int l, h;
+    static int TARGH[3] = { NUCLEAR, PORT, COMBASE }; // for destinations
 
-    for (int i{}; i < AdjacentVector.size(); ++i) /* R>C C>I I>R  */
+    // R>C C>I I>R
+    for (int i{}; i < AdjacentVector.size(); ++i)
     {
         const int tile = adjacentTile(i);
 
