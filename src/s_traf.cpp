@@ -118,7 +118,6 @@ bool FindPRoad()
 	  ty = SimulationTarget.y + PerimY[z];
       if (CoordinatesValid({ tx, ty })) {
 		  if (RoadTest(Map[tx][ty])) {
-              //SimulationTarget.y = SMapStack.top().y;
               SimulationTarget = { tx, ty };
 			  return true;
 		  }
