@@ -29,7 +29,7 @@ namespace
 {
     constexpr auto MaxDistance = 30;
 
-    std::stack<Point<int>> SMapStack;
+    std::stack<Point<int>> CoordinatesStack;
 
     int LDir;
     int Zsource;
@@ -51,23 +51,21 @@ namespace
         { -2, -1 }
     } };
 
-    void pushPosition()
+    void pushCoordinates()
     {
-        SMapStack.push(SimulationTarget);
+        CoordinatesStack.push(SimulationTarget);
     }
 
-
-    void popPosition()
+    void popCoordinates()
     {
-        SMapStack.pop();
+        CoordinatesStack.pop();
     }
 
-
-    void resetPositionStack()
+    void resetCoordinatesStack()
     {
-        while (!SMapStack.empty())
+        while (!CoordinatesStack.empty())
         {
-            SMapStack.pop();
+            CoordinatesStack.pop();
         }
     }
 }
@@ -75,9 +73,9 @@ namespace
 
 void SetTrafMem()
 {
-    for (int x = SMapStack.size(); x > 0; --x)
+    for (int x = CoordinatesStack.size(); x > 0; --x)
     {
-        popPosition();
+        popCoordinates();
         if (CoordinatesValid(SimulationTarget))
         {
             int z = maskedTileValue(SimulationTarget.x, SimulationTarget.y);
@@ -197,7 +195,7 @@ bool TryGo(int z)
             LDir = (realdir + 2) % 4;
             if (z & 1) // save pos every other move
             {
-                pushPosition();
+                pushCoordinates();
             }
             return true;
         }
@@ -239,7 +237,7 @@ bool TryDrive()
         }
         else
         {
-            if (!SMapStack.empty()) // deadend , backup
+            if (!CoordinatesStack.empty()) // deadend , backup
             {
                 //PosStackN--;
                 // popStack() ?
@@ -261,7 +259,7 @@ TrafficResult makeTraffic(int Zt)
     const auto simLocation = SimulationTarget;
 
     Zsource = Zt;
-    resetPositionStack();
+    resetCoordinatesStack();
 
     if (FindPRoad()) // look for road on zone perimeter
     {
