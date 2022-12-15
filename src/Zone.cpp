@@ -402,9 +402,7 @@ void buildHouse(int value)
 void increaseRateOfGrowth(int amount)
 {
     const auto location = SimulationTarget.skewInverseBy({ 8, 8 });
-    const int rogVal = RateOfGrowthMap.value(location);
-
-    RateOfGrowthMap.value(location) = rogVal + (amount * 4);
+    RateOfGrowthMap.value(location) += (amount * 4);
 }
 
 
