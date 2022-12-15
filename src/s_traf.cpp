@@ -33,7 +33,6 @@ namespace
 
     std::stack<Point<int>> CoordinatesStack;
 
-    int LDir;
     int Zsource;
 
     const std::array<Vector<int>, 12> ZonePerimeterOffset =
@@ -184,7 +183,9 @@ int GetFromMap(int x)
 
 bool TryGo(int z)
 {
-    int rdir = RandomRange(0, 4);
+    int LDir = 5;
+    const int rdir = RandomRange(0, 4);
+    
     for (int x = rdir; x < (rdir + 4); x++) // for the 4 directions
     {
         int realdir = x % 4;
@@ -228,7 +229,6 @@ bool DriveDone()
 
 bool TryDrive()
 {
-    LDir = 5;
     for (int z = 0; z < MaxDistance; ++z) // Maximum distance to try
     {
         if (TryGo(z)) // if it got a road
