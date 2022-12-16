@@ -18,6 +18,8 @@
 #include "SmallMaps.h"
 #include "Sprite.h"
 
+#include "w_util.h"
+
 #include <array>
 #include <SDL2/SDL.h>
 
@@ -95,6 +97,27 @@ bool tileIsZoned(const unsigned int tile)
 	return tile & ZONEBIT;
 }
 
+bool tileIsRoad(const Point<int> coordinates)
+{
+	if (!CoordinatesValid(coordinates))
+	{
+		return false;
+	}
+
+	const auto tile = maskedTileValue(coordinates);
+
+	if (tile < ROADBASE || tile > LASTRAIL)
+	{
+		return false;
+	}
+
+	if ((tile >= POWERBASE) && (tile < RAILHPOWERV))
+	{
+		return false;
+	}
+
+	return true;
+}
 
 bool blink()
 {

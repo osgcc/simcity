@@ -176,6 +176,8 @@ unsigned int maskedTileValue(unsigned int tile);
 bool tilePowered(const unsigned int tile);
 bool tileIsZoned(const unsigned int tile);
 
+bool tileIsRoad(const Point<int> coordinates);
+
 bool blink();
 void ResetMap();
 

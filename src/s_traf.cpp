@@ -113,29 +113,6 @@ void updateTrafficDensityMap()
 }
 
 
-bool tileIsRoad(const Point<int> coordinates)
-{
-    if (!CoordinatesValid(coordinates))
-    {
-        return false;
-    }
-
-    const auto tile = maskedTileValue(coordinates);
-
-    if (tile < ROADBASE || tile > LASTRAIL)
-    {
-        return false;
-    }
-
-    if ((tile >= POWERBASE) && (tile < RAILHPOWERV))
-    {
-        return false;
-    }
-
-    return true;
-}
-
-
 /* look for road on edges of zone   */
 bool roadOnZonePerimeter()
 {
