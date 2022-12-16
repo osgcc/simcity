@@ -143,7 +143,7 @@ void initMapArrays()
 }
 
 
-bool MoveSimulationTarget(SearchDirection direction)
+bool moveSimulationTarget(SearchDirection direction)
 {
     const Point<int> newTargetCoordinates{ SimulationTarget + AdjacentVector.at(direction) };
 

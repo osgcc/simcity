@@ -127,7 +127,7 @@ namespace
 
             if (tileIsRoad(SimulationTarget + AdjacentVector[direction]))
             {
-                MoveSimulationTarget(static_cast<SearchDirection>(direction));
+                moveSimulationTarget(static_cast<SearchDirection>(direction));
                 lastDirection = (direction + 2) % AdjacentVector.size();
 
                 // save coordinates every other move

@@ -83,7 +83,7 @@ bool isTileConductive(SearchDirection direction)
 {
     const auto saved = SimulationTarget;
 
-    if (MoveSimulationTarget(direction))
+    if (moveSimulationTarget(direction))
     {
         if ((tileValue(SimulationTarget) & CONDBIT) && !testPowerBit(SimulationTarget))
         {
@@ -139,7 +139,7 @@ void powerScan()
                 return;
             }
 
-            MoveSimulationTarget(static_cast<SearchDirection>(ADir));
+            moveSimulationTarget(static_cast<SearchDirection>(ADir));
             setPowerBit(SimulationTarget);
 
             conductiveTileCount = 0;

@@ -68,4 +68,4 @@ extern int ComHisMax;
 extern int IndHisMax;
 
 void initMapArrays();
-bool MoveSimulationTarget(SearchDirection direction);
+bool moveSimulationTarget(SearchDirection direction);
