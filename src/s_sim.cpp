@@ -35,7 +35,6 @@
 
 #include <algorithm>
 #include <iostream>
-#include <random>
 
 
 /* Simulation */
@@ -1460,27 +1459,4 @@ void FireZone(int Xloc, int Yloc, int ch)
             }
         }
     }
-}
-
-
-static std::random_device RandomDevice;
-static std::mt19937 PseudoRandomNumberGenerator(RandomDevice());
-
-
-int RandomRange(int min, int max)
-{
-    std::uniform_int_distribution<std::mt19937::result_type> prngDistribution(min, max);
-    return prngDistribution(PseudoRandomNumberGenerator);
-}
-
-
-int Random()
-{
-    return RandomRange(0, std::mt19937::max());
-}
-
-
-int Rand16()
-{
-    return RandomRange(0, 32767) * (RandomRange(0, 1) ? -1 : 1);
 }

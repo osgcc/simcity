@@ -18,7 +18,7 @@
 #include "w_resrc.h"
 #include "w_sound.h"
 #include "w_tk.h"
-
+#include "w_util.h"
 
 #include "Point.h"
 

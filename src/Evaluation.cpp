@@ -16,6 +16,7 @@
 #include "s_sim.h"
 
 #include "w_eval.h"
+#include "w_util.h"
 
 
 /* City Evaluation */

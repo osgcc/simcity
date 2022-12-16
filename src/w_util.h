@@ -47,3 +47,7 @@ bool CoordinatesValid(const Point<int>& position);
 Point<int> PositionToCell(const Point<int>& position, const Point<int>& offset);
 const Vector<int> vectorFromPoints(const Point<int>& start, const Point<int>& end);
 bool pointInRect(const Point<int>& point, const SDL_Rect& rect);
+
+int RandomRange(int min, int max);
+int Random();
+int Rand16();

@@ -18,7 +18,3 @@ void FireZone(int Xloc, int Yloc, int ch);
 void DoSimInit(CityProperties&, Budget&);
 void DoSPZone(bool powered, const CityProperties&);
 void RepairZone(int ZCent, int zsize);
-
-int RandomRange(int min, int max);
-int Random();
-int Rand16();
