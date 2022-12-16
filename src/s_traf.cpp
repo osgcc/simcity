@@ -113,21 +113,25 @@ void updateTrafficDensityMap()
 }
 
 
-bool RoadTest(const int x)
+bool tileIsRoad(const Point<int> coordinates)
 {
-    int tile = x & LOMASK;
-    if (tile < ROADBASE)
+    if (!CoordinatesValid(coordinates))
     {
         return false;
     }
-    if (tile > LASTRAIL)
+
+    const auto tile = maskedTileValue(coordinates);
+
+    if (tile < ROADBASE || tile > LASTRAIL)
     {
         return false;
     }
+
     if ((tile >= POWERBASE) && (tile < RAILHPOWERV))
     {
         return false;
     }
+
     return true;
 }
 
@@ -140,7 +144,7 @@ bool roadOnZonePerimeter()
         const Point<int> coordinates = SimulationTarget + ZonePerimeterOffset[i];
         if (CoordinatesValid(coordinates))
         {
-            if (RoadTest(tileValue(coordinates)))
+            if (tileIsRoad(coordinates))
             {
                 SimulationTarget = coordinates;
                 return true;
@@ -155,13 +159,7 @@ bool roadOnZonePerimeter()
 int adjacentTile(size_t i)
 {
     const Point<int> coordinates{ SimulationTarget + AdjacentVector[i] };
-
-    if (!CoordinatesValid(coordinates))
-    {
-        return 0;
-    }
-
-    return maskedTileValue(coordinates);
+    return CoordinatesValid(coordinates) ? maskedTileValue(coordinates) : 0;
 }
 
 
@@ -180,7 +178,7 @@ bool TryGo(int distance)
             continue;
         }
 
-        if (RoadTest(adjacentTile(direction)))
+        if (tileIsRoad(SimulationTarget + AdjacentVector[direction]))
         {
             MoveSimulationTarget(static_cast<SearchDirection>(direction));
             lastDirection = (direction + 2) % AdjacentVector.size();
