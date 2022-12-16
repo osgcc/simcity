@@ -10,16 +10,15 @@
 // file, included in this distribution, for details.
 #include "main.h"
 
-#include "CityProperties.h"
-
-#include "Map.h"
-#include "Power.h"
-
 #include "s_alloc.h"
 #include "s_sim.h"
-#include "s_traf.h"
 
 #include "w_util.h"
+
+#include "CityProperties.h"
+#include "Map.h"
+#include "Power.h"
+#include "Traffic.h"
 #include "Zone.h"
 
 #include <algorithm>

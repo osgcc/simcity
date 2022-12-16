@@ -35,10 +35,10 @@
     <ClCompile Include="src\s_msg.cpp" />
     <ClCompile Include="src\Power.cpp" />
     <ClCompile Include="src\s_sim.cpp" />
-    <ClCompile Include="src\s_traf.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Tool.cpp" />
     <ClCompile Include="src\ToolPalette.cpp" />
+    <ClCompile Include="src\Traffic.cpp" />
     <ClCompile Include="src\w_eval.cpp" />
     <ClCompile Include="src\w_keys.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
@@ -79,10 +79,10 @@
     <ClInclude Include="src\s_msg.h" />
     <ClInclude Include="src\Power.h" />
     <ClInclude Include="src\s_sim.h" />
-    <ClInclude Include="src\s_traf.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Tool.h" />
     <ClInclude Include="src\ToolPalette.h" />
+    <ClInclude Include="src\Traffic.h" />
     <ClInclude Include="src\Vector.h" />
     <ClInclude Include="src\VectorSizeRange.h" />
     <ClInclude Include="src\animtab.h" />
