@@ -11,13 +11,10 @@
 #include "Traffic.h"
 
 #include "Map.h"
+#include "Sprite.h"
 
 #include "s_alloc.h"
-#include "s_sim.h"
-
 #include "w_util.h"
-
-#include "Sprite.h"
 
 #include <algorithm>
 #include <array>
