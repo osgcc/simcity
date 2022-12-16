@@ -113,7 +113,7 @@ void updateTrafficDensityMap()
 }
 
 
-/* look for road on edges of zone   */
+// look for road on edges of zone
 bool roadOnZonePerimeter()
 {
     for (int i{}; i < ZonePerimeterOffset.size(); ++i)
