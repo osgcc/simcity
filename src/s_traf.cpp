@@ -140,7 +140,7 @@ int adjacentTile(size_t i)
 }
 
 
-bool TryGo(int distance)
+bool tryGo(int distance)
 {
     size_t lastDirection = 5;
     const int startDirection = RandomRange(0, 3);
@@ -174,7 +174,7 @@ bool TryGo(int distance)
 }
 
 
-bool DriveDone()
+bool driveDone()
 {
     static int TARGL[3] = { COMBASE, LHTHR, LHTHR };
     static int TARGH[3] = { NUCLEAR, PORT, COMBASE }; // for destinations
@@ -194,14 +194,14 @@ bool DriveDone()
 }
 
 
-bool TryDrive()
+bool tryDrive()
 {
     for (int distance{}; distance < MaxDistance; ++distance)
     {
         // if it got a road
-        if (TryGo(distance))
+        if (tryGo(distance))
         {
-            if (DriveDone())
+            if (driveDone())
             {
                 return true;
             }
@@ -234,7 +234,7 @@ TrafficResult makeTraffic(int Zt)
 
     if (roadOnZonePerimeter()) // look for road on zone perimeter
     {
-        if (TryDrive()) // attempt to drive somewhere
+        if (tryDrive()) // attempt to drive somewhere
         {
             updateTrafficDensityMap(); // if sucessful, inc trafdensity
             SimulationTarget = simLocation;
