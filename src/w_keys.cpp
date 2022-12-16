@@ -8,6 +8,8 @@
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
 // file, included in this distribution, for details.
+
+/*
 #include "main.h"
 
 #include "Map.h"
@@ -40,6 +42,7 @@ int PunishCnt{};
 */
 
 
+/*
 void ResetLastKeys()
 {
     LastKeys[0] = ' ';
@@ -51,7 +54,7 @@ void ResetLastKeys()
 }
 
 
-/* comefrom: processEvent */
+//* comefrom: processEvent
 void doKeyDown(SimView* view, int charCode)
 {
     LastKeys[0] = LastKeys[1];
@@ -61,7 +64,7 @@ void doKeyDown(SimView* view, int charCode)
 
     if (strcmp(LastKeys, "fund") == 0) {
         //Spend(-10000);
-        PunishCnt++;				/* punish for cheating */
+        PunishCnt++; // punish for cheating
         if (PunishCnt == 5) {
             PunishCnt = 0;
             MakeEarthquake();
@@ -114,7 +117,7 @@ void doKeyDown(SimView* view, int charCode)
 
     switch (charCode) {
 
-        /*
+        
       case 'X':
       case 'x': {
         int s = view->tool_state;
@@ -134,9 +137,8 @@ void doKeyDown(SimView* view, int charCode)
         setWandState(s);
         break;
       }
-      */
-
-      /***** shift wand state to bull dozer *****/
+     
+      //***** shift wand state to bull dozer
     case 'B':
     case 'b':
     case 'B' - '@':
@@ -149,7 +151,7 @@ void doKeyDown(SimView* view, int charCode)
         break;
     }
 
-    /***** shift wand state to roads *****/
+   //***** shift wand state to roads
     case 'R':
     case 'r':
     case 'R' - '@':
@@ -161,7 +163,7 @@ void doKeyDown(SimView* view, int charCode)
         break;
     }
 
-    /***** shift wand state to power *****/
+    //***** shift wand state to power
     case 'P':
     case 'p':
     case 'P' - '@':
@@ -174,7 +176,7 @@ void doKeyDown(SimView* view, int charCode)
         break;
     }
 
-    /***** shift wand state to transit *****/
+    //***** shift wand state to transit
     case 'T':
     case 't':
     case 'T' - '@':
@@ -214,16 +216,17 @@ void doKeyUp(SimView* view, int charCode)
     case 'q':
     case 'Q':
     case 'Q' - '@':
-        /*
+        
         if (view->tool_state_save != -1)
         {
             setWandState(view->tool_state_save);
         }
         view->tool_state_save = -1;
-        */
+        
         break;
 
     default:
         break;
     }
 }
+*/

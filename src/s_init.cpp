@@ -18,7 +18,6 @@
 #include "s_msg.h"
 #include "s_sim.h"
 
-#include "w_keys.h"
 #include "w_update.h"
 #include "w_util.h"
 
@@ -43,6 +42,5 @@ void InitWillStuff()
 
     initMapArrays();
 
-    ResetLastKeys();
     DoNewGame();
 }
