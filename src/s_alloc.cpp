@@ -14,7 +14,10 @@
 #include "main.h"
 #include "Power.h"
 
+#include "w_util.h"
+
 #include <array>
+#include <map>
 #include <vector>
 
 
@@ -83,6 +86,15 @@ GraphHistory MiscHis120Years{};
 
 namespace
 {
+    const std::map<SearchDirection, Vector<int>> AdjacentVector
+    {
+        { SearchDirection::Left,  { -1,  0 } },
+        { SearchDirection::Right, {  1,  0 } },
+        { SearchDirection::Up,    {  0, -1 } },
+        { SearchDirection::Down,  {  0,  1 } },
+        { SearchDirection::Undefined, {} }
+    };
+
     void resetHalfArrays()
     {
         PopulationDensityMap.reset();
@@ -99,26 +111,26 @@ namespace
 
     void resetHistoryArrays()
     {
-         ResHis.fill(0);
-         ComHis.fill(0);
-         IndHis.fill(0);
+        ResHis.fill(0);
+        ComHis.fill(0);
+        IndHis.fill(0);
 
-         MoneyHis.fill(0);
-         PollutionHis.fill(0);
-         CrimeHis.fill(0);
-         MiscHis.fill(0);
+        MoneyHis.fill(0);
+        PollutionHis.fill(0);
+        CrimeHis.fill(0);
+        MiscHis.fill(0);
 
-         ResHis120Years.fill(0);
-         ComHis120Years.fill(0);
-         IndHis120Years.fill(0);
+        ResHis120Years.fill(0);
+        ComHis120Years.fill(0);
+        IndHis120Years.fill(0);
 
-         MoneyHis120Years.fill(0);
-         PollutionHis120Years.fill(0);
-         CrimeHis120Years.fill(0);
-         MiscHis120Years.fill(0);
+        MoneyHis120Years.fill(0);
+        PollutionHis120Years.fill(0);
+        CrimeHis120Years.fill(0);
+        MiscHis120Years.fill(0);
 
-         MiscHis.fill(0);
-         resetPowerMap();
+        MiscHis.fill(0);
+        resetPowerMap();
     }
 };
 
@@ -133,59 +145,13 @@ void initMapArrays()
 
 bool MoveSimulationTarget(SearchDirection direction)
 {
-    switch (direction)
+    const Point<int> newTargetCoordinates{ SimulationTarget + AdjacentVector.at(direction) };
+
+    if (!CoordinatesValid(newTargetCoordinates))
     {
-    case SearchDirection::Left:
-        if (SimulationTarget.y > 0)
-        {
-            SimulationTarget.y--;
-            return true;
-        }
-        if (SimulationTarget.y < 0)
-        {
-            SimulationTarget.y = 0;
-        }
         return false;
-
-    case SearchDirection::Down:
-        if (SimulationTarget.x < (SimWidth - 1))
-        {
-            SimulationTarget.x++;
-            return true;
-        }
-        if (SimulationTarget.x > (SimWidth - 1))
-        {
-            SimulationTarget.x = SimWidth - 1;
-        }
-        return false;
-
-    case SearchDirection::Right:
-        if (SimulationTarget.y < (SimHeight - 1))
-        {
-            SimulationTarget.y++;
-            return true;
-        }
-        if (SimulationTarget.y > (SimHeight - 1))
-        {
-            SimulationTarget.y = SimHeight - 1;
-        }
-        return false;
-
-    case SearchDirection::Up:
-        if (SimulationTarget.x > 0)
-        {
-            SimulationTarget.x--;
-            return true;
-        }
-        if (SimulationTarget.x < 0)
-        {
-            SimulationTarget.x = 0;
-        }
-        return false;
-
-    case SearchDirection::Undefined:
-        return true;
     }
 
-    return false;
+    SimulationTarget += AdjacentVector.at(direction);
+    return true;
 }

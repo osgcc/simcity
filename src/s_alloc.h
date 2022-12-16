@@ -18,8 +18,9 @@
 
 enum class SearchDirection
 {
-	Left, Down, Right, Up, Undefined
+	Up, Right, Down, Left, Undefined
 };
+
 
 extern Point<int> SimulationTarget;
 
