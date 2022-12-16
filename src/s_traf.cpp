@@ -87,7 +87,7 @@ void updateTrafficDensityMap()
         popCoordinates();
         if (CoordinatesValid(SimulationTarget))
         {
-            int tile = maskedTileValue(SimulationTarget.x, SimulationTarget.y);
+            int tile = maskedTileValue(SimulationTarget);
             if ((tile >= ROADBASE) && (tile < POWERBASE))
             {
                 /* check for rail */
