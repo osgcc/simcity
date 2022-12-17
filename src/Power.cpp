@@ -15,6 +15,8 @@
 #include "s_alloc.h"
 #include "s_msg.h"
 
+#include <stack>
+
 /* Power Scan */
 
 namespace
@@ -26,16 +28,21 @@ namespace
     constexpr auto PowerMapSize = (PowerMapRow * SimHeight);
     constexpr auto PowerStackSize = ((SimWidth * SimHeight) / 4);
 
-    int PowerStackCount{};
+    //int PowerStackCount{};
 
-    std::array<Point<int>, PowerStackSize> PowerStack;
+    //std::array<Point<int>, PowerStackSize> PowerStack;
+    std::stack<Point<int>> PowerStack;
     std::array<int, PowerMapSize> PowerMap{};
 };
 
 
 void resetPowerStackCount()
 {
-    PowerStackCount = 0;
+    //PowerStackCount = 0;
+    while (!PowerStack.empty())
+    {
+        PowerStack.pop();
+    }
 }
 
 
@@ -100,20 +107,20 @@ bool isTileConductive(SearchDirection direction)
 
 void pushPowerStack()
 {
-    if (PowerStackCount < (PowerStackSize - 2))
+
+    if (PowerStack.size() < PowerStackSize)
     {
-        PowerStackCount++;
-        PowerStack[PowerStackCount] = SimulationTarget;
+        PowerStack.push(SimulationTarget);
     }
 }
 
 
 void pullPowerStack()
 {
-    if (PowerStackCount > 0)
+    if (!PowerStack.empty())
     {
-        SimulationTarget = PowerStack[PowerStackCount];
-        PowerStackCount--;
+        SimulationTarget = PowerStack.top();
+        PowerStack.pop();
     }
 }
 
@@ -126,7 +133,7 @@ void powerScan()
     int powerConsumed = 0;
 
     int conductiveTileCount{};
-    while (PowerStackCount)
+    while (!PowerStack.empty())
     {
         pullPowerStack();
 
