@@ -28,11 +28,26 @@ namespace
     constexpr auto PowerMapSize = (PowerMapRow * SimHeight);
     constexpr auto PowerStackSize = ((SimWidth * SimHeight) / 4);
 
-    //int PowerStackCount{};
-
-    //std::array<Point<int>, PowerStackSize> PowerStack;
     std::stack<Point<int>> PowerStack;
     std::array<int, PowerMapSize> PowerMap{};
+
+    void pushPowerStack()
+    {
+
+        if (PowerStack.size() < PowerStackSize)
+        {
+            PowerStack.push(SimulationTarget);
+        }
+    }
+
+    void popPowerStack()
+    {
+        if (!PowerStack.empty())
+        {
+            SimulationTarget = PowerStack.top();
+            PowerStack.pop();
+        }
+    }
 };
 
 
@@ -105,26 +120,6 @@ bool isTileConductive(SearchDirection direction)
 }
 
 
-void pushPowerStack()
-{
-
-    if (PowerStack.size() < PowerStackSize)
-    {
-        PowerStack.push(SimulationTarget);
-    }
-}
-
-
-void pullPowerStack()
-{
-    if (!PowerStack.empty())
-    {
-        SimulationTarget = PowerStack.top();
-        PowerStack.pop();
-    }
-}
-
-
 void powerScan()
 {
     resetPowerMap();
@@ -135,7 +130,7 @@ void powerScan()
     int conductiveTileCount{};
     while (!PowerStack.empty())
     {
-        pullPowerStack();
+        popPowerStack();
 
         int ADir{ 4 };
         do
