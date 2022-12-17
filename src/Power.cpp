@@ -31,14 +31,6 @@ namespace
     std::stack<Point<int>> PowerStack;
     std::array<int, PowerMapSize> PowerMap{};
 
-    void pushPowerStack()
-    {
-
-        if (PowerStack.size() < PowerStackSize)
-        {
-            PowerStack.push(SimulationTarget);
-        }
-    }
 
     void popPowerStack()
     {
@@ -48,12 +40,21 @@ namespace
             PowerStack.pop();
         }
     }
+
 };
 
-
-void resetPowerStackCount()
+void pushPowerStack()
 {
-    //PowerStackCount = 0;
+
+    if (PowerStack.size() < PowerStackSize)
+    {
+        PowerStack.push(SimulationTarget);
+    }
+}
+
+
+void resetPowerStack()
+{
     while (!PowerStack.empty())
     {
         PowerStack.pop();

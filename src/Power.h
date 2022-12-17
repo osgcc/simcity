@@ -14,7 +14,7 @@
 
 #include "main.h"
 
-void resetPowerStackCount();
+void resetPowerStack();
 void resetPowerMap();
 void pushPowerStack();
 bool testPowerBit(const Point<int>& location);

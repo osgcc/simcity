@@ -893,7 +893,7 @@ void ClearCensus()
     NuclearPop = 0;
     PortPop = 0;
     APortPop = 0;
-    resetPowerStackCount(); // Reset before Mapscan
+    resetPowerStack(); // Reset before Mapscan
 
     FireStationMap.reset();
     PoliceStationMap.reset();
@@ -1076,7 +1076,7 @@ void InitSimMemory()
     DisasterEvent = 0;
     ScoreType = 0;
 
-    resetPowerStackCount();
+    resetPowerStack();
     powerScan();
 
     InitSimLoad = 0;
