@@ -13,6 +13,7 @@
 #include "Budget.h"
 
 #include "BudgetWindow.h"
+#include "Evaluation.h"
 #include "GraphWindow.h"
 #include "MiniMapWindow.h"
 
@@ -307,6 +308,25 @@ void simLoop(bool doSim)
 }
 
 
+void initWillStuff()
+{
+    RoadEffect = 32;
+    PoliceEffect = 1000;
+    FireEffect = 1000;
+    cityScore(500);
+    cityPopulation(-1);
+    LastCityTime(-1);
+    LastCityYear(1);
+    LastCityMonth(0);
+    pendingTool(Tool::None);
+    MessageId(NotificationId::None);
+    destroyAllSprites();
+    DisasterEvent = 0;
+    initMapArrays();
+    DoNewGame();
+}
+
+
 void simInit()
 {
     userSoundOn(true);
@@ -330,7 +350,7 @@ void simInit()
     InitializeSound();
     StopEarthquake();
     ClearMap();
-    InitWillStuff();
+    initWillStuff();
     budget.CurrentFunds(5000);
     SetGameLevelFunds(0, cityProperties, budget);
     SimSpeed(SimulationSpeed::Paused);

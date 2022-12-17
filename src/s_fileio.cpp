@@ -135,7 +135,7 @@ bool loadFile(const std::string& filename, CityProperties& properties, Budget& b
     budget.FirePercent(static_cast<float>(MiscHis[60] / 100.0f));
     budget.RoadPercent(static_cast<float>(MiscHis[62] / 100.0f));
 
-    InitWillStuff();
+    initWillStuff();
     ScenarioID = 0;
     DoSimInit(properties, budget);
 
@@ -221,7 +221,7 @@ void LoadScenario(Scenario scenario, CityProperties& properties, Budget& budget)
 
     SimSpeed(SimulationSpeed::Normal);
 
-    InitWillStuff();
+    initWillStuff();
     UpdateFunds(budget);
     InitSimLoad = 1;
     DoInitialEval = 0;

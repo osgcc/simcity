@@ -90,6 +90,8 @@ extern SDL_Renderer* MainWindowRenderer;
 
 void showBudgetWindow();
 
+void initWillStuff();
+
 bool autoBudget();
 void autoBudget(const bool b);
 

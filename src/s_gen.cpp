@@ -577,7 +577,7 @@ void GenerateSomeCity(int seed, CityProperties& properties, Budget& budget)
     InitSimLoad = 2;
     DoInitialEval = 0;
 
-    InitWillStuff();
+    initWillStuff();
     UpdateFunds(budget);
     DoSimInit(properties, budget);
     Eval("UIDidGenerateNewCity");
