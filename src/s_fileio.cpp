@@ -16,7 +16,6 @@
 
 #include "s_alloc.h"
 #include "s_fileio.h"
-#include "s_init.h"
 #include "s_sim.h"
 
 #include "w_sound.h"

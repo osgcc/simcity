@@ -32,7 +32,6 @@
 #include "s_disast.h"
 #include "s_fileio.h"
 #include "s_gen.h"
-#include "s_init.h"
 #include "s_msg.h"
 #include "s_sim.h"
 
