@@ -31,17 +31,21 @@ namespace
     std::stack<Point<int>> PowerStack;
     std::array<int, PowerMapSize> PowerMap{};
 
+    const Point<int>& topPowerStack()
+    {
+        return PowerStack.top();
+    }
 
     void popPowerStack()
     {
         if (!PowerStack.empty())
         {
-            SimulationTarget = PowerStack.top();
             PowerStack.pop();
         }
     }
 
 };
+
 
 void pushPowerStack(const Point<int>& location)
 {
@@ -131,6 +135,7 @@ void powerScan()
     int conductiveTileCount{};
     while (!PowerStack.empty())
     {
+        SimulationTarget = topPowerStack();
         popPowerStack();
 
         int ADir{ 4 };
