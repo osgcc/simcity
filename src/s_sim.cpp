@@ -475,7 +475,7 @@ void DoSPZone(bool powered, const CityProperties& properties)
         {
             RepairZone(POWERPLANT, 4);
         }
-        pushPowerStack();
+        pushPowerStack(SimulationTarget);
         CoalSmoke(SimulationTarget.x, SimulationTarget.y);
         return;
 
@@ -490,7 +490,7 @@ void DoSPZone(bool powered, const CityProperties& properties)
         {
             RepairZone(NUCLEAR, 4);
         }
-        pushPowerStack();
+        pushPowerStack(SimulationTarget);
         return;
 
     case FIRESTATION:

@@ -16,5 +16,5 @@
 
 void resetPowerStack();
 void resetPowerMap();
-void pushPowerStack();
+void pushPowerStack(const Point<int>& location);
 bool testPowerBit(const Point<int>& location);

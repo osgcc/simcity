@@ -43,12 +43,12 @@ namespace
 
 };
 
-void pushPowerStack()
+void pushPowerStack(const Point<int>& location)
 {
 
     if (PowerStack.size() < PowerStackSize)
     {
-        PowerStack.push(SimulationTarget);
+        PowerStack.push(location);
     }
 }
 
@@ -158,7 +158,7 @@ void powerScan()
             }
             if (conductiveTileCount > 1)
             {
-                pushPowerStack();
+                pushPowerStack(SimulationTarget);
             }
         } while (conductiveTileCount);
     }
