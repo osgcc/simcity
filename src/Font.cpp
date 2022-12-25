@@ -11,8 +11,13 @@
 
 #include "PointInRectangleRange.h"
 
+#if defined(__APPLE__)
+#include <SDL2_image/SDL_image.h>
+#include <SDL2_ttf//SDL_ttf.h>
+#else
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#endif
 
 #include <cmath>
 #include <algorithm>

@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright © 2022 Leeor Dicker
+// Copyright ï¿½ 2022 Leeor Dicker
 //
-// Portions Copyright © 1989-2007 Electronic Arts Inc.
+// Portions Copyright ï¿½ 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -11,11 +11,13 @@
 
 #include "FileIo.h"
 
+#if defined(WIN32)
 #define NOMINMAX
 #include <windows.h>
 #include <ShlObj_core.h>
 #include <Shlwapi.h>
 #undef NOMINMAX
+#endif
 
 
 #include <locale>
@@ -26,6 +28,7 @@
 
 namespace
 {
+    #if defined(WIN32)
     COMDLG_FILTERSPEC FileTypeFilter[] =
     {
         { L"Micropolis City", L"*.cty"}
@@ -45,6 +48,7 @@ namespace
         WideCharToMultiByte(CP_UTF8, 0, &str.at(0), (int)str.size(), &out.at(0), length, nullptr, nullptr);
         return out;
     }
+    #endif
 
 };
 
@@ -54,6 +58,7 @@ FileIo::FileIo(SDL_Window& window):
 {
 	SDL_GetWindowWMInfo(&mWindow, &mWmInfo);
 
+    #if defined(WIN32)
     wchar_t* path{ nullptr };
     if (SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_CREATE, NULL, &path) != S_OK)
     {
@@ -69,6 +74,7 @@ FileIo::FileIo(SDL_Window& window):
     {
         CreateDirectory(mSavePathW.c_str(), nullptr);
     }
+    #endif
 }
 
 
@@ -114,7 +120,10 @@ void FileIo::extractFileName()
 {
     std::size_t location = mFileNameW.find_last_of(L"/\\");
     mFileNameW = mFileNameW.substr(location + 1);
+    
+    #if defined(WIN32)
     mFileName = StringFromWString(mFileNameW);
+    #endif
 }
 
 
@@ -130,6 +139,7 @@ void FileIo::extractFileName()
  */
 bool FileIo::showFileDialog(FileOperation operation)
 {
+    #if defined(WIN32)
     CLSID fileOperation
     {
         operation == FileOperation::Open ? CLSID_FileOpenDialog : CLSID_FileSaveDialog
@@ -181,6 +191,7 @@ bool FileIo::showFileDialog(FileOperation operation)
     }
 
     fileDialog->Release();
+    #endif
 
     return true;
 }

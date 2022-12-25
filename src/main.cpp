@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright © 2022 Leeor Dicker
+// Copyright ï¿½ 2022 Leeor Dicker
 //
-// Portions Copyright © 1989-2007 Electronic Arts Inc.
+// Portions Copyright ï¿½ 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -58,14 +58,20 @@
 #include <vector>
 
 #include <SDL2/SDL.h>
+
+#if defined(__APPLE__)
+#include <SDL2_image/SDL_image.h>
+#else
 #include <SDL2/SDL_image.h>
+#endif
 
-
+#if defined(WIN32)
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <Windows.h>
 #undef NOMINMAX
 #undef WIN32_LEAN_AND_MEAN
+#endif
 
 const std::string MicropolisVersion = "4.0";
 
@@ -896,7 +902,12 @@ void initRenderer()
 
     SDL_SetWindowMinimumSize(MainWindow, 800, 600);
 
+    #if defined(__APPLE__)
+    MainWindowRenderer = SDL_CreateRenderer(MainWindow, -1, SDL_RENDERER_SOFTWARE);
+    #else
     MainWindowRenderer = SDL_CreateRenderer(MainWindow, -1, SDL_RENDERER_ACCELERATED);
+    #endif
+    
     if (!MainWindow)
     {
         throw std::runtime_error("initRenderer(): Unable to create renderer: " + std::string(SDL_GetError()));
@@ -1203,7 +1214,12 @@ int main(int argc, char* argv[])
     catch(std::exception e)
     {
         std::string message(std::string(e.what()) + "\n\nMicropolis-SDL2PP will now close.");
+        
+        #if defined(WIN32)
         MessageBoxA(nullptr, message.c_str(), "Micropolis-SDL2PP", MB_ICONERROR | MB_OK);
+        #else
+        std::cout << message << std::endl;
+        #endif
     }
 
     return 0;
