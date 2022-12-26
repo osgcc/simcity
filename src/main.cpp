@@ -656,7 +656,6 @@ void validateDraggableToolVector(Vector<int>& toolVector)
     if (axisLarge == 0) { return; }
 
     const int step = axisLarge < 0 ? -1 : 1;
-    const int axis = std::abs(axisLarge);
     const bool xAxisLarger = std::abs(toolVector.x) > std::abs(toolVector.y);
 
     const Point<int>& origin = toolStart();
