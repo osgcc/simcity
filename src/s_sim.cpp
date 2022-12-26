@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright © 2022 Leeor Dicker
+// Copyright ï¿½ 2022 Leeor Dicker
 //
-// Portions Copyright © 1989-2007 Electronic Arts Inc.
+// Portions Copyright ï¿½ 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -207,8 +207,8 @@ void DoRadTile()
 int GetBoatDis()
 {
     int dist = 99999;
-    int mx = (SimulationTarget.x * 16) + 8;
-    int my = (SimulationTarget.y * 16) + 8;
+    //int mx = (SimulationTarget.x * 16) + 8;
+    //int my = (SimulationTarget.y * 16) + 8;
 
     /*
     for (SimSprite* sprite = sim->sprite; sprite != NULL; sprite = sprite->next)
@@ -606,7 +606,7 @@ void DoSPZone(bool powered, const CityProperties& properties)
         }
 
         SimSprite* shipSprite = getSprite(SimSprite::Type::Ship);
-        if (powered && shipSprite == nullptr || shipSprite != nullptr && !shipSprite->active)
+        if ((powered && shipSprite == nullptr) || (shipSprite != nullptr && !shipSprite->active))
         {
             generateShip();
         }
@@ -622,7 +622,8 @@ void MapScan(int x1, int x2, const CityProperties& properties)
     {
         for (int y = 0; y < SimHeight; y++)
         {
-            if (CurrentTile = Map[x][y])
+            CurrentTile = Map[x][y];
+            if (CurrentTile != 0)
             {
                 CurrentTileMasked = CurrentTile & LOMASK;	// Mask off status bits
 
@@ -982,7 +983,7 @@ void CollectTax(const CityProperties& properties, Budget& budget)
     static float FLevels[3] = { 1.4f, 1.2f, 0.8f };
 
     // XXX: do something with z
-    int z = AvCityTax / 48;  // post
+    //int z = AvCityTax / 48;  // post
     AvCityTax = 0;
     
     budget.PoliceFundsNeeded(PolicePop * 100);
