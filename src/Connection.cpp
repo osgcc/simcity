@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright © 2022 Leeor Dicker
+// Copyright ï¿½ 2022 Leeor Dicker
 //
-// Portions Copyright © 1989-2007 Electronic Arts Inc.
+// Portions Copyright ï¿½ 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -20,8 +20,6 @@
 
 namespace
 {
-    constexpr auto WaterConstructionMultiplier = 5;
-
     int _RoadTable[16]
     {
       66, 67, 66, 68,
@@ -579,7 +577,6 @@ void _FixZone(int x, int y)
 ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
 {
     const int cost = toolProperties(tool).cost;
-    const int waterCost = cost * WaterConstructionMultiplier;
 
     if (budget.CurrentFunds() < cost)
     {
