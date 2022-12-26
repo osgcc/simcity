@@ -116,7 +116,7 @@ GraphWindow::GraphWindow(SDL_Renderer* renderer) :
 }
 
 
-void GraphWindow::onMoved(const Point<int>& movement)
+void GraphWindow::onMoved(const Vector<int>& movement)
 {
 	mArea = { mArea.x + movement.x, mArea.y + movement.y, mArea.w, mArea.h };
 	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
@@ -171,7 +171,7 @@ void GraphWindow::injectMouseUp()
 }
 
 
-void GraphWindow::injectMouseMotion(const Point<int>& delta)
+void GraphWindow::injectMouseMotion(const Vector<int>& delta)
 {
 	if (!mDragging) { return; }
 	move(delta);
