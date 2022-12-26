@@ -33,7 +33,6 @@
 		57C37B9A2958E4FF0055BC50 /* Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B6D2958E4FF0055BC50 /* Sprite.cpp */; };
 		57C37B9B2958E4FF0055BC50 /* Budget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B6E2958E4FF0055BC50 /* Budget.cpp */; };
 		57C37B9C2958E4FF0055BC50 /* Traffic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B702958E4FF0055BC50 /* Traffic.cpp */; };
-		57C37B9D2958E4FF0055BC50 /* w_keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B732958E4FF0055BC50 /* w_keys.cpp */; };
 		57C37B9E2958E4FF0055BC50 /* Scan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B742958E4FF0055BC50 /* Scan.cpp */; };
 		57C37B9F2958E4FF0055BC50 /* s_alloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B772958E4FF0055BC50 /* s_alloc.cpp */; };
 		57C37BA02958E4FF0055BC50 /* s_disast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B782958E4FF0055BC50 /* s_disast.cpp */; };
@@ -138,7 +137,6 @@
 		57C37B702958E4FF0055BC50 /* Traffic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Traffic.cpp; path = ../../src/Traffic.cpp; sourceTree = "<group>"; };
 		57C37B712958E4FF0055BC50 /* SmallMaps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmallMaps.h; path = ../../src/SmallMaps.h; sourceTree = "<group>"; };
 		57C37B722958E4FF0055BC50 /* VectorSizeRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VectorSizeRange.h; path = ../../src/VectorSizeRange.h; sourceTree = "<group>"; };
-		57C37B732958E4FF0055BC50 /* w_keys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = w_keys.cpp; path = ../../src/w_keys.cpp; sourceTree = "<group>"; };
 		57C37B742958E4FF0055BC50 /* Scan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scan.cpp; path = ../../src/Scan.cpp; sourceTree = "<group>"; };
 		57C37B752958E4FF0055BC50 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector.h; path = ../../src/Vector.h; sourceTree = "<group>"; };
 		57C37B762958E4FF0055BC50 /* w_sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = w_sound.h; path = ../../src/w_sound.h; sourceTree = "<group>"; };
@@ -237,7 +235,6 @@
 				57C37B672958E4FF0055BC50 /* ToolPalette.cpp */,
 				57C37B702958E4FF0055BC50 /* Traffic.cpp */,
 				57C37B532958E4FE0055BC50 /* w_eval.cpp */,
-				57C37B732958E4FF0055BC50 /* w_keys.cpp */,
 				57C37B382958E4FE0055BC50 /* w_resrc.cpp */,
 				57C37B422958E4FE0055BC50 /* w_sound.cpp */,
 				57C37B4D2958E4FE0055BC50 /* w_tk.cpp */,
@@ -399,7 +396,6 @@
 				57C37B9E2958E4FF0055BC50 /* Scan.cpp in Sources */,
 				57C37B862958E4FF0055BC50 /* w_sound.cpp in Sources */,
 				57C37BAE2958E52C0055BC50 /* main.cpp in Sources */,
-				57C37B9D2958E4FF0055BC50 /* w_keys.cpp in Sources */,
 				57C37B8A2958E4FF0055BC50 /* Texture.cpp in Sources */,
 				57C37B9A2958E4FF0055BC50 /* Sprite.cpp in Sources */,
 				57C37B922958E4FF0055BC50 /* StringRender.cpp in Sources */,
