@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright © 2022 Leeor Dicker
+// Copyright ï¿½ 2022 Leeor Dicker
 //
-// Portions Copyright © 1989-2007 Electronic Arts Inc.
+// Portions Copyright ï¿½ 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -73,12 +73,12 @@ namespace
 
 	std::array<ButtonMeta, 6> Buttons
 	{
-		ButtonMeta{ ButtonId::Residential, ButtonLayout.at(ButtonId::Residential), { 0 }, { true } },
-		ButtonMeta{ ButtonId::Commercial, ButtonLayout.at(ButtonId::Commercial), { 0 }, { true } },
-		ButtonMeta{ ButtonId::Industrial, ButtonLayout.at(ButtonId::Industrial), { 0 }, { true } },
-		ButtonMeta{ ButtonId::Pollution, ButtonLayout.at(ButtonId::Pollution), { 0 }, { true } },
-		ButtonMeta{ ButtonId::Crime, ButtonLayout.at(ButtonId::Crime), { 0 }, { true } },
-		ButtonMeta{ ButtonId::Money, ButtonLayout.at(ButtonId::Money), { 0 }, { true } }
+		ButtonMeta{ ButtonId::Residential, ButtonLayout.at(ButtonId::Residential), { 0 }, true },
+		ButtonMeta{ ButtonId::Commercial, ButtonLayout.at(ButtonId::Commercial), { 0 }, true },
+		ButtonMeta{ ButtonId::Industrial, ButtonLayout.at(ButtonId::Industrial), { 0 }, true },
+		ButtonMeta{ ButtonId::Pollution, ButtonLayout.at(ButtonId::Pollution), { 0 }, true },
+		ButtonMeta{ ButtonId::Crime, ButtonLayout.at(ButtonId::Crime), { 0 }, true },
+		ButtonMeta{ ButtonId::Money, ButtonLayout.at(ButtonId::Money), { 0 }, true }
 	};
 
 
