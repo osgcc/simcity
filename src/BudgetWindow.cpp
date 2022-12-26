@@ -168,7 +168,7 @@ void BudgetWindow::reset()
 }
 
 
-void BudgetWindow::position(const Point<int>& pos)
+void BudgetWindow::onPositionChanged(const Point<int>& pos)
 {
 	mRect = { pos.x, pos.y, mRect.w, mRect.h };
 
@@ -248,11 +248,12 @@ void BudgetWindow::handleMouseDown(const ButtonId id)
 }
 
 
-void BudgetWindow::injectMouseClickPosition(const SDL_Point& pos)
+void BudgetWindow::injectMouseDown(const Point<int>& pos)
 {
 	for (auto id : buttons)
 	{
-		if (id != ButtonId::None && SDL_PointInRect(&pos, &ButtonRects[id]))
+		const SDL_Point pt{ pos.x, pos.y };
+		if (id != ButtonId::None && SDL_PointInRect(&pt, &ButtonRects[id]))
 		{
 			mButtonDownId = id;
 			handleMouseDown(id);

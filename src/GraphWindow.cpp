@@ -116,7 +116,7 @@ GraphWindow::GraphWindow(SDL_Renderer* renderer) :
 }
 
 
-void GraphWindow::move(const SDL_Point& movement)
+void GraphWindow::onMoved(const Point<int>& movement)
 {
 	mArea = { mArea.x + movement.x, mArea.y + movement.y, mArea.w, mArea.h };
 	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
@@ -130,7 +130,7 @@ void GraphWindow::move(const SDL_Point& movement)
 }
 
 
-void GraphWindow::position(const SDL_Point& position)
+void GraphWindow::onPositionChanged(const Point<int>& position)
 {
 	mArea = { position.x, position.y, mArea.w, mArea.h };
 	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
@@ -144,9 +144,10 @@ void GraphWindow::position(const SDL_Point& position)
 }
 
 
-void GraphWindow::injectMouseDown(const SDL_Point& position)
-{
-	if (SDL_PointInRect(&position, &TitleBarPosition))
+void GraphWindow::injectMouseDown(const Point<int>& position)
+{ 
+	const SDL_Point& pt{ position.x, position.y };
+	if (SDL_PointInRect(&pt, &TitleBarPosition))
 	{
 		mDragging = true;
 		return;
@@ -154,7 +155,7 @@ void GraphWindow::injectMouseDown(const SDL_Point& position)
 
 	for (auto& button : Buttons)
 	{
-		if (SDL_PointInRect(&position, &button.area))
+		if (SDL_PointInRect(&pt, &button.area))
 		{
 			button.toggled = !button.toggled;
 			update();
@@ -163,13 +164,14 @@ void GraphWindow::injectMouseDown(const SDL_Point& position)
 	}
 }
 
+
 void GraphWindow::injectMouseUp()
 {
 	mDragging = false;
 }
 
 
-void GraphWindow::injectMouseMotion(const SDL_Point& delta)
+void GraphWindow::injectMouseMotion(const Point<int>& delta)
 {
 	if (!mDragging) { return; }
 	move(delta);

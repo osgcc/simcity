@@ -52,18 +52,18 @@ public:
 
 	void reset();
 
-	void position(const Point<int>& pos);
-
 	bool accepted() const { return mAccepted; }
 
-	void injectMouseClickPosition(const SDL_Point& pos);
-	void injectMouseUp();
+	void injectMouseDown(const Point<int>& pos) override;
+	void injectMouseUp() override;
 
 	void draw() override;
 	void update() override;
 
 private:
 	void handleMouseDown(const ButtonId id);
+
+	void onPositionChanged(const Point<int>& pos) override;
 
 	Budget& mBudget;
 	bool mAccepted{ false };

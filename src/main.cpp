@@ -725,7 +725,7 @@ void handleMouseEvent(SDL_Event& event)
 {
     if (event.window.windowID != MainWindowId) { return; }
 
-    SDL_Point mouseMotionDelta{};
+    Point<int> mouseMotionDelta{};
     SDL_Point mousePosition = { EventHandling::MousePosition.x, EventHandling::MousePosition.y };
 
     switch (event.type)
@@ -771,12 +771,12 @@ void handleMouseEvent(SDL_Event& event)
 
             if (SDL_PointInRect(&mousePosition, &budgetWindow->rect()))
             {
-                budgetWindow->injectMouseClickPosition(mousePosition);
+                budgetWindow->injectMouseDown({ mousePosition.x, mousePosition.y });
             }
 
             if (SDL_PointInRect(&mousePosition, &graphWindow->rect()))
             {
-                graphWindow->injectMouseDown(mousePosition);
+                graphWindow->injectMouseDown({ mousePosition.x, mousePosition.y });
             }
 
             if (!budgetWindow->visible() && !pendingToolProperties().draggable)
