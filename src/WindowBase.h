@@ -22,10 +22,8 @@ public:
 	void hide() { mVisible = false; }
 
 	void move(const Vector<int>& delta)
-	{
-        mArea.x += delta.x;
-        mArea.y += delta.y;
-
+    {
+        mArea.startPoint(mArea.startPoint() + delta);
 		onMoved(delta);
 	}
 
@@ -34,6 +32,26 @@ public:
         mArea.startPoint(point);
 		onPositionChanged(point);
 	}
+    
+    constexpr Point<int> position() const
+    {
+        return mArea.startPoint();
+    }
+    
+    void size(const Vector<int>& size)
+    {
+        mArea.size(size);
+    }
+    
+    constexpr Vector<int> size() const
+    {
+        return mArea.size();
+    }
+    
+    const Rectangle<int> area() const
+    {
+        return mArea;
+    }
 
 	virtual void injectMouseDown(const Point<int>& position) {};
 	virtual void injectMouseUp() {};
@@ -41,6 +59,12 @@ public:
 	
 	virtual void draw() = 0;
 	virtual void update() = 0;
+    
+protected:
+    Rectangle<int>& area()
+    {
+        return mArea;
+    }
 
 private:
 	virtual void onMoved(const Vector<int>&) {};
