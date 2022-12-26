@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright © 2022 Leeor Dicker
+// Copyright ï¿½ 2022 Leeor Dicker
 //
-// Portions Copyright © 1989-2007 Electronic Arts Inc.
+// Portions Copyright ï¿½ 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -33,7 +33,7 @@ namespace
     int CityPop{}, deltaCityPop{};
     int CityAssessedValue; /* assessed city value */
     int CityClass; /*  0..5  */
-    int CityScore{}, DeltaCityScore{}, AverageCityScore{};
+int CityScore{}, DeltaCityScore{}, AverageCityScore{};
     int TrafficAverage{};
 };
 
