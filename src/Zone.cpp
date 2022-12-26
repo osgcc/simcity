@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright © 2022 Leeor Dicker
+// Copyright ï¿½ 2022 Leeor Dicker
 //
-// Portions Copyright © 1989-2007 Electronic Arts Inc.
+// Portions Copyright ï¿½ 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -199,9 +199,9 @@ void setSmoke(bool ZonePower)
     static const std::array<bool, 8> animateTile = { true, false, true, true, false, false, true, true };
     
     static const int AniTabA[8] = { 0,    0,   32,   40,    0,    0,   48,   56 };
-    static const int AniTabB[8] = { 0,    0,   36,   44,    0,    0,   52,   60 };
+    //static const int AniTabB[8] = { 0,    0,   36,   44,    0,    0,   52,   60 };
     static const int AniTabC[8] = { IND1,    0, IND2, IND4,    0,    0, IND6, IND8 };
-    static const int AniTabD[8] = { IND1,    0, IND3, IND5,    0,    0, IND7, IND9 };
+    //static const int AniTabD[8] = { IND1,    0, IND3, IND5,    0,    0, IND7, IND9 };
     
     if (CurrentTileMasked < IZB)
     {
