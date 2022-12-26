@@ -41,6 +41,7 @@ const Vector<int> vectorFromPoints(const Point<int>& start, const Point<int>& en
     return { end.x - start.x, end.y - start.y };
 }
 
+
 bool pointInRect(const Point<int>& point, const SDL_Rect& rect)
 {
     return point.x >= rect.x && point.x <= rect.x + rect.w && point.y >= rect.y && point.y <= rect.y + rect.h;
