@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright © 2022 Leeor Dicker
+// Copyright ï¿½ 2022 Leeor Dicker
 //
-// Portions Copyright © 1989-2007 Electronic Arts Inc.
+// Portions Copyright ï¿½ 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -116,8 +116,8 @@ void PutOnMap(int Mchar, int Xoff, int Yoff)
         return;
     }
 
-    int temp = 0;
-    if (temp = Map[Xloc][Yloc])
+    int temp = Map[Xloc][Yloc];
+    if (temp != 0)
     {
         temp = temp & LOMASK;
         if (temp == RIVER)
