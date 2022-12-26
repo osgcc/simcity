@@ -1282,8 +1282,6 @@ bool findSpawnPosition()
 
 void generateMonster()
 {
-    bool done{ false };
-
     SimSprite* sprite = getSprite(SimSprite::Type::Monster);
     if (sprite)
     {
