@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright © 2022 Leeor Dicker
+// Copyright ï¿½ 2022 Leeor Dicker
 //
-// Portions Copyright © 1989-2007 Electronic Arts Inc.
+// Portions Copyright ï¿½ 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -18,14 +18,7 @@
 namespace
 {
 	const SDL_Rect bgRect{ 0, 0, 456, 422 };
-
 	const SDL_Rect mainButtonDown{ 2, 426, 434, 36 };
-
-	SDL_Rect TaxRateBox{ 138, 39, 285, 21 };
-	const SDL_Rect TaxRateBoxPosition = TaxRateBox;
-
-	SDL_Rect TaxCollectedBox{ 138, 70, 285, 21 };
-	const SDL_Rect TaxCollectedBoxPosition = TaxCollectedBox;
 
 	enum class TextPanelId
 	{
