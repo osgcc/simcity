@@ -45,9 +45,6 @@
     <ClCompile Include="src\w_eval.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_keys.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\w_resrc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

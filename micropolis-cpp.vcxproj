@@ -39,7 +39,6 @@
     <ClCompile Include="src\ToolPalette.cpp" />
     <ClCompile Include="src\Traffic.cpp" />
     <ClCompile Include="src\w_eval.cpp" />
-    <ClCompile Include="src\w_keys.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
     <ClCompile Include="src\w_sound.cpp" />
     <ClCompile Include="src\w_tk.cpp" />
