@@ -908,7 +908,7 @@ void initRenderer()
     MainWindowRenderer = SDL_CreateRenderer(MainWindow, -1, SDL_RENDERER_ACCELERATED);
     #endif
     
-    if (!MainWindow)
+    if (!MainWindowRenderer)
     {
         throw std::runtime_error("initRenderer(): Unable to create renderer: " + std::string(SDL_GetError()));
     }
