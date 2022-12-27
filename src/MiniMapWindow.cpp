@@ -519,7 +519,20 @@ void MiniMapWindow::handleMouseEvent(const SDL_Event& event)
                     {
                         button.state = ButtonStatePressed;
                         mButtonDownId = button.id;
-                        drawCurrentOverlay();
+
+                        // fixme    Find a better way to do this
+                        if (button.id == ButtonId::TransportationNetwork)
+                        {
+                            drawLilTransMap();
+                        }
+                        else if (button.id == ButtonId::PowerGrid)
+                        {
+                            drawPowerMap();
+                        }
+                        else
+                        {
+                            drawCurrentOverlay();
+                        }
                     }
                     else
                     {
