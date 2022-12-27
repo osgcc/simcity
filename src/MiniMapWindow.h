@@ -97,6 +97,8 @@ private:
 	void initOverlayTextures();
 
 	void drawCurrentOverlay();
+    void drawPlainMap();
+    void drawPowerMap();
 
 private:
 	struct ButtonMeta

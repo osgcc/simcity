@@ -272,12 +272,16 @@ void MiniMapWindow::initOverlayTextures()
     initTexture(mOverlayTextures[ButtonId::PopulationDensity], overlayHalfSize);
     initTexture(mOverlayTextures[ButtonId::Pollution], overlayHalfSize);
     initTexture(mOverlayTextures[ButtonId::TrafficDensity], overlayHalfSize);
-
+    
     // Necessary because of integer math dropping fractional component.
     const Vector<int> overlayEigthSize{ mMapSize.x / 8, (mMapSize.y / 8) + 1 };
     initTexture(mOverlayTextures[ButtonId::PoliceProtection], overlayEigthSize);
     initTexture(mOverlayTextures[ButtonId::FireProtection], overlayEigthSize);
     initTexture(mOverlayTextures[ButtonId::PopulationGrowth], overlayEigthSize);
+    
+    // Full size textures
+    initTexture(mOverlayTextures[ButtonId::TransportationNetwork], mMapSize.skewBy({MiniTileSize, MiniTileSize}));
+    initTexture(mOverlayTextures[ButtonId::PowerGrid], mMapSize.skewBy({MiniTileSize, MiniTileSize}));
 }
 
 
@@ -318,13 +322,11 @@ void MiniMapWindow::show()
 }
 
 
-void MiniMapWindow::draw()
+void MiniMapWindow::drawPlainMap()
 {
-    //SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 150);
-
     SDL_Rect miniMapDrawRect{ 0, 0, MiniTileSize, MiniTileSize };
-
     SDL_SetRenderTarget(mRenderer, mTexture.texture);
+        
     for (int row = 0; row < mMapSize.x; row++)
     {
         for (int col = 0; col < mMapSize.y; col++)
@@ -338,6 +340,77 @@ void MiniMapWindow::draw()
     SDL_RenderPresent(mRenderer);
     SDL_SetRenderTarget(mRenderer, nullptr);
 
+}
+
+
+void MiniMapWindow::drawPowerMap()
+{
+    SDL_Color tileColor{};
+    SDL_Rect miniMapDrawRect{ 0, 0, MiniTileSize, MiniTileSize };
+    SDL_SetRenderTarget(mRenderer, mOverlayTextures[ButtonId::PowerGrid].texture);
+
+    for (int row = 0; row < mMapSize.x; row++)
+    {
+        for (int col = 0; col < mMapSize.y; col++)
+        {
+            miniMapDrawRect = { row * MiniTileSize, col * MiniTileSize, miniMapDrawRect.w, miniMapDrawRect.h };
+
+            const unsigned int unmaskedTile = tileValue(row, col);
+            unsigned int tile = maskedTileValue(unmaskedTile);
+
+            bool colored{ true };
+
+            if (tile <= LASTFIRE)
+            {
+                colored = false;
+            }
+            else if (unmaskedTile & ZONEBIT)
+            {
+                tileColor = (unmaskedTile & PWRBIT) ? Colors::Red : Colors::LightBlue;
+            }
+            else
+            {
+                if (unmaskedTile & CONDBIT)
+                {
+                    tileColor = Colors::LightGrey;
+                }
+                else
+                {
+                    tile = DIRT;
+                    colored = false;
+                }
+            }
+
+            if (colored)
+            {
+                SDL_SetRenderDrawColor(mRenderer, tileColor.r, tileColor.g, tileColor.b, 255);
+                SDL_RenderFillRect(mRenderer, &miniMapDrawRect);
+            }
+            else
+            {
+                mTileRect.y = maskedTileValue(tileValue(row, col)) * MiniTileSize;
+                SDL_RenderCopy(mRenderer, mTiles.texture, &mTileRect, &miniMapDrawRect);
+            }
+        }
+    }
+    SDL_RenderPresent(mRenderer);
+    SDL_SetRenderTarget(mRenderer, nullptr);
+}
+
+
+void MiniMapWindow::draw()
+{
+    if(mButtonDownId == ButtonId::PowerGrid)
+    {
+        drawPowerMap();
+        return;
+    }
+    
+    if(mButtonDownId == ButtonId::TransportationNetwork)
+    {
+    }
+
+    drawPlainMap();
     drawCurrentOverlay();
 }
 
@@ -505,9 +578,9 @@ void MiniMapWindow::setButtonValues()
     mButtons[7].id = ButtonId::Pollution;
     mButtons[8].id = ButtonId::TrafficDensity;
     //mButtons[9].id = ButtonId::TransportationNetwork;
-    //mButtons[10].id = ButtonId::PowerGrid;
+    mButtons[10].id = ButtonId::PowerGrid;
     mButtons[9].id = ButtonId::Normal;
-    mButtons[10].id = ButtonId::Normal;
+    //mButtons[10].id = ButtonId::Normal;
 }
 
 
