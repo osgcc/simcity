@@ -61,16 +61,11 @@ public:
 	virtual void update() = 0;
     
 protected:
-    Rectangle<int>& area()
-    {
-        return mArea;
-    }
+    Rectangle<int>  mArea;
 
 private:
 	virtual void onMoved(const Vector<int>&) {};
 	virtual void onPositionChanged(const Point<int>&) {};
     
-    Rectangle<int>  mArea;
-
 	bool mVisible{ false };
 };

@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright © 2022 Leeor Dicker
+// Copyright Â© 2022 Leeor Dicker
 //
-// Portions Copyright © 1989-2007 Electronic Arts Inc.
+// Portions Copyright Â© 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -48,8 +48,6 @@ public:
 	BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRenderer, Budget& budget);
 	~BudgetWindow() override;
 
-	const SDL_Rect& rect() const { return mRect; }
-
 	void reset();
 
 	bool accepted() const { return mAccepted; }
@@ -67,8 +65,6 @@ private:
 
 	Budget& mBudget;
 	bool mAccepted{ false };
-
-	SDL_Rect mRect{ 0, 0, 456, 422 };
 
 	SDL_Renderer* mRenderer{ nullptr };
 	const StringRender& mStringRenderer;

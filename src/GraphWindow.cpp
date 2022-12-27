@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright � 2022 Leeor Dicker
+// Copyright © 2022 Leeor Dicker
 //
-// Portions Copyright � 1989-2007 Electronic Arts Inc.
+// Portions Copyright © 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -112,13 +112,13 @@ GraphWindow::GraphWindow(SDL_Renderer* renderer) :
 	mRenderer(*renderer),
 	mTexture(loadTexture(renderer, "images/graph.png"))
 {
+    size({264, 287});
 	initTexture(*MainWindowRenderer, mGraphTexture, { GraphLayout.w, GraphLayout.h });
 }
 
 
 void GraphWindow::onMoved(const Vector<int>& movement)
 {
-	mArea = { mArea.x + movement.x, mArea.y + movement.y, mArea.w, mArea.h };
 	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
 	TitleBarPosition = { TitleBarLayout.x + mArea.x, TitleBarLayout.y + mArea.y, TitleBarLayout.w, TitleBarLayout.h };
 
@@ -132,7 +132,6 @@ void GraphWindow::onMoved(const Vector<int>& movement)
 
 void GraphWindow::onPositionChanged(const Point<int>& position)
 {
-	mArea = { position.x, position.y, mArea.w, mArea.h };
 	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
 	TitleBarPosition = { TitleBarLayout.x + mArea.x, TitleBarLayout.y + mArea.y, TitleBarLayout.w, TitleBarLayout.h };
 
@@ -180,7 +179,8 @@ void GraphWindow::injectMouseMotion(const Vector<int>& delta)
 
 void GraphWindow::draw()
 {
-	SDL_RenderCopy(&mRenderer, mTexture.texture, &Bg, &mArea);
+    const SDL_Rect rect{ mArea.x, mArea.y, mArea.width, mArea.height };
+	SDL_RenderCopy(&mRenderer, mTexture.texture, &Bg, &rect);
 
 	for (auto& button : Buttons)
 	{

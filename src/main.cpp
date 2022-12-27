@@ -1,9 +1,9 @@
 // This file is part of Micropolis-SDL2PP
 // Micropolis-SDL2PP is based on Micropolis
 //
-// Copyright � 2022 Leeor Dicker
+// Copyright © 2022 Leeor Dicker
 //
-// Portions Copyright � 1989-2007 Electronic Arts Inc.
+// Portions Copyright © 1989-2007 Electronic Arts Inc.
 //
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
@@ -505,13 +505,13 @@ void minimapViewUpdated(const Point<int>& newOffset)
 
 void centerBudgetWindow()
 {
-    budgetWindow->position({ WindowSize.x / 2 - budgetWindow->rect().w / 2, WindowSize.y / 2 - budgetWindow->rect().h / 2 });
+    budgetWindow->position({ WindowSize.x / 2 - budgetWindow->area().width / 2, WindowSize.y / 2 - budgetWindow->area().height / 2 });
 }
 
 
 void centerGraphWindow()
 {
-    graphWindow->position({ WindowSize.x / 2 - graphWindow->rect().w / 2, WindowSize.y / 2 - graphWindow->rect().h / 2 });
+    graphWindow->position({ WindowSize.x / 2 - graphWindow->area().width / 2, WindowSize.y / 2 - graphWindow->area().height / 2 });
 }
 
 
@@ -726,7 +726,7 @@ void handleMouseEvent(SDL_Event& event)
     if (event.window.windowID != MainWindowId) { return; }
 
     Vector<int> mouseMotionDelta{};
-    SDL_Point mousePosition = { EventHandling::MousePosition.x, EventHandling::MousePosition.y };
+    Point<int> mousePosition = { EventHandling::MousePosition.x, EventHandling::MousePosition.y };
 
     switch (event.type)
     {
@@ -747,7 +747,7 @@ void handleMouseEvent(SDL_Event& event)
 
         if ((SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON_RMASK) != 0)
         {
-            MapViewOffset -= { event.motion.xrel, event.motion.yrel };
+            MapViewOffset -= mouseMotionDelta;
             clampViewOffset();
             updateMapDrawParameters();
             RightButtonDrag = true;
@@ -761,7 +761,7 @@ void handleMouseEvent(SDL_Event& event)
 
             for (auto rect : UiRects)
             {
-                if (SDL_PointInRect(&mousePosition, rect))
+                if (pointInRect(mousePosition, *rect))
                 {
                     return;
                 }
@@ -769,14 +769,14 @@ void handleMouseEvent(SDL_Event& event)
 
             toolStart(TilePointedAt);
 
-            if (SDL_PointInRect(&mousePosition, &budgetWindow->rect()))
+            if (budgetWindow->area().contains(mousePosition))
             {
-                budgetWindow->injectMouseDown({ mousePosition.x, mousePosition.y });
+                budgetWindow->injectMouseDown(mousePosition);
             }
 
-            if (SDL_PointInRect(&mousePosition, &graphWindow->rect()))
+            if (graphWindow->area().contains(mousePosition))
             {
-                graphWindow->injectMouseDown({ mousePosition.x, mousePosition.y });
+                graphWindow->injectMouseDown(mousePosition);
             }
 
             if (!budgetWindow->visible() && !pendingToolProperties().draggable)
@@ -799,7 +799,7 @@ void handleMouseEvent(SDL_Event& event)
 
             for (auto rect : UiRects)
             {
-                if (SDL_PointInRect(&mousePosition, rect))
+                if (pointInRect(mousePosition, *rect))
                 {
                     return;
                 }
