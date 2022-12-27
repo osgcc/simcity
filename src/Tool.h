@@ -78,3 +78,7 @@ const Point<int>& toolStart();
 
 void toolEnd(const Point<int>&);
 const Point<int>& toolEnd();
+
+int longestAxis(const Vector<int>&);
+void validateDraggableToolVector(Vector<int>&, Budget&);
+void executeDraggableTool(const Vector<int>&, const Point<int>&, Budget&);

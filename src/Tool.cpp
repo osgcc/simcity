@@ -1017,3 +1017,82 @@ void ToolDown(int mapX, int mapY, Budget& budget)
     }
 }
 
+
+int longestAxis(const Vector<int>& vec)
+{
+    return abs(vec.x) >= abs(vec.y) ? vec.x : vec.y;
+}
+
+
+/**
+ * Modifies \c toolVector
+ */
+void validateDraggableToolVector(Vector<int>& toolVector, Budget& budget)
+{
+    const int axisLarge = longestAxis(toolVector);
+    if (axisLarge == 0) { return; }
+
+    const int step = axisLarge < 0 ? -1 : 1;
+    const bool xAxisLarger = std::abs(toolVector.x) > std::abs(toolVector.y);
+
+    const Point<int>& origin = toolStart();
+    
+    if (CanConnectTile(origin.x, origin.y, pendingTool(), budget) != ToolResult::Success)
+    {
+        toolVector = {};
+        return;
+    }
+
+    if (xAxisLarger)
+    {
+        for (int i = 0; std::abs(i) <= std::abs(toolVector.x); i += step)
+        {
+            const auto result = CanConnectTile(origin.x + i, origin.y, pendingTool(), budget);
+            if (result != ToolResult::Success)
+            {
+                toolVector = { i - step, 0 };
+                return;
+            }
+        }
+    }
+    else // ew, find a better way to do this
+    {
+        for (int i = 0; std::abs(i) <= std::abs(toolVector.y); i += step)
+        {
+            if (CanConnectTile(origin.x, origin.y + i, pendingTool(), budget) != ToolResult::Success)
+            {
+                toolVector = { 0, i - step };
+                return;
+            }
+        }
+    }
+}
+
+
+void executeDraggableTool(const Vector<int>& toolVector, const Point<int>& tilePointedAt, Budget& budget)
+{
+    if (toolVector == Vector<int>{ 0, 0 })
+    {
+        ToolDown(tilePointedAt.x, tilePointedAt.y, budget);
+        return;
+    }
+
+    const bool xAxisLarger = std::abs(toolVector.x) > std::abs(toolVector.y);
+    const int axis = longestAxis(toolVector);
+    const int step = axis < 0 ? -1 : 1;
+
+    if (xAxisLarger)
+    {
+        for (int i = 0; std::abs(i) <= std::abs(toolVector.x); i += step)
+        {
+            ConnectTile(toolStart().x + i, toolStart().y, pendingTool(), budget);
+        }
+    }
+    else
+    {
+        for (int i = 0; std::abs(i) <= std::abs(toolVector.y); i += step)
+        {
+            ConnectTile(toolStart().x, toolStart().y + i, pendingTool(), budget);
+        }
+    }
+}

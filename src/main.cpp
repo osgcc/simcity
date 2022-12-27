@@ -641,86 +641,6 @@ void handleKeyEvent(SDL_Event& event)
 }
 
 
-int longestAxis(const Vector<int>& vec)
-{
-    return abs(vec.x) >= abs(vec.y) ? vec.x : vec.y;
-}
-
-
-/**
- * Modifies \c toolVector
- */
-void validateDraggableToolVector(Vector<int>& toolVector)
-{
-    const int axisLarge = longestAxis(toolVector);
-    if (axisLarge == 0) { return; }
-
-    const int step = axisLarge < 0 ? -1 : 1;
-    const bool xAxisLarger = std::abs(toolVector.x) > std::abs(toolVector.y);
-
-    const Point<int>& origin = toolStart();
-    
-    if (CanConnectTile(origin.x, origin.y, pendingTool(), budget) != ToolResult::Success)
-    {
-        toolVector = {};
-        return;
-    }
-
-    if (xAxisLarger)
-    {
-        for (int i = 0; std::abs(i) <= std::abs(toolVector.x); i += step)
-        {
-            const auto result = CanConnectTile(origin.x + i, origin.y, pendingTool(), budget);
-            if (result != ToolResult::Success)
-            {
-                toolVector = { i - step, 0 };
-                return;
-            }
-        }
-    }
-    else // ew, find a better way to do this
-    {
-        for (int i = 0; std::abs(i) <= std::abs(toolVector.y); i += step)
-        {
-            if (CanConnectTile(origin.x, origin.y + i, pendingTool(), budget) != ToolResult::Success)
-            {
-                toolVector = { 0, i - step };
-                return;
-            }
-        }
-    }
-}
-
-
-void executeDraggableTool()
-{
-    if (DraggableToolVector == Vector<int>{ 0, 0 })
-    {
-        ToolDown(TilePointedAt.x, TilePointedAt.y, budget);
-        return;
-    }
-
-    const bool xAxisLarger = std::abs(DraggableToolVector.x) > std::abs(DraggableToolVector.y);
-    const int axis = longestAxis(DraggableToolVector);
-    const int step = axis < 0 ? -1 : 1;
-
-    if (xAxisLarger)
-    {
-        for (int i = 0; std::abs(i) <= std::abs(DraggableToolVector.x); i += step)
-        {
-            ConnectTile(toolStart().x + i, toolStart().y, pendingTool(), budget);
-        }
-    }
-    else
-    {
-        for (int i = 0; std::abs(i) <= std::abs(DraggableToolVector.y); i += step)
-        {
-            ConnectTile(toolStart().x, toolStart().y + i, pendingTool(), budget);
-        }
-    }
-}
-
-
 void handleMouseEvent(SDL_Event& event)
 {
     if (event.window.windowID != MainWindowId) { return; }
@@ -738,7 +658,7 @@ void handleMouseEvent(SDL_Event& event)
         if (pendingToolProperties().draggable && EventHandling::MouseLeftDown && toolStart() != TilePointedAt)
         {
             DraggableToolVector = vectorFromPoints(toolStart(), TilePointedAt);
-            validateDraggableToolVector(DraggableToolVector);
+            validateDraggableToolVector(DraggableToolVector, budget);
         }
 
         calculateMouseToWorld();
@@ -809,7 +729,7 @@ void handleMouseEvent(SDL_Event& event)
             
             if (pendingToolProperties().draggable)
             {
-                executeDraggableTool();
+                executeDraggableTool(DraggableToolVector, TilePointedAt, budget);
             }
         }
         else if (event.button.button == SDL_BUTTON_RIGHT)
