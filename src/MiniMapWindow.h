@@ -103,6 +103,7 @@ private:
     void drawPlainMap();
 	void drawResidential();
 	void drawCommercial();
+	void drawIndustrial();
 	void drawPowerMap();
     void drawLilTransMap();
 
