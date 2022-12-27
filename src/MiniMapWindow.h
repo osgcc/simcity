@@ -102,7 +102,8 @@ private:
 	void drawCurrentOverlay();
     void drawPlainMap();
 	void drawResidential();
-    void drawPowerMap();
+	void drawCommercial();
+	void drawPowerMap();
     void drawLilTransMap();
 
 private:

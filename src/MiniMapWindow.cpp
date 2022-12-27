@@ -375,6 +375,34 @@ void MiniMapWindow::drawResidential()
 }
 
 
+void MiniMapWindow::drawCommercial()
+{
+    SDL_Rect miniMapDrawRect{ 0, 0, MiniTileSize, MiniTileSize };
+    SDL_SetRenderTarget(mRenderer, mOverlayTextures[ButtonId::Commercial].texture);
+
+    for (int row = 0; row < mMapSize.x; row++)
+    {
+        for (int col = 0; col < mMapSize.y; col++)
+        {
+            miniMapDrawRect = { row * MiniTileSize, col * MiniTileSize, miniMapDrawRect.w, miniMapDrawRect.h };
+
+            unsigned int tile = maskedTileValue(row, col);
+
+            if ((tile > 609) || ((tile >= 232) && (tile < 423)))
+            {
+                tile = 0;
+            }
+
+            mTileRect.y = maskedTileValue(tile) * MiniTileSize;
+            SDL_RenderCopy(mRenderer, mTiles.texture, &mTileRect, &miniMapDrawRect);
+        }
+    }
+
+    SDL_RenderPresent(mRenderer);
+    SDL_SetRenderTarget(mRenderer, nullptr);
+}
+
+
 void MiniMapWindow::drawPowerMap()
 {
     SDL_Color tileColor{};
@@ -477,6 +505,10 @@ void MiniMapWindow::draw()
         drawResidential();
         return;
 
+    case ButtonId::Commercial:
+        drawCommercial();
+        return;
+
     default:
         drawPlainMap();
         drawCurrentOverlay();
@@ -569,6 +601,10 @@ void MiniMapWindow::handleMouseEvent(const SDL_Event& event)
                         else if (button.id == ButtonId::Residential)
                         {
                             drawResidential();
+                        }
+                        else if (button.id == ButtonId::Commercial)
+                        {
+                            drawCommercial();
                         }
                         else
                         {
@@ -665,12 +701,9 @@ void MiniMapWindow::setButtonValues()
     mButtons[8].id = ButtonId::TrafficDensity;
     mButtons[9].id = ButtonId::TransportationNetwork;
     mButtons[10].id = ButtonId::PowerGrid;
-
     mButtons[11].id = ButtonId::Residential;
-    //mButtons[12].id = ButtonId::Commercial;
+    mButtons[12].id = ButtonId::Commercial;
     //mButtons[13].id = ButtonId::Industrial;
-    //mButtons[11].id = ButtonId::Normal;
-    mButtons[12].id = ButtonId::Normal;
     mButtons[13].id = ButtonId::Normal;
 
 }
