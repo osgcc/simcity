@@ -58,7 +58,7 @@ public:
         return mArea.size();
     }
     
-    const Rectangle<int> area() const
+    const Rectangle<int>& area() const
     {
         return mArea;
     }
@@ -71,7 +71,7 @@ public:
 	virtual void update() = 0;
     
 protected:
-    Rectangle<int>  mArea;
+    Rectangle<int> mArea;
 
 private:
 	virtual void onMoved(const Vector<int>&) {};
