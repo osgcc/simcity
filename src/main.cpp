@@ -966,8 +966,6 @@ void gameInit()
 
     updateMapDrawParameters();
     initTimers();
-
-    initMapTextures();
 }
 
 

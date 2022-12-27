@@ -20,32 +20,6 @@
 
 int DynamicData[32];
 
-
-namespace
-{
-    Texture TransitMapTexture;
-    Texture PowerMapTexture;
-};
-
-
-const Texture& transitMapTexture()
-{
-    return TransitMapTexture;
-}
-
-const Texture& powerMapTexture()
-{
-    return PowerMapTexture;
-}
-
-
-void initMapTextures()
-{
-    initTexture(*MainWindowRenderer, TransitMapTexture, { SimWidth * 3, SimHeight * 3 });
-    initTexture(*MainWindowRenderer, PowerMapTexture, { SimWidth * 3, SimHeight * 3 });
-}
-
-
 /*
 void drawRes()
 {
@@ -118,35 +92,6 @@ void drawInd()
             {
                 tile = 0;
             }
-
-            miniMapTileRect().y = tile * 3;
-            SDL_RenderCopy(MainWindowRenderer, SmallTileset.texture, &miniMapTileRect(), &miniMapDrawRect);
-        }
-    }
-    SDL_RenderPresent(MainWindowRenderer);
-    SDL_SetRenderTarget(MainWindowRenderer, nullptr);
-}
-
-
-void drawLilTransMap()
-{
-    SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
-    SDL_SetRenderTarget(MainWindowRenderer, TransitMapTexture.texture);
-    for (int row = 0; row < SimWidth; row++)
-    {
-        for (int col = 0; col < SimHeight; col++)
-        {
-            miniMapDrawRect = { row * 3, col * 3, miniMapDrawRect.w, miniMapDrawRect.h };
-
-            unsigned int tile = maskedTileValue(row, col);
-
-            if ((tile >= ResidentialBase) ||
-                ((tile >= BRWXXX7) && tile <= 220) ||
-                (tile == UNUSED_TRASH6))
-            {
-                tile = 0;
-            }
-
 
             miniMapTileRect().y = tile * 3;
             SDL_RenderCopy(MainWindowRenderer, SmallTileset.texture, &miniMapTileRect(), &miniMapDrawRect);

@@ -12,14 +12,7 @@
 
 
 int dynamicFilter(int col, int row);
-void drawLilTransMap();
 void drawRes();
 void drawCom();
 void drawInd();
 void drawDynamic();
-void drawPower();
-
-//const Texture& transitMapTexture();
-//const Texture& powerMapTexture();
-
-void initMapTextures();
