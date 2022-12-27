@@ -98,28 +98,6 @@ namespace
     }
 
 
-    /*
-    void drawRateOfGrowth()
-    {
-        SDL_SetRenderTarget(MainWindowRenderer, RateOfGrowth.texture);
-        turnOffBlending(RateOfGrowth);
-        clearOverlayTexture();
-
-        for (int x = 0; x < EighthWorldWidth; x++)
-        {
-            for (int y = 0; y < EighthWorldHeight; y++)
-            {
-                const int index = rateOfGrowthColorIndex(RateOfGrowthMap[x][y]);
-                drawPointToCurrentOverlay(x, y, index);
-            }
-        }
-
-        turnOnBlending(RateOfGrowth);
-        SDL_SetRenderTarget(MainWindowRenderer, nullptr);
-    }
-    */
-
-
     int GetColorIndex(int x)
     {
         if (x < 50)
