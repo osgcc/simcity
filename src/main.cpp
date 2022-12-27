@@ -503,15 +503,9 @@ void minimapViewUpdated(const Point<int>& newOffset)
 }
 
 
-void centerBudgetWindow()
+void centerWindow(WindowBase& window)
 {
-    budgetWindow->position({ WindowSize.x / 2 - budgetWindow->area().width / 2, WindowSize.y / 2 - budgetWindow->area().height / 2 });
-}
-
-
-void centerGraphWindow()
-{
-    graphWindow->position({ WindowSize.x / 2 - graphWindow->area().width / 2, WindowSize.y / 2 - graphWindow->area().height / 2 });
+    window.position({ WindowSize.x / 2 - window.area().width / 2, WindowSize.y / 2 - window.area().height / 2 });
 }
 
 
@@ -523,8 +517,8 @@ void windowResized(const Vector<int>& size)
     miniMapWindow->updateViewportSize(WindowSize);
 
     updateMapDrawParameters();
-    centerBudgetWindow();
-    centerGraphWindow();
+    centerWindow(*budgetWindow);
+    centerWindow(*graphWindow);
 
     UiHeaderRect.w = WindowSize.x - 20;
 }
@@ -1011,10 +1005,10 @@ void initUI()
     toolPalette->position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
 
     budgetWindow = new BudgetWindow(MainWindowRenderer, *stringRenderer, budget);
-    centerBudgetWindow();
+    centerWindow(*budgetWindow);
 
     graphWindow = new GraphWindow(MainWindowRenderer);
-    centerGraphWindow();
+    centerWindow(*graphWindow);
 
     UiRects.push_back(&toolPalette->rect());
     UiRects.push_back(&UiHeaderRect);
