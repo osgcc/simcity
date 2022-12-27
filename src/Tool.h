@@ -64,7 +64,7 @@ enum class ToolResult
 };
 
 
-void ToolDown(int mapX, int mapY, Budget& budget);
+void ToolDown(const Point<int> location, Budget& budget);
 bool tally(int tileValue);
 
 const ToolProperties& toolProperties(const Tool);

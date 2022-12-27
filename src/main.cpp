@@ -701,7 +701,7 @@ void handleMouseEvent(SDL_Event& event)
 
             if (!budgetWindow->visible() && !pendingToolProperties().draggable)
             {
-                ToolDown(TilePointedAt.x, TilePointedAt.y, budget);
+                ToolDown(TilePointedAt, budget);
             }
         }
         break;

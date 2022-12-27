@@ -994,14 +994,14 @@ std::map<Tool, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
  * Coordinates expected to be in tile coords,
  * not screen coords.
  */
-void ToolDown(int mapX, int mapY, Budget& budget)
+void ToolDown(const Point<int> location, Budget& budget)
 {
     if (PendingTool == Tool::None)
     {
         return;
     }
 
-    ToolResult result = ToolFunctionTable.at(PendingTool)(mapX, mapY, budget);
+    ToolResult result = ToolFunctionTable.at(PendingTool)(location.x, location.y, budget);
 
     if (result == ToolResult::RequiresBulldozing)
     {
@@ -1073,7 +1073,7 @@ void executeDraggableTool(const Vector<int>& toolVector, const Point<int>& tileP
 {
     if (toolVector == Vector<int>{ 0, 0 })
     {
-        ToolDown(tilePointedAt.x, tilePointedAt.y, budget);
+        ToolDown(tilePointedAt, budget);
         return;
     }
 
