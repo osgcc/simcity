@@ -41,7 +41,10 @@ public:
 		Pollution,
 		TrafficDensity,
 		TransportationNetwork,
-		PowerGrid
+		PowerGrid,
+		Residential,
+		Commercial,
+		Industrial
 	};
 
 	static constexpr auto ButtonStateNormal{ 0 };
@@ -127,8 +130,8 @@ private:
 
 	Vector<int> mMapSize{};
 
-	std::array<SDL_Rect, 22> mButtonUV{};
-	std::array<ButtonMeta, 11> mButtons{};
+	std::array<SDL_Rect, 28> mButtonUV{};
+	std::array<ButtonMeta, 14> mButtons{};
 
 	std::map<ButtonId, Texture> mOverlayTextures;
 	std::map<ButtonId, const EffectMap*> mEffectMaps;

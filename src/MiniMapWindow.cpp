@@ -624,6 +624,14 @@ void MiniMapWindow::setButtonValues()
     mButtons[8].id = ButtonId::TrafficDensity;
     mButtons[9].id = ButtonId::TransportationNetwork;
     mButtons[10].id = ButtonId::PowerGrid;
+
+    //mButtons[11].id = ButtonId::Residential;
+    //mButtons[12].id = ButtonId::Commercial;
+    //mButtons[13].id = ButtonId::Industrial;
+    mButtons[11].id = ButtonId::Normal;
+    mButtons[12].id = ButtonId::Normal;
+    mButtons[13].id = ButtonId::Normal;
+
 }
 
 
@@ -640,7 +648,7 @@ void MiniMapWindow::setButtonTextureUv()
 void MiniMapWindow::setButtonPositions()
 {
     constexpr Vector<int> buttonSize{ 24, 24 };
-    constexpr Vector<int> buttonTransform{buttonSize.x + 6, 0};
+    constexpr Vector<int> buttonTransform{buttonSize.x + 1, 0};
     
     const int arraySize = static_cast<int>(mButtons.size());
     const int startPosition = (mButtonArea.w - (buttonTransform.x * arraySize)) / 2;
