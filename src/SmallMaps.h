@@ -12,7 +12,4 @@
 
 
 int dynamicFilter(int col, int row);
-void drawRes();
-void drawCom();
-void drawInd();
 void drawDynamic();
