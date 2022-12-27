@@ -156,61 +156,6 @@ void drawLilTransMap()
     SDL_SetRenderTarget(MainWindowRenderer, nullptr);
 }
 
-
-void drawPower()
-{
-    SDL_Rect miniMapDrawRect{ 0, 0, 3, 3 };
-
-    SDL_Color tileColor{};
-
-    SDL_SetRenderTarget(MainWindowRenderer, PowerMapTexture.texture);
-    for (int row = 0; row < SimWidth; row++)
-    {
-        for (int col = 0; col < SimHeight; col++)
-        {
-            miniMapDrawRect = { row * 3, col * 3, miniMapDrawRect.w, miniMapDrawRect.h };
-
-            const unsigned int unmaskedTile = tileValue(row, col);
-            unsigned int tile = maskedTileValue(unmaskedTile);
-
-            bool colored{ true };
-
-            if (tile <= LASTFIRE)
-            {
-                colored = false;
-            }
-            else if (unmaskedTile & ZONEBIT)
-            {
-                tileColor = (unmaskedTile & PWRBIT) ? Colors::Red : Colors::LightBlue;
-            }
-            else
-            {
-                if (unmaskedTile & CONDBIT)
-                {
-                    tileColor = Colors::LightGrey;
-                }
-                else
-                {
-                    tile = DIRT;
-                    colored = false;
-                }
-            }
-
-            if (colored)
-            {
-                SDL_SetRenderDrawColor(MainWindowRenderer, tileColor.r, tileColor.g, tileColor.b, 255);
-                SDL_RenderFillRect(MainWindowRenderer, &miniMapDrawRect);
-            }
-            else
-            {
-                miniMapTileRect().y = tile * 3;
-                SDL_RenderCopy(MainWindowRenderer, SmallTileset.texture, &miniMapTileRect(), &miniMapDrawRect);
-            }
-        }
-    }
-    SDL_RenderPresent(MainWindowRenderer);
-    SDL_SetRenderTarget(MainWindowRenderer, nullptr);
-}
 */
 
 
