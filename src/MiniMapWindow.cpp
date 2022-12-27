@@ -282,6 +282,10 @@ void MiniMapWindow::initOverlayTextures()
     // Full size textures
     initTexture(mOverlayTextures[ButtonId::TransportationNetwork], mMapSize.skewBy({MiniTileSize, MiniTileSize}));
     initTexture(mOverlayTextures[ButtonId::PowerGrid], mMapSize.skewBy({MiniTileSize, MiniTileSize}));
+    initTexture(mOverlayTextures[ButtonId::Residential], mMapSize.skewBy({ MiniTileSize, MiniTileSize }));
+    initTexture(mOverlayTextures[ButtonId::Commercial], mMapSize.skewBy({ MiniTileSize, MiniTileSize }));
+    initTexture(mOverlayTextures[ButtonId::Industrial], mMapSize.skewBy({ MiniTileSize, MiniTileSize }));
+
 }
 
 
@@ -343,6 +347,34 @@ void MiniMapWindow::drawPlainMap()
 }
 
 
+void MiniMapWindow::drawResidential()
+{
+    SDL_Rect miniMapDrawRect{ 0, 0, MiniTileSize, MiniTileSize };
+    SDL_SetRenderTarget(mRenderer, mOverlayTextures[ButtonId::Residential].texture);
+
+    for (int row = 0; row < mMapSize.x; row++)
+    {
+        for (int col = 0; col < mMapSize.y; col++)
+        {
+            miniMapDrawRect = { row * MiniTileSize, col * MiniTileSize, miniMapDrawRect.w, miniMapDrawRect.h };
+
+            unsigned int tile = maskedTileValue(row, col);
+
+            if (tile > 422)
+            {
+                tile = 0;
+            }
+
+            mTileRect.y = maskedTileValue(tile) * MiniTileSize;
+            SDL_RenderCopy(mRenderer, mTiles.texture, &mTileRect, &miniMapDrawRect);
+        }
+    }
+
+    SDL_RenderPresent(mRenderer);
+    SDL_SetRenderTarget(mRenderer, nullptr);
+}
+
+
 void MiniMapWindow::drawPowerMap()
 {
     SDL_Color tileColor{};
@@ -393,6 +425,7 @@ void MiniMapWindow::drawPowerMap()
             }
         }
     }
+
     SDL_RenderPresent(mRenderer);
     SDL_SetRenderTarget(mRenderer, nullptr);
 }
@@ -430,20 +463,24 @@ void MiniMapWindow::drawLilTransMap()
 
 void MiniMapWindow::draw()
 {
-    if(mButtonDownId == ButtonId::PowerGrid)
+    switch (mButtonDownId)
     {
+    case ButtonId::PowerGrid:
         drawPowerMap();
         return;
-    }
-    
-    if(mButtonDownId == ButtonId::TransportationNetwork)
-    {
+
+    case ButtonId::TransportationNetwork:
         drawLilTransMap();
         return;
-    }
 
-    drawPlainMap();
-    drawCurrentOverlay();
+    case ButtonId::Residential:
+        drawResidential();
+        return;
+
+    default:
+        drawPlainMap();
+        drawCurrentOverlay();
+    }
 }
 
 
@@ -528,6 +565,10 @@ void MiniMapWindow::handleMouseEvent(const SDL_Event& event)
                         else if (button.id == ButtonId::PowerGrid)
                         {
                             drawPowerMap();
+                        }
+                        else if (button.id == ButtonId::Residential)
+                        {
+                            drawResidential();
                         }
                         else
                         {
@@ -625,10 +666,10 @@ void MiniMapWindow::setButtonValues()
     mButtons[9].id = ButtonId::TransportationNetwork;
     mButtons[10].id = ButtonId::PowerGrid;
 
-    //mButtons[11].id = ButtonId::Residential;
+    mButtons[11].id = ButtonId::Residential;
     //mButtons[12].id = ButtonId::Commercial;
     //mButtons[13].id = ButtonId::Industrial;
-    mButtons[11].id = ButtonId::Normal;
+    //mButtons[11].id = ButtonId::Normal;
     mButtons[12].id = ButtonId::Normal;
     mButtons[13].id = ButtonId::Normal;
 
