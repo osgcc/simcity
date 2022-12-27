@@ -36,7 +36,6 @@
 		57C37B9E2958E4FF0055BC50 /* Scan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B742958E4FF0055BC50 /* Scan.cpp */; };
 		57C37B9F2958E4FF0055BC50 /* s_alloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B772958E4FF0055BC50 /* s_alloc.cpp */; };
 		57C37BA02958E4FF0055BC50 /* s_disast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B782958E4FF0055BC50 /* s_disast.cpp */; };
-		57C37BA12958E4FF0055BC50 /* SmallMaps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B7E2958E4FF0055BC50 /* SmallMaps.cpp */; };
 		57C37BA92958E52C0055BC50 /* Rectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37BA22958E52C0055BC50 /* Rectangle.cpp */; };
 		57C37BAA2958E52C0055BC50 /* BudgetWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37BA32958E52C0055BC50 /* BudgetWindow.cpp */; };
 		57C37BAB2958E52C0055BC50 /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37BA42958E52C0055BC50 /* Connection.cpp */; };
@@ -135,7 +134,6 @@
 		57C37B6E2958E4FF0055BC50 /* Budget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Budget.cpp; path = ../../src/Budget.cpp; sourceTree = "<group>"; };
 		57C37B6F2958E4FF0055BC50 /* ToolPalette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolPalette.h; path = ../../src/ToolPalette.h; sourceTree = "<group>"; };
 		57C37B702958E4FF0055BC50 /* Traffic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Traffic.cpp; path = ../../src/Traffic.cpp; sourceTree = "<group>"; };
-		57C37B712958E4FF0055BC50 /* SmallMaps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmallMaps.h; path = ../../src/SmallMaps.h; sourceTree = "<group>"; };
 		57C37B722958E4FF0055BC50 /* VectorSizeRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VectorSizeRange.h; path = ../../src/VectorSizeRange.h; sourceTree = "<group>"; };
 		57C37B742958E4FF0055BC50 /* Scan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scan.cpp; path = ../../src/Scan.cpp; sourceTree = "<group>"; };
 		57C37B752958E4FF0055BC50 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector.h; path = ../../src/Vector.h; sourceTree = "<group>"; };
@@ -147,7 +145,6 @@
 		57C37B7B2958E4FF0055BC50 /* w_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = w_util.h; path = ../../src/w_util.h; sourceTree = "<group>"; };
 		57C37B7C2958E4FF0055BC50 /* FileIo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileIo.h; path = ../../src/FileIo.h; sourceTree = "<group>"; };
 		57C37B7D2958E4FF0055BC50 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Colors.h; path = ../../src/Colors.h; sourceTree = "<group>"; };
-		57C37B7E2958E4FF0055BC50 /* SmallMaps.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SmallMaps.cpp; path = ../../src/SmallMaps.cpp; sourceTree = "<group>"; };
 		57C37B7F2958E4FF0055BC50 /* Point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point.h; path = ../../src/Point.h; sourceTree = "<group>"; };
 		57C37B802958E4FF0055BC50 /* BudgetWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BudgetWindow.h; path = ../../src/BudgetWindow.h; sourceTree = "<group>"; };
 		57C37B812958E4FF0055BC50 /* Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Map.h; path = ../../src/Map.h; sourceTree = "<group>"; };
@@ -227,7 +224,6 @@
 				57C37B472958E4FE0055BC50 /* s_msg.cpp */,
 				57C37B5F2958E4FE0055BC50 /* s_sim.cpp */,
 				57C37B742958E4FF0055BC50 /* Scan.cpp */,
-				57C37B7E2958E4FF0055BC50 /* SmallMaps.cpp */,
 				57C37B6D2958E4FF0055BC50 /* Sprite.cpp */,
 				57C37B552958E4FE0055BC50 /* StringRender.cpp */,
 				57C37B482958E4FE0055BC50 /* Texture.cpp */,
@@ -271,7 +267,6 @@
 				57C37B4F2958E4FE0055BC50 /* s_msg.h */,
 				57C37B6A2958E4FF0055BC50 /* s_sim.h */,
 				57C37B572958E4FE0055BC50 /* Scan.h */,
-				57C37B712958E4FF0055BC50 /* SmallMaps.h */,
 				57C37B612958E4FE0055BC50 /* Sprite.h */,
 				57C37B642958E4FE0055BC50 /* StringRender.h */,
 				57C37B3E2958E4FE0055BC50 /* Texture.h */,
@@ -420,7 +415,6 @@
 				57C37B942958E4FF0055BC50 /* s_sim.cpp in Sources */,
 				57C37B8D2958E4FF0055BC50 /* Graphics.cpp in Sources */,
 				57C37B912958E4FF0055BC50 /* w_eval.cpp in Sources */,
-				57C37BA12958E4FF0055BC50 /* SmallMaps.cpp in Sources */,
 				57C37B972958E4FF0055BC50 /* ToolPalette.cpp in Sources */,
 				57C37BAD2958E52C0055BC50 /* FileIo.cpp in Sources */,
 				57C37B9C2958E4FF0055BC50 /* Traffic.cpp in Sources */,
