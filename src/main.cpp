@@ -36,7 +36,6 @@
 #include "s_sim.h"
 
 #include "Scan.h"
-#include "SmallMaps.h"
 #include "Sprite.h"
 #include "StringRender.h"
 

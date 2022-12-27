@@ -75,9 +75,6 @@
     <ClCompile Include="src\ToolPalette.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SmallMaps.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\BudgetWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -195,9 +192,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SmallMaps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\BudgetWindow.h">

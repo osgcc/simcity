@@ -15,7 +15,6 @@
 #include "Point.h"
 
 #include "Texture.h"
-#include "SmallMaps.h"
 #include "Sprite.h"
 
 #include "w_util.h"
