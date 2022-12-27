@@ -398,6 +398,36 @@ void MiniMapWindow::drawPowerMap()
 }
 
 
+void MiniMapWindow::drawLilTransMap()
+{
+    SDL_Rect miniMapDrawRect{ 0, 0, MiniTileSize, MiniTileSize };
+    SDL_SetRenderTarget(mRenderer, mOverlayTextures[ButtonId::TransportationNetwork].texture);
+    
+    for (int row = 0; row < mMapSize.x; row++)
+    {
+        for (int col = 0; col < mMapSize.y; col++)
+        {
+            miniMapDrawRect = { row * MiniTileSize, col * MiniTileSize, miniMapDrawRect.w, miniMapDrawRect.h };
+
+            unsigned int tile = maskedTileValue(row, col);
+
+            if ((tile >= ResidentialBase) ||
+                ((tile >= BRWXXX7) && tile <= 220) ||
+                (tile == UNUSED_TRASH6))
+            {
+                tile = 0;
+            }
+
+            mTileRect.y = maskedTileValue(tile) * MiniTileSize;
+            SDL_RenderCopy(mRenderer, mTiles.texture, &mTileRect, &miniMapDrawRect);
+        }
+    }
+
+    SDL_RenderPresent(mRenderer);
+    SDL_SetRenderTarget(mRenderer, nullptr);
+}
+
+
 void MiniMapWindow::draw()
 {
     if(mButtonDownId == ButtonId::PowerGrid)
@@ -408,6 +438,8 @@ void MiniMapWindow::draw()
     
     if(mButtonDownId == ButtonId::TransportationNetwork)
     {
+        drawLilTransMap();
+        return;
     }
 
     drawPlainMap();
@@ -577,10 +609,8 @@ void MiniMapWindow::setButtonValues()
     mButtons[6].id = ButtonId::PopulationGrowth;
     mButtons[7].id = ButtonId::Pollution;
     mButtons[8].id = ButtonId::TrafficDensity;
-    //mButtons[9].id = ButtonId::TransportationNetwork;
+    mButtons[9].id = ButtonId::TransportationNetwork;
     mButtons[10].id = ButtonId::PowerGrid;
-    mButtons[9].id = ButtonId::Normal;
-    //mButtons[10].id = ButtonId::Normal;
 }
 
 

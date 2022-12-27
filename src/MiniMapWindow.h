@@ -99,6 +99,7 @@ private:
 	void drawCurrentOverlay();
     void drawPlainMap();
     void drawPowerMap();
+    void drawLilTransMap();
 
 private:
 	struct ButtonMeta
