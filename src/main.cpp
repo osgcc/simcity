@@ -138,13 +138,13 @@ namespace
     Budget budget{};
     CityProperties cityProperties{};
 
-    BudgetWindow* budgetWindow{ nullptr };
-    GraphWindow* graphWindow{ nullptr };
-    StringRender* stringRenderer{ nullptr };
-    ToolPalette* toolPalette{ nullptr };
-    MiniMapWindow* miniMapWindow{ nullptr };
+    std::unique_ptr<BudgetWindow> budgetWindow;
+    std::unique_ptr<GraphWindow> graphWindow;
+    std::unique_ptr<StringRender> stringRenderer;
+    std::unique_ptr<ToolPalette> toolPalette;
+    std::unique_ptr<MiniMapWindow> miniMapWindow;
 
-    FileIo* fileIo{ nullptr };
+    std::unique_ptr<FileIo> fileIo;
 
     std::unique_ptr<Font> MainFont;
     std::unique_ptr<Font> MainBigFont;
@@ -982,7 +982,7 @@ void initUI()
         std::clamp(mainWindowPosition.y, 10, mode.h)
     };
 
-    miniMapWindow = new MiniMapWindow(miniMapWindowPosition, { SimWidth, SimHeight });
+    miniMapWindow = std::make_unique<MiniMapWindow>(miniMapWindowPosition, Vector<int>{ SimWidth, SimHeight });
     miniMapWindow->updateViewportSize(WindowSize);
     miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
 
@@ -995,16 +995,16 @@ void initUI()
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PopulationGrowth, RateOfGrowthMap);
     miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::TrafficDensity, TrafficDensityMap);
 
-    fileIo = new FileIo(*MainWindow);
+    fileIo = std::make_unique<FileIo>(*MainWindow);
 
-    stringRenderer = new StringRender(MainWindowRenderer);
-    toolPalette = new ToolPalette(MainWindowRenderer);
+    stringRenderer = std::make_unique<StringRender>(MainWindowRenderer);
+    toolPalette = std::make_unique<ToolPalette>(MainWindowRenderer);
     toolPalette->position({ UiHeaderRect.x, UiHeaderRect.y + UiHeaderRect.h + 5 });
 
-    budgetWindow = new BudgetWindow(MainWindowRenderer, *stringRenderer, budget);
+    budgetWindow = std::make_unique<BudgetWindow>(MainWindowRenderer, *stringRenderer, budget);
     centerWindow(*budgetWindow);
 
-    graphWindow = new GraphWindow(MainWindowRenderer);
+    graphWindow = std::make_unique<GraphWindow>(MainWindowRenderer);
     centerWindow(*graphWindow);
 
     UiRects.push_back(&toolPalette->rect());
@@ -1014,13 +1014,6 @@ void initUI()
 
 void cleanUp()
 {
-    delete budgetWindow;
-    delete graphWindow;
-    delete toolPalette;
-    delete stringRenderer;
-    delete fileIo;
-    delete miniMapWindow;
-
     deinitTimers();
 
     SDL_DestroyTexture(BigTileset.texture);
