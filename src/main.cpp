@@ -14,6 +14,7 @@
 
 #include "BudgetWindow.h"
 #include "Evaluation.h"
+#include "EvaluationWindow.h"
 #include "GraphWindow.h"
 #include "MiniMapWindow.h"
 
@@ -140,9 +141,9 @@ namespace
 
     std::unique_ptr<BudgetWindow> budgetWindow;
     std::unique_ptr<GraphWindow> graphWindow;
-    std::unique_ptr<StringRender> stringRenderer;
-    std::unique_ptr<ToolPalette> toolPalette;
     std::unique_ptr<MiniMapWindow> miniMapWindow;
+    std::unique_ptr<ToolPalette> toolPalette;
+    std::unique_ptr<StringRender> stringRenderer;
 
     std::unique_ptr<FileIo> fileIo;
 
