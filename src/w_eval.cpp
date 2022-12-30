@@ -58,7 +58,7 @@ const std::string probStr[10] =
 };
 
 
-struct Strings
+struct EvaulationStrings
 {
 	const std::string changed{};
 	const std::string score{};
@@ -80,7 +80,7 @@ struct Strings
 };
 
 
-void SetEvaluation(const Strings& strings)
+void SetEvaluation(const EvaulationStrings& strings)
 {
 	const std::string evalMessage = "UISetEvaluation {" +
 		strings.changed + "} {" +
@@ -101,17 +101,13 @@ void SetEvaluation(const Strings& strings)
 		"GoodNo: " + strings.goodno + "} {" +
 		"Title: " + strings.title + "}";
 
-
 	Eval(evalMessage);
 }
 
 
 void doScoreCard(const CityProperties& properties)
 {
-    
-    
-    
-	const Strings strings
+	const EvaulationStrings strings
 	{
 		std::to_string(deltaCityScore()),
 		std::to_string(cityScore()),
