@@ -600,8 +600,7 @@ void handleKeyEvent(SDL_Event& event)
         break;
 
     case SDLK_F4:
-        miniMapWindow->show();
-        SDL_SetWindowInputFocus(MainWindow);
+        miniMapWindow->hidden() ? miniMapWindow->show() : miniMapWindow->hide();
         break;
 
     case SDLK_F5:

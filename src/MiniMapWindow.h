@@ -78,6 +78,8 @@ public:
 	void hide();
 	void show();
 
+	bool hidden() const;
+
 	void draw();
 	void drawUI();
 
@@ -144,4 +146,5 @@ private:
 	ButtonId mButtonDownId{ ButtonId::Normal };
 
 	bool mButtonDownInMinimapArea{ false };
+	bool mHidden{ true };
 };

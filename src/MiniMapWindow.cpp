@@ -316,6 +316,7 @@ void MiniMapWindow::resetOverlayButtons()
 void MiniMapWindow::hide()
 {
     SDL_HideWindow(mWindow);
+    mHidden = true;
 }
 
 
@@ -323,6 +324,13 @@ void MiniMapWindow::show()
 {
     SDL_RestoreWindow(mWindow);
     SDL_ShowWindow(mWindow);
+    mHidden = false;
+}
+
+
+bool MiniMapWindow::hidden() const
+{
+    return mHidden;
 }
 
 
