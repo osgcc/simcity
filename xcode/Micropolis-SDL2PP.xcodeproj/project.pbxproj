@@ -210,6 +210,7 @@
 				57C37BA32958E52C0055BC50 /* BudgetWindow.cpp */,
 				57C37BA42958E52C0055BC50 /* Connection.cpp */,
 				57C37B4B2958E4FE0055BC50 /* Evaluation.cpp */,
+				57E8E892295E9CCE0062D57B /* EvaluationWindow.cpp */,
 				57C37BA62958E52C0055BC50 /* FileIo.cpp */,
 				57C37BA52958E52C0055BC50 /* Font.cpp */,
 				57C37B392958E4FE0055BC50 /* g_ani.cpp */,
@@ -250,6 +251,7 @@
 				57C37B3D2958E4FE0055BC50 /* Connection.h */,
 				57C37B3C2958E4FE0055BC50 /* EffectMap.h */,
 				57C37B6C2958E4FF0055BC50 /* Evaluation.h */,
+				57E8E891295E9A4C0062D57B /* EvaluationWindow.h */,
 				57C37B7C2958E4FF0055BC50 /* FileIo.h */,
 				57C37B4C2958E4FE0055BC50 /* Font.h */,
 				57C37B662958E4FF0055BC50 /* g_ani.h */,
@@ -288,8 +290,6 @@
 				57C37B3A2958E4FE0055BC50 /* Zone.h */,
 				57C37B2B2958E47C0055BC50 /* Assets.xcassets */,
 				57C37B2D2958E47C0055BC50 /* MainMenu.xib */,
-				57E8E891295E9A4C0062D57B /* EvaluationWindow.h */,
-				57E8E892295E9CCE0062D57B /* EvaluationWindow.cpp */,
 			);
 			path = "Micropolis-SDL2PP";
 			sourceTree = "<group>";

@@ -628,6 +628,11 @@ void handleKeyEvent(SDL_Event& event)
         budgetWindow->toggleVisible();
         if (budgetWindow->visible()) { budgetWindow->update(); }
         break;
+            
+    case SDLK_F1:
+        evaluationWindow->toggleVisible();
+        if(evaluationWindow->visible()) { budgetWindow->update(); }
+        break;
 
     default:
         break;
@@ -1075,6 +1080,7 @@ void GameLoop()
             toolPalette->draw();
 
             if (graphWindow->visible()) { graphWindow->draw(); }
+            if (evaluationWindow->visible()) { evaluationWindow->draw(); }
         }
 
         SDL_RenderPresent(MainWindowRenderer);

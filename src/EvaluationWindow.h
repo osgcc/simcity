@@ -11,6 +11,7 @@
 #pragma once
 
 #include "WindowBase.h"
+#include "Texture.h"
 
 #include <memory>
 #include <SDL2/SDL.h>
@@ -32,5 +33,6 @@ public:
     void injectMouseUp() override;
     
 private:
+    Texture mTexture;
     SDL_Renderer* mRenderer{ nullptr };
 };
