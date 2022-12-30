@@ -51,6 +51,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -145,8 +146,8 @@ namespace
 
     FileIo* fileIo{ nullptr };
 
-    Font* MainFont{ nullptr };
-    Font* MainBigFont{ nullptr };
+    std::unique_ptr<Font> MainFont;
+    std::unique_ptr<Font> MainBigFont;
 
 
     unsigned int speedModifier()
@@ -459,8 +460,8 @@ void loadGraphics()
 
 void loadFonts()
 {
-    MainFont = new Font("res/raleway-medium.ttf", 12);
-    MainBigFont = new Font("res/raleway-medium.ttf", 14);
+    MainFont = std::make_unique<Font>("res/raleway-medium.ttf", 12);
+    MainBigFont = std::make_unique<Font>("res/raleway-medium.ttf", 14);
 }
 
 
@@ -1013,8 +1014,6 @@ void initUI()
 
 void cleanUp()
 {
-    delete MainFont;
-    delete MainBigFont;
     delete budgetWindow;
     delete graphWindow;
     delete toolPalette;
