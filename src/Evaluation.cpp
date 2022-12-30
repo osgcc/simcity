@@ -33,7 +33,7 @@ namespace
     int CityPop{}, deltaCityPop{};
     int CityAssessedValue; /* assessed city value */
     int CityClass; /*  0..5  */
-int CityScore{}, DeltaCityScore{}, AverageCityScore{};
+    int CityScore{}, DeltaCityScore{}, AverageCityScore{};
     int TrafficAverage{};
 };
 
