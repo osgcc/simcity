@@ -62,16 +62,9 @@ struct Strings
 {
 	const std::string changed{};
 	const std::string score{};
-
-	const std::string ps0{};
-	const std::string ps1{};
-	const std::string ps2{};
-	const std::string ps3{};
-
-	const std::string pv0{};
-	const std::string pv1{};
-	const std::string pv2{};
-	const std::string pv3{};
+    
+    const std::array<std::string, 4> problemString;
+    const std::array<std::string, 4> problemVote;
 
 	const std::string pop{};
 	const std::string delta{};
@@ -91,15 +84,14 @@ void SetEvaluation(const Strings& strings)
 {
 	const std::string evalMessage = "UISetEvaluation {" +
 		strings.changed + "} {" +
-		strings.score + "} {" +
-		strings.ps0 + "} {" +
-		strings.ps1 + "} {" +
-		strings.ps2 + "} {" +
-		strings.ps3 + "} {" +
-		strings.pv0 + "} {" +
-		strings.pv1 + "} {" +
-		strings.pv2 + "} {" +
-		strings.pv3 + "} {" +
+		strings.problemString[0] + "} {" +
+        strings.problemString[1] + "} {" +
+        strings.problemString[2] + "} {" +
+        strings.problemString[3] + "} {" +
+        strings.problemVote[0] + "} {" +
+		strings.problemVote[1] + "} {" +
+		strings.problemVote[2] + "} {" +
+		strings.problemVote[3] + "} {" +
 		strings.pop + "} {" +
 		strings.delta + "} {" +
 		strings.assessed_dollars + "} {" +
@@ -116,18 +108,27 @@ void SetEvaluation(const Strings& strings)
 
 void doScoreCard(const CityProperties& properties)
 {
+    
+    
+    
 	const Strings strings
 	{
 		std::to_string(deltaCityScore()),
 		std::to_string(cityScore()),
-		problemVotes()[problemOrder()[0]] ? probStr[problemOrder()[0]] : " ",
-		problemVotes()[problemOrder()[1]] ? probStr[problemOrder()[1]] : " ",
-		problemVotes()[problemOrder()[2]] ? probStr[problemOrder()[2]] : " ",
-		problemVotes()[problemOrder()[3]] ? probStr[problemOrder()[3]] : " ",
-		problemVotes()[problemOrder()[0]] ? std::to_string(problemVotes()[problemOrder()[0]]) + "%" : " ",
-		problemVotes()[problemOrder()[1]] ? std::to_string(problemVotes()[problemOrder()[1]]) + "%" : " ",
-		problemVotes()[problemOrder()[2]] ? std::to_string(problemVotes()[problemOrder()[2]]) + "%" : " ",
-		problemVotes()[problemOrder()[3]] ? std::to_string(problemVotes()[problemOrder()[3]]) + "%" : " ",
+        std::array<std::string, 4>
+        {
+            problemVotes()[problemOrder()[0]] ? probStr[problemOrder()[0]] : " ",
+            problemVotes()[problemOrder()[1]] ? probStr[problemOrder()[1]] : " ",
+            problemVotes()[problemOrder()[2]] ? probStr[problemOrder()[2]] : " ",
+            problemVotes()[problemOrder()[3]] ? probStr[problemOrder()[3]] : " "
+        },
+        std::array<std::string, 4>
+        {
+            problemVotes()[problemOrder()[0]] ? std::to_string(problemVotes()[problemOrder()[0]]) + "%" : " ",
+            problemVotes()[problemOrder()[1]] ? std::to_string(problemVotes()[problemOrder()[1]]) + "%" : " ",
+            problemVotes()[problemOrder()[2]] ? std::to_string(problemVotes()[problemOrder()[2]]) + "%" : " ",
+            problemVotes()[problemOrder()[3]] ? std::to_string(problemVotes()[problemOrder()[3]]) + "%" : " "
+        },
 		std::to_string(cityPopulation()),
 		std::to_string(deltaCityPopulation()),
 		NumberToDollarDecimal(cityAssessedValue()),
