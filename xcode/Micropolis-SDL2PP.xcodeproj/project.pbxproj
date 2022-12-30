@@ -55,6 +55,7 @@
 		57C37BC52958EAA30055BC50 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 57C37BBF2958EAA30055BC50 /* images */; };
 		57C37BC62958EAA30055BC50 /* res in Resources */ = {isa = PBXBuildFile; fileRef = 57C37BC02958EAA30055BC50 /* res */; };
 		57C37BC72958EAA30055BC50 /* micropolis.ico in Resources */ = {isa = PBXBuildFile; fileRef = 57C37BC12958EAA30055BC50 /* micropolis.ico */; };
+		57E8E893295E9CCE0062D57B /* EvaluationWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57E8E892295E9CCE0062D57B /* EvaluationWindow.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -166,6 +167,8 @@
 		57C37BBF2958EAA30055BC50 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = ../images; sourceTree = "<group>"; };
 		57C37BC02958EAA30055BC50 /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../res; sourceTree = "<group>"; };
 		57C37BC12958EAA30055BC50 /* micropolis.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; name = micropolis.ico; path = ../micropolis.ico; sourceTree = "<group>"; };
+		57E8E891295E9A4C0062D57B /* EvaluationWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EvaluationWindow.h; path = ../../src/EvaluationWindow.h; sourceTree = "<group>"; };
+		57E8E892295E9CCE0062D57B /* EvaluationWindow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EvaluationWindow.cpp; path = ../../src/EvaluationWindow.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -285,6 +288,8 @@
 				57C37B3A2958E4FE0055BC50 /* Zone.h */,
 				57C37B2B2958E47C0055BC50 /* Assets.xcassets */,
 				57C37B2D2958E47C0055BC50 /* MainMenu.xib */,
+				57E8E891295E9A4C0062D57B /* EvaluationWindow.h */,
+				57E8E892295E9CCE0062D57B /* EvaluationWindow.cpp */,
 			);
 			path = "Micropolis-SDL2PP";
 			sourceTree = "<group>";
@@ -409,6 +414,7 @@
 				57C37B872958E4FF0055BC50 /* w_util.cpp in Sources */,
 				57C37B882958E4FF0055BC50 /* Zone.cpp in Sources */,
 				57C37B9B2958E4FF0055BC50 /* Budget.cpp in Sources */,
+				57E8E893295E9CCE0062D57B /* EvaluationWindow.cpp in Sources */,
 				57C37BAA2958E52C0055BC50 /* BudgetWindow.cpp in Sources */,
 				57C37B8E2958E4FF0055BC50 /* GraphWindow.cpp in Sources */,
 				57C37B892958E4FF0055BC50 /* s_msg.cpp in Sources */,

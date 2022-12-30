@@ -1,12 +1,36 @@
+// This file is part of Micropolis-SDL2PP
+// Micropolis-SDL2PP is based on Micropolis
 //
-//  EvaluationWindow.h
-//  Micropolis-SDL2PP
+// Copyright © 2022 Leeor Dicker
 //
-//  Created by Leeor Dicker on 12/29/22.
+// Portions Copyright © 1989-2007 Electronic Arts Inc.
 //
+// Micropolis-SDL2PP is free software; you can redistribute it and/or modify
+// it under the terms of the GNU GPLv3, with additional terms. See the README
+// file, included in this distribution, for details.
+#pragma once
 
-#ifndef EvaluationWindow_h
-#define EvaluationWindow_h
+#include "WindowBase.h"
+
+#include <memory>
+#include <SDL2/SDL.h>
 
 
-#endif /* EvaluationWindow_h */
+class EvaluationWindow : public WindowBase
+{
+public:
+    EvaluationWindow() = delete;
+    EvaluationWindow(const EvaluationWindow&) = delete;
+    const EvaluationWindow operator=(const EvaluationWindow&) = delete;
+    
+    EvaluationWindow(SDL_Renderer* renderer);
+    
+    void draw() override;
+    void update() override;
+    
+    void injectMouseDown(const Point<int>& position) override;
+    void injectMouseUp() override;
+    
+private:
+    SDL_Renderer* mRenderer{ nullptr };
+};

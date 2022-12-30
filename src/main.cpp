@@ -141,6 +141,7 @@ namespace
 
     std::unique_ptr<BudgetWindow> budgetWindow;
     std::unique_ptr<GraphWindow> graphWindow;
+    std::unique_ptr<EvaluationWindow> evaluationWindow;
     std::unique_ptr<MiniMapWindow> miniMapWindow;
     std::unique_ptr<ToolPalette> toolPalette;
     std::unique_ptr<StringRender> stringRenderer;
@@ -1007,6 +1008,9 @@ void initUI()
 
     graphWindow = std::make_unique<GraphWindow>(MainWindowRenderer);
     centerWindow(*graphWindow);
+    
+    evaluationWindow = std::make_unique<EvaluationWindow>(MainWindowRenderer);
+    centerWindow(*evaluationWindow);
 
     UiRects.push_back(&toolPalette->rect());
     UiRects.push_back(&UiHeaderRect);
