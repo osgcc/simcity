@@ -579,7 +579,7 @@ void handleKeyEvent(SDL_Event& event)
         break;
 
     case SDLK_F2:
-        if (!fileIo->filePicked() || SDL_GetModState() & (KMOD_LSHIFT | KMOD_RSHIFT))
+        if (!fileIo->filePicked() || SDL_GetModState() & KMOD_SHIFT)
         {
             if (!fileIo->pickSaveFile())
             {
