@@ -13,6 +13,8 @@
 #include <array>
 
 class Budget;
+class CityProperties;
+
 constexpr auto PROBNUM = 10;
 
 int cityAssessedValue();
@@ -37,6 +39,11 @@ int deltaCityScore();
 void EvalInit();
 
 int trafficAverage();
+
+void ChangeEval();
+void scoreDoer(const CityProperties& properties);
+
+void UpdateEvaluation();
 
 const std::array<int, PROBNUM>& problemVotes();
 const std::array<int, 4>& problemOrder();

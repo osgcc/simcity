@@ -11,11 +11,13 @@
 #include "Evaluation.h"
 
 #include "Budget.h"
+#include "CityProperties.h"
 
 #include "s_alloc.h"
 #include "s_sim.h"
 
 #include "w_eval.h"
+#include "w_tk.h"
 #include "w_util.h"
 
 
@@ -24,6 +26,8 @@ namespace
 {
     int EvalValid{};
     int CityYes{}, CityNo{};
+
+    bool EvalChanged{ false };
 
     std::array<int, PROBNUM> ProblemTable;
     std::array<int, PROBNUM> ProblemTaken;
@@ -35,6 +39,58 @@ namespace
     int CityClass; /*  0..5  */
     int CityScore{}, DeltaCityScore{}, AverageCityScore{};
     int TrafficAverage{};
+
+    const std::string cityClassStr[6] =
+    {
+      "VILLAGE",
+      "TOWN",
+      "CITY",
+      "CAPITAL",
+      "METROPOLIS",
+      "MEGALOPOLIS"
+    };
+
+
+    const std::string cityLevelStr[3] =
+    {
+      "Easy",
+      "Medium",
+      "Hard"
+    };
+
+
+    const std::string probStr[10] =
+    {
+      "CRIME",
+      "POLLUTION",
+      "HOUSING COSTS",
+      "TAXES",
+      "TRAFFIC",
+      "UNEMPLOYMENT",
+      "FIRES"
+    };
+
+
+    struct EvaulationStrings
+    {
+        const std::string changed{};
+        const std::string score{};
+        
+        const std::array<std::string, 4> problemString;
+        const std::array<std::string, 4> problemVote;
+
+        const std::string pop{};
+        const std::string delta{};
+        const std::string assessed_dollars{};
+
+        const std::string cityclass{};
+        const std::string citylevel{};
+
+        const std::string goodyes{};
+        const std::string goodno{};
+
+        const std::string title{};
+    };
 };
 
 
@@ -136,6 +192,18 @@ void EvalInit()
     
     ProblemVotes.fill(0);
     ProblemTaken.fill(0);
+}
+
+
+void ChangeEval()
+{
+    EvalChanged = true;
+}
+
+
+void UpdateEvaluation()
+{
+    ChangeEval();
 }
 
 
@@ -419,4 +487,73 @@ void CityEvaluation(const Budget& budget)
     }
 
     EvalValid = 1;
+}
+
+
+void SetEvaluation(const EvaulationStrings& strings)
+{
+    const std::string evalMessage = "UISetEvaluation {" +
+        strings.changed + "} {" +
+        strings.problemString[0] + "} {" +
+        strings.problemString[1] + "} {" +
+        strings.problemString[2] + "} {" +
+        strings.problemString[3] + "} {" +
+        strings.problemVote[0] + "} {" +
+        strings.problemVote[1] + "} {" +
+        strings.problemVote[2] + "} {" +
+        strings.problemVote[3] + "} {" +
+        strings.pop + "} {" +
+        strings.delta + "} {" +
+        strings.assessed_dollars + "} {" +
+        "City Class: " + strings.cityclass + "} {" +
+        "City Level: " + strings.citylevel + "} {" +
+        "GoodYes: " + strings.goodyes + "} {" +
+        "GoodNo: " + strings.goodno + "} {" +
+        "Title: " + strings.title + "}";
+
+    Eval(evalMessage);
+}
+
+
+void doScoreCard(const CityProperties& properties)
+{
+    const EvaulationStrings strings
+    {
+        std::to_string(deltaCityScore()),
+        std::to_string(cityScore()),
+        std::array<std::string, 4>
+        {
+            problemVotes()[problemOrder()[0]] ? probStr[problemOrder()[0]] : " ",
+            problemVotes()[problemOrder()[1]] ? probStr[problemOrder()[1]] : " ",
+            problemVotes()[problemOrder()[2]] ? probStr[problemOrder()[2]] : " ",
+            problemVotes()[problemOrder()[3]] ? probStr[problemOrder()[3]] : " "
+        },
+        std::array<std::string, 4>
+        {
+            problemVotes()[problemOrder()[0]] ? std::to_string(problemVotes()[problemOrder()[0]]) + "%" : " ",
+            problemVotes()[problemOrder()[1]] ? std::to_string(problemVotes()[problemOrder()[1]]) + "%" : " ",
+            problemVotes()[problemOrder()[2]] ? std::to_string(problemVotes()[problemOrder()[2]]) + "%" : " ",
+            problemVotes()[problemOrder()[3]] ? std::to_string(problemVotes()[problemOrder()[3]]) + "%" : " "
+        },
+        std::to_string(cityPopulation()),
+        std::to_string(deltaCityPopulation()),
+        NumberToDollarDecimal(cityAssessedValue()),
+        cityClassStr[cityClass()],
+        cityLevelStr[properties.GameLevel()],
+        std::to_string(cityYes()) + "%",
+        std::to_string(cityNo()) + "%",
+        std::to_string(CurrentYear())
+    };
+
+    SetEvaluation(strings);
+}
+
+
+void scoreDoer(const CityProperties& properties)
+{
+    if (EvalChanged)
+    {
+        doScoreCard(properties);
+        EvalChanged = false;
+    }
 }

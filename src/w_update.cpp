@@ -151,12 +151,6 @@ void UpdateOptionsMenu(int options)
 }
 
 
-void UpdateEvaluation()
-{
-  ChangeEval();
-}
-
-
 void UpdateFunds(Budget& budget)
 {
     budget.PreviousFunds(budget.CurrentFunds());

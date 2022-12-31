@@ -33,8 +33,6 @@ enum class Month
 
 bool newMonth();
 
-
-void UpdateEvaluation();
 void UpdateFunds(Budget&);
 void updateDate();
 
