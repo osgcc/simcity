@@ -22,7 +22,6 @@
 		57C37B8E2958E4FF0055BC50 /* GraphWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B502958E4FE0055BC50 /* GraphWindow.cpp */; };
 		57C37B8F2958E4FF0055BC50 /* Tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B512958E4FE0055BC50 /* Tool.cpp */; };
 		57C37B902958E4FF0055BC50 /* s_fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B522958E4FE0055BC50 /* s_fileio.cpp */; };
-		57C37B912958E4FF0055BC50 /* w_eval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B532958E4FE0055BC50 /* w_eval.cpp */; };
 		57C37B922958E4FF0055BC50 /* StringRender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B552958E4FE0055BC50 /* StringRender.cpp */; };
 		57C37B932958E4FF0055BC50 /* w_update.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B582958E4FE0055BC50 /* w_update.cpp */; };
 		57C37B942958E4FF0055BC50 /* s_sim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B5F2958E4FE0055BC50 /* s_sim.cpp */; };
@@ -106,13 +105,11 @@
 		57C37B502958E4FE0055BC50 /* GraphWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GraphWindow.cpp; path = ../../src/GraphWindow.cpp; sourceTree = "<group>"; };
 		57C37B512958E4FE0055BC50 /* Tool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Tool.cpp; path = ../../src/Tool.cpp; sourceTree = "<group>"; };
 		57C37B522958E4FE0055BC50 /* s_fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = s_fileio.cpp; path = ../../src/s_fileio.cpp; sourceTree = "<group>"; };
-		57C37B532958E4FE0055BC50 /* w_eval.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = w_eval.cpp; path = ../../src/w_eval.cpp; sourceTree = "<group>"; };
 		57C37B542958E4FE0055BC50 /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Graph.h; path = ../../src/Graph.h; sourceTree = "<group>"; };
 		57C37B552958E4FE0055BC50 /* StringRender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StringRender.cpp; path = ../../src/StringRender.cpp; sourceTree = "<group>"; };
 		57C37B562958E4FE0055BC50 /* GraphWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphWindow.h; path = ../../src/GraphWindow.h; sourceTree = "<group>"; };
 		57C37B572958E4FE0055BC50 /* Scan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scan.h; path = ../../src/Scan.h; sourceTree = "<group>"; };
 		57C37B582958E4FE0055BC50 /* w_update.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = w_update.cpp; path = ../../src/w_update.cpp; sourceTree = "<group>"; };
-		57C37B592958E4FE0055BC50 /* w_eval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = w_eval.h; path = ../../src/w_eval.h; sourceTree = "<group>"; };
 		57C37B5A2958E4FE0055BC50 /* WindowBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WindowBase.h; path = ../../src/WindowBase.h; sourceTree = "<group>"; };
 		57C37B5B2958E4FE0055BC50 /* s_fileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = s_fileio.h; path = ../../src/s_fileio.h; sourceTree = "<group>"; };
 		57C37B5C2958E4FE0055BC50 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = ../../src/main.h; sourceTree = "<group>"; };
@@ -234,7 +231,6 @@
 				57C37B512958E4FE0055BC50 /* Tool.cpp */,
 				57C37B672958E4FF0055BC50 /* ToolPalette.cpp */,
 				57C37B702958E4FF0055BC50 /* Traffic.cpp */,
-				57C37B532958E4FE0055BC50 /* w_eval.cpp */,
 				57C37B382958E4FE0055BC50 /* w_resrc.cpp */,
 				57C37B422958E4FE0055BC50 /* w_sound.cpp */,
 				57C37B4D2958E4FE0055BC50 /* w_tk.cpp */,
@@ -280,7 +276,6 @@
 				57C37B402958E4FE0055BC50 /* Traffic.h */,
 				57C37B752958E4FF0055BC50 /* Vector.h */,
 				57C37B722958E4FF0055BC50 /* VectorSizeRange.h */,
-				57C37B592958E4FE0055BC50 /* w_eval.h */,
 				57C37B652958E4FF0055BC50 /* w_resrc.h */,
 				57C37B762958E4FF0055BC50 /* w_sound.h */,
 				57C37B792958E4FF0055BC50 /* w_tk.h */,
@@ -420,7 +415,6 @@
 				57C37B892958E4FF0055BC50 /* s_msg.cpp in Sources */,
 				57C37B942958E4FF0055BC50 /* s_sim.cpp in Sources */,
 				57C37B8D2958E4FF0055BC50 /* Graphics.cpp in Sources */,
-				57C37B912958E4FF0055BC50 /* w_eval.cpp in Sources */,
 				57C37B972958E4FF0055BC50 /* ToolPalette.cpp in Sources */,
 				57C37BAD2958E52C0055BC50 /* FileIo.cpp in Sources */,
 				57C37B9C2958E4FF0055BC50 /* Traffic.cpp in Sources */,
