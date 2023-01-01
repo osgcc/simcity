@@ -16,7 +16,6 @@
 #include "s_alloc.h"
 #include "s_sim.h"
 
-#include "w_eval.h"
 #include "w_tk.h"
 #include "w_util.h"
 

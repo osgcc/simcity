@@ -40,7 +40,6 @@
 #include "Sprite.h"
 #include "StringRender.h"
 
-#include "w_eval.h"
 #include "w_sound.h"
 #include "w_tk.h"
 #include "w_update.h"

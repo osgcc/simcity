@@ -18,7 +18,6 @@
 
 #include "Scan.h"
 
-#include "w_eval.h"
 #include "w_sound.h"
 #include "w_tk.h"
 #include "w_util.h"
