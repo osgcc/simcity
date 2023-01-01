@@ -11,22 +11,28 @@
 #include "EvaluationWindow.h"
 
 
+namespace
+{
+    const SDL_Rect BgRect{ 0, 1, 511, 320 };
+};
+
 
 
 EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
+    mFont{ new Font("res/raleway-medium.ttf", 14) },
+    mTexture(loadTexture(renderer, "images/EvalWindow.png")),
     mRenderer{ renderer }
 {
-    size({ 100, 200 });
-    mTexture.texture = SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, size().x, size().y);
+    size({ 511, 320 });
 }
 
 
 void EvaluationWindow::draw()
 {
-    const SDL_Rect rect{area().x, area().y, area().width, area().height };
-    //SDL_RenderCopy(mRenderer, mTexture.texture, &bgRect, &rect);
+    const SDL_Rect rect{ area().x, area().y, area().width, area().height };
+    SDL_RenderCopy(mRenderer, mTexture.texture, &BgRect, &rect);
     
-    SDL_RenderDrawRect(mRenderer, &rect);
+    //SDL_RenderDrawRect(mRenderer, &rect);
 }
 
 
