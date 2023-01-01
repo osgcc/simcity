@@ -15,6 +15,7 @@
     <ClCompile Include="src\BudgetWindow.cpp" />
     <ClCompile Include="src\Connection.cpp" />
     <ClCompile Include="src\Evaluation.cpp" />
+    <ClCompile Include="src\EvaluationWindow.cpp" />
     <ClCompile Include="src\FileIo.cpp" />
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
@@ -37,7 +38,6 @@
     <ClCompile Include="src\Tool.cpp" />
     <ClCompile Include="src\ToolPalette.cpp" />
     <ClCompile Include="src\Traffic.cpp" />
-    <ClCompile Include="src\w_eval.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
     <ClCompile Include="src\w_sound.cpp" />
     <ClCompile Include="src\w_tk.cpp" />
@@ -55,6 +55,7 @@
     <ClInclude Include="src\Connection.h" />
     <ClInclude Include="src\EffectMap.h" />
     <ClInclude Include="src\Evaluation.h" />
+    <ClInclude Include="src\EvaluationWindow.h" />
     <ClInclude Include="src\FileIo.h" />
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Graph.h" />
@@ -84,7 +85,6 @@
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\s_alloc.h" />
     <ClInclude Include="src\WindowBase.h" />
-    <ClInclude Include="src\w_eval.h" />
     <ClInclude Include="src\w_resrc.h" />
     <ClInclude Include="src\w_sound.h" />
     <ClInclude Include="src\w_tk.h" />

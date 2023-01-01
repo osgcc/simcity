@@ -42,9 +42,6 @@
     <ClCompile Include="src\s_sim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\w_eval.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\w_resrc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -114,15 +111,15 @@
     <ClCompile Include="src\Traffic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\EvaluationWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\animtab.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\main.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\w_eval.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\w_tk.h">
@@ -249,6 +246,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Traffic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EvaluationWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
