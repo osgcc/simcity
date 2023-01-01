@@ -520,6 +520,7 @@ void windowResized(const Vector<int>& size)
     updateMapDrawParameters();
     centerWindow(*budgetWindow);
     centerWindow(*graphWindow);
+    centerWindow(*evaluationWindow);
 
     UiHeaderRect.w = WindowSize.x - 20;
 }
@@ -552,6 +553,8 @@ void handleKeyEvent(SDL_Event& event)
     {
     case SDLK_ESCAPE:
         budgetWindow->hide();
+        evaluationWindow->hide();
+        graphWindow->hide();
         break;
 
     case SDLK_0:
