@@ -25,8 +25,11 @@ namespace
 	const SDL_Rect GraphLayout{ 10, 71, 242, 202 };
 	SDL_Rect GraphPosition = GraphLayout;
 
-	const SDL_Rect TitleBarLayout{ 6, 5, 250, 21 };
+	const SDL_Rect TitleBarLayout{ 2, 2, 261, 19 };
 	SDL_Rect TitleBarPosition = TitleBarLayout;
+
+	const SDL_Rect CloseButtonLayout{ 4, 4, 13, 13 };
+	SDL_Rect CloseButtonPosition = CloseButtonLayout;
 
 
 	enum class ButtonId
@@ -121,6 +124,7 @@ void GraphWindow::onMoved(const Vector<int>& movement)
 {
 	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
 	TitleBarPosition = { TitleBarLayout.x + mArea.x, TitleBarLayout.y + mArea.y, TitleBarLayout.w, TitleBarLayout.h };
+	CloseButtonPosition = { CloseButtonLayout.x + mArea.x, CloseButtonLayout.y + mArea.y, CloseButtonLayout.w, TitleBarLayout.h };
 
 	for (auto& button : Buttons)
 	{
@@ -134,6 +138,7 @@ void GraphWindow::onPositionChanged(const Point<int>& position)
 {
 	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
 	TitleBarPosition = { TitleBarLayout.x + mArea.x, TitleBarLayout.y + mArea.y, TitleBarLayout.w, TitleBarLayout.h };
+	CloseButtonPosition = { CloseButtonLayout.x + mArea.x, CloseButtonLayout.y + mArea.y, CloseButtonLayout.w, TitleBarLayout.h };
 
 	for (auto& button : Buttons)
 	{
@@ -146,6 +151,13 @@ void GraphWindow::onPositionChanged(const Point<int>& position)
 void GraphWindow::injectMouseDown(const Point<int>& position)
 { 
 	const SDL_Point& pt{ position.x, position.y };
+
+	if (SDL_PointInRect(&pt, &CloseButtonPosition))
+	{
+		hide();
+		return;
+	}
+
 	if (SDL_PointInRect(&pt, &TitleBarPosition))
 	{
 		mDragging = true;

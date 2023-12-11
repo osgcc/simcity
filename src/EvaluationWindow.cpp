@@ -13,7 +13,7 @@
 
 namespace
 {
-    const SDL_Rect BgRect{ 0, 1, 511, 320 };
+    const SDL_Rect BgRect{ 0, 0, 503, 256 };
 };
 
 
@@ -23,7 +23,7 @@ EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
     mTexture(loadTexture(renderer, "images/EvalWindow.png")),
     mRenderer{ renderer }
 {
-    size({ 511, 320 });
+    size({ 503, 256 });
 }
 
 
