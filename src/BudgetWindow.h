@@ -10,6 +10,8 @@
 // file, included in this distribution, for details.
 #pragma once
 
+#include <memory>
+
 #include <SDL2/SDL.h>
 
 #include "Budget.h"
@@ -69,7 +71,7 @@ private:
 	SDL_Renderer* mRenderer{ nullptr };
 	const StringRender& mStringRenderer;
 
-	Font* mFont{ nullptr };
+	std::unique_ptr<Font> mFont{ nullptr };
 
 	Texture mTexture{};
 

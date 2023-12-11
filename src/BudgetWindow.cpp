@@ -159,9 +159,7 @@ BudgetWindow::BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRen
 
 
 BudgetWindow::~BudgetWindow()
-{
-	delete mFont;
-}
+{}
 
 
 void BudgetWindow::reset()
