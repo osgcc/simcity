@@ -139,7 +139,7 @@ BudgetWindow::BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRen
 	mBudget(budget),
 	mRenderer(renderer),
 	mStringRenderer(stringRenderer),
-	mFont(new Font("res/Voltaire-Regular.ttf", 14)),
+	mFont(new Font("res/Raleway-Medium.ttf", 14)),
 	mTexture(loadTexture(renderer, "images/budget.png"))
 {
     size({456, 422});

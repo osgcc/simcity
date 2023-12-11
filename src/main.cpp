@@ -461,8 +461,8 @@ void loadGraphics()
 
 void loadFonts()
 {
-    MainFont = std::make_unique<Font>("res/Voltaire-Regular.ttf", 12);
-    MainBigFont = std::make_unique<Font>("res/Voltaire-Regular.ttf", 14);
+    MainFont = std::make_unique<Font>("res/Raleway-Medium.ttf", 12);
+    MainBigFont = std::make_unique<Font>("res/Raleway-Medium.ttf", 14);
 }
 
 
