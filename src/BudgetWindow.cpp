@@ -143,6 +143,7 @@ BudgetWindow::BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRen
 	mTexture(loadTexture(renderer, "images/budget.png"))
 {
     size({456, 422});
+	anchor();
     
 	for (auto id : buttons)
 	{
