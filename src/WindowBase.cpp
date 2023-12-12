@@ -78,6 +78,13 @@ const Rectangle<int>& WindowBase::area() const
 }
 
 
+const Rectangle<int>& WindowBase::clientArea() const
+{
+    return mClientArea;
+}
+
+
+
 void WindowBase::anchor()
 {
     mAnchored = true;

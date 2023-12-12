@@ -55,6 +55,9 @@ public:
     virtual void draw() = 0;
     virtual void update() = 0;
 
+protected:
+    const Rectangle<int>& clientArea() const;
+
 private:
     virtual void onMouseDown(const Point<int>&) {};
     virtual void onMouseUp() {};
