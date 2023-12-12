@@ -25,10 +25,6 @@ namespace
 	const SDL_Rect GraphLayout{ 10, 71, 242, 202 };
 	SDL_Rect GraphPosition = GraphLayout;
 
-	const SDL_Rect CloseButtonLayout{ 4, 4, 13, 13 };
-	SDL_Rect CloseButtonPosition = CloseButtonLayout;
-
-
 	enum class ButtonId
 	{
 		Residential,
@@ -120,7 +116,6 @@ GraphWindow::GraphWindow(SDL_Renderer* renderer) :
 void GraphWindow::onMoved(const Vector<int>& movement)
 {
 	GraphPosition = { GraphLayout.x + area().x, GraphLayout.y + area().y, GraphLayout.w, GraphLayout.h };
-	CloseButtonPosition = { CloseButtonLayout.x + area().x, CloseButtonLayout.y + area().y, CloseButtonLayout.w, 18 };
 
 	for (auto& button : Buttons)
 	{
@@ -133,7 +128,6 @@ void GraphWindow::onMoved(const Vector<int>& movement)
 void GraphWindow::onPositionChanged(const Point<int>& position)
 {
 	GraphPosition = { GraphLayout.x + area().x, GraphLayout.y + area().y, GraphLayout.w, GraphLayout.h };
-	CloseButtonPosition = { CloseButtonLayout.x + area().x, CloseButtonLayout.y + area().y, CloseButtonLayout.w, 18 };
 
 	for (auto& button : Buttons)
 	{
@@ -146,12 +140,6 @@ void GraphWindow::onPositionChanged(const Point<int>& position)
 void GraphWindow::onMouseDown(const Point<int>& position)
 { 
 	const SDL_Point& pt{ position.x, position.y };
-
-	if (SDL_PointInRect(&pt, &CloseButtonPosition))
-	{
-		hide();
-		return;
-	}
 
 	for (auto& button : Buttons)
 	{

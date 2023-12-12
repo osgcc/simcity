@@ -58,6 +58,8 @@ public:
 protected:
     const Rectangle<int>& clientArea() const;
 
+    void closeButtonActive(bool show);
+
 private:
     virtual void onMouseDown(const Point<int>&) {};
     virtual void onMouseUp() {};
@@ -69,8 +71,10 @@ private:
     Rectangle<int> mArea;
     Rectangle<int> mClientArea;
     Rectangle<int> mTitleBarArea;
+    Rectangle<int> mCloseButtonArea;
 
     bool mVisible{ false };
     bool mAnchored{ false };
     bool mDragging{ false };
+    bool mCloseButtonActive{ true };
 };

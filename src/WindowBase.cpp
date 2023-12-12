@@ -7,6 +7,8 @@ namespace
 {
     constexpr int TitleBarHeight = 20;
     constexpr int ClientAreaPadding = 8;
+    constexpr Vector<int> CloseButtonSize{ 13, 13 };
+    constexpr Vector<int> CloseButtonPosition{ 4, 4 };
 }
 
 
@@ -39,6 +41,7 @@ void WindowBase::move(const Vector<int>& delta)
     mArea.startPoint(mArea.startPoint() + delta);
     mTitleBarArea.startPoint(mArea.startPoint());
     mClientArea.startPoint(mArea.startPoint() + Vector<int>{ClientAreaPadding, TitleBarHeight});
+    mCloseButtonArea.startPoint(mArea.startPoint() + CloseButtonPosition);
 
     onMoved(delta);
 }
@@ -64,6 +67,7 @@ void WindowBase::size(const Vector<int>& size)
     mArea.size(size);
     mTitleBarArea.size({ size.x, TitleBarHeight });
     mClientArea.size(size - Vector{ ClientAreaPadding * 2, TitleBarHeight + ClientAreaPadding });
+    mCloseButtonArea.size(CloseButtonSize);
 }
 
 
@@ -84,6 +88,11 @@ const Rectangle<int>& WindowBase::clientArea() const
     return mClientArea;
 }
 
+
+void WindowBase::closeButtonActive(bool show)
+{
+    mCloseButtonActive = show;
+}
 
 
 void WindowBase::anchor()
@@ -108,8 +117,14 @@ void WindowBase::injectMouseDown(const Point<int>& position)
 {
     const SDL_Point& pt{ position.x, position.y };
 
-    const SDL_Rect titlebar{ mTitleBarArea.x, mTitleBarArea.y, mTitleBarArea.width, mTitleBarArea.height };
+    const SDL_Rect closeButton{ mCloseButtonArea.x, mCloseButtonArea.y, mCloseButtonArea.width, mCloseButtonArea.height };
+    if (mCloseButtonActive && SDL_PointInRect(&pt, &closeButton))
+    {
+        hide();
+        return;
+    }
 
+    const SDL_Rect titlebar{ mTitleBarArea.x, mTitleBarArea.y, mTitleBarArea.width, mTitleBarArea.height };
     if (SDL_PointInRect(&pt, &titlebar) && !anchored())
     {
         mDragging = true;

@@ -30,6 +30,8 @@ ToolPalette::ToolPalette(SDL_Renderer* renderer) :
     mBackground(loadTexture(mRenderer, "images/ToolPalette.png"))
 {
     size(ToolPaletteSize);
+    closeButtonActive(false);
+
     initToolbarUv();
 
     mToolButtons[10].state = DisabledState;
@@ -94,8 +96,8 @@ void ToolPalette::updateButtonPositions()
     {
         mToolButtons[i].rect =
         {
-            (((i % 3) * 32) + (i % 3) * 2) + area().x + 8,
-            (((i / 3) * 32) + (i / 3) * 2) + area().y + 25,
+            (((i % 3) * 32) + (i % 3) * 2) + clientArea().x,
+            (((i / 3) * 32) + (i / 3) * 2) + clientArea().y + 5,
             32, 32
         };
     }
