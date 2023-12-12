@@ -10,14 +10,29 @@
 // file, included in this distribution, for details.
 #include "ToolPalette.h"
 
+#include "Vector.h"
+
 #include <stdexcept>
 #include <string>
 
 
+namespace
+{
+    constexpr Vector<int> ToolPaletteSize{ 118, 235 };
+    const SDL_Rect bgRect{ 0, 0, ToolPaletteSize.x, ToolPaletteSize.y };
+
+    const SDL_Rect TitleBarLayout{ 2, 2, 113, 19 };
+    SDL_Rect TitleBarPosition = TitleBarLayout;
+};
+
+
+
 ToolPalette::ToolPalette(SDL_Renderer* renderer) :
     mRenderer(renderer),
-    texture(loadTexture(mRenderer, "icons/buttons.png"))
+    mIcons(loadTexture(mRenderer, "icons/buttons.png")),
+    mBackground(loadTexture(mRenderer, "images/ToolPalette.png"))
 {
+    size(ToolPaletteSize);
     initToolbarUv();
 
     mToolButtons[10].state = DisabledState;
@@ -27,6 +42,7 @@ ToolPalette::ToolPalette(SDL_Renderer* renderer) :
 
     setToolValues();
     loadToolGhosts();
+    show();
 }
 
 
@@ -40,9 +56,9 @@ ToolPalette::~ToolPalette()
         }
     }
 
-    if (texture.texture)
+    if (mIcons.texture)
     {
-        SDL_DestroyTexture(texture.texture);
+        SDL_DestroyTexture(mIcons.texture);
     }
 }
 
@@ -54,18 +70,41 @@ void ToolPalette::draw()
     for (size_t i = 0; i < 20; ++i)
     {
         if (mToolButtons[i].tool == Tool::None) { continue; }
-        SDL_RenderCopy(mRenderer, texture.texture, &mToolButtonUV[i + (mToolButtons[i].state * 20)], &mToolButtons[i].rect);
+        SDL_RenderCopy(mRenderer, mIcons.texture, &mToolButtonUV[i + (mToolButtons[i].state * 20)], &mToolButtons[i].rect);
     }
 }
 
 
-void ToolPalette::position(const Point<int>& position)
+void ToolPalette::update()
 {
-    mRect = { position.x, position.y, 106, 234 };
 
+}
+
+
+void ToolPalette::onMoved(const Vector<int>&)
+{
+    TitleBarPosition = { TitleBarLayout.x + area().x, TitleBarLayout.y + area().y, TitleBarLayout.w, TitleBarLayout.h};
+    updateButtonPositions();
+}
+
+
+void ToolPalette::onPositionChanged(const Point<int>& position)
+{
+    TitleBarPosition = { TitleBarLayout.x + area().x, TitleBarLayout.y + area().y, TitleBarLayout.w, TitleBarLayout.h };
+    updateButtonPositions();
+}
+
+
+void ToolPalette::updateButtonPositions()
+{
     for (int i = 0; i < 20; ++i)
     {
-        mToolButtons[i].rect = { (i % 3) * 32 + mRect.x + 5, ((i / 3) * 32) + mRect.y + 5, 32, 32 };
+        mToolButtons[i].rect =
+        {
+            (((i % 3) * 32) + (i % 3) * 2) + area().x + 8,
+            (((i / 3) * 32) + (i / 3) * 2) + area().y + TitleBarLayout.h + 5,
+            32, 32
+        };
     }
 }
 
@@ -103,13 +142,20 @@ const Texture& ToolPalette::toolGost() const
 }
 
 
-void ToolPalette::injectMouseClickPosition(const Point<int>& mousePosition)
+void ToolPalette::injectMouseDown(const Point<int>& position)
 {
+    const SDL_Point& pt{ position.x, position.y };
+    if (SDL_PointInRect(&pt, &TitleBarPosition))
+    {
+        mDragging = true;
+        return;
+    }
+
     for (int i = 0; i < 20; ++i)
     {
         const SDL_Rect& buttonRect = mToolButtons[i].rect;
-        if (mousePosition.x >= buttonRect.x && mousePosition.x <= buttonRect.x + buttonRect.w &&
-            mousePosition.y >= buttonRect.y && mousePosition.y <= buttonRect.y + buttonRect.h)
+        if (position.x >= buttonRect.x && position.x <= buttonRect.x + buttonRect.w &&
+            position.y >= buttonRect.y && position.y <= buttonRect.y + buttonRect.h)
         {
             const int buttonState = mToolButtons[i].state;
             if (buttonState == PressedState || buttonState == DisabledState)
@@ -124,9 +170,16 @@ void ToolPalette::injectMouseClickPosition(const Point<int>& mousePosition)
 }
 
 
-const SDL_Rect& ToolPalette::rect() const
+void ToolPalette::injectMouseUp()
 {
-    return mRect;
+    mDragging = false;
+}
+
+
+void ToolPalette::injectMouseMotion(const Vector<int>& delta)
+{
+    if (!mDragging) { return; }
+    move(delta);
 }
 
 
@@ -209,11 +262,8 @@ void ToolPalette::setButtonState(int buttonIndex, int buttonState)
 
 void ToolPalette::drawBackground()
 {
-    SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 150);
-    SDL_RenderFillRect(mRenderer, &mRect);
-
-    SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
-    SDL_RenderDrawRect(mRenderer, &mRect);
+    const SDL_Rect rect{ area().x, area().y, area().width, area().height };
+    SDL_RenderCopy(mRenderer, mBackground.texture, &bgRect, &rect);
 }
 
 

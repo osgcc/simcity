@@ -18,8 +18,10 @@
 #include "Texture.h"
 #include "Tool.h"
 
+#include "WindowBase.h"
 
-class ToolPalette
+
+class ToolPalette : public WindowBase
 {
 public:
     ToolPalette() = delete;
@@ -39,11 +41,14 @@ public:
 
     Tool tool() const;
     const Texture& toolGost() const;
-    const SDL_Rect& rect() const;
 
-    void draw();
-    void position(const Point<int>& position);
-    void injectMouseClickPosition(const Point<int>& mousePosition);
+    void draw() override;
+    void update() override;
+
+    void injectMouseDown(const Point<int>& mousePosition) override;
+
+    void injectMouseUp() override;
+    void injectMouseMotion(const Vector<int>& delta) override;
 
     void cancelTool();
 
@@ -68,14 +73,22 @@ private:
     void toolIndex(const int toolIndex);
     int toolIndex() const;
 
+
+    void onMoved(const Vector<int>&) override;
+    void onPositionChanged(const Point<int>& position) override;
+
+    void updateButtonPositions();
+
     std::array<SDL_Rect, 80> mToolButtonUV{};
     std::array<ButtonMeta, 20> mToolButtons{};
 
-    SDL_Rect mRect{};
-
     SDL_Renderer* mRenderer{ nullptr };
-    Texture texture{};
+    
+    Texture mIcons{};
+    Texture mBackground{};
 
     int mSelectedIndex{ NoSelection };
     Tool mTool{ Tool::None };
+
+    bool mDragging{ false };
 };

@@ -204,7 +204,6 @@ namespace EventHandling
     Point<int> MousePosition{};
 
     bool MouseLeftDown{ false };
-    bool MouseClicked{ false };
 };
 
 
@@ -666,6 +665,7 @@ void handleMouseEvent(SDL_Event& event)
         calculateMouseToWorld();
 
         if (graphWindow->visible()) { graphWindow->injectMouseMotion(mouseMotionDelta); }
+        if (toolPalette->visible()) { toolPalette->injectMouseMotion(mouseMotionDelta); }
 
         if ((SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON_RMASK) != 0)
         {
@@ -689,18 +689,26 @@ void handleMouseEvent(SDL_Event& event)
                 }
             }
 
-            toolStart(TilePointedAt);
+            if (toolPalette->area().contains(mousePosition))
+            {
+                toolPalette->injectMouseDown(mousePosition);
+                return;
+            }
 
             if (budgetWindow->area().contains(mousePosition))
             {
                 budgetWindow->injectMouseDown(mousePosition);
+                return;
             }
 
             if (graphWindow->area().contains(mousePosition))
             {
                 graphWindow->injectMouseDown(mousePosition);
+                return;
             }
 
+            toolStart(TilePointedAt);
+            
             if (!budgetWindow->visible() && !pendingToolProperties().draggable)
             {
                 ToolDown(TilePointedAt, budget);
@@ -714,10 +722,9 @@ void handleMouseEvent(SDL_Event& event)
             EventHandling::MouseLeftDown = false;
             EventHandling::MouseClickPosition = { event.button.x, event.button.y };
 
-            EventHandling::MouseClicked = true;
-
             if (budgetWindow->visible()) { budgetWindow->injectMouseUp(); }
             if (graphWindow->visible()) { graphWindow->injectMouseUp(); }
+            if (toolPalette->visible()) { toolPalette->injectMouseUp(); }
 
             for (auto rect : UiRects)
             {
@@ -1019,7 +1026,6 @@ void initUI()
     evaluationWindow = std::make_unique<EvaluationWindow>(MainWindowRenderer);
     centerWindow(*evaluationWindow);
 
-    UiRects.push_back(&toolPalette->rect());
     UiRects.push_back(&UiHeaderRect);
 }
 
@@ -1074,11 +1080,6 @@ void GameLoop()
 
             drawTopUi();
 
-            if (EventHandling::MouseClicked)
-            {
-                EventHandling::MouseClicked = false;
-                toolPalette->injectMouseClickPosition(EventHandling::MouseClickPosition);
-            }
             toolPalette->draw();
 
             if (graphWindow->visible()) { graphWindow->draw(); }
