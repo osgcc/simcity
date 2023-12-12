@@ -20,9 +20,6 @@ namespace
 {
     constexpr Vector<int> ToolPaletteSize{ 118, 235 };
     const SDL_Rect bgRect{ 0, 0, ToolPaletteSize.x, ToolPaletteSize.y };
-
-    const SDL_Rect TitleBarLayout{ 2, 2, 113, 19 };
-    SDL_Rect TitleBarPosition = TitleBarLayout;
 };
 
 
@@ -98,7 +95,7 @@ void ToolPalette::updateButtonPositions()
         mToolButtons[i].rect =
         {
             (((i % 3) * 32) + (i % 3) * 2) + area().x + 8,
-            (((i / 3) * 32) + (i / 3) * 2) + area().y + TitleBarLayout.h + 5,
+            (((i / 3) * 32) + (i / 3) * 2) + area().y + 25,
             32, 32
         };
     }
