@@ -38,6 +38,7 @@
     <ClCompile Include="src\Tool.cpp" />
     <ClCompile Include="src\ToolPalette.cpp" />
     <ClCompile Include="src\Traffic.cpp" />
+    <ClCompile Include="src\WindowBase.cpp" />
     <ClCompile Include="src\WindowStack.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
     <ClCompile Include="src\w_sound.cpp" />
