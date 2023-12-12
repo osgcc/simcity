@@ -37,8 +37,9 @@ void WindowBase::hide()
 void WindowBase::move(const Vector<int>& delta)
 {
     mArea.startPoint(mArea.startPoint() + delta);
-    mTitleBarArea.startPoint(mArea.startPoint() + delta);
-    mClientArea.startPoint(mArea.startPoint() + Vector<int>{delta.x + ClientAreaPadding, delta.y + TitleBarHeight});
+    mTitleBarArea.startPoint(mArea.startPoint());
+    mClientArea.startPoint(mArea.startPoint() + Vector<int>{ClientAreaPadding, TitleBarHeight});
+
     onMoved(delta);
 }
 
@@ -131,5 +132,5 @@ void WindowBase::injectMouseMotion(const Vector<int>& delta)
     if (!mDragging) { return; }
     move(delta);
 
-    onMouseMotion(delta);
+    //onMouseMotion(delta);
 }
