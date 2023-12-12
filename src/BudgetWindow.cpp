@@ -247,7 +247,7 @@ void BudgetWindow::handleMouseDown(const ButtonId id)
 }
 
 
-void BudgetWindow::injectMouseDown(const Point<int>& pos)
+void BudgetWindow::onMouseDown(const Point<int>& pos)
 {
 	for (auto id : buttons)
 	{
@@ -262,7 +262,7 @@ void BudgetWindow::injectMouseDown(const Point<int>& pos)
 }
 
 
-void BudgetWindow::injectMouseUp()
+void BudgetWindow::onMouseUp()
 {
 	mButtonDownId = ButtonId::None;
 }

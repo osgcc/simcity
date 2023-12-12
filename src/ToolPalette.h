@@ -45,11 +45,6 @@ public:
     void draw() override;
     void update() override;
 
-    void injectMouseDown(const Point<int>& mousePosition) override;
-
-    void injectMouseUp() override;
-    void injectMouseMotion(const Vector<int>& delta) override;
-
     void cancelTool();
 
 private:
@@ -73,6 +68,9 @@ private:
     void toolIndex(const int toolIndex);
     int toolIndex() const;
 
+    void onMouseDown(const Point<int>& mousePosition) override;
+    void onMouseUp() override;
+    void onMouseMotion(const Vector<int>& delta) override;
 
     void onMoved(const Vector<int>&) override;
     void onPositionChanged(const Point<int>& position) override;
@@ -90,5 +88,5 @@ private:
     int mSelectedIndex{ NoSelection };
     Tool mTool{ Tool::None };
 
-    bool mDragging{ false };
+    //bool mDragging{ false };
 };

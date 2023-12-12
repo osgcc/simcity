@@ -54,13 +54,13 @@ public:
 
 	bool accepted() const { return mAccepted; }
 
-	void injectMouseDown(const Point<int>& pos) override;
-	void injectMouseUp() override;
-
 	void draw() override;
 	void update() override;
 
 private:
+	void onMouseDown(const Point<int>& pos) override;
+	void onMouseUp() override;
+
 	void handleMouseDown(const ButtonId id);
 
 	void onPositionChanged(const Point<int>& pos) override;

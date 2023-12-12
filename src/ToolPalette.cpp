@@ -142,14 +142,16 @@ const Texture& ToolPalette::toolGost() const
 }
 
 
-void ToolPalette::injectMouseDown(const Point<int>& position)
+void ToolPalette::onMouseDown(const Point<int>& position)
 {
+    /*
     const SDL_Point& pt{ position.x, position.y };
     if (SDL_PointInRect(&pt, &TitleBarPosition))
     {
         mDragging = true;
         return;
     }
+    */
 
     for (int i = 0; i < 20; ++i)
     {
@@ -170,16 +172,16 @@ void ToolPalette::injectMouseDown(const Point<int>& position)
 }
 
 
-void ToolPalette::injectMouseUp()
+void ToolPalette::onMouseUp()
 {
-    mDragging = false;
+    //mDragging = false;
 }
 
 
-void ToolPalette::injectMouseMotion(const Vector<int>& delta)
+void ToolPalette::onMouseMotion(const Vector<int>& delta)
 {
-    if (!mDragging) { return; }
-    move(delta);
+    //if (!mDragging) { return; }
+    //move(delta);
 }
 
 

@@ -27,14 +27,15 @@ public:
 	GraphWindow(SDL_Renderer*);
 	~GraphWindow() override = default;
 
-	void injectMouseDown(const Point<int>& position) override;
-	void injectMouseUp() override;
-	void injectMouseMotion(const Vector<int>& delta) override;
-
 	void draw() override;
 	void update() override;
 
 private:
+	void onMouseDown(const Point<int>& position) override;
+	void onMouseUp() override;
+	void onMouseMotion(const Vector<int>& delta) override;
+
+
 	void fillGraphPoints(Graph::PointsList&, const GraphHistory&);
 
 	void onMoved(const Vector<int>&) override;
@@ -44,6 +45,4 @@ private:
 	SDL_Renderer& mRenderer;
 	const Texture mTexture;
 	Texture mGraphTexture;
-
-	bool mDragging{ false };
 };
