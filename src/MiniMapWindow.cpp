@@ -48,7 +48,7 @@ namespace
     constexpr auto POWERED = 1;
     constexpr auto CONDUCTIVE = 2;
 
-    constexpr SDL_Color BackgroundColor{ 126, 163, 217, 255 };
+    constexpr SDL_Color BackgroundColor{ 228, 228, 228, 255 };
 
     std::array<SDL_Color, 3> PowerColorTable =
     { {
