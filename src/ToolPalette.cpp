@@ -20,9 +20,6 @@ namespace
 {
     constexpr Vector<int> ToolPaletteSize{ 118, 235 };
     const SDL_Rect bgRect{ 0, 0, ToolPaletteSize.x, ToolPaletteSize.y };
-
-    const SDL_Rect TitleBarLayout{ 2, 2, 113, 19 };
-    SDL_Rect TitleBarPosition = TitleBarLayout;
 };
 
 
@@ -33,6 +30,8 @@ ToolPalette::ToolPalette(SDL_Renderer* renderer) :
     mBackground(loadTexture(mRenderer, "images/ToolPalette.png"))
 {
     size(ToolPaletteSize);
+    closeButtonActive(false);
+
     initToolbarUv();
 
     mToolButtons[10].state = DisabledState;
@@ -76,21 +75,17 @@ void ToolPalette::draw()
 
 
 void ToolPalette::update()
-{
-
-}
+{}
 
 
 void ToolPalette::onMoved(const Vector<int>&)
 {
-    TitleBarPosition = { TitleBarLayout.x + area().x, TitleBarLayout.y + area().y, TitleBarLayout.w, TitleBarLayout.h};
     updateButtonPositions();
 }
 
 
 void ToolPalette::onPositionChanged(const Point<int>& position)
 {
-    TitleBarPosition = { TitleBarLayout.x + area().x, TitleBarLayout.y + area().y, TitleBarLayout.w, TitleBarLayout.h };
     updateButtonPositions();
 }
 
@@ -101,8 +96,8 @@ void ToolPalette::updateButtonPositions()
     {
         mToolButtons[i].rect =
         {
-            (((i % 3) * 32) + (i % 3) * 2) + area().x + 8,
-            (((i / 3) * 32) + (i / 3) * 2) + area().y + TitleBarLayout.h + 5,
+            (((i % 3) * 32) + (i % 3) * 2) + clientArea().x,
+            (((i / 3) * 32) + (i / 3) * 2) + clientArea().y + 5,
             32, 32
         };
     }
@@ -142,15 +137,8 @@ const Texture& ToolPalette::toolGost() const
 }
 
 
-void ToolPalette::injectMouseDown(const Point<int>& position)
+void ToolPalette::onMouseDown(const Point<int>& position)
 {
-    const SDL_Point& pt{ position.x, position.y };
-    if (SDL_PointInRect(&pt, &TitleBarPosition))
-    {
-        mDragging = true;
-        return;
-    }
-
     for (int i = 0; i < 20; ++i)
     {
         const SDL_Rect& buttonRect = mToolButtons[i].rect;
@@ -167,19 +155,6 @@ void ToolPalette::injectMouseDown(const Point<int>& position)
             return;
         }
     }
-}
-
-
-void ToolPalette::injectMouseUp()
-{
-    mDragging = false;
-}
-
-
-void ToolPalette::injectMouseMotion(const Vector<int>& delta)
-{
-    if (!mDragging) { return; }
-    move(delta);
 }
 
 

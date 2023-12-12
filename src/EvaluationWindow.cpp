@@ -42,13 +42,13 @@ void EvaluationWindow::update()
 }
 
 
-void EvaluationWindow::injectMouseDown(const Point<int>& position)
+void EvaluationWindow::onMouseDown(const Point<int>& position)
 {
     
 }
 
 
-void EvaluationWindow::injectMouseUp()
+void EvaluationWindow::onMouseUp()
 {
     
 }

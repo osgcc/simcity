@@ -18,64 +18,63 @@
 class WindowBase
 {
 public:
-	WindowBase() = default;
-	WindowBase(const WindowBase&) = delete;
-	const WindowBase& operator=(const WindowBase&) = delete;
+    WindowBase() = default;
+    WindowBase(const WindowBase&) = delete;
+    const WindowBase& operator=(const WindowBase&) = delete;
 
-	virtual ~WindowBase() = default;
+    virtual ~WindowBase() = default;
 
-	bool visible() const { return mVisible; }
+    bool visible() const;
 
-	void toggleVisible() { mVisible = !mVisible; }
-	
-	void show() { mVisible = true; }
-	void hide() { mVisible = false; }
+    void toggleVisible();
 
-	void move(const Vector<int>& delta)
-    {
-        mArea.startPoint(mArea.startPoint() + delta);
-		onMoved(delta);
-	}
+    void show();
+    void hide();
 
-	void position(const Point<int>& point)
-	{
-        mArea.startPoint(point);
-		onPositionChanged(point);
-	}
-    
-    constexpr Point<int> position() const
-    {
-        return mArea.startPoint();
-    }
-    
-    void size(const Vector<int>& size)
-    {
-        mArea.size(size);
-    }
-    
-    constexpr Vector<int> size() const
-    {
-        return mArea.size();
-    }
-    
-    const Rectangle<int>& area() const
-    {
-        return mArea;
-    }
+    void move(const Vector<int>& delta);
 
-	virtual void injectMouseDown(const Point<int>& position) {};
-	virtual void injectMouseUp() {};
-	virtual void injectMouseMotion(const Vector<int>& delta) {};
-	
-	virtual void draw() = 0;
-	virtual void update() = 0;
-    
+    void position(const Point<int>& point);
+    constexpr Point<int> position() const;
+
+    void size(const Vector<int>& size);
+
+    constexpr Vector<int> size() const;
+
+    const Rectangle<int>& area() const;
+
+    void anchor();
+
+    void unanchor();
+
+    bool anchored() const;
+
+    void injectMouseDown(const Point<int>& position);
+    void injectMouseUp();
+    void injectMouseMotion(const Vector<int>& delta);
+
+    virtual void draw() = 0;
+    virtual void update() = 0;
+
 protected:
-    Rectangle<int> mArea;
+    const Rectangle<int>& clientArea() const;
+
+    void closeButtonActive(bool show);
 
 private:
-	virtual void onMoved(const Vector<int>&) {};
-	virtual void onPositionChanged(const Point<int>&) {};
-    
-	bool mVisible{ false };
+    virtual void onMouseDown(const Point<int>&) {};
+    virtual void onMouseUp() {};
+    virtual void onMouseMotion(const Vector<int>&) {};
+
+    virtual void onMoved(const Vector<int>&) {};
+    virtual void onPositionChanged(const Point<int>&) {};
+
+    Rectangle<int> mArea;
+    Rectangle<int> mClientArea;
+    Rectangle<int> mTitleBarArea;
+    Rectangle<int> mCloseButtonArea;
+
+    bool mVisible{ false };
+    bool mAnchored{ false };
+    bool mDragging{ false };
+    bool mCloseButtonActive{ true };
 };

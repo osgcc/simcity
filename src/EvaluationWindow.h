@@ -31,8 +31,8 @@ public:
     void draw() override;
     void update() override;
     
-    void injectMouseDown(const Point<int>& position) override;
-    void injectMouseUp() override;
+    void onMouseDown(const Point<int>& position) override;
+    void onMouseUp() override;
     
 private:
     Font* mFont{ nullptr };

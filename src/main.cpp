@@ -48,6 +48,8 @@
 #include "Texture.h"
 #include "ToolPalette.h"
 
+#include "WindowStack.h"
+
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
@@ -149,6 +151,9 @@ namespace
 
     std::unique_ptr<Font> MainFont;
     std::unique_ptr<Font> MainBigFont;
+
+
+    WindowStack GuiWindowStack;
 
 
     unsigned int speedModifier()
@@ -632,7 +637,7 @@ void handleKeyEvent(SDL_Event& event)
             
     case SDLK_F1:
         evaluationWindow->toggleVisible();
-        if(evaluationWindow->visible()) { budgetWindow->update(); }
+        if(evaluationWindow->visible()) { evaluationWindow->update(); }
         break;
 
     default:
@@ -664,8 +669,7 @@ void handleMouseEvent(SDL_Event& event)
 
         calculateMouseToWorld();
 
-        if (graphWindow->visible()) { graphWindow->injectMouseMotion(mouseMotionDelta); }
-        if (toolPalette->visible()) { toolPalette->injectMouseMotion(mouseMotionDelta); }
+        GuiWindowStack.injectMouseMotion(mouseMotionDelta);
 
         if ((SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON_RMASK) != 0)
         {
@@ -689,21 +693,10 @@ void handleMouseEvent(SDL_Event& event)
                 }
             }
 
-            if (toolPalette->area().contains(mousePosition))
+            if (GuiWindowStack.pointInWindow(EventHandling::MousePosition))
             {
-                toolPalette->injectMouseDown(mousePosition);
-                return;
-            }
-
-            if (budgetWindow->area().contains(mousePosition))
-            {
-                budgetWindow->injectMouseDown(mousePosition);
-                return;
-            }
-
-            if (graphWindow->area().contains(mousePosition))
-            {
-                graphWindow->injectMouseDown(mousePosition);
+                GuiWindowStack.updateStack(EventHandling::MousePosition);
+                GuiWindowStack.front()->injectMouseDown(EventHandling::MousePosition);
                 return;
             }
 
@@ -722,9 +715,7 @@ void handleMouseEvent(SDL_Event& event)
             EventHandling::MouseLeftDown = false;
             EventHandling::MouseClickPosition = { event.button.x, event.button.y };
 
-            if (budgetWindow->visible()) { budgetWindow->injectMouseUp(); }
-            if (graphWindow->visible()) { graphWindow->injectMouseUp(); }
-            if (toolPalette->visible()) { toolPalette->injectMouseUp(); }
+            GuiWindowStack.injectMouseUp();
 
             for (auto rect : UiRects)
             {
@@ -1026,6 +1017,11 @@ void initUI()
     evaluationWindow = std::make_unique<EvaluationWindow>(MainWindowRenderer);
     centerWindow(*evaluationWindow);
 
+    GuiWindowStack.addWindow(budgetWindow.get());
+    GuiWindowStack.addWindow(evaluationWindow.get());
+    GuiWindowStack.addWindow(graphWindow.get());
+    GuiWindowStack.addWindow(toolPalette.get());
+
     UiRects.push_back(&UiHeaderRect);
 }
 
@@ -1080,10 +1076,7 @@ void GameLoop()
 
             drawTopUi();
 
-            toolPalette->draw();
-
-            if (graphWindow->visible()) { graphWindow->draw(); }
-            if (evaluationWindow->visible()) { evaluationWindow->draw(); }
+            GuiWindowStack.draw();
         }
 
         SDL_RenderPresent(MainWindowRenderer);

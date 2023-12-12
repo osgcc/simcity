@@ -38,6 +38,8 @@
     <ClCompile Include="src\Tool.cpp" />
     <ClCompile Include="src\ToolPalette.cpp" />
     <ClCompile Include="src\Traffic.cpp" />
+    <ClCompile Include="src\WindowBase.cpp" />
+    <ClCompile Include="src\WindowStack.cpp" />
     <ClCompile Include="src\w_resrc.cpp" />
     <ClCompile Include="src\w_sound.cpp" />
     <ClCompile Include="src\w_tk.cpp" />
@@ -85,6 +87,7 @@
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\s_alloc.h" />
     <ClInclude Include="src\WindowBase.h" />
+    <ClInclude Include="src\WindowStack.h" />
     <ClInclude Include="src\w_resrc.h" />
     <ClInclude Include="src\w_sound.h" />
     <ClInclude Include="src\w_tk.h" />

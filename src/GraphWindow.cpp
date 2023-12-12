@@ -25,13 +25,6 @@ namespace
 	const SDL_Rect GraphLayout{ 10, 71, 242, 202 };
 	SDL_Rect GraphPosition = GraphLayout;
 
-	const SDL_Rect TitleBarLayout{ 2, 2, 261, 19 };
-	SDL_Rect TitleBarPosition = TitleBarLayout;
-
-	const SDL_Rect CloseButtonLayout{ 4, 4, 13, 13 };
-	SDL_Rect CloseButtonPosition = CloseButtonLayout;
-
-
 	enum class ButtonId
 	{
 		Residential,
@@ -122,13 +115,11 @@ GraphWindow::GraphWindow(SDL_Renderer* renderer) :
 
 void GraphWindow::onMoved(const Vector<int>& movement)
 {
-	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
-	TitleBarPosition = { TitleBarLayout.x + mArea.x, TitleBarLayout.y + mArea.y, TitleBarLayout.w, TitleBarLayout.h };
-	CloseButtonPosition = { CloseButtonLayout.x + mArea.x, CloseButtonLayout.y + mArea.y, CloseButtonLayout.w, TitleBarLayout.h };
+	GraphPosition = { GraphLayout.x + area().x, GraphLayout.y + area().y, GraphLayout.w, GraphLayout.h };
 
 	for (auto& button : Buttons)
 	{
-		button.area = { ButtonLayout.at(button.id).x + mArea.x, ButtonLayout.at(button.id).y + mArea.y, 36, 36 };
+		button.area = { ButtonLayout.at(button.id).x + area().x, ButtonLayout.at(button.id).y + area().y, 36, 36 };
 		button.iconPosition = { button.area.x + 6, button.area.y + 6, 22, 22 };
 	}
 }
@@ -136,33 +127,19 @@ void GraphWindow::onMoved(const Vector<int>& movement)
 
 void GraphWindow::onPositionChanged(const Point<int>& position)
 {
-	GraphPosition = { GraphLayout.x + mArea.x, GraphLayout.y + mArea.y, GraphLayout.w, GraphLayout.h };
-	TitleBarPosition = { TitleBarLayout.x + mArea.x, TitleBarLayout.y + mArea.y, TitleBarLayout.w, TitleBarLayout.h };
-	CloseButtonPosition = { CloseButtonLayout.x + mArea.x, CloseButtonLayout.y + mArea.y, CloseButtonLayout.w, TitleBarLayout.h };
+	GraphPosition = { GraphLayout.x + area().x, GraphLayout.y + area().y, GraphLayout.w, GraphLayout.h };
 
 	for (auto& button : Buttons)
 	{
-		button.area = { ButtonLayout.at(button.id).x + mArea.x, ButtonLayout.at(button.id).y + mArea.y, 36, 36 };
+		button.area = { ButtonLayout.at(button.id).x + area().x, ButtonLayout.at(button.id).y + area().y, 36, 36 };
 		button.iconPosition = { button.area.x + 6, button.area.y + 6, 22, 22 };
 	}
 }
 
 
-void GraphWindow::injectMouseDown(const Point<int>& position)
+void GraphWindow::onMouseDown(const Point<int>& position)
 { 
 	const SDL_Point& pt{ position.x, position.y };
-
-	if (SDL_PointInRect(&pt, &CloseButtonPosition))
-	{
-		hide();
-		return;
-	}
-
-	if (SDL_PointInRect(&pt, &TitleBarPosition))
-	{
-		mDragging = true;
-		return;
-	}
 
 	for (auto& button : Buttons)
 	{
@@ -176,22 +153,9 @@ void GraphWindow::injectMouseDown(const Point<int>& position)
 }
 
 
-void GraphWindow::injectMouseUp()
-{
-	mDragging = false;
-}
-
-
-void GraphWindow::injectMouseMotion(const Vector<int>& delta)
-{
-	if (!mDragging) { return; }
-	move(delta);
-}
-
-
 void GraphWindow::draw()
 {
-    const SDL_Rect rect{ mArea.x, mArea.y, mArea.width, mArea.height };
+    const SDL_Rect rect{ area().x, area().y, area().width, area().height};
 	SDL_RenderCopy(&mRenderer, mTexture.texture, &Bg, &rect);
 
 	for (auto& button : Buttons)

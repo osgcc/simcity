@@ -143,6 +143,8 @@ BudgetWindow::BudgetWindow(SDL_Renderer* renderer, const StringRender& stringRen
 	mTexture(loadTexture(renderer, "images/budget.png"))
 {
     size({456, 422});
+	closeButtonActive(false);
+	anchor();
     
 	for (auto id : buttons)
 	{
@@ -246,7 +248,7 @@ void BudgetWindow::handleMouseDown(const ButtonId id)
 }
 
 
-void BudgetWindow::injectMouseDown(const Point<int>& pos)
+void BudgetWindow::onMouseDown(const Point<int>& pos)
 {
 	for (auto id : buttons)
 	{
@@ -261,7 +263,7 @@ void BudgetWindow::injectMouseDown(const Point<int>& pos)
 }
 
 
-void BudgetWindow::injectMouseUp()
+void BudgetWindow::onMouseUp()
 {
 	mButtonDownId = ButtonId::None;
 }
