@@ -76,21 +76,17 @@ void ToolPalette::draw()
 
 
 void ToolPalette::update()
-{
-
-}
+{}
 
 
 void ToolPalette::onMoved(const Vector<int>&)
 {
-    TitleBarPosition = { TitleBarLayout.x + area().x, TitleBarLayout.y + area().y, TitleBarLayout.w, TitleBarLayout.h};
     updateButtonPositions();
 }
 
 
 void ToolPalette::onPositionChanged(const Point<int>& position)
 {
-    TitleBarPosition = { TitleBarLayout.x + area().x, TitleBarLayout.y + area().y, TitleBarLayout.w, TitleBarLayout.h };
     updateButtonPositions();
 }
 
@@ -144,15 +140,6 @@ const Texture& ToolPalette::toolGost() const
 
 void ToolPalette::onMouseDown(const Point<int>& position)
 {
-    /*
-    const SDL_Point& pt{ position.x, position.y };
-    if (SDL_PointInRect(&pt, &TitleBarPosition))
-    {
-        mDragging = true;
-        return;
-    }
-    */
-
     for (int i = 0; i < 20; ++i)
     {
         const SDL_Rect& buttonRect = mToolButtons[i].rect;
@@ -169,19 +156,6 @@ void ToolPalette::onMouseDown(const Point<int>& position)
             return;
         }
     }
-}
-
-
-void ToolPalette::onMouseUp()
-{
-    //mDragging = false;
-}
-
-
-void ToolPalette::onMouseMotion(const Vector<int>& delta)
-{
-    //if (!mDragging) { return; }
-    //move(delta);
 }
 
 

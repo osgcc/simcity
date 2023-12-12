@@ -69,8 +69,6 @@ private:
     int toolIndex() const;
 
     void onMouseDown(const Point<int>& mousePosition) override;
-    void onMouseUp() override;
-    void onMouseMotion(const Vector<int>& delta) override;
 
     void onMoved(const Vector<int>&) override;
     void onPositionChanged(const Point<int>& position) override;

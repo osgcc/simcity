@@ -1,5 +1,7 @@
 #include "WindowBase.h"
 
+#include <SDL2/SDL.h>
+
 
 namespace
 {
@@ -96,17 +98,31 @@ bool WindowBase::anchored() const
 
 void WindowBase::injectMouseDown(const Point<int>& position)
 {
+    const SDL_Point& pt{ position.x, position.y };
+
+    const SDL_Rect titlebar{ mTitleBarArea.x, mTitleBarArea.y, mTitleBarArea.width, mTitleBarArea.height };
+
+    if (SDL_PointInRect(&pt, &titlebar) && !anchored())
+    {
+        mDragging = true;
+        return;
+    }
+
     onMouseDown(position);
 }
 
 
 void WindowBase::injectMouseUp()
 {
+    mDragging = false;
     onMouseUp();
 }
 
 
 void WindowBase::injectMouseMotion(const Vector<int>& delta)
 {
+    if (!mDragging) { return; }
+    move(delta);
+
     onMouseMotion(delta);
 }

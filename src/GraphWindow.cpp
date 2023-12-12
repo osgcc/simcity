@@ -158,14 +158,6 @@ void GraphWindow::onMouseDown(const Point<int>& position)
 		return;
 	}
 
-	/*
-	if (SDL_PointInRect(&pt, &TitleBarPosition))
-	{
-		mDragging = true;
-		return;
-	}
-	*/
-
 	for (auto& button : Buttons)
 	{
 		if (SDL_PointInRect(&pt, &button.area))
@@ -175,19 +167,6 @@ void GraphWindow::onMouseDown(const Point<int>& position)
 			return; // assumption: mouse position can only ever be within one button
 		}
 	}
-}
-
-
-void GraphWindow::onMouseUp()
-{
-	//mDragging = false;
-}
-
-
-void GraphWindow::onMouseMotion(const Vector<int>& delta)
-{
-	//if (!mDragging) { return; }
-	//move(delta);
 }
 
 

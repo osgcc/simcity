@@ -31,13 +31,9 @@ public:
 	void update() override;
 
 private:
-	void onMouseDown(const Point<int>& position) override;
-	void onMouseUp() override;
-	void onMouseMotion(const Vector<int>& delta) override;
-
-
 	void fillGraphPoints(Graph::PointsList&, const GraphHistory&);
 
+	void onMouseDown(const Point<int>& position) override;
 	void onMoved(const Vector<int>&) override;
 	void onPositionChanged(const Point<int>&) override;
 
