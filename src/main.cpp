@@ -532,8 +532,8 @@ void calculateMouseToWorld()
     
     TilePointedAt =
     {
-       screenCell.x + (MapViewOffset.x / TileSize),
-       screenCell.y + (MapViewOffset.y / TileSize)
+       std::clamp(screenCell.x + (MapViewOffset.x / TileSize), 0, SimWidth - 1),
+       std::clamp(screenCell.y + (MapViewOffset.y / TileSize), 0, SimHeight - 1)
     };
 
     TileHighlight =
