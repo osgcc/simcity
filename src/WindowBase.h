@@ -63,6 +63,21 @@ public:
         return mArea;
     }
 
+    void anchor()
+    {
+        mAnchored = true;
+    }
+
+    void unanchor()
+    {
+        mAnchored = false;
+    }
+
+    bool anchored() const
+    {
+        return mAnchored;
+    }
+
 	virtual void injectMouseDown(const Point<int>& position) {};
 	virtual void injectMouseUp() {};
 	virtual void injectMouseMotion(const Vector<int>& delta) {};
@@ -78,4 +93,5 @@ private:
 	virtual void onPositionChanged(const Point<int>&) {};
     
 	bool mVisible{ false };
+    bool mAnchored{ false };
 };
