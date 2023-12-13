@@ -596,6 +596,12 @@ void SetSpeed(SimulationSpeed speed)
 }
 
 
+void TogglePause()
+{
+    Paused() ? Resume() : Pause();
+}
+
+
 void handleKeyEvent(SDL_Event& event)
 {
     switch (event.key.keysym.sym)
@@ -609,7 +615,7 @@ void handleKeyEvent(SDL_Event& event)
     case SDLK_0:
     case SDLK_p:
     case SDLK_SPACE:
-        Paused() ? Resume() : Pause();
+        TogglePause();
         break;
 
     case SDLK_1:
