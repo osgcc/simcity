@@ -607,9 +607,7 @@ void handleKeyEvent(SDL_Event& event)
     switch (event.key.keysym.sym)
     {
     case SDLK_ESCAPE:
-        budgetWindow->hide();
-        evaluationWindow->hide();
-        graphWindow->hide();
+        GuiWindowStack.hide();
         break;
 
     case SDLK_0:
