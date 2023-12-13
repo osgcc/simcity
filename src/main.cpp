@@ -577,6 +577,14 @@ bool IgnoreToolMouseUp(Point<int>& mousePosition)
 }
 
 
+void ShowWindowAndBringToFront(WindowBase& window)
+{
+    window.toggleVisible();
+    GuiWindowStack.bringToFront(&window);
+    if (window.visible()) { window.update(); }
+}
+
+
 void handleKeyEvent(SDL_Event& event)
 {
     switch (event.key.keysym.sym)
@@ -652,21 +660,15 @@ void handleKeyEvent(SDL_Event& event)
         break;
 
     case SDLK_F9:
-        graphWindow->toggleVisible();
-        GuiWindowStack.bringToFront(graphWindow.get());
-        if (graphWindow->visible()) { graphWindow->update(); }
+        ShowWindowAndBringToFront(*graphWindow.get());
         break;
 
     case SDLK_F10:
-        budgetWindow->toggleVisible();
-        GuiWindowStack.bringToFront(budgetWindow.get());
-        if (budgetWindow->visible()) { budgetWindow->update(); }
+        ShowWindowAndBringToFront(*budgetWindow.get());
         break;
             
     case SDLK_F1:
-        evaluationWindow->toggleVisible();
-        GuiWindowStack.bringToFront(evaluationWindow.get());
-        if(evaluationWindow->visible()) { evaluationWindow->update(); }
+        ShowWindowAndBringToFront(*evaluationWindow.get());
         break;
 
     default:
