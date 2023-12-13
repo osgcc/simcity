@@ -725,6 +725,11 @@ void handleMouseEvent(SDL_Event& event)
                 }
             }
 
+            if (GuiWindowStack.pointInWindow(EventHandling::MousePosition))
+            {
+                return;
+            }
+
             toolEnd(TilePointedAt);
             
             if (pendingToolProperties().draggable)
