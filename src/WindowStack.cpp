@@ -96,9 +96,9 @@ void WindowStack::bringToFront(WindowBase* window)
 
 void WindowStack::hide()
 {
-	for (auto it = mWindowList.rbegin(); it != mWindowList.rend(); ++it)
+	for (auto window : mWindowList)
 	{
-		(*it)->hide();
+		window->hide();
 	}
 }
 
