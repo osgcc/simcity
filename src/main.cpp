@@ -205,6 +205,7 @@ namespace
 
 namespace EventHandling
 {
+    Point<int> MouseDownPosition{};
     Point<int> MouseClickPosition{};
     Point<int> MousePosition{};
 
@@ -551,6 +552,31 @@ void calculateMouseToWorld()
 }
 
 
+bool IgnoreToolMouseUp(Point<int>& mousePosition)
+{
+    for (auto rect : UiRects)
+    {
+        if (pointInRect(mousePosition, *rect))
+        {
+            return true;
+        }
+    }
+
+    if (GuiWindowStack.pointInWindow(EventHandling::MousePosition))
+    {
+        return true;
+    }
+
+    if (EventHandling::MouseDownPosition != EventHandling::MousePosition &&
+        GuiWindowStack.pointInWindow(EventHandling::MouseDownPosition))
+    {
+        true;
+    }
+
+    return false;
+}
+
+
 void handleKeyEvent(SDL_Event& event)
 {
     switch (event.key.keysym.sym)
@@ -684,6 +710,7 @@ void handleMouseEvent(SDL_Event& event)
         if (event.button.button == SDL_BUTTON_LEFT)
         {
             EventHandling::MouseLeftDown = true;
+            EventHandling::MouseDownPosition = { event.motion.x, event.motion.y };
 
             for (auto rect : UiRects)
             {
@@ -717,15 +744,7 @@ void handleMouseEvent(SDL_Event& event)
 
             GuiWindowStack.injectMouseUp();
 
-            for (auto rect : UiRects)
-            {
-                if (pointInRect(mousePosition, *rect))
-                {
-                    return;
-                }
-            }
-
-            if (GuiWindowStack.pointInWindow(EventHandling::MousePosition))
+            if (IgnoreToolMouseUp(mousePosition))
             {
                 return;
             }
