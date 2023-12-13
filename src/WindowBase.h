@@ -48,6 +48,9 @@ public:
 
     bool anchored() const;
 
+    void alwaysVisible(bool always);
+    bool alwaysVisible() const;
+
     void injectMouseDown(const Point<int>& position);
     void injectMouseUp();
     void injectMouseMotion(const Vector<int>& delta);
@@ -74,6 +77,7 @@ private:
     Rectangle<int> mCloseButtonArea;
 
     bool mVisible{ false };
+    bool mAlwaysVisible{ false };
     bool mAnchored{ false };
     bool mDragging{ false };
     bool mCloseButtonActive{ true };

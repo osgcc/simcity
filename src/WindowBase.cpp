@@ -113,6 +113,18 @@ bool WindowBase::anchored() const
 }
 
 
+void WindowBase::alwaysVisible(bool always)
+{
+    mAlwaysVisible = always;
+}
+
+
+bool WindowBase::alwaysVisible() const
+{
+    return mAlwaysVisible;
+}
+
+
 void WindowBase::injectMouseDown(const Point<int>& position)
 {
     const SDL_Point& pt{ position.x, position.y };
