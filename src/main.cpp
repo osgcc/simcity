@@ -652,7 +652,7 @@ void handleMouseEvent(SDL_Event& event)
     if (event.window.windowID != MainWindowId) { return; }
 
     Vector<int> mouseMotionDelta{};
-    Point<int> mousePosition = { EventHandling::MousePosition.x, EventHandling::MousePosition.y };
+    Point<int> mousePosition = EventHandling::MousePosition;
 
     switch (event.type)
     {
