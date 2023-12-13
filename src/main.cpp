@@ -654,7 +654,7 @@ void handleKeyEvent(SDL_Event& event)
     case SDLK_F9:
         graphWindow->toggleVisible();
         GuiWindowStack.bringToFront(graphWindow.get());
-        if (graphWindow) { graphWindow->update(); }
+        if (graphWindow->visible()) { graphWindow->update(); }
         break;
 
     case SDLK_F10:
