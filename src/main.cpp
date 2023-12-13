@@ -570,7 +570,7 @@ bool IgnoreToolMouseUp(Point<int>& mousePosition)
     if (EventHandling::MouseDownPosition != EventHandling::MousePosition &&
         GuiWindowStack.pointInWindow(EventHandling::MouseDownPosition))
     {
-        true;
+        return true;
     }
 
     return false;
@@ -960,6 +960,10 @@ void DrawPendingTool(const ToolPalette& palette)
 void drawDraggableToolVector()
 {
     if (!EventHandling::MouseLeftDown) { return; }
+    if (GuiWindowStack.pointInWindow(EventHandling::MouseDownPosition))
+    {
+        return;
+    }
     
     SDL_Rect toolRect
     {
