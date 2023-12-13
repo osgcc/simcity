@@ -31,6 +31,7 @@ ToolPalette::ToolPalette(SDL_Renderer* renderer) :
 {
     size(ToolPaletteSize);
     closeButtonActive(false);
+    alwaysVisible(true);
 
     initToolbarUv();
 
