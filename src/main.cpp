@@ -585,6 +585,17 @@ void ShowWindowAndBringToFront(WindowBase& window)
 }
 
 
+void SetSpeed(SimulationSpeed speed)
+{
+    if (Paused())
+    {
+        Resume();
+    }
+
+    SimSpeed(speed);
+}
+
+
 void handleKeyEvent(SDL_Event& event)
 {
     switch (event.key.keysym.sym)
@@ -602,23 +613,19 @@ void handleKeyEvent(SDL_Event& event)
         break;
 
     case SDLK_1:
-        if (Paused()) { Resume(); }
-        SimSpeed(SimulationSpeed::Slow);
+        SetSpeed(SimulationSpeed::Slow);
         break;
 
     case SDLK_2:
-        if (Paused()) { Resume(); }
-        SimSpeed(SimulationSpeed::Normal);
+        SetSpeed(SimulationSpeed::Normal);
         break;
 
     case SDLK_3:
-        if (Paused()) { Resume(); }
-        SimSpeed(SimulationSpeed::Fast);
+        SetSpeed(SimulationSpeed::Fast);
         break;
 
     case SDLK_4:
-        if (Paused()) { Resume(); }
-        SimSpeed(SimulationSpeed::AfricanSwallow);
+        SetSpeed(SimulationSpeed::AfricanSwallow);
         break;
 
     case SDLK_F2:
