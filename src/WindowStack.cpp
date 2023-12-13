@@ -98,7 +98,10 @@ void WindowStack::hide()
 {
 	for (auto window : mWindowList)
 	{
-		window->hide();
+		if(!window->alwaysVisible())
+		{
+			window->hide();
+		}
 	}
 }
 
