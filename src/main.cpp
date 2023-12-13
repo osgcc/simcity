@@ -653,16 +653,19 @@ void handleKeyEvent(SDL_Event& event)
 
     case SDLK_F9:
         graphWindow->toggleVisible();
+        GuiWindowStack.bringToFront(graphWindow.get());
         if (graphWindow) { graphWindow->update(); }
         break;
 
     case SDLK_F10:
         budgetWindow->toggleVisible();
+        GuiWindowStack.bringToFront(budgetWindow.get());
         if (budgetWindow->visible()) { budgetWindow->update(); }
         break;
             
     case SDLK_F1:
         evaluationWindow->toggleVisible();
+        GuiWindowStack.bringToFront(evaluationWindow.get());
         if(evaluationWindow->visible()) { evaluationWindow->update(); }
         break;
 
