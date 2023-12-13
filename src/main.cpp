@@ -1071,8 +1071,11 @@ void GameLoop()
         }
         else
         {
-            DrawPendingTool(*toolPalette);
-            drawDraggableToolVector();
+            if (!GuiWindowStack.pointInWindow(EventHandling::MousePosition))
+            {
+                DrawPendingTool(*toolPalette);
+                drawDraggableToolVector();
+            }
 
             drawTopUi();
 
