@@ -158,6 +158,4 @@ void WindowBase::injectMouseMotion(const Vector<int>& delta)
 {
     if (!mDragging) { return; }
     move(delta);
-
-    //onMouseMotion(delta);
 }
