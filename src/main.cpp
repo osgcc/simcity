@@ -602,6 +602,12 @@ void TogglePause()
 }
 
 
+void ToggleMiniMapVisibility()
+{
+    miniMapWindow->hidden() ? miniMapWindow->show() : miniMapWindow->hide();
+}
+
+
 void handleKeyEvent(SDL_Event& event)
 {
     switch (event.key.keysym.sym)
@@ -654,7 +660,7 @@ void handleKeyEvent(SDL_Event& event)
         break;
 
     case SDLK_F4:
-        miniMapWindow->hidden() ? miniMapWindow->show() : miniMapWindow->hide();
+        ToggleMiniMapVisibility();
         break;
 
     case SDLK_F5:
