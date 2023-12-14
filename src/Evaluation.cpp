@@ -93,6 +93,12 @@ namespace
 };
 
 
+struct Evaluation
+{
+
+};
+
+
 const std::array<int, 4>& problemOrder()
 {
     return ProblemOrder;

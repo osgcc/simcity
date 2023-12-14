@@ -11,6 +11,9 @@
 #include "EvaluationWindow.h"
 
 
+#include "Evaluation.h"
+
+
 namespace
 {
     const SDL_Rect BgRect{ 0, 0, 503, 256 };
@@ -24,6 +27,11 @@ EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
     mRenderer{ renderer }
 {
     size({ BgRect.w, BgRect.h });
+}
+
+
+void EvaluationWindow::showEvaluation(Evaluation evaluation)
+{
 }
 
 

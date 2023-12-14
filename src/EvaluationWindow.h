@@ -19,6 +19,9 @@
 #include <SDL2/SDL.h>
 
 
+struct Evaluation;
+
+
 class EvaluationWindow : public WindowBase
 {
 public:
@@ -27,6 +30,8 @@ public:
     const EvaluationWindow operator=(const EvaluationWindow&) = delete;
     
     EvaluationWindow(SDL_Renderer* renderer);
+
+    void showEvaluation(Evaluation evaluation);
     
     void draw() override;
     void update() override;

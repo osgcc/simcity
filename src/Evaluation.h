@@ -15,6 +15,8 @@
 class Budget;
 class CityProperties;
 
+struct Evaluation;
+
 constexpr auto PROBNUM = 10;
 
 int cityAssessedValue();
