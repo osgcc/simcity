@@ -23,7 +23,7 @@ EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
     mTexture(loadTexture(renderer, "images/EvalWindow.png")),
     mRenderer{ renderer }
 {
-    size({ 503, 256 });
+    size({ BgRect.w, BgRect.h });
 }
 
 
@@ -31,8 +31,8 @@ void EvaluationWindow::draw()
 {
     const SDL_Rect rect{ area().x, area().y, area().width, area().height };
     SDL_RenderCopy(mRenderer, mTexture.texture, &BgRect, &rect);
-    
-    //SDL_RenderDrawRect(mRenderer, &rect);
+
+
 }
 
 
