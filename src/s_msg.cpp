@@ -200,21 +200,21 @@ void DoScenarioScore(int type)
     switch (type)
     {
     case 1:	/* Dullsville */
-        if (cityClass() >= 4)
+        if (cityClass() >= CityClass::Metropolis)
         {
             z = -100;
         }
         break;
 
     case 2:	/* San Francisco */
-        if (cityClass() >= 4)
+        if (cityClass() >= CityClass::Metropolis)
         {
             z = -100;
         }
         break;
 
     case 3:	/* Hamburg */
-        if (cityClass() >= 4)
+        if (cityClass() >= CityClass::Metropolis)
         {
             z = -100;
         }

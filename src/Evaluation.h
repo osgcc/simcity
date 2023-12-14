@@ -15,14 +15,28 @@
 class Budget;
 class CityProperties;
 
-struct Evaluation;
+struct Evaluation
+{
+
+};
+
+enum class CityClass
+{
+	Village,
+	Town,
+	City,
+	Capital,
+	Metropolis,
+	Megalopolis
+};
+
 
 constexpr auto PROBNUM = 10;
 
 int cityAssessedValue();
 
-int cityClass();
-void cityClass(const int value);
+CityClass cityClass();
+void cityClass(const CityClass value);
 
 void CityEvaluation(const Budget& budget);
 

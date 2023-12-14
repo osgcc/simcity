@@ -19,6 +19,8 @@
 #include "w_tk.h"
 #include "w_util.h"
 
+#include <map>
+
 
 /* City Evaluation */
 namespace
@@ -35,18 +37,19 @@ namespace
     
     int CityPop{}, deltaCityPop{};
     int CityAssessedValue; /* assessed city value */
-    int CityClass; /*  0..5  */
+    int CityClassValue;
     int CityScore{}, DeltaCityScore{}, AverageCityScore{};
     int TrafficAverage{};
 
-    const std::string cityClassStr[6] =
+
+    const std::map<CityClass, std::string> CityClassString =
     {
-      "VILLAGE",
-      "TOWN",
-      "CITY",
-      "CAPITAL",
-      "METROPOLIS",
-      "MEGALOPOLIS"
+        { CityClass::Village, "VILLAGE" },
+        { CityClass::Town, "TOWN" },
+        { CityClass::City, "CITY" },
+        { CityClass::Capital, "CAPITAL" },
+        { CityClass::Metropolis, "METROPOLIS" },
+        { CityClass::Megalopolis, "MEGALOPOLIS" }
     };
 
 
@@ -93,12 +96,6 @@ namespace
 };
 
 
-struct Evaluation
-{
-
-};
-
-
 const std::array<int, 4>& problemOrder()
 {
     return ProblemOrder;
@@ -141,15 +138,15 @@ int deltaCityScore()
 }
 
 
-int cityClass()
+CityClass cityClass()
 {
-    return CityClass;
+    return static_cast<CityClass>(CityClassValue);
 }
 
 
-void cityClass(const int value)
+void cityClass(const CityClass value)
 {
-    CityClass = value;
+    CityClassValue = static_cast<int>(value);
 }
 
 
@@ -190,7 +187,7 @@ void EvalInit()
     CityPop = 0;
     deltaCityPop = 0;
     CityAssessedValue = 0;
-    CityClass = 0;
+    CityClassValue = 0;
     CityScore = 500;
     DeltaCityScore = 0;
     EvalValid = 1;
@@ -249,12 +246,12 @@ void DoPopNum()
      * 500000 == megalopolis
      */
 
-    CityClass = 0;
-    if (CityPop > 2000) { CityClass++; }
-    if (CityPop > 10000) { CityClass++; }
-    if (CityPop > 50000) { CityClass++; }
-    if (CityPop > 100000) { CityClass++; }
-    if (CityPop > 500000) { CityClass++; }
+    CityClassValue = 0;
+    if (CityPop > 2000) { CityClassValue++; }
+    if (CityPop > 10000) { CityClassValue++; }
+    if (CityPop > 50000) { CityClassValue++; }
+    if (CityPop > 100000) { CityClassValue++; }
+    if (CityPop > 500000) { CityClassValue++; }
 }
 
 
@@ -543,7 +540,7 @@ void doScoreCard(const CityProperties& properties)
         std::to_string(cityPopulation()),
         std::to_string(deltaCityPopulation()),
         NumberToDollarDecimal(cityAssessedValue()),
-        cityClassStr[cityClass()],
+        CityClassString.at(cityClass()),
         cityLevelStr[properties.GameLevel()],
         std::to_string(cityYes()) + "%",
         std::to_string(cityNo()) + "%",
