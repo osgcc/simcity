@@ -20,6 +20,7 @@ struct Evaluation
 
 };
 
+
 enum class CityClass
 {
 	Village,

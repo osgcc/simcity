@@ -42,6 +42,17 @@ namespace
     int TrafficAverage{};
 
 
+    const std::map<CityClass, int> CityClassPopulation =
+    {
+        { CityClass::Village, 0 },
+        { CityClass::Town, 2000 },
+        { CityClass::City, 10000 },
+        { CityClass::Capital, 50000 },
+        { CityClass::Metropolis, 100000 },
+        { CityClass::Megalopolis, 500000 }
+    };
+
+
     const std::map<CityClass, std::string> CityClassString =
     {
         { CityClass::Village, "VILLAGE" },
@@ -229,29 +240,36 @@ void DoPopNum()
 {
     int oldCityPop{ CityPop };
     CityPop = (ResPop + (ComPop * 8) + (IndPop * 8)) * 20;
-
+    
     if (oldCityPop == -1) // fixme: magic number (sentinel, use named value)
     {
         oldCityPop = CityPop;
     }
-
+    
     deltaCityPop = CityPop - oldCityPop;
-
-    /**
-     * 0 == village
-     * 2000 == town
-     * 10000 == city
-     * 50000 == capital
-     * 100000 == metropolis
-     * 500000 == megalopolis
-     */
-
+    
     CityClassValue = CityClass::Village;
-    if (CityPop > 2000) { CityClassValue = CityClass::Town; }
-    if (CityPop > 10000) { CityClassValue = CityClass::City; }
-    if (CityPop > 50000) { CityClassValue = CityClass::Capital; }
-    if (CityPop > 100000) { CityClassValue = CityClass::Metropolis; }
-    if (CityPop > 500000) { CityClassValue = CityClass::Megalopolis; }
+    
+    if (CityPop > 2000)
+    {
+        CityClassValue = CityClass::Town;
+    }
+    if (CityPop > 10000)
+    {
+        CityClassValue = CityClass::City;
+    }
+    if (CityPop > 50000)
+    {
+        CityClassValue = CityClass::Capital;
+    }
+    if (CityPop > 100000)
+    {
+        CityClassValue = CityClass::Metropolis;
+    }
+    if (CityPop > 500000)
+    {
+        CityClassValue = CityClass::Megalopolis;
+    }
 }
 
 
