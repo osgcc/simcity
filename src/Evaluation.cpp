@@ -37,7 +37,7 @@ namespace
     
     int CityPop{}, deltaCityPop{};
     int CityAssessedValue; /* assessed city value */
-    int CityClassValue;
+    CityClass CityClassValue;
     int CityScore{}, DeltaCityScore{}, AverageCityScore{};
     int TrafficAverage{};
 
@@ -146,7 +146,7 @@ CityClass cityClass()
 
 void cityClass(const CityClass value)
 {
-    CityClassValue = static_cast<int>(value);
+    CityClassValue = value;
 }
 
 
@@ -187,7 +187,7 @@ void EvalInit()
     CityPop = 0;
     deltaCityPop = 0;
     CityAssessedValue = 0;
-    CityClassValue = 0;
+    CityClassValue = CityClass::Village;
     CityScore = 500;
     DeltaCityScore = 0;
     EvalValid = 1;
@@ -246,12 +246,12 @@ void DoPopNum()
      * 500000 == megalopolis
      */
 
-    CityClassValue = 0;
-    if (CityPop > 2000) { CityClassValue++; }
-    if (CityPop > 10000) { CityClassValue++; }
-    if (CityPop > 50000) { CityClassValue++; }
-    if (CityPop > 100000) { CityClassValue++; }
-    if (CityPop > 500000) { CityClassValue++; }
+    CityClassValue = CityClass::Village;
+    if (CityPop > 2000) { CityClassValue = CityClass::Town; }
+    if (CityPop > 10000) { CityClassValue = CityClass::City; }
+    if (CityPop > 50000) { CityClassValue = CityClass::Capital; }
+    if (CityPop > 100000) { CityClassValue = CityClass::Metropolis; }
+    if (CityPop > 500000) { CityClassValue = CityClass::Megalopolis; }
 }
 
 
