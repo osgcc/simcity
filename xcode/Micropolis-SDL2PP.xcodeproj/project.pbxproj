@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		57B5F54D2B2BECC300683BF7 /* WindowStack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B5F54B2B2BECC300683BF7 /* WindowStack.cpp */; };
+		57B5F54F2B2BEDBD00683BF7 /* WindowBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B5F54E2B2BEDBD00683BF7 /* WindowBase.cpp */; };
 		57C37B2C2958E47C0055BC50 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57C37B2B2958E47C0055BC50 /* Assets.xcassets */; };
 		57C37B2F2958E47C0055BC50 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57C37B2D2958E47C0055BC50 /* MainMenu.xib */; };
 		57C37B842958E4FF0055BC50 /* w_resrc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57C37B382958E4FE0055BC50 /* w_resrc.cpp */; };
@@ -74,6 +76,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		57B5F54B2B2BECC300683BF7 /* WindowStack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WindowStack.cpp; path = ../../src/WindowStack.cpp; sourceTree = "<group>"; };
+		57B5F54C2B2BECC300683BF7 /* WindowStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WindowStack.h; path = ../../src/WindowStack.h; sourceTree = "<group>"; };
+		57B5F54E2B2BEDBD00683BF7 /* WindowBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WindowBase.cpp; path = ../../src/WindowBase.cpp; sourceTree = "<group>"; };
 		57C37B252958E47B0055BC50 /* Micropolis-SDL2PP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Micropolis-SDL2PP.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		57C37B2B2958E47C0055BC50 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		57C37B2E2958E47C0055BC50 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -236,6 +241,8 @@
 				57C37B4D2958E4FE0055BC50 /* w_tk.cpp */,
 				57C37B582958E4FE0055BC50 /* w_update.cpp */,
 				57C37B442958E4FE0055BC50 /* w_util.cpp */,
+				57B5F54E2B2BEDBD00683BF7 /* WindowBase.cpp */,
+				57B5F54B2B2BECC300683BF7 /* WindowStack.cpp */,
 				57C37B462958E4FE0055BC50 /* Zone.cpp */,
 				57C37B322958E47C0055BC50 /* Micropolis_SDL2PP.entitlements */,
 				57C37B3F2958E4FE0055BC50 /* animtab.h */,
@@ -282,6 +289,7 @@
 				57C37B7A2958E4FF0055BC50 /* w_update.h */,
 				57C37B7B2958E4FF0055BC50 /* w_util.h */,
 				57C37B5A2958E4FE0055BC50 /* WindowBase.h */,
+				57B5F54C2B2BECC300683BF7 /* WindowStack.h */,
 				57C37B3A2958E4FE0055BC50 /* Zone.h */,
 				57C37B2B2958E47C0055BC50 /* Assets.xcassets */,
 				57C37B2D2958E47C0055BC50 /* MainMenu.xib */,
@@ -406,6 +414,7 @@
 				57C37B9F2958E4FF0055BC50 /* s_alloc.cpp in Sources */,
 				57C37B952958E4FF0055BC50 /* s_gen.cpp in Sources */,
 				57C37BA92958E52C0055BC50 /* Rectangle.cpp in Sources */,
+				57B5F54F2B2BEDBD00683BF7 /* WindowBase.cpp in Sources */,
 				57C37B872958E4FF0055BC50 /* w_util.cpp in Sources */,
 				57C37B882958E4FF0055BC50 /* Zone.cpp in Sources */,
 				57C37B9B2958E4FF0055BC50 /* Budget.cpp in Sources */,
@@ -415,6 +424,7 @@
 				57C37B892958E4FF0055BC50 /* s_msg.cpp in Sources */,
 				57C37B942958E4FF0055BC50 /* s_sim.cpp in Sources */,
 				57C37B8D2958E4FF0055BC50 /* Graphics.cpp in Sources */,
+				57B5F54D2B2BECC300683BF7 /* WindowStack.cpp in Sources */,
 				57C37B972958E4FF0055BC50 /* ToolPalette.cpp in Sources */,
 				57C37BAD2958E52C0055BC50 /* FileIo.cpp in Sources */,
 				57C37B9C2958E4FF0055BC50 /* Traffic.cpp in Sources */,
