@@ -42,17 +42,12 @@ namespace
     int TrafficAverage{};
 
 
-    const std::map<CityClass, int> CityClassPopulation =
+    constexpr int CityClassPopulation[] =
     {
-        { CityClass::Village, 0 },
-        { CityClass::Town, 2000 },
-        { CityClass::City, 10000 },
-        { CityClass::Capital, 50000 },
-        { CityClass::Metropolis, 100000 },
-        { CityClass::Megalopolis, 500000 }
+        0, 2000, 10000, 50000, 100000, 500000
     };
 
-
+    
     const std::map<CityClass, std::string> CityClassString =
     {
         { CityClass::Village, "VILLAGE" },
@@ -250,27 +245,27 @@ void DoPopNum()
     
     CityClassValue = CityClass::Village;
     
-    if (CityPop > 2000)
+    if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Town)])
     {
         CityClassValue = CityClass::Town;
     }
 
-    if (CityPop > 10000)
+    if (CityPop > CityClassPopulation[static_cast<int>(CityClass::City)])
     {
         CityClassValue = CityClass::City;
     }
 
-    if (CityPop > 50000)
+    if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Capital)])
     {
         CityClassValue = CityClass::Capital;
     }
 
-    if (CityPop > 100000)
+    if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Metropolis)])
     {
         CityClassValue = CityClass::Metropolis;
     }
 
-    if (CityPop > 500000)
+    if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Megalopolis)])
     {
         CityClassValue = CityClass::Megalopolis;
     }
