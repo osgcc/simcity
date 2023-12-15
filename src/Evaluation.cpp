@@ -254,18 +254,22 @@ void DoPopNum()
     {
         CityClassValue = CityClass::Town;
     }
+
     if (CityPop > 10000)
     {
         CityClassValue = CityClass::City;
     }
+
     if (CityPop > 50000)
     {
         CityClassValue = CityClass::Capital;
     }
+
     if (CityPop > 100000)
     {
         CityClassValue = CityClass::Metropolis;
     }
+
     if (CityPop > 500000)
     {
         CityClassValue = CityClass::Megalopolis;
