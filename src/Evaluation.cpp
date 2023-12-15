@@ -101,31 +101,37 @@ namespace
     };
 
 
+    int PopulationThreshold(CityClass cityClass)
+    {
+        return CityClassPopulation[static_cast<int>(cityClass)];
+    }
+
+
     CityClass DetermineCityClass()
     {
         auto cityClass = CityClass::Village;
 
-        if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Town)])
+        if (CityPop > PopulationThreshold(CityClass::Town))
         {
             cityClass = CityClass::Town;
         }
 
-        if (CityPop > CityClassPopulation[static_cast<int>(CityClass::City)])
+        if (CityPop > PopulationThreshold(CityClass::City))
         {
             cityClass = CityClass::City;
         }
 
-        if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Capital)])
+        if (CityPop > PopulationThreshold(CityClass::Capital))
         {
             cityClass = CityClass::Capital;
         }
 
-        if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Metropolis)])
+        if (CityPop > PopulationThreshold(CityClass::Metropolis))
         {
             cityClass = CityClass::Metropolis;
         }
 
-        if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Megalopolis)])
+        if (CityPop > PopulationThreshold(CityClass::Megalopolis))
         {
             cityClass = CityClass::Megalopolis;
         }
