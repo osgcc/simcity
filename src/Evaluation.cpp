@@ -99,6 +99,40 @@ namespace
 
         const std::string title{};
     };
+
+
+    CityClass DetermineCityClass()
+    {
+        auto cityClass = CityClass::Village;
+
+        if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Town)])
+        {
+            cityClass = CityClass::Town;
+        }
+
+        if (CityPop > CityClassPopulation[static_cast<int>(CityClass::City)])
+        {
+            cityClass = CityClass::City;
+        }
+
+        if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Capital)])
+        {
+            cityClass = CityClass::Capital;
+        }
+
+        if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Metropolis)])
+        {
+            cityClass = CityClass::Metropolis;
+        }
+
+        if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Megalopolis)])
+        {
+            cityClass = CityClass::Megalopolis;
+        }
+
+        return cityClass;
+    }
+
 };
 
 
@@ -243,32 +277,7 @@ void DoPopNum()
     
     deltaCityPop = CityPop - oldCityPop;
     
-    CityClassValue = CityClass::Village;
-    
-    if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Town)])
-    {
-        CityClassValue = CityClass::Town;
-    }
-
-    if (CityPop > CityClassPopulation[static_cast<int>(CityClass::City)])
-    {
-        CityClassValue = CityClass::City;
-    }
-
-    if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Capital)])
-    {
-        CityClassValue = CityClass::Capital;
-    }
-
-    if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Metropolis)])
-    {
-        CityClassValue = CityClass::Metropolis;
-    }
-
-    if (CityPop > CityClassPopulation[static_cast<int>(CityClass::Megalopolis)])
-    {
-        CityClassValue = CityClass::Megalopolis;
-    }
+    CityClassValue = DetermineCityClass();
 }
 
 
