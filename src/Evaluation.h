@@ -11,13 +11,31 @@
 #pragma once
 
 #include <array>
+#include <string>
 
 class Budget;
 class CityProperties;
 
+
 struct Evaluation
 {
+    const std::string changed{};
+    const std::string score{};
 
+    const std::array<std::string, 4> problemString;
+    const std::array<std::string, 4> problemVote;
+
+    const std::string pop{};
+    const std::string delta{};
+    const std::string assessed_dollars{};
+
+    const std::string cityclass{};
+    const std::string citylevel{};
+
+    const std::string goodyes{};
+    const std::string goodno{};
+
+    const std::string title{};
 };
 
 

@@ -68,28 +68,6 @@ namespace
     };
 
 
-    struct Evaulation
-    {
-        const std::string changed{};
-        const std::string score{};
-        
-        const std::array<std::string, 4> problemString;
-        const std::array<std::string, 4> problemVote;
-
-        const std::string pop{};
-        const std::string delta{};
-        const std::string assessed_dollars{};
-
-        const std::string cityclass{};
-        const std::string citylevel{};
-
-        const std::string goodyes{};
-        const std::string goodno{};
-
-        const std::string title{};
-    };
-
-
     int PopulationThreshold(CityClass cityClass)
     {
         return CityClassPopulation[static_cast<int>(cityClass)];
@@ -516,7 +494,7 @@ void CityEvaluation(const Budget& budget)
 }
 
 
-void SetEvaluation(const Evaulation& strings)
+void SetEvaluation(const Evaluation& strings)
 {
     const std::string evalMessage = "UISetEvaluation {" +
         strings.changed + "} {" +
@@ -543,7 +521,7 @@ void SetEvaluation(const Evaulation& strings)
 
 void doScoreCard(const CityProperties& properties)
 {
-    const Evaulation eval
+    const Evaluation eval
     {
         std::to_string(deltaCityScore()),
         std::to_string(cityScore()),
