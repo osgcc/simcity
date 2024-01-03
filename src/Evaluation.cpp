@@ -107,6 +107,9 @@ namespace
     }
 
 
+    /**
+     * \todo Yuck, there has to be a better way to do this.
+     */
     CityClass DetermineCityClass()
     {
         auto cityClass = CityClass::Village;
