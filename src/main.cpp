@@ -608,6 +608,13 @@ void ToggleMiniMapVisibility()
 }
 
 
+void showEvaluationWindow()
+{
+    evaluationWindow->setEvaluation(currentEvaluation());
+    ShowWindowAndBringToFront(*evaluationWindow.get());
+}
+
+
 void handleKeyEvent(SDL_Event& event)
 {
     switch (event.key.keysym.sym)
@@ -685,7 +692,7 @@ void handleKeyEvent(SDL_Event& event)
         break;
             
     case SDLK_F1:
-        ShowWindowAndBringToFront(*evaluationWindow.get());
+        showEvaluationWindow();
         break;
 
     default:
