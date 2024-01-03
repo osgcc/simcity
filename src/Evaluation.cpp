@@ -41,7 +41,6 @@ namespace
     int CityScore{}, DeltaCityScore{}, AverageCityScore{};
     int TrafficAverage{};
 
-
     constexpr int CityClassPopulation[] =
     {
         0, 2000, 10000, 50000, 100000, 500000
@@ -51,17 +50,13 @@ namespace
     {
         "VILLAGE", "TOWN", "CITY", "METROPOLIS", "MEGALOPOLIS"
     };
-    
 
-    const std::string cityLevelStr[3] =
+    const std::string CityLevelString[] =
     {
-      "Easy",
-      "Medium",
-      "Hard"
+      "Easy", "Medium", "Hard"
     };
 
-
-    const std::string probStr[10] =
+    const std::string ProblemStrings[10] =
     {
       "CRIME",
       "POLLUTION",
@@ -554,10 +549,10 @@ void doScoreCard(const CityProperties& properties)
         std::to_string(cityScore()),
         std::array<std::string, 4>
         {
-            problemVotes()[problemOrder()[0]] ? probStr[problemOrder()[0]] : " ",
-            problemVotes()[problemOrder()[1]] ? probStr[problemOrder()[1]] : " ",
-            problemVotes()[problemOrder()[2]] ? probStr[problemOrder()[2]] : " ",
-            problemVotes()[problemOrder()[3]] ? probStr[problemOrder()[3]] : " "
+            problemVotes()[problemOrder()[0]] ? ProblemStrings[problemOrder()[0]] : " ",
+            problemVotes()[problemOrder()[1]] ? ProblemStrings[problemOrder()[1]] : " ",
+            problemVotes()[problemOrder()[2]] ? ProblemStrings[problemOrder()[2]] : " ",
+            problemVotes()[problemOrder()[3]] ? ProblemStrings[problemOrder()[3]] : " "
         },
         std::array<std::string, 4>
         {
@@ -570,7 +565,7 @@ void doScoreCard(const CityProperties& properties)
         std::to_string(deltaCityPopulation()),
         NumberToDollarDecimal(cityAssessedValue()),
         CityClassString[static_cast<int>(cityClass())],
-        cityLevelStr[properties.GameLevel()],
+        CityLevelString[properties.GameLevel()],
         std::to_string(cityYes()) + "%",
         std::to_string(cityNo()) + "%",
         std::to_string(CurrentYear())
