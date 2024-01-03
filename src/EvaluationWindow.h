@@ -19,7 +19,7 @@
 #include <SDL2/SDL.h>
 
 
-struct Evaluation;
+#include "Evaluation.h"
 
 
 class EvaluationWindow : public WindowBase
@@ -31,7 +31,7 @@ public:
     
     EvaluationWindow(SDL_Renderer* renderer);
 
-    void showEvaluation(Evaluation evaluation);
+    void setEvaluation(const Evaluation& evaluation);
     
     void draw() override;
     void update() override;
@@ -43,4 +43,6 @@ private:
     Font* mFont{ nullptr };
     Texture mTexture;
     SDL_Renderer* mRenderer{ nullptr };
+
+    Evaluation mEvaluation;
 };

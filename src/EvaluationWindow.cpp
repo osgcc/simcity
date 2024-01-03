@@ -30,8 +30,9 @@ EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
 }
 
 
-void EvaluationWindow::showEvaluation(Evaluation evaluation)
+void EvaluationWindow::setEvaluation(const Evaluation& evaluation)
 {
+    mEvaluation = evaluation;
 }
 
 
