@@ -68,7 +68,7 @@ namespace
     };
 
 
-    struct EvaulationStrings
+    struct Evaulation
     {
         const std::string changed{};
         const std::string score{};
@@ -516,7 +516,7 @@ void CityEvaluation(const Budget& budget)
 }
 
 
-void SetEvaluation(const EvaulationStrings& strings)
+void SetEvaluation(const Evaulation& strings)
 {
     const std::string evalMessage = "UISetEvaluation {" +
         strings.changed + "} {" +
@@ -543,7 +543,7 @@ void SetEvaluation(const EvaulationStrings& strings)
 
 void doScoreCard(const CityProperties& properties)
 {
-    const EvaulationStrings strings
+    const Evaulation eval
     {
         std::to_string(deltaCityScore()),
         std::to_string(cityScore()),
@@ -571,7 +571,7 @@ void doScoreCard(const CityProperties& properties)
         std::to_string(CurrentYear())
     };
 
-    SetEvaluation(strings);
+    SetEvaluation(eval);
 }
 
 
