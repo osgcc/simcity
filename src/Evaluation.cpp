@@ -494,26 +494,26 @@ void CityEvaluation(const Budget& budget)
 }
 
 
-void SetEvaluation(const Evaluation& strings)
+void SetEvaluation(const Evaluation& eval)
 {
     const std::string evalMessage = "UISetEvaluation {" +
-        strings.changed + "} {" +
-        strings.problemString[0] + "} {" +
-        strings.problemString[1] + "} {" +
-        strings.problemString[2] + "} {" +
-        strings.problemString[3] + "} {" +
-        strings.problemVote[0] + "} {" +
-        strings.problemVote[1] + "} {" +
-        strings.problemVote[2] + "} {" +
-        strings.problemVote[3] + "} {" +
-        strings.pop + "} {" +
-        strings.delta + "} {" +
-        strings.assessed_dollars + "} {" +
-        "City Class: " + strings.cityclass + "} {" +
-        "City Level: " + strings.citylevel + "} {" +
-        "GoodYes: " + strings.goodyes + "} {" +
-        "GoodNo: " + strings.goodno + "} {" +
-        "Title: " + strings.title + "}";
+        eval.changed + "} {" +
+        eval.problemString[0] + "} {" +
+        eval.problemString[1] + "} {" +
+        eval.problemString[2] + "} {" +
+        eval.problemString[3] + "} {" +
+        eval.problemVote[0] + "} {" +
+        eval.problemVote[1] + "} {" +
+        eval.problemVote[2] + "} {" +
+        eval.problemVote[3] + "} {" +
+        eval.pop + "} {" +
+        eval.delta + "} {" +
+        eval.assessed_dollars + "} {" +
+        "City Class: " + eval.cityclass + "} {" +
+        "City Level: " + eval.citylevel + "} {" +
+        "GoodYes: " + eval.goodyes + "} {" +
+        "GoodNo: " + eval.goodno + "} {" +
+        "Title: " + eval.title + "}";
 
     Eval(evalMessage);
 }
