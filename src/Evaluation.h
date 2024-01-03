@@ -19,23 +19,23 @@ class CityProperties;
 
 struct Evaluation
 {
-    const std::string changed{};
-    const std::string score{};
+    std::string changed{};
+    std::string score{};
 
-    const std::array<std::string, 4> problemString;
-    const std::array<std::string, 4> problemVote;
+    std::array<std::string, 4> problemString;
+    std::array<std::string, 4> problemVote;
 
-    const std::string pop{};
-    const std::string delta{};
-    const std::string assessed_dollars{};
+    std::string pop{};
+    std::string delta{};
+    std::string assessed_dollars{};
 
-    const std::string cityclass{};
-    const std::string citylevel{};
+    std::string cityclass{};
+    std::string citylevel{};
 
-    const std::string goodyes{};
-    const std::string goodno{};
+    std::string goodyes{};
+    std::string goodno{};
 
-    const std::string title{};
+    std::string title{};
 };
 
 
@@ -51,6 +51,8 @@ enum class CityClass
 
 
 constexpr auto PROBNUM = 10;
+
+const Evaluation& currentEvaluation();
 
 int cityAssessedValue();
 

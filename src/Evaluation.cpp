@@ -30,6 +30,8 @@ namespace
 
     bool EvalChanged{ false };
 
+    Evaluation CurrentEvaluation;
+
     std::array<int, PROBNUM> ProblemTable;
     std::array<int, PROBNUM> ProblemTaken;
     std::array<int, PROBNUM> ProblemVotes; /* these are the votes for each  */
@@ -110,6 +112,12 @@ namespace
     }
 
 };
+
+
+const Evaluation& currentEvaluation()
+{
+    return CurrentEvaluation;
+}
 
 
 const std::array<int, 4>& problemOrder()
@@ -496,6 +504,8 @@ void CityEvaluation(const Budget& budget)
 
 void SetEvaluation(const Evaluation& eval)
 {
+    CurrentEvaluation = eval;
+
     const std::string evalMessage = "UISetEvaluation {" +
         eval.changed + "} {" +
         eval.problemString[0] + "} {" +
