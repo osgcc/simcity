@@ -17,16 +17,27 @@
 namespace
 {
     const SDL_Rect BgRect{ 0, 0, 503, 256 };
+
+    constexpr SDL_Rect YesNoRect{ 12, 50, 234, 70 };
+    constexpr SDL_Rect OpinionRect{ 12, 128, 234, 115 };
+    constexpr SDL_Rect StatisticsRect{ 256, 50, 234, 193 };
+
+    constexpr Vector<int> ContentPanelPadding{ 2, 2 };
 };
 
 
 
 EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
-    mFont{ new Font("res/raleway-medium.ttf", 14) },
+    mFont{ new Font("res/raleway-medium.ttf", 13) },
+    mFontBold{ new Font("res/raleway-bold.ttf", 13) },
     mTexture(loadTexture(renderer, "images/EvalWindow.png")),
-    mRenderer{ renderer }
+    mRenderer{ renderer },
+    mStringRenderer{ renderer }
 {
     size({ BgRect.w, BgRect.h });
+
+    SDL_SetTextureColorMod(mFont->texture(), 0, 0, 0);
+    SDL_SetTextureColorMod(mFontBold->texture(), 0, 0, 0);
 }
 
 
@@ -41,6 +52,16 @@ void EvaluationWindow::draw()
     const SDL_Rect rect{ area().x, area().y, area().width, area().height };
     SDL_RenderCopy(mRenderer, mTexture.texture, &BgRect, &rect);
 
+    Point<int> yesNoPanelStart = Point<int>{ area().x + YesNoRect.x, area().y + YesNoRect.y } + ContentPanelPadding;
+    mStringRenderer.drawString(*mFontBold, "Is the Mayor doing a good job?", yesNoPanelStart);
+
+    yesNoPanelStart.y += mFontBold->height() + ContentPanelPadding.y * 2;
+    std::string yesnostr = "Yes:  " + mEvaluation.goodyes;
+    mStringRenderer.drawString(*mFont, yesnostr, yesNoPanelStart);
+
+    yesNoPanelStart.y += mFont->height();
+    yesnostr = "No:  " + mEvaluation.goodno;
+    mStringRenderer.drawString(*mFont, yesnostr, yesNoPanelStart);
 
 }
 

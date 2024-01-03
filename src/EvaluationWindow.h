@@ -13,6 +13,7 @@
 #include "WindowBase.h"
 
 #include "Font.h"
+#include "StringRender.h"
 #include "Texture.h"
 
 #include <memory>
@@ -41,8 +42,12 @@ public:
     
 private:
     Font* mFont{ nullptr };
+    Font* mFontBold{ nullptr };
+
     Texture mTexture;
+
     SDL_Renderer* mRenderer{ nullptr };
 
     Evaluation mEvaluation;
+    StringRender mStringRenderer;
 };
