@@ -47,17 +47,11 @@ namespace
         0, 2000, 10000, 50000, 100000, 500000
     };
 
-    
-    const std::map<CityClass, std::string> CityClassString =
+    const std::string CityClassString[] =
     {
-        { CityClass::Village, "VILLAGE" },
-        { CityClass::Town, "TOWN" },
-        { CityClass::City, "CITY" },
-        { CityClass::Capital, "CAPITAL" },
-        { CityClass::Metropolis, "METROPOLIS" },
-        { CityClass::Megalopolis, "MEGALOPOLIS" }
+        "VILLAGE", "TOWN", "CITY", "METROPOLIS", "MEGALOPOLIS"
     };
-
+    
 
     const std::string cityLevelStr[3] =
     {
@@ -575,7 +569,7 @@ void doScoreCard(const CityProperties& properties)
         std::to_string(cityPopulation()),
         std::to_string(deltaCityPopulation()),
         NumberToDollarDecimal(cityAssessedValue()),
-        CityClassString.at(cityClass()),
+        CityClassString[static_cast<int>(cityClass())],
         cityLevelStr[properties.GameLevel()],
         std::to_string(cityYes()) + "%",
         std::to_string(cityNo()) + "%",
