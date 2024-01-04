@@ -39,11 +39,20 @@ public:
     
     void onMouseDown(const Point<int>& position) override;
     void onMouseUp() override;
+
+private:
+    void drawYesNoPanel();
+    void drawOpinionPanel();
+    void drawStatsPanel();
+    void drawScorePanel();
     
 private:
     Font* mFont{ nullptr };
     Font* mFontBold{ nullptr };
     Font* mFontSemiBold{ nullptr };
+
+    const int mLineSpacing{ 0 };
+    const int mTitleSpacing{ 0 };
 
     Texture mTexture;
     Texture mTextTexture;

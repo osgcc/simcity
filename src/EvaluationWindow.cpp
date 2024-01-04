@@ -24,6 +24,8 @@ namespace
 
     constexpr Vector<int> ContentPanelPadding{ 2, 2 };
 
+    int DualColumnOffset = 0;
+
     auto stringLength = [](std::string a, std::string b)
         {
             return a.length() < b.length();
@@ -69,6 +71,8 @@ EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
     mFont{ new Font("res/raleway-medium.ttf", 13) },
     mFontBold{ new Font("res/raleway-bold.ttf", 13) },
     mFontSemiBold{ new Font("res/Raleway-BoldItalic.ttf", 13) },
+    mLineSpacing{ mFont->height() + 2 },
+    mTitleSpacing{ mFontBold->height() + 15 },
     mTexture(loadTexture(renderer, "images/EvalWindow.png")),
     mTextTexture(newTexture(renderer, mTexture.dimensions)),
     mRenderer{ renderer },
@@ -84,30 +88,22 @@ EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
 }
 
 
-void EvaluationWindow::setEvaluation(const Evaluation& evaluation)
+void EvaluationWindow::drawYesNoPanel()
 {
-    mEvaluation = evaluation;
-
-    flushTexture(mRenderer, mTextTexture);
-    
-    const auto titlePadding = mFontBold->height() + 15;
-    const auto lineSpacing = mFont->height() + 2;
-
-    // YesNo Panel
-    Point<int> yesNoPanelStart =
+    Point<int> panelStart =
     {
         YesNoRect.x + ContentPanelPadding.x,
         YesNoRect.y + ContentPanelPadding.y
     };
 
-    mStringRenderer.drawString(*mFontBold, "Is the Mayor doing a good job?", yesNoPanelStart);
+    mStringRenderer.drawString(*mFontBold, "Is the Mayor doing a good job?", panelStart);
 
     const TextColumnMeta yesno
     {
         mStringRenderer,
         *mFont,
-        yesNoPanelStart + Vector<int>{ 0, titlePadding },
-        lineSpacing,
+        panelStart + Vector<int>{ 0, mTitleSpacing },
+        mLineSpacing,
         {
             "Yes:  " + mEvaluation.goodyes,
             "No:  " + mEvaluation.goodno
@@ -115,23 +111,26 @@ void EvaluationWindow::setEvaluation(const Evaluation& evaluation)
     };
 
     drawTextColumn(yesno);
+}
 
-    // Opinion Panel
-    const Point<int> opinionPanelStart =
+
+void EvaluationWindow::drawOpinionPanel()
+{
+    const Point<int> panelStart =
     {
         OpinionRect.x + ContentPanelPadding.x,
         OpinionRect.y + ContentPanelPadding.y
     };
 
-    mStringRenderer.drawString(*mFontBold, "What are the biggest issues?", opinionPanelStart);
+    mStringRenderer.drawString(*mFontBold, "What are the biggest issues?", panelStart);
 
 
     const TextColumnMeta opinions
     {
         mStringRenderer,
         *mFont,
-        opinionPanelStart + Vector<int>{ 0, titlePadding },
-        lineSpacing,
+        panelStart + Vector<int>{ 0, mTitleSpacing },
+        mLineSpacing,
         {
             mEvaluation.problemVote[0] + "  " + mEvaluation.problemString[0],
             mEvaluation.problemVote[1] + "  " + mEvaluation.problemString[1],
@@ -141,10 +140,12 @@ void EvaluationWindow::setEvaluation(const Evaluation& evaluation)
     };
 
     drawTextColumn(opinions);
+}
 
 
-    // Statistics Panel
-    const Point<int> statsPanelStart =
+void EvaluationWindow::drawStatsPanel()
+{
+    const Point<int> panelStart =
     {
         StatisticsRect.x + ContentPanelPadding.x,
         StatisticsRect.y + ContentPanelPadding.y
@@ -154,8 +155,8 @@ void EvaluationWindow::setEvaluation(const Evaluation& evaluation)
     {
         mStringRenderer,
         *mFontSemiBold,
-        statsPanelStart,
-        lineSpacing,
+        panelStart,
+        mLineSpacing,
         {
             "Population",
             "Net Migration",
@@ -168,17 +169,17 @@ void EvaluationWindow::setEvaluation(const Evaluation& evaluation)
     drawTextColumn(statLabels);
 
     const auto it = std::max_element(statLabels.columns.begin(), statLabels.columns.end(), stringLength);
-    const auto statsColumn2x = statLabels.font.width(*it);
+    DualColumnOffset = statLabels.font.width(*it) + 45;
 
     const TextColumnMeta statValues
     {
         mStringRenderer,
         *mFont,
         {
-            statsPanelStart.x + statsColumn2x + 45,
+            panelStart.x + DualColumnOffset,
             StatisticsRect.y + ContentPanelPadding.y
         },
-        lineSpacing,
+        mLineSpacing,
         {
             mEvaluation.pop,
             mEvaluation.delta,
@@ -189,23 +190,26 @@ void EvaluationWindow::setEvaluation(const Evaluation& evaluation)
     };
 
     drawTextColumn(statValues);
+}
 
-    // City Score
+
+void EvaluationWindow::drawScorePanel()
+{
     Point<int> scorePanelStart =
     {
         StatisticsRect.x + ContentPanelPadding.x,
-        StatisticsRect.y + ContentPanelPadding.y + lineSpacing * 6
+        StatisticsRect.y + ContentPanelPadding.y + mLineSpacing * 6
     };
 
     mStringRenderer.drawString(*mFontBold, "Overall City Score", scorePanelStart);
-    mStringRenderer.drawString(*mFont, "Range 0 - 1000", scorePanelStart + Vector<int>{ 0, lineSpacing});
+    mStringRenderer.drawString(*mFont, "Range 0 - 1000", scorePanelStart + Vector<int>{ 0, mLineSpacing });
 
     const TextColumnMeta scoreLabels
     {
         mStringRenderer,
         *mFontSemiBold,
-        scorePanelStart + Vector<int>{ 0, lineSpacing * 2 + 10 },
-        lineSpacing,
+        scorePanelStart + Vector<int>{ 0, mLineSpacing * 2 + 10 },
+        mLineSpacing,
         { "Current Score", "Annual Change" }
     };
 
@@ -215,14 +219,27 @@ void EvaluationWindow::setEvaluation(const Evaluation& evaluation)
     {
         mStringRenderer,
         *mFont,
-        scorePanelStart + Vector<int>{ statsColumn2x + 45, lineSpacing * 2 + 10 },
-        lineSpacing,
+        scorePanelStart + Vector<int>{ DualColumnOffset, mLineSpacing * 2 + 10 },
+        mLineSpacing,
         { mEvaluation.score, mEvaluation.changed }
     };
 
     drawTextColumn(scoreValues);
-    
+
     SDL_SetRenderTarget(mRenderer, nullptr);
+}
+
+
+void EvaluationWindow::setEvaluation(const Evaluation& evaluation)
+{
+    mEvaluation = evaluation;
+
+    flushTexture(mRenderer, mTextTexture);
+    
+    drawYesNoPanel();
+    drawOpinionPanel();
+    drawStatsPanel();
+    drawScorePanel();
 }
 
 
