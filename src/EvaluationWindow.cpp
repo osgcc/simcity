@@ -23,6 +23,31 @@ namespace
     constexpr SDL_Rect StatisticsRect{ 256, 50, 234, 193 };
 
     constexpr Vector<int> ContentPanelPadding{ 2, 2 };
+
+    auto stringLength = [](std::string a, std::string b)
+        {
+            return a.length() < b.length();
+        };
+
+
+    struct TextColumnMeta
+    {
+        StringRender& stringRenderer;
+        Font& font;
+        const Point<int> startPoint;
+        int lineSpacing;
+        const std::vector<std::string> columns;
+    };
+
+    void drawTextColumn(const TextColumnMeta& textColumnMeta)
+    {
+        int offset = 0;
+        for (auto& columnText : textColumnMeta.columns)
+        {
+            textColumnMeta.stringRenderer.drawString(textColumnMeta.font, columnText, textColumnMeta.startPoint + Vector<int>{ 0, offset });
+            offset += textColumnMeta.font.height();
+        }
+    }
 };
 
 
@@ -30,6 +55,7 @@ namespace
 EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
     mFont{ new Font("res/raleway-medium.ttf", 13) },
     mFontBold{ new Font("res/raleway-bold.ttf", 13) },
+    mFontSemiBold{ new Font("res/Raleway-BoldItalic.ttf", 13) },
     mTexture(loadTexture(renderer, "images/EvalWindow.png")),
     mRenderer{ renderer },
     mStringRenderer{ renderer }
@@ -38,6 +64,7 @@ EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
 
     SDL_SetTextureColorMod(mFont->texture(), 0, 0, 0);
     SDL_SetTextureColorMod(mFontBold->texture(), 0, 0, 0);
+    SDL_SetTextureColorMod(mFontSemiBold->texture(), 0, 0, 0);
 }
 
 
@@ -52,16 +79,137 @@ void EvaluationWindow::draw()
     const SDL_Rect rect{ area().x, area().y, area().width, area().height };
     SDL_RenderCopy(mRenderer, mTexture.texture, &BgRect, &rect);
 
-    Point<int> yesNoPanelStart = Point<int>{ area().x + YesNoRect.x, area().y + YesNoRect.y } + ContentPanelPadding;
+    const auto titlePadding = mFontBold->height() + 15;
+    const auto lineSpacing = mFont->height() + 2;
+
+    // YesNo Panel
+    Point<int> yesNoPanelStart =
+    {
+        area().x + YesNoRect.x + ContentPanelPadding.x,
+        area().y + YesNoRect.y + ContentPanelPadding.y
+    };
+    
     mStringRenderer.drawString(*mFontBold, "Is the Mayor doing a good job?", yesNoPanelStart);
 
-    yesNoPanelStart.y += mFontBold->height() + ContentPanelPadding.y * 2;
-    std::string tempString = "Yes:  " + mEvaluation.goodyes;
-    mStringRenderer.drawString(*mFont, tempString, yesNoPanelStart);
+    const TextColumnMeta yesno
+    {
+        mStringRenderer,
+        *mFont,
+        yesNoPanelStart + Vector<int>{ 0, titlePadding },
+        lineSpacing,
+        {
+            "Yes:  " + mEvaluation.goodyes,
+            "No:  " + mEvaluation.goodno
+        }
+    };
 
-    yesNoPanelStart.y += mFont->height();
-    tempString = "No:  " + mEvaluation.goodno;
-    mStringRenderer.drawString(*mFont, tempString, yesNoPanelStart);
+    drawTextColumn(yesno);
+    
+    // Opinion Panel
+    const Point<int> opinionPanelStart =
+    {
+        area().x + OpinionRect.x + ContentPanelPadding.x,
+        area().y + OpinionRect.y + ContentPanelPadding.y
+    };
+
+    mStringRenderer.drawString(*mFontBold, "What are the biggest issues?", opinionPanelStart);
+
+
+    const TextColumnMeta opinions
+    {
+        mStringRenderer,
+        *mFont,
+        opinionPanelStart + Vector<int>{ 0, titlePadding },
+        lineSpacing,
+        {
+            mEvaluation.problemVote[0] + "  " + mEvaluation.problemString[0],
+            mEvaluation.problemVote[1] + "  " + mEvaluation.problemString[1],
+            mEvaluation.problemVote[2] + "  " + mEvaluation.problemString[2],
+            mEvaluation.problemVote[3] + "  " + mEvaluation.problemString[3]
+        }
+    };
+
+    drawTextColumn(opinions);
+
+
+    // Statistics Panel
+    const Point<int> statsPanelStart =
+    {
+        area().x + StatisticsRect.x + ContentPanelPadding.x,
+        area().y + StatisticsRect.y + ContentPanelPadding.y
+    };
+
+    const TextColumnMeta statLabels
+    {
+        mStringRenderer,
+        *mFontSemiBold,
+        statsPanelStart,
+        lineSpacing,
+        {
+            "Population",
+            "Net Migration",
+            "Assessed Value",
+            "City Class",
+            "Game Level"
+        }
+    };
+
+    drawTextColumn(statLabels);
+
+    const auto it = std::max_element(statLabels.columns.begin(), statLabels.columns.end(), stringLength);
+    const auto statsColumn2x = statLabels.font.width(*it);
+
+    const TextColumnMeta statValues
+    {
+        mStringRenderer,
+        *mFont,
+        {
+            statsPanelStart.x + statsColumn2x + 45,
+            area().y + StatisticsRect.y + ContentPanelPadding.y
+        },
+        lineSpacing,
+        {
+            mEvaluation.pop,
+            mEvaluation.changed,
+            mEvaluation.assessed_dollars,
+            mEvaluation.cityclass,
+            mEvaluation.citylevel
+        }
+    };
+
+    drawTextColumn(statValues);
+
+    // City Score
+    Point<int> scorePanelStart =
+    {
+        area().x + StatisticsRect.x + ContentPanelPadding.x,
+        area().y + StatisticsRect.y + ContentPanelPadding.y + lineSpacing * 6
+    };
+
+    mStringRenderer.drawString(*mFontBold, "Overall City Score", scorePanelStart);
+    mStringRenderer.drawString(*mFont, "Range 0 - 1000", scorePanelStart + Vector<int>{ 0, lineSpacing});
+
+    const TextColumnMeta scoreLabels
+    {
+        mStringRenderer,
+        *mFontSemiBold,
+        scorePanelStart + Vector<int>{ 0, lineSpacing * 2 + 10 },
+        lineSpacing,
+        { "Current Score", "Annual Change" }
+    };
+
+    drawTextColumn(scoreLabels);
+
+    const TextColumnMeta scoreValues
+    {
+        mStringRenderer,
+        *mFont,
+        scorePanelStart + Vector<int>{ statsColumn2x + 45, lineSpacing * 2 + 10 },
+        lineSpacing,
+        { mEvaluation.score, mEvaluation.changed }
+    };
+
+    drawTextColumn(scoreValues);
 }
 
 

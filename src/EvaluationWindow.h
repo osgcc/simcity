@@ -43,6 +43,7 @@ public:
 private:
     Font* mFont{ nullptr };
     Font* mFontBold{ nullptr };
+    Font* mFontSemiBold{ nullptr };
 
     Texture mTexture;
 
