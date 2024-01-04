@@ -57,6 +57,7 @@ EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
     mFontBold{ new Font("res/raleway-bold.ttf", 13) },
     mFontSemiBold{ new Font("res/Raleway-BoldItalic.ttf", 13) },
     mTexture(loadTexture(renderer, "images/EvalWindow.png")),
+    mTextTexture(newTexture(renderer, mTexture.dimensions)),
     mRenderer{ renderer },
     mStringRenderer{ renderer }
 {
@@ -65,30 +66,32 @@ EvaluationWindow::EvaluationWindow(SDL_Renderer* renderer):
     SDL_SetTextureColorMod(mFont->texture(), 0, 0, 0);
     SDL_SetTextureColorMod(mFontBold->texture(), 0, 0, 0);
     SDL_SetTextureColorMod(mFontSemiBold->texture(), 0, 0, 0);
+
+    SDL_SetTextureBlendMode(mTextTexture.texture, SDL_BLENDMODE_BLEND);
 }
 
 
 void EvaluationWindow::setEvaluation(const Evaluation& evaluation)
 {
     mEvaluation = evaluation;
-}
 
-
-void EvaluationWindow::draw()
-{
-    const SDL_Rect rect{ area().x, area().y, area().width, area().height };
-    SDL_RenderCopy(mRenderer, mTexture.texture, &BgRect, &rect);
-
+    // Flush Texture
+    SDL_SetRenderTarget(mRenderer, mTextTexture.texture);
+    SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 0);
+    SDL_RenderFillRect(mRenderer, &mTextTexture.area);
+    SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+    
     const auto titlePadding = mFontBold->height() + 15;
     const auto lineSpacing = mFont->height() + 2;
 
     // YesNo Panel
     Point<int> yesNoPanelStart =
     {
-        area().x + YesNoRect.x + ContentPanelPadding.x,
-        area().y + YesNoRect.y + ContentPanelPadding.y
+        YesNoRect.x + ContentPanelPadding.x,
+        YesNoRect.y + ContentPanelPadding.y
     };
-    
+
     mStringRenderer.drawString(*mFontBold, "Is the Mayor doing a good job?", yesNoPanelStart);
 
     const TextColumnMeta yesno
@@ -104,12 +107,12 @@ void EvaluationWindow::draw()
     };
 
     drawTextColumn(yesno);
-    
+
     // Opinion Panel
     const Point<int> opinionPanelStart =
     {
-        area().x + OpinionRect.x + ContentPanelPadding.x,
-        area().y + OpinionRect.y + ContentPanelPadding.y
+        OpinionRect.x + ContentPanelPadding.x,
+        OpinionRect.y + ContentPanelPadding.y
     };
 
     mStringRenderer.drawString(*mFontBold, "What are the biggest issues?", opinionPanelStart);
@@ -135,8 +138,8 @@ void EvaluationWindow::draw()
     // Statistics Panel
     const Point<int> statsPanelStart =
     {
-        area().x + StatisticsRect.x + ContentPanelPadding.x,
-        area().y + StatisticsRect.y + ContentPanelPadding.y
+        StatisticsRect.x + ContentPanelPadding.x,
+        StatisticsRect.y + ContentPanelPadding.y
     };
 
     const TextColumnMeta statLabels
@@ -165,7 +168,7 @@ void EvaluationWindow::draw()
         *mFont,
         {
             statsPanelStart.x + statsColumn2x + 45,
-            area().y + StatisticsRect.y + ContentPanelPadding.y
+            StatisticsRect.y + ContentPanelPadding.y
         },
         lineSpacing,
         {
@@ -182,8 +185,8 @@ void EvaluationWindow::draw()
     // City Score
     Point<int> scorePanelStart =
     {
-        area().x + StatisticsRect.x + ContentPanelPadding.x,
-        area().y + StatisticsRect.y + ContentPanelPadding.y + lineSpacing * 6
+        StatisticsRect.x + ContentPanelPadding.x,
+        StatisticsRect.y + ContentPanelPadding.y + lineSpacing * 6
     };
 
     mStringRenderer.drawString(*mFontBold, "Overall City Score", scorePanelStart);
@@ -210,6 +213,16 @@ void EvaluationWindow::draw()
     };
 
     drawTextColumn(scoreValues);
+    
+    SDL_SetRenderTarget(mRenderer, nullptr);
+}
+
+
+void EvaluationWindow::draw()
+{
+    const SDL_Rect rect{ area().x, area().y, area().width, area().height };
+    SDL_RenderCopy(mRenderer, mTexture.texture, &BgRect, &rect);
+    SDL_RenderCopy(mRenderer, mTextTexture.texture, &BgRect, &rect);
 }
 
 

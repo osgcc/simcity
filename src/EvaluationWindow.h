@@ -46,6 +46,7 @@ private:
     Font* mFontSemiBold{ nullptr };
 
     Texture mTexture;
+    Texture mTextTexture;
 
     SDL_Renderer* mRenderer{ nullptr };
 
