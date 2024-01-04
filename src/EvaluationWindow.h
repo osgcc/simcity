@@ -36,9 +36,6 @@ public:
     
     void draw() override;
     void update() override;
-    
-    void onMouseDown(const Point<int>& position) override;
-    void onMouseUp() override;
 
 private:
     void drawYesNoPanel();

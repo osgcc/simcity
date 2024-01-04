@@ -98,19 +98,27 @@ void EvaluationWindow::drawYesNoPanel()
 
     mStringRenderer.drawString(*mFontBold, "Is the Mayor doing a good job?", panelStart);
 
-    const TextColumnMeta yesno
+    const TextColumnMeta yesNoLabels
+    {
+        mStringRenderer,
+        * mFontSemiBold,
+        panelStart + Vector<int>{ 0, mTitleSpacing },
+        mLineSpacing,
+        { "Yes", "No" }
+    };
+
+    drawTextColumn(yesNoLabels);
+
+    const TextColumnMeta yesNoValues
     {
         mStringRenderer,
         *mFont,
-        panelStart + Vector<int>{ 0, mTitleSpacing },
+        panelStart + Vector<int>{ DualColumnOffset + 50, mTitleSpacing },
         mLineSpacing,
-        {
-            "Yes:  " + mEvaluation.goodyes,
-            "No:  " + mEvaluation.goodno
-        }
+        { mEvaluation.goodyes, mEvaluation.goodno }
     };
 
-    drawTextColumn(yesno);
+    drawTextColumn(yesNoValues);
 }
 
 
@@ -124,22 +132,37 @@ void EvaluationWindow::drawOpinionPanel()
 
     mStringRenderer.drawString(*mFontBold, "What are the biggest issues?", panelStart);
 
-
-    const TextColumnMeta opinions
+    const TextColumnMeta opinionLabels
     {
         mStringRenderer,
-        *mFont,
+        *mFontSemiBold,
         panelStart + Vector<int>{ 0, mTitleSpacing },
         mLineSpacing,
         {
-            mEvaluation.problemVote[0] + "  " + mEvaluation.problemString[0],
-            mEvaluation.problemVote[1] + "  " + mEvaluation.problemString[1],
-            mEvaluation.problemVote[2] + "  " + mEvaluation.problemString[2],
-            mEvaluation.problemVote[3] + "  " + mEvaluation.problemString[3]
+            mEvaluation.problemString[0],
+            mEvaluation.problemString[1],
+            mEvaluation.problemString[2],
+            mEvaluation.problemString[3]
         }
     };
 
-    drawTextColumn(opinions);
+    drawTextColumn(opinionLabels);
+
+    const TextColumnMeta opinionValues
+    {
+        mStringRenderer,
+        *mFont,
+        panelStart + Vector<int>{ DualColumnOffset + 50, mTitleSpacing },
+        mLineSpacing,
+        {
+            mEvaluation.problemVote[0],
+            mEvaluation.problemVote[1],
+            mEvaluation.problemVote[2],
+            mEvaluation.problemVote[3]
+        }
+    };
+
+    drawTextColumn(opinionValues);
 }
 
 
@@ -256,14 +279,3 @@ void EvaluationWindow::update()
     
 }
 
-
-void EvaluationWindow::onMouseDown(const Point<int>& position)
-{
-    
-}
-
-
-void EvaluationWindow::onMouseUp()
-{
-    
-}
