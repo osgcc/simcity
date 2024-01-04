@@ -260,7 +260,7 @@ void DoPopNum()
     int oldCityPop{ CityPop };
     CityPop = (ResPop + (ComPop * 8) + (IndPop * 8)) * 20;
     
-    if (oldCityPop == -1) // fixme: magic number (sentinel, use named value)
+    if (oldCityPop == 0) // fixme: magic number (sentinel, use named value)
     {
         oldCityPop = CityPop;
     }
