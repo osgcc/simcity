@@ -48,6 +48,19 @@ namespace
             offset += textColumnMeta.font.height();
         }
     }
+
+    /**
+     * \todo This function is pretty useful, move it into a higher
+             level so other areas of the code can use it
+     */
+    void flushTexture(SDL_Renderer* renderer, Texture& texture)
+    {
+        SDL_SetRenderTarget(renderer, texture.texture);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+        SDL_RenderFillRect(renderer, &texture.area);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    }
 };
 
 
@@ -75,12 +88,7 @@ void EvaluationWindow::setEvaluation(const Evaluation& evaluation)
 {
     mEvaluation = evaluation;
 
-    // Flush Texture
-    SDL_SetRenderTarget(mRenderer, mTextTexture.texture);
-    SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_NONE);
-    SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 0);
-    SDL_RenderFillRect(mRenderer, &mTextTexture.area);
-    SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+    flushTexture(mRenderer, mTextTexture);
     
     const auto titlePadding = mFontBold->height() + 15;
     const auto lineSpacing = mFont->height() + 2;
