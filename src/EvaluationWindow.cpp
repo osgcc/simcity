@@ -170,7 +170,7 @@ void EvaluationWindow::draw()
         lineSpacing,
         {
             mEvaluation.pop,
-            mEvaluation.changed,
+            mEvaluation.delta,
             mEvaluation.assessed_dollars,
             mEvaluation.cityclass,
             mEvaluation.citylevel
