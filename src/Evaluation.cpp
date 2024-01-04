@@ -120,6 +120,12 @@ const Evaluation& currentEvaluation()
 }
 
 
+void currentEvaluationSeen()
+{
+    CurrentEvaluation.needsAttention = false;
+}
+
+
 const std::array<int, 4>& problemOrder()
 {
     return ProblemOrder;
