@@ -56,13 +56,12 @@ void EvaluationWindow::draw()
     mStringRenderer.drawString(*mFontBold, "Is the Mayor doing a good job?", yesNoPanelStart);
 
     yesNoPanelStart.y += mFontBold->height() + ContentPanelPadding.y * 2;
-    std::string yesnostr = "Yes:  " + mEvaluation.goodyes;
-    mStringRenderer.drawString(*mFont, yesnostr, yesNoPanelStart);
+    std::string tempString = "Yes:  " + mEvaluation.goodyes;
+    mStringRenderer.drawString(*mFont, tempString, yesNoPanelStart);
 
     yesNoPanelStart.y += mFont->height();
-    yesnostr = "No:  " + mEvaluation.goodno;
-    mStringRenderer.drawString(*mFont, yesnostr, yesNoPanelStart);
-
+    tempString = "No:  " + mEvaluation.goodno;
+    mStringRenderer.drawString(*mFont, tempString, yesNoPanelStart);
 }
 
 
