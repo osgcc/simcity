@@ -16,7 +16,7 @@
 
 #include <string>
 
-struct Texture
+struct Texture final
 {
     SDL_Texture* texture{ nullptr };
     SDL_Rect area{};
@@ -26,3 +26,4 @@ struct Texture
 
 
 Texture loadTexture(SDL_Renderer* renderer, const std::string& filename);
+Texture newTexture(SDL_Renderer* renderer, const Vector<int>& dimensions);

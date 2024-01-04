@@ -41,3 +41,21 @@ Texture loadTexture(SDL_Renderer* renderer, const std::string& filename)
 
     return Texture{ out, SDL_Rect{ 0, 0, width, height }, { width, height } };
 }
+
+
+Texture newTexture(SDL_Renderer* renderer, const Vector<int>& dimensions)
+{
+
+    SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, dimensions.x, dimensions.y);
+
+    if (!texture)
+    {
+        std::cout << "newTexture(): Unable to create new texture: " << SDL_GetError() << std::endl;
+        throw std::runtime_error(std::string{ "newTexture() : Unable to create new texture : " } + SDL_GetError());
+    }
+
+    int width = 0, height = 0;
+    SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+
+    return Texture{ texture, SDL_Rect{ 0, 0, width, height }, { width, height } };
+}
