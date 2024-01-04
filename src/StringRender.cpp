@@ -19,7 +19,7 @@ StringRender::StringRender(SDL_Renderer* renderer) :
 {}
 
 
-void StringRender::drawString(Font& font, std::string_view text, Point<int> position) const
+void StringRender::drawString(Font& font, std::string_view text, const Point<int>& position) const
 {
     if (text.empty()) { return; }
 
