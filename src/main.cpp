@@ -348,7 +348,7 @@ void simInit()
     CityTime = 50;
     NoDisasters = false;
     AutoBulldoze = true;
-    AutoBudget = false;
+    AutoBudget = true;
     MessageId(NotificationId::None);
     ClearMes();
     SimSpeed(SimulationSpeed::Normal);
@@ -611,6 +611,7 @@ void ToggleMiniMapVisibility()
 void showEvaluationWindow()
 {
     evaluationWindow->setEvaluation(currentEvaluation());
+    currentEvaluationSeen();
     ShowWindowAndBringToFront(*evaluationWindow.get());
 }
 
@@ -1135,6 +1136,12 @@ void GameLoop()
             }
 
             drawTopUi();
+
+            if (currentEvaluation().needsAttention)
+            {
+                evaluationWindow->setEvaluation(currentEvaluation());
+                currentEvaluationSeen();
+            }
 
             GuiWindowStack.draw();
         }
